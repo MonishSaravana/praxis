@@ -1,0 +1,22 @@
+{
+  "verifier": "claude_strong",
+  "n": 120,
+  "subset": "eval checks whose node has orientation/alignment/quantity/part-identity checks",
+  "full_frames": {
+    "accuracy": 0.7916666666666666,
+    "auroc": 0.8489627735152032,
+    "deviation_precision": 0.8571428571428571,
+    "n_deviation": 7
+  },
+  "with_crops": {
+    "accuracy": 0.7916666666666666,
+    "auroc": 0.8601875532821824,
+    "deviation_precision": 1.0,
+    "n_deviation": 6
+  },
+  "crop_rate": 1.0,
+  "tokens_full": 2401.616666666667,
+  "tokens_with_crops": 2572.516666666667,
+  "tapnext_seconds_per_crop_p50": 8.97192931175232,
+  "crop_protocol": "seed a 6x6 grid on the hands' working area 1.6 s before the check, track at 10 fps with TAPNext++ (MPS), crop the tracked region (fallback: seeded hand area) from the full frame"
+}

@@ -85,3 +85,18 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
       made no progress for about 40 minutes.
     - Fix: compute crops sequentially with a single tracker and cache them, then run the verifier calls in parallel
       over the cached crops.
+
+14. **Two design-selection processes wrote the same run logs.**
+    - Symptom: train-split design-selection logs with interleaved records from two runs.
+    - Cause: a `pkill` pattern didn't match the first process, so a restarted run and the old one wrote to the same
+      files at once.
+    - Fix: the affected runs were deleted and re-run in one process, and run logs are now written atomically
+      (temporary file + rename). The re-runs reused cached model answers, so the deleted runs' original API cost is
+      listed as untracked in `results/spend.json` rather than estimated.
+
+15. **Point-tracked crops did not help the verifier enough to keep.**
+    - On 120 fine-grained eval checks (orientation, alignment, quantity, part identity), Opus with tracked crops
+      matched Opus with full frames on accuracy and gained only about 0.01 AUROC (`results/l5/crops_vs_full.json`).
+    - TAPNext++ took several seconds per crop on this Mac, and on head-mounted video the points drift off the
+      hands quickly.
+    - Crops stay off by default. A faster tracker, or crops from hand boxes alone, would be the next thing to try.
