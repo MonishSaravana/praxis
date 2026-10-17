@@ -46,6 +46,10 @@ class EngineConfig:
     recognize: bool = True              # False = task given (oracle), skip L3b
     commit_on_switch_p: float = 0.7     # implicit commit when belief confidently moves past a step
     escalate: bool = True
+    order_check: bool = True            # stateful early warning for skipped prerequisites
+    order_min_p: float = 0.8
+    order_unseen_mass: float = 0.3
+    order_conf: float = 0.6
     tracker: TrackerConfig = field(default_factory=TrackerConfig)
     policy: PolicyConfig = field(default_factory=PolicyConfig)
 
@@ -80,6 +84,8 @@ class Engine:
         self._last_sched = -1e9
         self._next_task_check = 4.0
         self._feat_now: dict = {}
+        self._max_mass: dict[str, float] = {}
+        self._order_flagged: set[str] = set()
         self._last_task_probs: dict[str, float] = {}
         if task_id is not None:
             self._start_task(0.0, task_id, oracle=True)
@@ -182,6 +188,10 @@ class Engine:
             tr.observe_boundary(float(rows["boundary"].max()))
         belief = tr.belief()
 
+        for nid, pk in zip(belief.ids, belief.p):
+            if pk > self._max_mass.get(nid, 0.0):
+                self._max_mass[nid] = float(pk)
+
         # implicit commit: belief confidently moved on from a step -> that step is done
         prev = self._last_switch_map
         if prev and belief.map_id != prev and prev != DONE and belief.map_p >= self.cfg.commit_on_switch_p \
@@ -190,6 +200,7 @@ class Engine:
             belief = tr.belief()
             self._w("commit", t, node=prev, reason="belief_switch")
             if belief.map_id != DONE:
+                self._check_order(t, belief, frame_at)
                 self._emit(pol.start(t, belief.map_id))
         self._last_switch_map = belief.map_id
 
@@ -272,6 +283,41 @@ class Engine:
             b = tr.belief()
             self._last_switch_map = b.map_id
             self._emit(pol.after_commit(t_out, b.map_id))
+
+    def _check_order(self, t: float, belief, frame_at) -> None:
+        """Stateful early warning: the person has started step j but a prerequisite of j was never seen.
+        Confirmed by the verifier (is j really underway?) before the wearer hears anything."""
+        if not self.cfg.order_check or self.cfg.join_mid_task or self.ver is None or belief.map_p < self.cfg.order_min_p:
+            return
+        if t - self.policy.last_card_t < self.policy.cfg.cooldown_s:
+            return
+        j = belief.map_id
+        if j in self._order_flagged:
+            return
+        missing = [p for p in self.tracker.pred.get(j, []) if p not in self.tracker.completed
+                   and self._max_mass.get(p, 0.0) < self.cfg.order_unseen_mass]
+        if not missing:
+            return
+        frames, times = span_keyframes(frame_at, t)
+        if not frames:
+            return
+        node = self.graph.node(j)
+        req = VerifyRequest(t=t, frames=frames, node=node, graph=self.graph, checks=node.checks,
+                            context={"frame_ages": [t - x for x in times]}, features=dict(self._feat_now))
+        v = (self.esc or self.ver).verify(req)
+        pc, _ = self._calibrated(v, "escalation" if self.esc else "primary")
+        self._log_verdict(t, v, "order_check", pc)
+        # 'in_progress' or 'deviation' on j with low P(complete) => j is underway now
+        if v.error is None and v.visibility == "ok" and pc <= 0.5 and v.confidence >= self.cfg.order_conf:
+            self._order_flagged.add(j)
+            self.policy.last_card_t = t
+            first = self.graph.node(missing[0])
+            t_out = t + v.latency_ms / 1000.0
+            self.user.on_mistake()
+            self._emit([Action(t_out, "mistake", f"Hold on: it looks like you skipped '{first.name}'. "
+                                                f"{first.instruction_expert} first.", j,
+                               {"what": f"'{node.name}' started before '{first.name}'", "type": "wrong_order",
+                                "mistake_id": "order", "missing": missing, "p": round(v.confidence, 3)})])
 
     def _calibrated(self, v: Verdict, which: str) -> tuple[float, float]:
         cal, dcal = self.cals.get(which, (None, None))
