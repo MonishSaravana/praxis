@@ -64,7 +64,12 @@ def engine_config(overrides: dict) -> EngineConfig:
     stack_thr = harness.load_stack()["boundary_thr"]
     base = EngineConfig(tracker=tuned_tracker(), policy=tuned_policy(), commit_on_switch_p=commit_p(), boundary_thr=stack_thr)
     for k, v in overrides.items():
-        setattr(base, k, v)
+        if k.startswith("policy."):
+            setattr(base.policy, k.split(".", 1)[1], v)
+        elif k.startswith("tracker."):
+            setattr(base.tracker, k.split(".", 1)[1], v)
+        else:
+            setattr(base, k, v)
     return base
 
 
