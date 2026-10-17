@@ -367,6 +367,151 @@ def adaptive_detail(run_name: str = "fused") -> dict:
     return res
 
 
+
+def distill(teacher: str = "claude_strong", alpha_gt: float = 0.5) -> dict:
+    """L7: train a local student on teacher verdicts (+GT) from TRAIN-split checks; evaluate on held-out eval-clip
+    checks: agreement with the teacher, accuracy vs GT, latency, cost."""
+    import time as _t
+    import torch
+    from .eval.verifier_eval import fit_calibrators, load
+    from .flywheel.distill import DistilledVerifier, featurize, predict, train_student
+    from .verify.calibration import raw_p_complete
+    cal = fit_calibrators(teacher)
+    tr = load(f"{teacher}_train")
+    te = load(f"{teacher}_eval")
+    Xtr, ktr = featurize(tr)
+    Xte, kte = featurize(te)
+    tr = [tr[i] for i in ktr]
+    te = [te[i] for i in kte]
+    p_raw = lambda rows: np.array([raw_p_complete(r["verdict"]["step_status"], r["verdict"]["confidence"]) for r in rows])
+    yt_tr = cal[0](p_raw(tr)) if cal else p_raw(tr)
+    yg_tr = np.array([r["y_complete"] for r in tr], float)
+    m, info = train_student(Xtr, yt_tr, yg_tr, alpha=alpha_gt)
+    DistilledVerifier.save(m, Xtr.shape[1], info=info)
+    t0 = _t.perf_counter()
+    ps = predict(m, Xte)
+    lat_ms = (_t.perf_counter() - t0) * 1000 / max(1, len(Xte))
+    # single-check latency (what the engine pays)
+    t1 = _t.perf_counter()
+    for i in range(min(50, len(Xte))):
+        predict(m, Xte[i:i + 1])
+    lat1 = (_t.perf_counter() - t1) * 1000 / max(1, min(50, len(Xte)))
+    pt = cal[0](p_raw(te)) if cal else p_raw(te)
+    y = np.array([r["y_complete"] for r in te])
+    teacher_lat = [r["verdict"]["latency_ms"] for r in te]
+    teacher_cost = [r["verdict"]["raw"].get("orig_cost_usd", r["verdict"]["cost_usd"]) for r in te]
+    from sklearn.metrics import roc_auc_score
+    res = {"teacher": teacher, "teacher_model": te[0]["verdict"]["model"] if te else None, "n_train": len(tr), "n_test": len(te),
+           "alpha_gt": alpha_gt, "features": "SigLIP2 frame (mean of last 1 s) + V-JEPA 2 window + SigLIP2 end-state text emb + product",
+           "agreement": float(((ps >= 0.5) == (pt >= 0.5)).mean()),
+           "student_acc_vs_gt": float(((ps >= 0.5) == (y == 1)).mean()), "teacher_acc_vs_gt": float(((pt >= 0.5) == (y == 1)).mean()),
+           "student_auroc": float(roc_auc_score(y, ps)) if len(set(y)) > 1 else None,
+           "teacher_auroc": float(roc_auc_score(y, pt)) if len(set(y)) > 1 else None,
+           "student_latency_ms_p50": float(lat1), "student_latency_ms_batched": float(lat_ms),
+           "teacher_latency_ms_p50": float(np.median(teacher_lat)),
+           "student_cost_per_1k_checks_usd": 0.0, "teacher_cost_per_1k_checks_usd": float(np.mean(teacher_cost) * 1000),
+           "student_device": "cpu", "train_info": info}
+    # confidence-gated routing: student answers when confident, teacher otherwise
+    conf = np.abs(ps - 0.5) * 2
+    for thr in (0.5, 0.7, 0.9):
+        use_s = conf >= thr
+        final = np.where(use_s, ps >= 0.5, pt >= 0.5)
+        res[f"routed_conf{thr}"] = {"share_handled_locally": float(use_s.mean()), "acc_vs_gt": float((final == (y == 1)).mean()),
+                                    "cost_per_1k_usd": float((~use_s).mean() * np.mean(teacher_cost) * 1000)}
+    (RESULTS / "l7").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l7" / "distill.json").write_text(json.dumps(res, indent=2))
+    return res
+
+
+
+def crops_vs_full(n: int = 120, kind: str = "claude_strong") -> dict:
+    """L1 point-tracking crops: same verifier, same eval checks, with vs without a TAPNext++ ROI crop."""
+    import random
+    from sklearn.metrics import roc_auc_score
+    from .eval.checks import load_checks
+    from .eval.verifier_eval import load
+    from .verify.calibration import raw_p_complete
+    from .tasks.compiler import load_library
+    lib = load_library()
+    ev = [c for c in load_checks("eval") if c.task_id in lib]
+    fine = [c for c in ev if any(ch.kind in ("orientation", "alignment", "quantity", "part_identity")
+                                 for ch in lib[c.task_id].node(c.node).checks)]
+    random.seed(1)
+    sub = random.sample(fine, min(n, len(fine)))
+    ids = [c.check_id for c in sub]
+    with_c = run_checks(kind, "eval", subset=ids, crops=True, workers=2)
+    base = {r["check_id"]: r for r in load(f"{kind}_eval")}
+    rows = [(r, base[r["check_id"]]) for r in with_c if r["check_id"] in base and not r["verdict"].get("error")]
+    y = np.array([b["y_complete"] for _, b in rows])
+    pc = np.array([raw_p_complete(r["verdict"]["step_status"], r["verdict"]["confidence"]) for r, _ in rows])
+    pf = np.array([raw_p_complete(b["verdict"]["step_status"], b["verdict"]["confidence"]) for _, b in rows])
+    ye = np.array([b["y_error"] for _, b in rows])
+    dc = np.array([r["verdict"]["step_status"] == "deviation" for r, _ in rows])
+    df = np.array([b["verdict"]["step_status"] == "deviation" for _, b in rows])
+    res = {"verifier": kind, "n": len(rows), "subset": "eval checks whose node has orientation/alignment/quantity/part-identity checks",
+           "full_frames": {"accuracy": float(((pf >= .5) == (y == 1)).mean()), "auroc": float(roc_auc_score(y, pf)),
+                           "deviation_precision": float(ye[df].mean()) if df.any() else None, "n_deviation": int(df.sum())},
+           "with_crops": {"accuracy": float(((pc >= .5) == (y == 1)).mean()), "auroc": float(roc_auc_score(y, pc)),
+                          "deviation_precision": float(ye[dc].mean()) if dc.any() else None, "n_deviation": int(dc.sum())},
+           "crop_rate": float(np.mean([r["n_crops"] > 0 for r, _ in rows])),
+           "tokens_full": float(np.mean([b["verdict"]["input_tokens"] for _, b in rows])),
+           "tokens_with_crops": float(np.mean([r["verdict"]["input_tokens"] for r, _ in rows]))}
+    (RESULTS / "l5").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l5" / "crops_vs_full.json").write_text(json.dumps(res, indent=2))
+    return res
+
+
+def visual_uncertainty(n: int = 60, modes=("blur", "occlude", "crop_away"), conf_thr: float = 0.7) -> dict:
+    """Degrade the view on mid-step eval checks (GT: person is on this step, in progress). Engine verifier (typed,
+    may say 'view insufficient') vs stateless baseline (same model, must answer). Count view requests vs confident
+    wrong calls."""
+    import random
+    from concurrent.futures import ThreadPoolExecutor
+    from .eval.checks import degrade, load_checks, run_verifier_on_checks, span_frames
+    from .tasks.compiler import load_library
+    from .verify.claude import StatelessBaseline
+    lib = load_library()
+    mids = [c for c in load_checks("eval") if c.kind == "mid" and c.task_id in lib]
+    random.seed(2)
+    sub = random.sample(mids, min(n, len(mids)))
+    budget = _budget(1500, 20.0)
+    ver = make_verifier("claude_strong", budget)
+    bl = StatelessBaseline("claude-opus-5-5", budget, effort="medium")
+    res = {"n": len(sub), "conf_thr": conf_thr, "verifier": "claude-opus-5-5", "modes": {}}
+    for mode in (None,) + tuple(modes):
+        tag = mode or "none"
+        out = RESULTS.parent / "data" / "verdicts" / f"uncert_engine_{tag}.jsonl"
+        er = run_verifier_on_checks(ver, sub, lib, out, workers=4, degrade_mode=mode, log_every=0)
+
+        def base_one(ci):
+            fr, ages = span_frames(ci.video, ci.t_abs)
+            if mode:
+                fr = degrade(fr, mode, seed=hash(ci.check_id) % 1000)
+            g = lib[ci.task_id]
+            r = bl.query(fr, g.title, [nd.name for nd in g.nodes], frame_ages=ages)
+            return ci, r
+        with ThreadPoolExecutor(4) as ex:
+            br = list(ex.map(base_one, sub))
+        e_view = np.mean([r["verdict"]["visibility"] == "insufficient" for r in er])
+        e_wrong = np.mean([r["verdict"]["visibility"] == "ok" and r["verdict"]["confidence"] >= conf_thr and
+                           r["verdict"]["step_status"] == "complete" for r in er])
+        e_false_mistake = np.mean([r["verdict"]["step_status"] == "deviation" and r["verdict"]["confidence"] >= conf_thr and
+                                   not r["y_error"] for r in er])
+        name_of = lambda ci: lib[ci.task_id].node(ci.node).name
+        b_ok = [(ci, r) for ci, r in br if "error" not in r]
+        b_wrong = np.mean([r["current_step"] != name_of(ci) and r["step_confidence"] >= conf_thr for ci, r in b_ok])
+        b_false_mistake = np.mean([r["mistake"] and r["mistake_confidence"] >= conf_thr and not ci.y_error for ci, r in b_ok])
+        res["modes"][tag] = {"engine_view_request_rate": float(e_view), "engine_confident_wrong_rate": float(e_wrong),
+                             "engine_confident_false_mistake_rate": float(e_false_mistake),
+                             "baseline_confident_wrong_step_rate": float(b_wrong),
+                             "baseline_confident_false_mistake_rate": float(b_false_mistake), "baseline_n": len(b_ok)}
+        print(tag, res["modes"][tag], flush=True)
+    res["spend_usd"] = budget.usd
+    (RESULTS / "l5").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l5" / "visual_uncertainty.json").write_text(json.dumps(res, indent=2))
+    return res
+
+
 if __name__ == "__main__":
     import sys
     t0 = time.time()

@@ -102,3 +102,23 @@ def dataset_graph(recipe: str) -> TaskGraph:
     return TaskGraph(task_id=cc4d.slug(recipe), title=recipe, domain="cooking", source="dataset step list (uncompiled)",
                      nodes=nodes, start=[s["id"] for s in steps if s["id"] not in has_pred] or [steps[0]["id"]],
                      compiler={"model": None, "note": "uncompiled dataset graph; replaced by L3 output once compiled"})
+
+
+def build_industreal(model: str = "claude-fable-5-1") -> TaskGraph:
+    """Toy-car assembly graph for IndustReal demo clips (no GT on these clips; qualitative showcase only).
+    Steps = the 'Install ...' states expected in the assembly procedure (IndustReal PSR/procedure_info.json)."""
+    from ..data import industreal
+    from ..perception.backbones import SigLIP
+    steps = industreal.procedure_steps("assy")
+    info = json.loads(industreal.PROCEDURE_INFO.read_text())
+    errs = [d["description"] for d in info if d["description"].startswith("Incorrectly installed")]
+    src = ("Assemble a construction-toy car (IndustReal, Schoonbeek et al. WACV 2024) on a work table from loose parts: "
+           "a base frame, front and rear chassis, chassis pins, a front bracket with a screw, and front and rear wheel "
+           "assemblies. Components are installed in the order below.\n" +
+           "\n".join(f"{i + 1}. {s['name']}" for i, s in enumerate(steps)))
+    g = compile_procedure("industreal_assy", "assembly", src, [{"id": s["id"], "name": s["name"]} for s in steps],
+                          ordering=None, mistake_hints=errs + ["Part installed rotated 180 degrees",
+                                                               "Wrong pin used (short vs long)", "Screw not tightened"],
+                          model=model, source="IndustReal procedure_info.json (assembly install states)")
+    save_graph(g, embed_graph(g, SigLIP()))
+    return g
