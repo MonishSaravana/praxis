@@ -65,6 +65,10 @@ def run_clip(clip: Clip, stack: dict, run_name: str, ecfg: EngineConfig, verifie
              user=None, frames: list[np.ndarray] | None = None, point_tracker=None, calibrators: dict | None = None,
              localizer=None) -> Path:
     feats, _ = load_features(clip.clip_id)
+    if len(feats.t) and feats.t[-1] > clip.duration + 0.5:      # clip shorter than its feature file (e.g. truncated)
+        m = feats.t <= clip.duration
+        feats = replace(feats, t=feats.t[m], frame=feats.frame[m], hands=feats.hands[m], window=feats.window[m],
+                        change=feats.change[m])
     scores = stack["detector"].score(feats)
     t_first = 0.0
     if join_at is not None:      # mid-task join: drop everything before join_at

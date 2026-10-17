@@ -1,0 +1,336 @@
+{
+  "protocol": "leave-one-recording-out over train-split recordings; local-only engine; first 420s",
+  "best": {
+    "local_weight": 0.1,
+    "boundary_weight": 0.0,
+    "commit_on_switch_p": 0.7
+  },
+  "best_mean_step_acc": 0.47451475230257634,
+  "coarse_grid": [
+    {
+      "local_weight": 0.15,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.45837846708000596,
+      "n": 24
+    },
+    {
+      "local_weight": 0.15,
+      "boundary_weight": 1.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.4380738461800721,
+      "n": 24
+    },
+    {
+      "local_weight": 0.15,
+      "boundary_weight": 1.0,
+      "commit_on_switch_p": 0.6,
+      "mean_step_acc": 0.43240476781171494,
+      "n": 24
+    },
+    {
+      "local_weight": 0.3,
+      "boundary_weight": 1.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.42087224689182606,
+      "n": 24
+    },
+    {
+      "local_weight": 0.3,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.3992308328197755,
+      "n": 24
+    },
+    {
+      "local_weight": 0.3,
+      "boundary_weight": 1.0,
+      "commit_on_switch_p": 0.6,
+      "mean_step_acc": 0.3984618188251838,
+      "n": 24
+    },
+    {
+      "local_weight": 0.15,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.6,
+      "mean_step_acc": 0.3890788298557259,
+      "n": 24
+    },
+    {
+      "local_weight": 0.6,
+      "boundary_weight": 1.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.3853599708891607,
+      "n": 24
+    },
+    {
+      "local_weight": 0.3,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.6,
+      "mean_step_acc": 0.35738650066939215,
+      "n": 24
+    },
+    {
+      "local_weight": 0.6,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.3182464338033288,
+      "n": 24
+    },
+    {
+      "local_weight": 0.6,
+      "boundary_weight": 1.0,
+      "commit_on_switch_p": 0.6,
+      "mean_step_acc": 0.2849231343305669,
+      "n": 24
+    },
+    {
+      "local_weight": 0.6,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.6,
+      "mean_step_acc": 0.25825093837733054,
+      "n": 24
+    },
+    {
+      "local_weight": 1.0,
+      "boundary_weight": 1.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.2491107427098096,
+      "n": 24
+    },
+    {
+      "local_weight": 1.0,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.2219052895264562,
+      "n": 24
+    },
+    {
+      "local_weight": 1.0,
+      "boundary_weight": 1.0,
+      "commit_on_switch_p": 0.6,
+      "mean_step_acc": 0.18380788203819723,
+      "n": 24
+    },
+    {
+      "local_weight": 1.0,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.6,
+      "mean_step_acc": 0.1649934761235915,
+      "n": 24
+    }
+  ],
+  "fine_grid": [
+    {
+      "local_weight": 0.1,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.7,
+      "mean_step_acc": 0.47451475230257634,
+      "n": 24
+    },
+    {
+      "local_weight": 0.08,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.9,
+      "mean_step_acc": 0.46657787238346343,
+      "n": 24
+    },
+    {
+      "local_weight": 0.08,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.46657787238346343,
+      "n": 24
+    },
+    {
+      "local_weight": 0.08,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.7,
+      "mean_step_acc": 0.46657787238346343,
+      "n": 24
+    },
+    {
+      "local_weight": 0.05,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.9,
+      "mean_step_acc": 0.4646419931155544,
+      "n": 24
+    },
+    {
+      "local_weight": 0.05,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.4646419931155544,
+      "n": 24
+    },
+    {
+      "local_weight": 0.05,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.7,
+      "mean_step_acc": 0.4646419931155544,
+      "n": 24
+    },
+    {
+      "local_weight": 0.15,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.7,
+      "mean_step_acc": 0.46266456622068075,
+      "n": 24
+    },
+    {
+      "local_weight": 0.1,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.9,
+      "mean_step_acc": 0.46228967396086035,
+      "n": 24
+    },
+    {
+      "local_weight": 0.1,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.46228967396086035,
+      "n": 24
+    },
+    {
+      "local_weight": 0.03,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.9,
+      "mean_step_acc": 0.4609415256541472,
+      "n": 24
+    },
+    {
+      "local_weight": 0.03,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.4609415256541472,
+      "n": 24
+    },
+    {
+      "local_weight": 0.03,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.7,
+      "mean_step_acc": 0.4609415256541472,
+      "n": 24
+    },
+    {
+      "local_weight": 0.1,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.7,
+      "mean_step_acc": 0.46078251048700697,
+      "n": 24
+    },
+    {
+      "local_weight": 0.15,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.9,
+      "mean_step_acc": 0.459285694427024,
+      "n": 24
+    },
+    {
+      "local_weight": 0.15,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.45837846708000596,
+      "n": 24
+    },
+    {
+      "local_weight": 0.08,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.7,
+      "mean_step_acc": 0.45586991375082525,
+      "n": 24
+    },
+    {
+      "local_weight": 0.08,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.9,
+      "mean_step_acc": 0.4553529575887078,
+      "n": 24
+    },
+    {
+      "local_weight": 0.08,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.4553529575887078,
+      "n": 24
+    },
+    {
+      "local_weight": 0.05,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.9,
+      "mean_step_acc": 0.45152281297174346,
+      "n": 24
+    },
+    {
+      "local_weight": 0.05,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.45152281297174346,
+      "n": 24
+    },
+    {
+      "local_weight": 0.05,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.7,
+      "mean_step_acc": 0.45152281297174346,
+      "n": 24
+    },
+    {
+      "local_weight": 0.1,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.9,
+      "mean_step_acc": 0.4494597014019197,
+      "n": 24
+    },
+    {
+      "local_weight": 0.1,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.44890855501744004,
+      "n": 24
+    },
+    {
+      "local_weight": 0.15,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.4464615131322589,
+      "n": 24
+    },
+    {
+      "local_weight": 0.15,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.9,
+      "mean_step_acc": 0.4454053896939365,
+      "n": 24
+    },
+    {
+      "local_weight": 0.15,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.7,
+      "mean_step_acc": 0.44452753131234807,
+      "n": 24
+    },
+    {
+      "local_weight": 0.03,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.9,
+      "mean_step_acc": 0.43864094970228046,
+      "n": 24
+    },
+    {
+      "local_weight": 0.03,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.8,
+      "mean_step_acc": 0.43864094970228046,
+      "n": 24
+    },
+    {
+      "local_weight": 0.03,
+      "boundary_weight": 0.5,
+      "commit_on_switch_p": 0.7,
+      "mean_step_acc": 0.43864094970228046,
+      "n": 24
+    }
+  ],
+  "note": "coarse grid best was at its lower edge (local_weight 0.15), so a finer grid below it was added; best overall is used by every engine run"
+}

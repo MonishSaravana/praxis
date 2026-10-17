@@ -389,7 +389,8 @@ def replay(engine: Engine, feats, scores: dict[str, np.ndarray], frames: list[np
     def frame_at(x: float):
         if len(frame_t) == 0 or x < frame_t[0] - 0.5:
             return None
-        return frames[int(np.argmin(np.abs(frame_t - x)))]
+        i = int(np.argmin(np.abs(frame_t - x)))
+        return frames[i] if i < len(frames) else None
 
     end = t_end if t_end is not None else float(t[-1]) if len(t) else 0.0
     tick = 1.0
