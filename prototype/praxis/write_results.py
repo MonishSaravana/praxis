@@ -150,10 +150,13 @@ def build() -> tuple[str, str]:
                   f"Everything else is handled by the local layers.")
     fp = m.get("fast_path")
     if fp:
-        md.append(f"- **Fast-path throughput** (computed from the measured L1 speeds): {num(fp['per_frame_ms'], 1)} ms per "
-                  f"frame, i.e. up to **{num(fp['max_fps'], 0)} fps** on this Mac. Breakdown: SigLIP2 "
-                  f"{num(fp['breakdown_ms']['siglip2_frame'], 1)} ms, hands {num(fp['breakdown_ms']['hands'], 1)} ms, "
-                  f"V-JEPA 2 amortized {num(fp['breakdown_ms']['vjepa2_amortized'], 1)} ms. The engine runs at 4 fps.")
+        md.append(f"- **Fast-path compute** (from the measured L1 speeds): at the engine's 4 fps, with one V-JEPA 2 window "
+                  f"per second, the local layers need {num(fp['compute_ms_per_video_s'], 0)} ms of compute per second of "
+                  f"video, about **{num(fp['realtime_factor'], 1)}× faster than real time** on this Mac. Per frame: "
+                  f"SigLIP2 {num(fp['breakdown_ms']['siglip2_frame'], 1)} ms and hands "
+                  f"{num(fp['breakdown_ms']['hands_frame'], 1)} ms; V-JEPA 2 {num(fp['breakdown_ms']['vjepa2_window'], 0)} ms "
+                  f"per window. With V-JEPA 2 kept at 1 Hz, the per-frame encoders could run at up to "
+                  f"{num(fp['max_frame_fps_with_vjepa_1hz'], 0)} fps.")
     s = m.get("l1_speed")
     if s:
         rows = [[r["backbone"], str(r["batch"]), f"{r['ms_per_item']:.1f}", f"{r['items_per_s']:.1f}"] for r in s["rows"]]
@@ -337,6 +340,26 @@ def build() -> tuple[str, str]:
                   "on head-mounted cooking video most points are lost within a few seconds. Crops were therefore "
                   "computed offline for the crop experiment only; the live plan is in docs/MODEL_ROADMAP.md. Source: "
                   "`results/l1/tapnext_speed.json`.\n")
+    lv = _jload("live/live_replay_10_18_0.json")
+    if lv and lv.get("summary"):
+        sm = lv["summary"]
+        slots = sm["frames_processed"] + (sm.get("dropped_frames") or 0)
+        rec = lv["task_recognized"][0] if lv.get("task_recognized") else None
+        md.append("## Live mode (real-time loop, replayed recording)\n")
+        md.append(f"`praxis.live` runs the whole engine in real time: L1 encoders on each incoming frame, L2, the tracker "
+                  f"and the verifiers. No webcam was available to this build, so the test fed a recorded eval clip "
+                  f"through the live loop at wall-clock speed. Frames the loop was too slow for were dropped, as a camera "
+                  f"would drop them. Source: `{lv['source']}`, {num(sm['wall_s'], 0)} s, task not given.\n")
+        md.append(f"- Task recognized: " + (f"`{rec['task_id']}` at {num(rec['t'], 0)} s." if rec else "no."))
+        md.append(f"- Frames processed: {sm['frames_processed']} of {slots} at 4 fps ({sm.get('dropped_frames')} dropped).")
+        md.append(f"- L1 per frame (SigLIP2 + hands, V-JEPA 2 at 1 Hz on a second thread), p50 / p95: "
+                  f"{num(sm['l1_frame_ms']['p50'], 0)} / {num(sm['l1_frame_ms']['p95'], 0)} ms.")
+        md.append(f"- How far each 1 s tick finished behind the camera, p50 / p95 / max: "
+                  f"{num(sm['tick_lag_s']['p50'], 2)} / {num(sm['tick_lag_s']['p95'], 2)} / {num(sm['tick_lag_s']['max'], 1)} s. "
+                  f"The worst stalls are frontier-model escalations (slowest call {num(lv['slowest_call_ms'] / 1000, 1)} s): "
+                  f"the slow path still runs inside the loop, so it blocks the fast path while it waits.")
+        md.append(f"- {lv['model_calls']} model calls, ${lv['spend_usd']:.3f}. Render: `renders/live_replay_user.mp4`.")
+        md.append(f"\nSource: `results/live/live_replay_10_18_0.json`.\n")
     pd = _jload("policy_demo.json")
     if pd and pd.get("profiles"):
         md.append("## Personalization demo (L6 user model, qualitative)\n")
@@ -531,15 +554,27 @@ def claims(m: dict) -> str:
             f"{cr['with_crops']['accuracy'] * 100:.0f}% with, AUROC {cr['full_frames']['auroc']:.2f} vs "
             f"{cr['with_crops']['auroc']:.2f}" + (f", and tracking took about {tn:.0f} s per crop on a laptop" if tn else "")
             + ". So crops are off by default.", "crops")
+    lv = _jload("live/live_replay_10_18_0.json")
+    if lv and lv.get("summary") and lv.get("task_recognized"):
+        sm, rec = lv["summary"], lv["task_recognized"][0]
+        out.append(f"- \"The whole engine runs live in real time on a laptop. We fed a recorded clip through the live "
+                   f"loop at real-time speed: it recognized the recipe in {rec['t']:.0f} seconds and gave step-by-step "
+                   f"instructions as the person worked, "
+                   f"with the local layers taking about {sm['l1_frame_ms']['p50']:.0f} ms per frame.\" "
+                   f"(`results/live/live_replay_10_18_0.json`)")
     out.append("\n## Do NOT claim (not measured or not true yet)\n")
     for s in ["Praxis runs on smart glasses. It has not been tested on glasses; the glasses adapter is a documented stub "
-              "(docs/GLASSES.md). Say instead: 'it runs live on a camera stream; glasses are an input adapter.'",
+              "(docs/GLASSES.md). Say instead: 'it runs live on a video stream in real time; glasses are one more input "
+              "adapter.'",
               "Any result on toy-car or drone assembly. The IndustReal assembly clips have no ground truth here (labels were "
               "unreachable this weekend); they are qualitative demos only.",
               "Any user study, customer, pilot, or 'helps people learn faster'. Adaptive detail is an association on "
               "public data, and on CaptainCook4D it was NOT associated with annotated errors (see RESULTS.md).",
               "Real-time point tracking. TAPNext++ ran offline for the crop experiment; it was too slow on this Mac for "
               "live use.",
+              "That live mode was tested with a webcam. It was tested on a recorded clip replayed in real time (no camera "
+              "was available to this build). Also don't say the slow path never stalls the loop: frontier-model "
+              "escalations still block it for a few seconds (results/live/).",
               "That the concept video is model output. It stays labeled 'Concept Prototype'.",
               "The application's '48 videos / 8 categories / 192 labeled action states' as if they were this build's "
               f"set. This build's eval set is {n_clips} clips / {types} procedure types / "

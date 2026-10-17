@@ -1,5 +1,5 @@
 {
-  "total_usd": 94.59248312199998,
+  "total_usd": 94.61292817599998,
   "items": {
     "L3 compile (8 recipes, Fable 5.1)": 4.16358,
     "L3 compile (IndustReal graph)": 0.43374,
@@ -24,6 +24,8 @@
     "mistake judge (Opus 5.5)": 0.020048,
     "demo: industreal_demo.json": 0.02273438999999999,
     "demo: policy_demo.json": 0.014450286,
+    "live mode: live_replay_10_18_0": 0.020445054,
+    "live mode: live_smoke": 0,
     "M2 two-clip test": 0.00170982
   },
   "untracked": [

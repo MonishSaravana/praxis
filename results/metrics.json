@@ -185,14 +185,15 @@
   ]
  },
  "fast_path": {
-  "per_frame_ms": 53.45582836889662,
-  "max_fps": 18.70703402253985,
+  "compute_ms_per_video_s": 324.558479944244,
+  "realtime_factor": 3.081108834906394,
+  "max_frame_fps_with_vjepa_1hz": 30.208309671541855,
   "breakdown_ms": {
    "siglip2_frame": 20.06566699128598,
-   "hands": 5.70636976044625,
-   "vjepa2_amortized": 27.68379161716439
+   "hands_frame": 5.70636976044625,
+   "vjepa2_window": 221.4703329373151
   },
-  "assumes": "SigLIP2 batch 1 + MediaPipe hands per frame; V-JEPA 2 (8 frames @224) every 2 s at 4 fps; measured with nothing else running"
+  "assumes": "4 fps; SigLIP2 batch 1 + MediaPipe hands per frame; one V-JEPA 2 window (8 frames @224) per second; measured with nothing else running"
  },
  "l1_quality": {
   "siglip2": {
@@ -5518,7 +5519,7 @@
   }
  },
  "spend": {
-  "total_usd": 94.59248312199998,
+  "total_usd": 94.61292817599998,
   "items": {
    "L3 compile (8 recipes, Fable 5.1)": 4.16358,
    "L3 compile (IndustReal graph)": 0.43374,
@@ -5543,6 +5544,8 @@
    "mistake judge (Opus 5.5)": 0.020048,
    "demo: industreal_demo.json": 0.02273438999999999,
    "demo: policy_demo.json": 0.014450286,
+   "live mode: live_replay_10_18_0": 0.020445054,
+   "live mode: live_smoke": 0,
    "M2 two-clip test": 0.00170982
   },
   "untracked": [

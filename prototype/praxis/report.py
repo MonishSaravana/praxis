@@ -53,15 +53,17 @@ def collect() -> dict:
         f_sig = ms.get("siglip2-base-224 (image)")
         hands = ms.get("mediapipe-hands")
         vj = ms.get("vjepa2-vitl (8f@224)")
-        # live fast path per frame at 4 fps: SigLIP2 (batch 1) + hands, plus one V-JEPA 2 window every 2 s
-        # (amortized over 8 frames); L2 head and tracker update are <1 ms (results/l2 head_fps)
+        # live fast path at the engine's 4 fps: SigLIP2 (batch 1) + hands per frame, plus one V-JEPA 2 embedding of the
+        # trailing 2 s window per second (the cadence the eval features were extracted with, perception/extract.py).
+        # The L2 head and tracker update are <1 ms (results/l2 head_fps).
         sig1 = [r for r in sp["rows"] if r["backbone"].startswith("siglip2-base-224 (image)") and r["batch"] == 1]
         sig1 = sig1[0]["ms_per_item"] if sig1 else f_sig
-        per_frame = sig1 + hands + vj / 8.0
-        put("fast_path", {"per_frame_ms": per_frame, "max_fps": 1000.0 / per_frame,
-                          "breakdown_ms": {"siglip2_frame": sig1, "hands": hands, "vjepa2_amortized": vj / 8.0},
-                          "assumes": "SigLIP2 batch 1 + MediaPipe hands per frame; V-JEPA 2 (8 frames @224) every 2 s at "
-                                     "4 fps; measured with nothing else running"}, "results/l1/l1_speed.json")
+        per_s = 4 * (sig1 + hands) + vj
+        put("fast_path", {"compute_ms_per_video_s": per_s, "realtime_factor": 1000.0 / per_s,
+                          "max_frame_fps_with_vjepa_1hz": (1000.0 - vj) / (sig1 + hands),
+                          "breakdown_ms": {"siglip2_frame": sig1, "hands_frame": hands, "vjepa2_window": vj},
+                          "assumes": "4 fps; SigLIP2 batch 1 + MediaPipe hands per frame; one V-JEPA 2 window (8 frames "
+                                     "@224) per second; measured with nothing else running"}, "results/l1/l1_speed.json")
     q = _j("l1/l1_quality_and_probes.json")
     put("l1_quality", q.get("backbones") if q else None, "results/l1/l1_quality_and_probes.json")
     put("l2", _j("l2/l2_event_detector.json") and {k: v for k, v in _j("l2/l2_event_detector.json").items() if k != "train"} | {

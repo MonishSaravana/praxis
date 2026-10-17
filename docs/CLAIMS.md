@@ -19,13 +19,15 @@ Every sentence below comes from a file under `results/`, linked after it. This f
 - "When we degraded the view (blur, occlude, crop away), Praxis asked for a better view on 77-98% of checks and was never confidently wrong. The stateless baseline has to answer, and it named the wrong step with at least 50% confidence on 12-73% of them (2-17% at 70% confidence)." (`results/l5/visual_uncertainty.json`)
 - "Escalating to the frontier model mostly cuts false alarms: with it, 4 of 17 mistake alerts named a real annotated error; without it, 3 of 24 (0.055 vs 0.089 strict false alarms per minute). Step accuracy barely changes (54% with it, 53% without). It costs $0.018 vs $0.001 per video-minute." (`results/runs/fused_no_escalation.json`)
 - "We tested zoomed-in crops from point tracking (TAPNext++) on 120 fine-grained checks. They barely changed the verifier: accuracy 79% without vs 79% with, AUROC 0.85 vs 0.86, and tracking took about 9 s per crop on a laptop. So crops are off by default." (`results/l5/crops_vs_full.json`)
+- "The whole engine runs live in real time on a laptop. We fed a recorded clip through the live loop at real-time speed: it recognized the recipe in 22 seconds and gave step-by-step instructions as the person worked, with the local layers taking about 51 ms per frame." (`results/live/live_replay_10_18_0.json`)
 
 ## Do NOT claim (not measured or not true yet)
 
-- Praxis runs on smart glasses. It has not been tested on glasses; the glasses adapter is a documented stub (docs/GLASSES.md). Say instead: 'it runs live on a camera stream; glasses are an input adapter.'
+- Praxis runs on smart glasses. It has not been tested on glasses; the glasses adapter is a documented stub (docs/GLASSES.md). Say instead: 'it runs live on a video stream in real time; glasses are one more input adapter.'
 - Any result on toy-car or drone assembly. The IndustReal assembly clips have no ground truth here (labels were unreachable this weekend); they are qualitative demos only.
 - Any user study, customer, pilot, or 'helps people learn faster'. Adaptive detail is an association on public data, and on CaptainCook4D it was NOT associated with annotated errors (see RESULTS.md).
 - Real-time point tracking. TAPNext++ ran offline for the crop experiment; it was too slow on this Mac for live use.
+- That live mode was tested with a webcam. It was tested on a recorded clip replayed in real time (no camera was available to this build). Also don't say the slow path never stalls the loop: frontier-model escalations still block it for a few seconds (results/live/).
 - That the concept video is model output. It stays labeled 'Concept Prototype'.
 - The application's '48 videos / 8 categories / 192 labeled action states' as if they were this build's set. This build's eval set is 48 clips / 8 procedure types / 302 annotated step segments / 170 timed errors (CaptainCook4D). Quote these instead.
 - Mistake precision from time-window matching (it is optimistic). Use the strict, judge-verified numbers.

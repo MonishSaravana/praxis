@@ -47,7 +47,7 @@ Source: `results/runs/fused.json`.
 - **Progress latency** (GT end of a step → Praxis marks it done, either verified or because the belief moved on; signed), p50 / p95: 6.1 s / 192.6 s. The long tails come from the 'stuck belief' failures (see the failure analysis).
 - **Verifier call latency** (live calls inside engine runs), p50 / p95: 192 ms / 6024 ms.
 - **Share of frames escalated to the slow path:** 12.9%. Everything else is handled by the local layers.
-- **Fast-path throughput** (computed from the measured L1 speeds): 53.5 ms per frame, i.e. up to **19 fps** on this Mac. Breakdown: SigLIP2 20.1 ms, hands 5.7 ms, V-JEPA 2 amortized 27.7 ms. The engine runs at 4 fps.
+- **Fast-path compute** (from the measured L1 speeds): at the engine's 4 fps, with one V-JEPA 2 window per second, the local layers need 325 ms of compute per second of video, about **3.1× faster than real time** on this Mac. Per frame: SigLIP2 20.1 ms and hands 5.7 ms; V-JEPA 2 221 ms per window. With V-JEPA 2 kept at 1 Hz, the per-frame encoders could run at up to 30 fps.
 
 **L1 speed on this Mac** (MPS, fp16, measured with nothing else running):
 
@@ -216,6 +216,18 @@ Chosen: {"tracker": {"local_weight": 0.1, "boundary_weight": 0.0, "commit_on_swi
 
 Measured while other jobs were running on the machine. TAPNext++ is far from real time here, and on head-mounted cooking video most points are lost within a few seconds. Crops were therefore computed offline for the crop experiment only; the live plan is in docs/MODEL_ROADMAP.md. Source: `results/l1/tapnext_speed.json`.
 
+## Live mode (real-time loop, replayed recording)
+
+`praxis.live` runs the whole engine in real time: L1 encoders on each incoming frame, L2, the tracker and the verifiers. No webcam was available to this build, so the test fed a recorded eval clip through the live loop at wall-clock speed. Frames the loop was too slow for were dropped, as a camera would drop them. Source: `replay:data/raw/cc4d/videos/10_18_360p.mp4@0.0`, 151 s, task not given.
+
+- Task recognized: `cc4d_pinwheels` at 22 s.
+- Frames processed: 577 of 605 at 4 fps (28 dropped).
+- L1 per frame (SigLIP2 + hands, V-JEPA 2 at 1 Hz on a second thread), p50 / p95: 51 / 101 ms.
+- How far each 1 s tick finished behind the camera, p50 / p95 / max: 0.08 / 0.37 / 4.4 s. The worst stalls are frontier-model escalations (slowest call 4.1 s): the slow path still runs inside the loop, so it blocks the fast path while it waits.
+- 27 model calls, $0.020. Render: `renders/live_replay_user.mp4`.
+
+Source: `results/live/live_replay_10_18_0.json`.
+
 ## Personalization demo (L6 user model, qualitative)
 
 The same clip (`10_18_0`) run twice with the profile fixed to novice and then to expert. Renders: `renders/policy_demo_novice_user.mp4`, `renders/policy_demo_expert_user.mp4` (80-135 s of the clip). Instructions given in that window:
@@ -249,7 +261,7 @@ No metric is computed from these clips. The official step labels were unreachabl
 
 ## Spend
 
-Tracked API spend for this build: **$94.59**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
+Tracked API spend for this build: **$94.61**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
 
 - hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total
 - 72 mistake-judge calls (Opus 5.5, effort low, one short text prompt each) made before the judge stored per-call cost
@@ -445,6 +457,15 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
     - TAPNext++ took several seconds per crop on this Mac, and on head-mounted video the points drift off the
       hands quickly.
     - Crops stay off by default. A faster tracker, or crops from hand boxes alone, would be the next thing to try.
+
+16. **Live mode crashed on its first real-time run.**
+    - Symptom: a Metal assertion ("A command encoder is already encoding to this command buffer") a few seconds
+      in.
+    - Cause: the V-JEPA 2 thread and the main loop's SigLIP2 call used the GPU (MPS) at the same time.
+    - Fix: one lock around GPU calls. After that, a 151 s real-time replay ran end to end (`results/live/`).
+    - Still open: verifier calls run inside the loop, so a frontier-model escalation blocks the fast path for a
+      few seconds and frames are dropped meanwhile. The fix is to run the slow path on its own thread and fold
+      verdicts in when they arrive.
 
 ## Limitations
 

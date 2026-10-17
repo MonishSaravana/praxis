@@ -46,8 +46,9 @@ Legend:
 
 ## Two speeds
 - **Fast path (every frame).**
-  - L1 runs on each frame: SigLIP2 image embedding, DINOv2, hand landmarks, and the 1–SSIM change score.
-    Each V-JEPA 2 window embedding is computed every 2 s.
+  - L1 runs on each frame: SigLIP2 image embedding, hand landmarks, and the 1–SSIM change score. A V-JEPA 2
+    embedding of the trailing 2 s window is computed once per second. (DINOv2 is extracted offline only, for the
+    backbone comparison.)
   - L2 scores step boundaries and onsets. L3b accumulates task evidence. L4 folds in local evidence once per
     second.
   - Measured speeds are in `results/l1/l1_speed.json` and `results/RESULTS.md`.
