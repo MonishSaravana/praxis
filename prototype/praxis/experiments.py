@@ -195,8 +195,77 @@ def _crops_fn():
     return fn
 
 
+
+# ------------------------------------------------------------------------------------- tracker tuning (train only)
+def _probe_items(clips):
+    from .tasks.train_probes import _labels
+    out = {}
+    for c in clips:
+        p = FEATURES / f"{c.clip_id}.npz"
+        if p.exists():
+            z = np.load(p)
+            out[c.clip_id] = (c, z)
+    return out
+
+
+def tune_tracker(max_s: float = 420.0) -> dict:
+    """Leave-one-recording-out on the TRAIN split: fit step probes on the other train recordings of the recipe,
+    replay the local-only engine on the held-out one, grid-search tracker temperatures by step accuracy."""
+    import itertools
+    from dataclasses import replace as dc_replace
+    from .data.cc4d import RECIPES, recipe_steps, slug
+    from .engine import EngineConfig
+    from .eval.harness import run_clip, score_clip
+    from .events.detector import HeuristicDetector
+    from .evidence import ProbeEvidence
+    from .state_tracker import TrackerConfig
+    from .tasks.build_library import dataset_graph
+    from .tasks.train_probes import _labels
+    man = load_manifest()
+    clips = [Clip.from_json(c) for c in man["train"]]
+    have = {c.clip_id: c for c in clips if (FEATURES / f"{c.clip_id}.npz").exists()}
+    grid = list(itertools.product([0.15, 0.3, 0.6, 1.0], [0.0, 1.0], [0.6, 0.8]))
+    scores = {g: [] for g in grid}
+    det = HeuristicDetector()
+    for r in RECIPES:
+        tid = slug(r)
+        ids = [s["id"] for s in recipe_steps(r)[0]]
+        rec = [c for c in have.values() if c.task_id == tid]
+        if len(rec) < 2:
+            continue
+        g = dataset_graph(r)
+        for held in rec:
+            X, y = [], []
+            for c in rec:
+                if c.clip_id == held.clip_id:
+                    continue
+                z = np.load(FEATURES / f"{c.clip_id}.npz")
+                X.append(np.concatenate([z["siglip"], z["window"]], 1).astype(np.float32)[::2])
+                y.append(_labels(c, z["t"], ids)[::2])
+            pe = ProbeEvidence.fit(ids, np.concatenate(X), np.concatenate(y))
+            hc = dc_replace(held, end=min(held.end, max_s))
+            stack = {"library": {tid: g}, "evidence": {tid: pe}, "recognizer": None, "detector": det}
+            for gp in grid:
+                lw, bw, cp = gp
+                ecfg = EngineConfig(tracker_mode="local", use_verifier=False, recognize=False, commit_on_switch_p=cp,
+                                    tracker=TrackerConfig(local_weight=lw, boundary_weight=bw))
+                p = run_clip(hc, stack, "tune_tracker", ecfg, oracle_task=True, frames=[])
+                scores[gp].append(score_clip(hc, p)["step_acc"])
+        print(r, "done", flush=True)
+    table = sorted(((float(np.mean(v)), k) for k, v in scores.items() if v), reverse=True)
+    best = table[0][1]
+    res = {"grid": [{"local_weight": k[0], "boundary_weight": k[1], "commit_on_switch_p": k[2], "mean_step_acc": m,
+                     "n": len(scores[k])} for m, k in table],
+           "best": {"local_weight": best[0], "boundary_weight": best[1], "commit_on_switch_p": best[2]},
+           "protocol": "leave-one-recording-out over train-split recordings; local-only engine; first %ds" % int(max_s)}
+    (RESULTS / "l4").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l4" / "tracker_tuning.json").write_text(json.dumps(res, indent=2))
+    print(json.dumps(res["best"]), table[:3])
+    return res
+
+
 if __name__ == "__main__":
     import sys
     t0 = time.time()
-    {"l2": l2, "probes": probes}[sys.argv[1]]()
+    {"l2": l2, "probes": probes, "tune": tune_tracker}[sys.argv[1]]()
     print("done in", round(time.time() - t0), "s")

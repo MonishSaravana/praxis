@@ -105,3 +105,34 @@ def poll_and_fetch(every_s: int = 300, max_hours: float = 30) -> None:
 
 if __name__ == "__main__":
     poll_and_fetch()
+
+
+# ------------------------------------------------------------------------------------------- demo clips
+# Without the official labels we can still run the engine on IndustReal video for qualitative assembly
+# demos (clearly labeled "no ground truth on this clip"); no IndustReal metric is reported from these.
+PROCEDURE_INFO = RAW / "repo" / "PSR" / "procedure_info.json"
+DEMO_RECORDINGS = ["08_assy_2_4", "07_assy_2_3", "04_assy_2_1", "08_assy_0_1", "22_assy_2_3"]
+
+
+def procedure_steps(kind: str = "assy") -> list[dict]:
+    """Install steps expected in the assembly ('assy') procedure, in the canonical state order."""
+    info = json.loads(PROCEDURE_INFO.read_text())
+    key = "expected_in_assy" if kind == "assy" else "expected_in_main"
+    return [{"id": f"ir{d['id']}", "name": d["description"], "state_idx": d["state_idx"]}
+            for d in info if d[key] and d["install"]]
+
+
+def demo_clips() -> list[dict]:
+    import cv2
+    out = []
+    for rec in DEMO_RECORDINGS:
+        v = RAW / "videos" / f"{rec}.mp4"
+        if not v.exists():
+            continue
+        cap = cv2.VideoCapture(str(v))
+        dur = cap.get(cv2.CAP_PROP_FRAME_COUNT) / (cap.get(cv2.CAP_PROP_FPS) or 10.0)
+        cap.release()
+        out.append({"clip_id": f"ir_{rec}", "dataset": "IndustReal", "task_id": "industreal_assy", "recording": rec,
+                    "video": str(v), "start": 0.0, "end": float(dur), "split": "demo_no_gt", "segments": [],
+                    "missing_steps": [], "person": rec.split("_")[0]})
+    return out
