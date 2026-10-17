@@ -1,11 +1,11 @@
 """Does a code change leave the offline replay (engine.replay, used by every evaluation) unchanged?
 
-Model answers are not reproducible on a re-run: the Jev completion-check cache key includes random per-request asset
-ids (verify/jev.py), so every re-run asks Jev again and gets slightly different answers. So this check feeds the engine
-the answers recorded in a saved run log instead (`Recorded`, below): each model call is answered with the next
-recorded answer of that model, after checking that the engine asked the same question (same tick and step for a
-completion check, same candidate steps for "which step?"). If the engine is unchanged, it asks exactly the recorded
-questions and writes the same log; anything else shows up as a mismatch or as a differing record.
+The saved runs' Jev answers cannot be replayed from the response cache: until the cache key was made content-based
+(verify/jev.py), it included random per-request asset ids, so a re-run asks Jev again and gets slightly different
+answers. So this check feeds the engine the answers recorded in a saved run log instead (`Recorded`, below): each model
+call is answered with the next recorded answer of that model, after checking that the engine asked the same question
+(same tick and step for a completion check, same candidate steps for "which step?"). If the engine is unchanged, it asks
+exactly the recorded questions and writes the same log; anything else shows up as a mismatch or as a differing record.
 
   python -m praxis.eval.replay_check run --tag _recorded_pre     # before the change
   python -m praxis.eval.replay_check run --tag _recorded_post    # after it
@@ -250,8 +250,9 @@ def diff(tag: str, against: str, cached_attempt: str | None = None) -> dict:
     out = {"what": "offline replay (engine.replay, used by every evaluation) re-run on the model answers recorded in "
                    "the saved run logs; every logged record compared field by field, ignoring only the write time "
                    "('wall'), the run name/id and engine-config keys in the meta record",
-           "why_recorded_answers": "the Jev completion-check cache key includes random per-request asset ids "
-                                   "(verify/jev.py), so a cached re-run still asks Jev again and gets different answers",
+           "why_recorded_answers": "the saved runs' Jev completion checks were cached under keys that included random "
+                                   "per-request asset ids (fixed since, verify/jev.py), so a cached re-run asks Jev "
+                                   "again and gets different answers",
            "clips": CLIPS,
            "runs": {t: {"mismatched_questions": sum(len(c["mismatches"]) for c in r["clips"]),
                         "recorded_answers_unused": sum(c["recorded_answers_unused"] for c in r["clips"]),

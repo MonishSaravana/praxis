@@ -68,6 +68,16 @@ def _asset(rgb: np.ndarray, max_side: int = 768) -> tuple[str, dict, bytes]:
     return ref, {"type": "image", "format": "jpg", "data_base64": b64(jpg)}, jpg
 
 
+def _stable_refs(obj, names: dict[str, str]):
+    """Copy of `obj` with each asset ref replaced by its stable name, for response-cache keys: the refs are random
+    per request, so a key built from them never matches and every re-run would ask Jev again."""
+    if isinstance(obj, dict):
+        return {k: _stable_refs(v, names) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_stable_refs(v, names) for v in obj]
+    return names.get(obj, obj) if isinstance(obj, str) else obj
+
+
 class JevVerifier:
     name = "jev"
 
@@ -132,11 +142,11 @@ class JevVerifier:
 
     def verify(self, req: VerifyRequest) -> Verdict:
         node = req.node
-        assets, frames_state, raws = {}, [], []
+        assets, frames_state, raws, names = {}, [], [], {}
         ages = req.context.get("frame_ages", [None] * len(req.frames))
         for f, ago in zip(req.frames, ages):
             ref, a, jpg = _asset(f, self.img_side)
-            assets[ref] = a
+            assets[ref], names[ref] = a, f"img{len(raws)}"
             raws.append(jpg)
             frames_state.append({"seconds_ago": round(float(ago), 1) if ago is not None else None, "frame": ref})
         state: dict = {
@@ -147,7 +157,7 @@ class JevVerifier:
         }
         for j, c in enumerate(req.crops):
             ref, a, jpg = _asset(c, 512)
-            assets[ref] = a
+            assets[ref], names[ref] = a, f"img{len(raws)}"
             raws.append(jpg)
             state.setdefault("zoomed_crops", []).append(ref)
         last = f"frames[{len(frames_state) - 1}].frame"
@@ -165,7 +175,8 @@ class JevVerifier:
                 crit[m.id] = f"{m.description} Looks like: {m.visual_cue}"
             q["mistake"] = {"type": "choice", "instructions": "Which of these mistakes, if any, is the person making in `frames`?",
                             "criteria": crit}
-        key = ResponseCache.key(PROMPT_VERSION, self.model, state, q, *raws)
+        # keyed on content: each ref -> its position, whose JPEG bytes follow (the request sent keeps the random refs)
+        key = ResponseCache.key(PROMPT_VERSION, self.model, _stable_refs(state, names), q, *raws)
         cached = self.cache.get(key) if self.cache else None
         try:
             if cached:

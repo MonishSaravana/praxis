@@ -562,17 +562,36 @@ def live_section() -> list[str]:
                   f"{'identical' if sv['eval_scores_identical'] and v['eval_scores_identical'] else 'NOT identical'}.")
         ca = rc.get("cached_rerun_attempt")
         if ca:
-            md.append(f"- Recorded answers were needed because cached re-runs are not reproducible: the Jev completion-"
-                      f"check cache key includes random per-request ids, so a re-run asks Jev again. Re-running the same "
+            md.append(f"- Recorded answers were needed because cached re-runs were not reproducible: the Jev completion-"
+                      f"check cache key included random per-request ids, so a re-run asked Jev again. Re-running the same "
                       f"clips on the caches (no code change) reproduced {ca['vs_saved_runs']['identical_records']} of "
                       f"{ca['vs_saved_runs']['records']} records and the eval scores of "
                       f"{ca['clips_with_identical_eval_scores']} of {ca['scored_clips']} clips; its cache misses cost "
                       f"${ca['spend_usd']:.3f}.")
+    cr = _jload("live/checks/cached_rerun.json")
+    if cr:
+        reruns = list(cr["runs"].values())
+        vc = [r["completion_checks"].get(cr["verifier"], {"checks": 0, "from_cache": 0}) for r in reruns]
+        c2, later = cr["comparisons"][0], cr["comparisons"][1:]
+        hit_only = set(c2["log"]["field_differences"]) <= {"verdict/cached", "verdict/cost_usd"}
+        md.append(f"- The Jev cache key is fixed: it is now built from the image content (`verify/jev.py`). Clip "
+                  f"{cr['clip']}, re-run {len(reruns)} times on the caches: the first run asked Jev "
+                  f"{vc[0]['checks'] - vc[0]['from_cache']} of its {vc[0]['checks']} checks again (answers cached under "
+                  f"the old key are unreachable; ${reruns[0]['spend_usd']:.4f}). Each later run answered "
+                  f"{min(v['from_cache'] for v in vc[1:])} of {vc[1]['checks']} from the cache and added "
+                  f"{sum(sum(r['new_cache_files'].values()) for r in reruns[1:])} cache entries "
+                  f"(${sum(r['spend_usd'] for r in reruns[1:]):.4f}). The second run logged "
+                  f"{c2['log']['identical_records']} of {c2['log']['records']} records exactly as the first ("
+                  + ("the rest differ only in being marked cached at $0" if hit_only else
+                     f"the rest differ in {', '.join(sorted(c2['log']['field_differences']))}") + ")"
+                  + "".join(f"; run {i + 3} matched run {i + 2} in {c['log']['identical_records']} of "
+                            f"{c['log']['records']}" for i, c in enumerate(later)) + ".")
     rr = _jload("live/render/live_replay_user.json")
     md.append(f"\nRender: `renders/live_replay_user.mp4`"
               + (f" (drawn from `{rr['log']}`, {num(rr['t0'], 0)}-{num(rr['t1'], 0)} s)" if rr else "") + ". Sources: "
               + ", ".join(f"`results/live/{f}.json`" for _, f, _ in runs)
-              + (", `results/live/checks/replay_unchanged.json`" if rc else "") + ".\n")
+              + (", `results/live/checks/replay_unchanged.json`" if rc else "")
+              + (", `results/live/checks/cached_rerun.json`" if cr else "") + ".\n")
     return md
 
 

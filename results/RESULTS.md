@@ -256,9 +256,10 @@ The same recording ran twice: first with model calls inline (a tick waits for it
 - The async loop folds answers in between frames, so an answer took effect a median 0.25 s (max 0.49 s) after its call returned. In both runs some answers came from the response cache, because the replayed frames match earlier runs of this clip (13 of 24 requests inline, 16 of 23 async); those come back in milliseconds, so the "took effect" rows mix live calls and cache hits.
 - Folding an answer in (logging it, re-running the filter from its tick, the policy) took 0.2 ms median and 8.7 ms at most on the main thread. No check had to be skipped as a duplicate of one still out.
 - Offline replay is unchanged. `replay()` (every evaluation) keeps model calls inline. Re-running 10 eval clips on the model answers recorded in their saved logs, the engine asked the recorded questions in order (0 mismatches) and wrote 6717 of 6717 records exactly as the engine before this change did. Against the saved logs, 6680 of 6717 records are identical; the rest differ only in fields the log format gained after those runs (`action/detail.chip`, `action/detail.draft`); `task_draft/cached`: the replay's open-set draft comes from the drafting response cache (the saved run made the call). Eval scores recomputed from the logs are identical.
-- Recorded answers were needed because cached re-runs are not reproducible: the Jev completion-check cache key includes random per-request ids, so a re-run asks Jev again. Re-running the same clips on the caches (no code change) reproduced 4230 of 6720 records and the eval scores of 1 of 9 clips; its cache misses cost $0.054.
+- Recorded answers were needed because cached re-runs were not reproducible: the Jev completion-check cache key included random per-request ids, so a re-run asked Jev again. Re-running the same clips on the caches (no code change) reproduced 4230 of 6720 records and the eval scores of 1 of 9 clips; its cache misses cost $0.054.
+- The Jev cache key is fixed: it is now built from the image content (`verify/jev.py`). Clip 17_43_0, re-run 3 times on the caches: the first run asked Jev 8 of its 8 checks again (answers cached under the old key are unreachable; $0.0009). Each later run answered 8 of 8 from the cache and added 0 cache entries ($0.0000). The second run logged 699 of 707 records exactly as the first (the rest differ only in being marked cached at $0); run 3 matched run 2 in 707 of 707.
 
-Render: `renders/live_replay_user.mp4` (drawn from `runs/live_replay_async/live.jsonl`, 16-112 s). Sources: `results/live/live_replay_10_18_0.json`, `results/live/live_replay_async.json`, `results/live/checks/replay_unchanged.json`.
+Render: `renders/live_replay_user.mp4` (drawn from `runs/live_replay_async/live.jsonl`, 16-112 s). Sources: `results/live/live_replay_10_18_0.json`, `results/live/live_replay_async.json`, `results/live/checks/replay_unchanged.json`, `results/live/checks/cached_rerun.json`.
 
 ## Personalization demo (L6 user model, qualitative)
 
@@ -293,7 +294,7 @@ No metric is computed from these clips. The official step labels were unreachabl
 
 ## Spend
 
-Tracked API spend for this build: **$98.41**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
+Tracked API spend for this build: **$98.46**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
 
 - hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total
 - 72 mistake-judge calls (Opus 5.5, effort low, one short text prompt each) made before the judge stored per-call cost
@@ -513,11 +514,18 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
     - Symptom: re-running eval clips on the response caches, with no code change, gave different logs and
       different eval scores, and made new paid calls (`results/live/checks/replay_unchanged.json`,
       `cached_rerun_attempt`).
-    - Cause: the Jev completion-check cache key includes the random per-request ids of the image assets
+    - Cause: the Jev completion-check cache key included the random per-request ids of the image assets
       (`verify/jev.py`), so those checks never hit the cache, and Jev's answers vary from call to call.
     - What changed: the check (`praxis/eval/replay_check.py`) feeds the engine the answers recorded in the saved
-      logs and verifies that it asks the same questions in the same order. The cache key itself is unchanged here
-      (fixing it changes no result); it is a follow-up.
+      logs and verifies that it asks the same questions in the same order.
+    - Fixed: the key is now built from a copy of the request with each image id replaced by its position, plus the
+      image bytes. The request sent to Jev is unchanged (`prototype/tests/test_jev_cache_key.py`).
+      - Answers cached under the old key stay unreachable, so the first re-run after the fix asks Jev again.
+      - On one eval clip (17_43_0, run three times on the caches, `results/live/checks/cached_rerun.json`): the first
+        run asked Jev all 8 of its checks ($0.0009). The second and third answered 8 of 8 from the cache and made
+        no calls; before the fix, a cached re-run of this clip answered 0 of 8 from the cache.
+      - The second run logged the same records as the first, except that its 8 Jev answers are marked cached at $0.
+        The third matched the second record for record.
 
 ## Limitations
 

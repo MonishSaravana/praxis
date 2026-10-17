@@ -1,0 +1,127 @@
+{
+ "what": "one eval clip re-run on the response caches with the live verifiers, one process per run, after the Jev completion-check cache key was made content-based; each run compared record by record with the one before it (write time and run name/id ignored)",
+ "variant": "fused_oracle",
+ "clip": "17_43_0",
+ "verifier": "jev-1.14.0",
+ "runs": {
+  "_rerun1": {
+   "log": "runs/fused_oracle_rerun1/17_43_0.jsonl",
+   "completion_checks": {
+    "jev-1.14.0": {
+     "checks": 8,
+     "from_cache": 0
+    },
+    "claude-opus-5-5": {
+     "checks": 9,
+     "from_cache": 9
+    }
+   },
+   "new_cache_files": {
+    "jev-1.14.0": 8
+   },
+   "spend_usd": 0.0008537760000000001
+  },
+  "_rerun2": {
+   "log": "runs/fused_oracle_rerun2/17_43_0.jsonl",
+   "completion_checks": {
+    "jev-1.14.0": {
+     "checks": 8,
+     "from_cache": 8
+    },
+    "claude-opus-5-5": {
+     "checks": 9,
+     "from_cache": 9
+    }
+   },
+   "new_cache_files": {},
+   "spend_usd": 0
+  },
+  "_rerun3": {
+   "log": "runs/fused_oracle_rerun3/17_43_0.jsonl",
+   "completion_checks": {
+    "jev-1.14.0": {
+     "checks": 8,
+     "from_cache": 8
+    },
+    "claude-opus-5-5": {
+     "checks": 9,
+     "from_cache": 9
+    }
+   },
+   "new_cache_files": {},
+   "spend_usd": 0
+  }
+ },
+ "comparisons": [
+  {
+   "run": "_rerun2",
+   "reference": "_rerun1",
+   "verifier_checks": {
+    "checks": 8,
+    "checks_reference": 8,
+    "identical": 0,
+    "identical_except_cache_hit_fields": 8,
+    "differing_fields": {
+     "cost_usd": 8,
+     "cached": 8
+    }
+   },
+   "log": {
+    "records": 707,
+    "records_reference": 707,
+    "identical_records": 699,
+    "field_differences": {
+     "verdict/cached": 8,
+     "verdict/cost_usd": 8
+    },
+    "meta_differences": [],
+    "summary_differences": []
+   },
+   "score_differences": [
+    "verifier_latency_ms"
+   ],
+   "unexplained_differences": []
+  },
+  {
+   "run": "_rerun3",
+   "reference": "_rerun2",
+   "verifier_checks": {
+    "checks": 8,
+    "checks_reference": 8,
+    "identical": 8,
+    "identical_except_cache_hit_fields": 8,
+    "differing_fields": {}
+   },
+   "log": {
+    "records": 707,
+    "records_reference": 707,
+    "identical_records": 707,
+    "field_differences": {},
+    "meta_differences": [],
+    "summary_differences": []
+   },
+   "score_differences": [],
+   "unexplained_differences": []
+  }
+ ],
+ "known_differences": {
+  "verdict/cached": "a completion check answered from the response cache is logged with cached=true",
+  "verdict/cost_usd": "... and cost_usd=0 (orig_cost_usd keeps what the first, live call cost)",
+  "score/verifier_latency_ms": "the eval's latency metric counts live (uncached) calls only (harness.score_clip); verifier_latency_ms_all includes the cached answers"
+ },
+ "before_fix": {
+  "what": "the same clip re-run on the caches before the fix (results/live/checks/replay_unchanged.json, cached_rerun_attempt)",
+  "log": "runs/fused_oracle_replay_pre/17_43_0.jsonl",
+  "completion_checks": {
+   "jev-1.14.0": {
+    "checks": 8,
+    "from_cache": 0
+   },
+   "claude-opus-5-5": {
+    "checks": 8,
+    "from_cache": 8
+   }
+  }
+ },
+ "spend_usd": 0.0008537760000000001
+}

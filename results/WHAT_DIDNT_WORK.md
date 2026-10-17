@@ -124,8 +124,15 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
     - Symptom: re-running eval clips on the response caches, with no code change, gave different logs and
       different eval scores, and made new paid calls (`results/live/checks/replay_unchanged.json`,
       `cached_rerun_attempt`).
-    - Cause: the Jev completion-check cache key includes the random per-request ids of the image assets
+    - Cause: the Jev completion-check cache key included the random per-request ids of the image assets
       (`verify/jev.py`), so those checks never hit the cache, and Jev's answers vary from call to call.
     - What changed: the check (`praxis/eval/replay_check.py`) feeds the engine the answers recorded in the saved
-      logs and verifies that it asks the same questions in the same order. The cache key itself is unchanged here
-      (fixing it changes no result); it is a follow-up.
+      logs and verifies that it asks the same questions in the same order.
+    - Fixed: the key is now built from a copy of the request with each image id replaced by its position, plus the
+      image bytes. The request sent to Jev is unchanged (`prototype/tests/test_jev_cache_key.py`).
+      - Answers cached under the old key stay unreachable, so the first re-run after the fix asks Jev again.
+      - On one eval clip (17_43_0, run three times on the caches, `results/live/checks/cached_rerun.json`): the first
+        run asked Jev all 8 of its checks ($0.0009). The second and third answered 8 of 8 from the cache and made
+        no calls; before the fix, a cached re-run of this clip answered 0 of 8 from the cache.
+      - The second run logged the same records as the first, except that its 8 Jev answers are marked cached at $0.
+        The third matched the second record for record.
