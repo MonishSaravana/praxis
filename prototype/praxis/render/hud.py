@@ -120,7 +120,9 @@ class LogState:
         a = min(1.0, age / 0.25, (dur - age) / 0.4)
         return c, max(0.0, a)
 
-    def chip(self, tau: float) -> str | None:
+    def chip(self, tau: float, step_names: dict | None = None) -> str | None:
+        """One-line chip after the instruction card collapses: the logged step's short name (from the task graph the
+        engine used) when available, else the instruction text."""
         ins = [c for c in self.cards if c.kind == "instruct" and c.t <= tau]
         if not ins:
             return None
@@ -128,7 +130,7 @@ class LogState:
         done = [a for a in self.actions if a["action"] == "done" and a["t"] <= tau]
         if done:
             return None
-        return last.detail.get("chip") or last.text
+        return last.detail.get("chip") or (step_names or {}).get(last.node) or last.text
 
     def pulse(self, tau: float) -> float:
         v = [a for a in self.actions if a["action"] == "verified" and 0 <= tau - a["t"] < 0.9]
@@ -162,8 +164,9 @@ def _arrow(draw: ImageDraw.ImageDraw, cx: float, cy: float, direction: str, r: f
 
 
 class UserView:
-    def __init__(self, W: int, H: int, badge: str):
+    def __init__(self, W: int, H: int, badge: str, step_names: dict | None = None):
         self.W, self.H, self.badge = W, H, badge
+        self.step_names = step_names or {}
         s = W / 1280
         self.s = s
         self.f_title = font(int(30 * s), bold=True)
@@ -198,7 +201,7 @@ class UserView:
         if card is not None and a > 0.02:
             img = self._card(img, card, a)
         else:
-            chip = st.chip(tau)
+            chip = st.chip(tau, self.step_names)
             if chip:
                 self._chip(img, chip)
         d = ImageDraw.Draw(img)
@@ -377,7 +380,7 @@ def render(log_path: str | Path, video: str | Path, out: str | Path, view: str =
     nat = cap.get(cv2.CAP_PROP_FPS) or 30.0
     vid_w, vid_h = cap.get(cv2.CAP_PROP_FRAME_WIDTH), cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
     H = int(round(width * vid_h / vid_w / 2) * 2)
-    user = UserView(width, H, badge)
+    user = UserView(width, H, badge, step_names)
     eng = EngineerView(1600, 900, badge, step_names or {}) if view == "engineer" else None
     outW, outH = (1600, 900) if eng else (width, H)
     out = Path(out)

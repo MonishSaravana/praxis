@@ -70,7 +70,7 @@ class Policy:
         node = self.g.node(step)
         self.announced_step = step
         self.step_started_t[step] = t
-        return [Action(t, "instruct", self.phrase(node), step, {"profile": self.user.profile})]
+        return [Action(t, "instruct", self.phrase(node), step, {"profile": self.user.profile, "chip": node.name})]
 
     # ------------------------------------------------------------ when to spend a verifier call
     def should_verify(self, t: float, belief: Belief, boundary_peak: bool, grasp_peak: bool) -> str | None:

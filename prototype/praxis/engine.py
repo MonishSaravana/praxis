@@ -118,9 +118,8 @@ class Engine:
             raise ValueError(f"evidence node order != graph node order for {task_id}")
         self._w("task", t, task_id=task_id, title=self.graph.title, oracle=oracle, posterior=posterior,
                 n_steps=len(self.graph.nodes))
-        verb = {"cooking": "making", "assembly": "assembling", "maintenance": "servicing"}.get(self.graph.domain, "working on")
-        acts = [Action(t, "announce_task", f"Looks like you're {verb} {self.graph.title.split(' (')[0].lower()}. "
-                                          "Want me to walk you through it?", None, {"oracle": oracle, "title": self.graph.title})]
+        acts = [Action(t, "announce_task", f"Looks like you're {activity_phrase(self.graph)}. Want me to walk you through it?",
+                       None, {"oracle": oracle, "title": self.graph.title})]
         return acts
 
     def _emit(self, acts: list[Action]) -> None:
@@ -395,6 +394,18 @@ class Engine:
         self.calls.append({"t": t, **rec})
         self._w("verdict", t, **rec)
         return rec
+
+
+def activity_phrase(g: TaskGraph) -> str:
+    """'making tomato mozzarella salad', 'assembling a construction-toy car'."""
+    import re
+    title = re.sub(r"\s*\(.*?\)", "", g.title)
+    title = re.sub(r"(?i)\bindustreal\b\s*", "", title).strip()
+    if g.domain == "assembly":
+        title = re.sub(r"(?i)\s+assembly$", "", title)
+        return f"assembling a {title.lower()}"
+    verb = {"cooking": "making", "maintenance": "servicing"}.get(g.domain, "working on")
+    return f"{verb} {title.lower()}"
 
 
 # ---------------------------------------------------------------------- replay driver

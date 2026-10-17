@@ -1,0 +1,83 @@
+{
+  "note": "qualitative only: IndustReal labels unavailable; no metrics",
+  "runs": {
+    "ir_08_assy_2_4": {
+      "recognized": "industreal_assy",
+      "t_recognize": 10.0,
+      "actions": [
+        {
+          "t": 10.0,
+          "action": "announce_task",
+          "text": "Looks like you're assembling a construction-toy car. Want me to walk you through it?"
+        },
+        {
+          "t": 10.0,
+          "action": "instruct",
+          "text": "Pick up the front chassis piece and set it onto the front end of the base frame, lining its holes up with the holes in the frame."
+        },
+        {
+          "t": 57.0,
+          "action": "instruct",
+          "text": "Pick up the front chassis piece and set it onto the front end of the base frame, lining its holes up with the holes in the frame."
+        },
+        {
+          "t": 132.0,
+          "action": "hint",
+          "text": "Pick up the front wheel assembly."
+        },
+        {
+          "t": 281.0,
+          "action": "hint",
+          "text": "Lay the base frame flat on the table with its front end facing away from you."
+        },
+        {
+          "t": 327.0,
+          "action": "instruct",
+          "text": "Put the screw through the bracket hole into the front chassis and turn it clockwise until it is snug and the bracket cannot move."
+        }
+      ]
+    },
+    "ir_07_assy_2_3": {
+      "recognized": "industreal_assy",
+      "t_recognize": 10.0,
+      "actions": [
+        {
+          "t": 10.0,
+          "action": "announce_task",
+          "text": "Looks like you're assembling a construction-toy car. Want me to walk you through it?"
+        },
+        {
+          "t": 10.0,
+          "action": "instruct",
+          "text": "Pick up the front chassis piece and set it onto the front end of the base frame, lining its holes up with the holes in the frame."
+        },
+        {
+          "t": 27.0,
+          "action": "instruct",
+          "text": "Take a chassis pin and push it through the aligned holes of the front chassis and base frame until it is fully in."
+        },
+        {
+          "t": 64.0,
+          "action": "instruct",
+          "text": "Pick up the long rear chassis and set it on the rear end of the base frame so both of its pin holes line up with the frame holes."
+        },
+        {
+          "t": 203.0,
+          "action": "hint",
+          "text": "Pick up the long rear chassis, not the short one."
+        },
+        {
+          "t": 233.0,
+          "action": "hint",
+          "text": "Pick up the front wheel assembly."
+        },
+        {
+          "t": 264.0,
+          "action": "hint",
+          "text": "Pick up the front bracket."
+        }
+      ]
+    }
+  },
+  "spend_usd": 0.02273438999999999
+}
