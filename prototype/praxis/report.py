@@ -28,7 +28,22 @@ def collect() -> dict:
 
     put("data", {k: v for k, v in (_j("data/eval_manifest_summary.json") or {}).items() if k != "clips"} or None,
         "results/data/eval_manifest_summary.json")
-    put("l1_speed", _j("l1/l1_speed.json"), "results/l1/l1_speed.json")
+    sp = _j("l1/l1_speed.json")
+    put("l1_speed", sp, "results/l1/l1_speed.json")
+    if sp:
+        ms = {r["backbone"]: r["ms_per_item"] for r in sp["rows"]}
+        f_sig = ms.get("siglip2-base-224 (image)")
+        hands = ms.get("mediapipe-hands")
+        vj = ms.get("vjepa2-vitl (8f@224)")
+        # live fast path per frame at 4 fps: SigLIP2 (batch 1) + hands, plus one V-JEPA 2 window every 2 s
+        # (amortized over 8 frames); L2 head and tracker update are <1 ms (results/l2 head_fps)
+        sig1 = [r for r in sp["rows"] if r["backbone"].startswith("siglip2-base-224 (image)") and r["batch"] == 1]
+        sig1 = sig1[0]["ms_per_item"] if sig1 else f_sig
+        per_frame = sig1 + hands + vj / 8.0
+        put("fast_path", {"per_frame_ms": per_frame, "max_fps": 1000.0 / per_frame,
+                          "breakdown_ms": {"siglip2_frame": sig1, "hands": hands, "vjepa2_amortized": vj / 8.0},
+                          "assumes": "SigLIP2 batch 1 + MediaPipe hands per frame; V-JEPA 2 (8 frames @224) every 2 s at "
+                                     "4 fps; measured with nothing else running"}, "results/l1/l1_speed.json")
     q = _j("l1/l1_quality_and_probes.json")
     put("l1_quality", q.get("backbones") if q else None, "results/l1/l1_quality_and_probes.json")
     put("l2", _j("l2/l2_event_detector.json") and {k: v for k, v in _j("l2/l2_event_detector.json").items() if k != "train"} | {
@@ -36,7 +51,7 @@ def collect() -> dict:
     put("l3_compile", _j("l3/compile_summary.json"), "results/l3/compile_summary.json")
     put("l4_tuning_best", (_j("l4/tracker_tuning.json") or {}).get("best"), "results/l4/tracker_tuning.json")
     for v in ("fused", "fused_oracle", "fused_heuristic_gate", "local_only", "verifier_only", "fused_distilled",
-              "fused_jev", "baseline_stateless"):
+              "fused_no_escalation", "fused_claude_fast", "baseline_stateless"):
         put(f"run_{v}", _agg(v), f"results/runs/{v}.json")
     put("recognition", _j("l3b/recognition.json"), "results/l3b/recognition.json")
     put("join_mid_task", _j("l3b/join_mid_task.json"), "results/l3b/join_mid_task.json")

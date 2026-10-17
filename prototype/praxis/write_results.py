@@ -110,6 +110,12 @@ def build() -> tuple[str, str]:
                   f"{lat(F['verifier_latency_ms_live'], 'ms', scale=1, dd=0)}.")
         md.append(f"- **Share of frames escalated to the slow path:** {pct(F['escalated_frame_share'], 1)}. "
                   f"Everything else is handled by the local layers.")
+    fp = m.get("fast_path")
+    if fp:
+        md.append(f"- **Fast-path throughput** (computed from the measured L1 speeds): {num(fp['per_frame_ms'], 1)} ms per "
+                  f"frame, i.e. up to **{num(fp['max_fps'], 0)} fps** on this Mac. Breakdown: SigLIP2 "
+                  f"{num(fp['breakdown_ms']['siglip2_frame'], 1)} ms, hands {num(fp['breakdown_ms']['hands'], 1)} ms, "
+                  f"V-JEPA 2 amortized {num(fp['breakdown_ms']['vjepa2_amortized'], 1)} ms. The engine runs at 4 fps.")
     s = m.get("l1_speed")
     if s:
         rows = [[r["backbone"], str(r["batch"]), f"{r['ms_per_item']:.1f}", f"{r['items_per_s']:.1f}"] for r in s["rows"]]
