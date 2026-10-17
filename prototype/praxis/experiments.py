@@ -39,7 +39,8 @@ def l2(epochs: int = 60) -> dict:
     res["train_recordings"] = [f.clip_id for f, _, _ in tr]
     (RESULTS / "l2" / "l2_event_detector.json").write_text(json.dumps(res, indent=2, default=float))
     for k, v in res["test"].items():
-        print(k, {m: round(v[m]["f1"], 3) for m in v})
+        for tol, vv in v.items():
+            print(k, tol, {m: (round(vv[m]["precision"], 3), round(vv[m]["recall"], 3), round(vv[m]["f1"], 3)) for m in vv})
     return res
 
 

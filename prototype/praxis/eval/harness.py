@@ -50,7 +50,7 @@ def load_stack(detector: str = "learned", evidence: str = "probe") -> dict:
     thr = 0.5
     p = Path(__file__).resolve().parents[3] / "results" / "l2" / "l2_event_detector.json"
     if p.exists():
-        r = json.loads(p.read_text())["train"]
+        r = json.loads(p.read_text())["train"]   # thresholds tuned on held-out train recordings
         thr = r["thr"] if detector == "learned" else r["heuristic_thr"]
     return {"library": lib, "evidence": ev, "recognizer": rec, "detector": det, "boundary_thr": thr}
 

@@ -123,12 +123,13 @@ class LearnedDetector:
 
     def save(self, path) -> None:
         torch.save({"state": self.net.state_dict(), "mean": self.mean, "std": self.std,
-                    "d_frame": self.net.d_frame, "d_window": self.net.d_window}, path)
+                    "d_frame": self.net.d_frame, "d_window": self.net.d_window,
+                    "hidden": self.net.proj_frame.out_features}, path)
 
     @classmethod
     def load(cls, path, dev: str = "cpu") -> "LearnedDetector":
         ck = torch.load(path, map_location="cpu", weights_only=False)
-        net = EventNet(ck["d_frame"], ck["d_window"])
+        net = EventNet(ck["d_frame"], ck["d_window"], hidden=ck.get("hidden", ck["state"]["proj_frame.weight"].shape[0]))
         net.load_state_dict(ck["state"])
         return cls(net, ck["mean"], ck["std"], dev)
 

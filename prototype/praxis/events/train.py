@@ -23,32 +23,44 @@ def make_xy(feats, boundaries: list[float], grasps: list[float]):
     return x, y, has_g
 
 
-def train(train_items, val_items=None, epochs: int = 60, seq_len: int = 480, lr: float = 1e-3, seed: int = 0,
-          dev: str = "cpu", log_every: int = 10) -> tuple[LearnedDetector, dict]:
-    """items: list of (ClipFeatures, boundaries, grasps)."""
+def _val_loss(net, data, mean, std, dev, pos_w):
+    net.eval()
+    tot = 0.0
+    with torch.no_grad():
+        for x, y, hg in data:
+            xx = torch.from_numpy((x - mean) / std)[None].to(dev)
+            yy = torch.from_numpy(y)[None].to(dev)
+            lg = net(xx)
+            tot += float(F.binary_cross_entropy_with_logits(lg[..., 0], yy[..., 0], pos_weight=pos_w[0]))
+    return tot / max(1, len(data))
+
+
+def train(train_items, val_items=None, epochs: int = 80, seq_len: int = 480, lr: float = 1e-3, seed: int = 0,
+          dev: str = "cpu", log_every: int = 10, hidden: int = 64, p_drop: float = 0.3) -> tuple[LearnedDetector, dict]:
+    """items: list of (ClipFeatures, boundaries, onsets). Early stopping on val_items (held-out train recordings)."""
     torch.manual_seed(seed)
     rng = np.random.default_rng(seed)
     data = [make_xy(f, b, g) for f, b, g in train_items]
+    vdata = [make_xy(f, b, g) for f, b, g in (val_items or [])]
     allx = np.concatenate([d[0] for d in data])
     mean, std = allx.mean(0), allx.std(0) + 1e-4
     f0 = train_items[0][0]
-    net = EventNet(f0.frame.shape[1], f0.window.shape[1]).to(dev)
-    opt = torch.optim.AdamW(net.parameters(), lr=lr, weight_decay=1e-2)
+    net = EventNet(f0.frame.shape[1], f0.window.shape[1], hidden=hidden, p=p_drop).to(dev)
+    opt = torch.optim.AdamW(net.parameters(), lr=lr, weight_decay=5e-2)
     pos_frac = float(np.concatenate([d[1][:, 0] for d in data]).mean())
     pos_w = torch.tensor([(1 - pos_frac) / max(pos_frac, 1e-3), 4.0], device=dev)
-    hist = []
+    hist, vhist, best, best_state = [], [], 1e9, None
     t0 = time.perf_counter()
     for ep in range(epochs):
         net.train()
-        order = rng.permutation(len(data))
         tot = 0.0
-        for i in order:
+        for i in rng.permutation(len(data)):
             x, y, hg = data[i]
             if len(x) > seq_len:
-                s = rng.integers(0, len(x) - seq_len)
-                x, y, hg = x[s:s + seq_len], y[s:s + seq_len], hg[s:s + seq_len]
+                st = rng.integers(0, len(x) - seq_len)
+                x, y, hg = x[st:st + seq_len], y[st:st + seq_len], hg[st:st + seq_len]
             xx = torch.from_numpy((x - mean) / std)[None].to(dev)
-            xx = xx + 0.05 * torch.randn_like(xx)
+            xx = xx + 0.1 * torch.randn_like(xx)
             yy = torch.from_numpy(y)[None].to(dev)
             logits = net(xx)
             lb = F.binary_cross_entropy_with_logits(logits[..., 0], yy[..., 0], pos_weight=pos_w[0])
@@ -59,12 +71,21 @@ def train(train_items, val_items=None, epochs: int = 60, seq_len: int = 480, lr:
             loss.backward()
             torch.nn.utils.clip_grad_norm_(net.parameters(), 1.0)
             opt.step()
-            tot += float(loss)
+            tot += float(loss.detach())
         hist.append(tot / len(data))
+        if vdata:
+            vl = _val_loss(net, vdata, mean, std, dev, pos_w)
+            vhist.append(vl)
+            if vl < best:
+                best, best_state = vl, {k: v.detach().clone() for k, v in net.state_dict().items()}
         if log_every and (ep + 1) % log_every == 0:
-            print(f"epoch {ep + 1}: loss {hist[-1]:.4f}", flush=True)
-    det = LearnedDetector(net.cpu(), mean.astype(np.float32), std.astype(np.float32), "cpu")
-    return det, {"loss": hist, "train_s": time.perf_counter() - t0, "n_train_clips": len(train_items)}
+            print(f"epoch {ep + 1}: loss {hist[-1]:.4f}" + (f" val {vhist[-1]:.4f}" if vhist else ""), flush=True)
+    if best_state is not None:
+        net.load_state_dict(best_state)
+    det = LearnedDetector(net.cpu().eval(), mean.astype(np.float32), std.astype(np.float32), "cpu")
+    return det, {"loss": hist, "val_loss": vhist, "best_val": best if vdata else None,
+                 "best_epoch": int(np.argmin(vhist)) + 1 if vhist else None, "train_s": time.perf_counter() - t0,
+                 "n_train_clips": len(train_items), "n_val_clips": len(val_items or [])}
 
 
 def evaluate(detector, items, thr: float, min_gap_s: float = 2.0, tol: float = 2.0) -> dict:
@@ -93,14 +114,23 @@ def tune_threshold(detector, items, grid=None, min_gap_s: float = 2.0, tol: floa
     return float(best)
 
 
-def run(train_items, test_sets: dict[str, list], out_name: str = "l2_event_detector", epochs: int = 60) -> dict:
-    det, info = train(train_items, epochs=epochs)
-    thr = tune_threshold(det, train_items)
+def run(train_items, test_sets: dict[str, list], out_name: str = "l2_event_detector", epochs: int = 80,
+        val_frac: float = 0.25, seed: int = 0) -> dict:
+    rng = np.random.default_rng(seed)
+    idx = rng.permutation(len(train_items))
+    n_val = max(1, int(round(val_frac * len(train_items))))
+    val = [train_items[i] for i in idx[:n_val]]
+    fit = [train_items[i] for i in idx[n_val:]]
+    det, info = train(fit, val, epochs=epochs)
+    thr = tune_threshold(det, val)                       # threshold chosen on held-out TRAIN recordings
     heur = HeuristicDetector()
-    hthr = tune_threshold(heur, train_items)
-    res = {"train": info | {"thr": thr, "heuristic_thr": hthr}, "test": {}}
+    hthr = tune_threshold(heur, val)
+    res = {"train": info | {"thr": thr, "heuristic_thr": hthr, "val_recordings": [f.clip_id for f, _, _ in val]}, "test": {}}
     for name, items in test_sets.items():
-        res["test"][name] = {"learned": evaluate(det, items, thr), "heuristic": evaluate(heur, items, hthr)}
+        res["test"][name] = {}
+        for tol in (2.0, 5.0):
+            res["test"][name][f"tol{int(tol)}s"] = {"learned": evaluate(det, items, thr, tol=tol),
+                                                    "heuristic": evaluate(heur, items, hthr, tol=tol)}
     CKPT.mkdir(parents=True, exist_ok=True)
     det.save(CKPT / f"{out_name}.pt")
     (RESULTS / "l2").mkdir(parents=True, exist_ok=True)
