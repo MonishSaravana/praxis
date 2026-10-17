@@ -47,6 +47,9 @@ class EngineConfig:
     commit_on_switch_p: float = 0.7     # implicit commit when belief confidently moves past a step
     escalate: bool = True
     order_check: bool = True            # stateful early warning for skipped prerequisites
+    step_choice: bool = True            # uncertain belief -> typed "which step?" question to the fast verifier
+    step_choice_k: int = 4
+    step_choice_weight: float = 1.0
     order_min_p: float = 0.8
     order_unseen_mass: float = 0.3
     order_conf: float = 0.6
@@ -233,7 +236,10 @@ class Engine:
                     reason, self._last_sched = "schedule", t
             else:
                 reason = pol.should_verify(t, belief, bool(bpeak), bool(gpeak))
-        if reason:
+        if reason == "uncertain" and self.cfg.step_choice and hasattr(self.ver, "choose_step"):
+            self._localize(t, belief, frame_at)        # cheap typed "which step?" question first
+            belief = tr.belief()
+        elif reason:
             self._verify(t, belief, reason, frame_at)
             belief = tr.belief()
 
@@ -296,6 +302,25 @@ class Engine:
             b = tr.belief()
             self._last_switch_map = b.map_id
             self._emit(pol.after_commit(t_out, b.map_id))
+
+    def _localize(self, t: float, belief, frame_at) -> None:
+        """Belief is spread over several steps: ask the fast verifier which of the top candidates is happening."""
+        frames, times = span_keyframes(frame_at, t)
+        if not frames:
+            return
+        cands = [k for k, p in belief.top(self.cfg.step_choice_k) if k != DONE and p > 0.02]
+        if len(cands) < 2:
+            return
+        opts = {k: f"{self.graph.node(k).name}: {self.graph.node(k).end_state}" for k in cands}
+        try:
+            ans = self.ver.choose_step(frames, opts, self.graph.title)
+        except Exception as e:  # noqa: BLE001
+            self._w("step_choice", t, error=str(e)[:200])
+            return
+        self.tracker.observe_step_choice(ans["probs"], weight=self.cfg.step_choice_weight)
+        self.n_escalated_frames += len(frames)
+        self._w("step_choice", t, options=cands, probs=ans["probs"], choice=ans["choice"], latency_ms=ans["latency_ms"],
+                model=ans["model"], cost_usd=ans["cost_usd"])
 
     def _check_order(self, t: float, belief, frame_at) -> None:
         """Stateful early warning: the person has started step j but a prerequisite of j was never seen.

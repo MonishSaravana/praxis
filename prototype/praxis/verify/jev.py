@@ -71,10 +71,44 @@ def _asset(rgb: np.ndarray, max_side: int = 768) -> tuple[str, dict, bytes]:
 class JevVerifier:
     name = "jev"
 
+    def choose_step(self, frames, options: dict[str, str], task: str) -> dict:
+        """Typed localization: which of these candidate steps is the person doing now? -> probabilities."""
+        self.budget.check()
+        assets, refs = {}, []
+        for f in frames:
+            ref, a, _ = _asset(f, 768)
+            assets[ref] = a
+            refs.append(ref)
+        crit = dict(options)
+        crit["none"] = "None of these steps (between steps, or something else)"
+        q = {"step": {"type": "choice", "instructions": f"The person is doing this task: {task}. Which step are they doing "
+                                                         "in the most recent `frames`?", "criteria": crit}}
+        key = ResponseCache.key("choose_step-v1", self.model, q, [assets[r]["data_base64"][:4096] + str(len(assets[r]["data_base64"]))
+                                                                  for r in refs])
+        hit = self.cache.get(key) if self.cache else None
+        if hit:
+            resp, lat = hit["resp"], hit["latency_ms"]
+        else:
+            resp, lat = self.client.system_one({"frames": refs}, q, assets, images=True)
+            if self.cache:
+                self.cache.put(key, {"resp": resp, "latency_ms": lat})
+        a = resp["answers"]["step"]
+        u = resp.get("usage", {})
+        usd = cost_usd(self.model, u.get("input_tokens", 0), 0)
+        self.budget.add(usd)
+        return {"probs": {k: float(p) for k, p in a["probabilities"].items()}, "choice": a["choice"],
+                "latency_ms": lat, "model": resp.get("model"), "cost_usd": usd}
+
     def choose_task(self, frames, options):
+        key = ResponseCache.key("choose_task-v1", self.model, options, [to_jpeg(f, 768, 280)[-4096:] for f in frames])
+        hit = self.cache.get(key) if self.cache else None
+        if hit:
+            return {**hit, "cached": True}
         self.budget.check()
         r = choose_task(self.client, frames, options)
         self.budget.add(r["cost_usd"])
+        if self.cache:
+            self.cache.put(key, r)
         return r
 
     def __init__(self, budget: Budget, model: str = "jev-1.14.0", use_cache: bool = True, img_side: int = 768):

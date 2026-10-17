@@ -179,6 +179,18 @@ class StateTracker:
                 L[self.idx[p]] = 1 - c
         self._update((L ** self.cfg.verifier_weight)[:, None])
 
+    def observe_step_choice(self, probs: dict[str, float], weight: float = 1.0, floor: float = 0.05) -> None:
+        """Verifier answer to 'which of these steps is happening?' as a likelihood over the candidates.
+        Steps not offered as options keep a neutral likelihood (the question said nothing about them)."""
+        offered = [k for k in probs if k in self.idx]
+        if not offered:
+            return
+        none_p = probs.get("none", 0.0)
+        L = np.full(self.K, max(none_p, floor))
+        for k in offered:
+            L[self.idx[k]] = max(probs[k], floor)
+        self._update((L ** weight)[:, None])
+
     def _update(self, L: np.ndarray) -> None:
         a = self.alpha * L
         z = a.sum()

@@ -146,11 +146,14 @@ def score_clip(clip: Clip, log_path: Path, join_at: float = 0.0) -> dict:
     res["progress_latency_s"] = [c["t"] - gt_end[c["node"]] for c in by_kind(recs, "commit") if c["node"] in gt_end]
     ver = by_kind(recs, "verdict")
     live = [v for v in ver if not v.get("cached") and not v.get("error")]
-    res["verifier_calls"] = len(ver)
+    sc = by_kind(recs, "step_choice") + by_kind(recs, "task_check")
+    res["typed_choice_calls"] = len(sc)
+    res["verifier_calls"] = len(ver) + len(sc)
     res["verifier_latency_ms"] = [v["latency_ms"] for v in live]
     res["verifier_latency_ms_all"] = [v["latency_ms"] for v in ver if not v.get("error")]
     res["verifier_errors"] = sum(1 for v in ver if v.get("error"))
-    res["cost_usd"] = float(sum(v.get("orig_cost_usd", v.get("cost_usd", 0.0)) or 0.0 for v in ver))
+    res["cost_usd"] = float(sum(v.get("orig_cost_usd", v.get("cost_usd", 0.0)) or 0.0 for v in ver)
+                            + sum(x.get("cost_usd", 0.0) or 0.0 for x in sc))
     summ = by_kind(recs, "summary")
     if summ:
         res["frames"] = summ[0]["n_frames"]
