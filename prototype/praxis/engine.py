@@ -26,7 +26,7 @@ from .state_tracker import DONE, StateTracker, TrackerConfig
 from .tasks.recognizer import TaskRecognizer
 from .tasks.schema import TaskGraph
 from .verify.calibration import Calibrator, raw_p_complete
-from .verify.common import pick_keyframes
+from .verify.common import span_keyframes
 from .verify.schema import Verdict, VerifyRequest
 
 
@@ -202,12 +202,11 @@ class Engine:
     def _verify(self, t: float, belief, reason: str, frame_at) -> None:
         tr, pol, g = self.tracker, self.policy, self.graph
         node = g.node(belief.map_id)
-        # keyframe selection: the sharpest frames of the last 4 s (head-mounted video is often motion-blurred)
-        cand_t = [t - 0.5 * i for i in reversed(range(9))]
-        cand = [(x, f) for x, f in ((x, frame_at(x)) for x in cand_t) if f is not None]
-        if not cand:
+        # evidence: sharpest frame from ~8-6 s ago (context) + 2 sharpest of the last 3 s ("now");
+        # head-mounted video is often motion-blurred, so frames are picked by sharpness
+        frames, times = span_keyframes(frame_at, t)
+        if not frames:
             return
-        frames, times = pick_keyframes([f for _, f in cand], [x for x, _ in cand], self.cfg.frames_per_call)
         crops = []
         if self.cfg.roi_crops and self.pt is not None:
             c = self.pt(t)

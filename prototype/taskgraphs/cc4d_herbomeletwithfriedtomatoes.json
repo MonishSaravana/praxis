@@ -1,0 +1,1096 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "cc4d_herbomeletwithfriedtomatoes",
+  "title": "Herb Omelet with Fried Tomatoes",
+  "domain": "cooking",
+  "summary": "Prepare an egg mixture with chopped cilantro and black pepper, halve a tomato, fry the tomato halves cut-side down in a non-stick pan, then cook the egg mixture into a soft omelette and serve it on a plate with the tomatoes.",
+  "source": "CaptainCook4D recipe text + task graph (Herb Omelet with Fried Tomatoes); mistake hints from train split",
+  "draft": false,
+  "compiler": {
+    "model": "claude-fable-5-1",
+    "prompt_version": "compile-v1",
+    "cost_usd": 0.63941,
+    "latency_s": 200.9295162500348,
+    "input_tokens": 4556,
+    "output_tokens": 11877
+  },
+  "nodes": [
+    {
+      "id": "s235",
+      "name": "Heat 1 tbsp oil in a non-stick frying pan",
+      "instruction_novice": "Put the non-stick frying pan on the stove, measure one tablespoon of oil into it, and turn on the heat.",
+      "instruction_expert": "Heat 1 tbsp oil, non-stick pan",
+      "substeps": [
+        "Place the non-stick frying pan on the burner",
+        "Measure one tablespoon of oil away from the pan",
+        "Pour the oil into the pan and turn on the heat",
+        "Wait until the oil shimmers"
+      ],
+      "parts": [
+        "non-stick frying pan",
+        "oil",
+        "tablespoon measure",
+        "stove"
+      ],
+      "end_state": "A thin film of oil coats the base of the non-stick pan on the burner and the burner is on.",
+      "view_hint": "the frying pan on the stove from above",
+      "checks": [
+        {
+          "id": "s235_c1",
+          "question": "Is a flat non-stick frying pan on the burner with a thin layer of oil?",
+          "kind": "part_identity",
+          "roi": "pan base"
+        },
+        {
+          "id": "s235_c2",
+          "question": "Was the oil measured with a tablespoon?",
+          "kind": "quantity",
+          "roi": "measuring spoon"
+        },
+        {
+          "id": "s235_c3",
+          "question": "Is the burner turned on?",
+          "kind": "completion",
+          "roi": "stove knob or flame"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s235_m1",
+          "type": "wrong_order",
+          "description": "Pan heated before the egg mixture was beaten",
+          "visual_cue": "Oil heating in the pan while the bowl still shows unbeaten egg or missing ingredients",
+          "correction": "Turn the heat off for now and finish beating the egg mixture before heating the pan.",
+          "early_cue": "Pan placed on the stove with the egg bowl still unmixed"
+        },
+        {
+          "id": "s235_m2",
+          "type": "wrong_part",
+          "description": "A wok used instead of a flat non-stick frying pan",
+          "visual_cue": "Deep round-bottomed wok on the burner",
+          "correction": "Use the flat non-stick frying pan, not the wok, so the omelette cooks evenly.",
+          "early_cue": "Wok lifted from the rack"
+        },
+        {
+          "id": "s235_m3",
+          "type": "wrong_quantity",
+          "description": "Too much oil, poured straight from the bottle or added extra after spilling",
+          "visual_cue": "Oil pooling deep in the pan rather than a thin coat",
+          "correction": "That is more than a tablespoon; pour the excess out so only a thin film remains.",
+          "early_cue": "Bottle tilted directly over the pan without a spoon"
+        },
+        {
+          "id": "s235_m4",
+          "type": "technique",
+          "description": "Oil spilled onto the pan while measuring over it",
+          "visual_cue": "Oil splashes around the spoon landing in the pan",
+          "correction": "Measure the oil over the counter, not over the pan, so you don't add extra by accident.",
+          "early_cue": "Measuring spoon held over the pan while pouring from the bottle"
+        }
+      ],
+      "successors": [
+        "s240"
+      ],
+      "duration": {
+        "mean_s": 82.73338997246708,
+        "std_s": 42.371500822421254,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s235"
+      ]
+    },
+    {
+      "id": "s236",
+      "name": "Put tomatoes on a serving plate",
+      "instruction_novice": "Gently set both tomato halves onto the serving plate, leaving room for the omelette.",
+      "instruction_expert": "Place tomatoes on serving plate",
+      "substeps": [
+        "Hold the plate near the pan",
+        "Slide each tomato half off the spatula onto the plate",
+        "Push them to one side to leave space"
+      ],
+      "parts": [
+        "tomato halves",
+        "serving plate",
+        "spatula"
+      ],
+      "end_state": "Two cooked tomato halves rest on one side of the serving plate with empty space beside them.",
+      "view_hint": "the serving plate from above",
+      "checks": [
+        {
+          "id": "s236_c1",
+          "question": "Are two cooked tomato halves on the serving plate?",
+          "kind": "quantity",
+          "roi": "serving plate"
+        },
+        {
+          "id": "s236_c2",
+          "question": "Is there clear space on the plate for the omelette?",
+          "kind": "other",
+          "roi": "serving plate"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s236_m1",
+          "type": "technique",
+          "description": "Tomatoes tipped or poured off the pan onto the plate instead of placed",
+          "visual_cue": "Pan tilted over the plate, tomatoes and oil sliding out together",
+          "correction": "Place the tomatoes with the spatula rather than tipping the pan, so the oil stays in the pan.",
+          "early_cue": "Pan lifted off the burner and tilted toward the plate"
+        },
+        {
+          "id": "s236_m2",
+          "type": "wrong_order",
+          "description": "Tomatoes plated before the egg mixture is ready",
+          "visual_cue": "Tomatoes on the plate while the bowl shows unbeaten egg",
+          "correction": "Beat the egg mixture quickly now so you can pour it in while the pan is hot.",
+          "early_cue": "Bowl with whole yolk still on the counter"
+        },
+        {
+          "id": "s236_m3",
+          "type": "other",
+          "description": "Tomatoes put on the cutting board rather than the serving plate",
+          "visual_cue": "Tomato halves on the board, plate still empty",
+          "correction": "Move the tomatoes onto the serving plate.",
+          "early_cue": "Plate left in the cupboard"
+        }
+      ],
+      "successors": [
+        "s241"
+      ],
+      "duration": {
+        "mean_s": 17.70025778452494,
+        "std_s": 7.3694908265938075,
+        "n": 3,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s236"
+      ]
+    },
+    {
+      "id": "s237",
+      "name": "Chop 2 tbsp cilantro",
+      "instruction_novice": "Take the fresh cilantro and chop it finely with a knife on the cutting board. Measure out two tablespoons of the chopped leaves.",
+      "instruction_expert": "Chop and measure 2 tbsp cilantro",
+      "substeps": [
+        "Place the cilantro on the cutting board",
+        "Chop finely with a knife",
+        "Scoop chopped cilantro into a tablespoon, level it, and repeat for a second tablespoon"
+      ],
+      "parts": [
+        "cilantro",
+        "knife",
+        "cutting board",
+        "tablespoon measure"
+      ],
+      "end_state": "A small pile of finely chopped cilantro sits on the cutting board or in a measuring spoon, roughly two level tablespoons.",
+      "view_hint": "the cutting board and measuring spoon from above",
+      "checks": [
+        {
+          "id": "s237_c1",
+          "question": "Is the cilantro chopped into small pieces with a knife?",
+          "kind": "completion",
+          "roi": "cutting board"
+        },
+        {
+          "id": "s237_c2",
+          "question": "Was a tablespoon measure used to portion the cilantro?",
+          "kind": "quantity",
+          "roi": "measuring spoon"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s237_m1",
+          "type": "wrong_quantity",
+          "description": "Cilantro portioned by eye without a measuring spoon",
+          "visual_cue": "Chopped cilantro moved straight from the board into the bowl, no measuring spoon in view",
+          "correction": "Grab a tablespoon and measure two level spoonfuls of cilantro before adding it.",
+          "early_cue": "Hand reaching toward the bowl with chopped cilantro and no spoon on the counter"
+        },
+        {
+          "id": "s237_m2",
+          "type": "wrong_quantity",
+          "description": "Only one tablespoon of cilantro measured instead of two",
+          "visual_cue": "A single level spoonful of cilantro set aside, no second spoonful",
+          "correction": "That is only one tablespoon, measure one more so you have two.",
+          "early_cue": "Spoon put down after a single scoop"
+        },
+        {
+          "id": "s237_m3",
+          "type": "technique",
+          "description": "Cilantro torn by hand instead of chopped with a knife",
+          "visual_cue": "Fingers tearing leaves, no knife on the board",
+          "correction": "Use the knife to chop the cilantro finely instead of tearing it by hand.",
+          "early_cue": "Cilantro picked up with both hands while the knife stays in the drawer"
+        },
+        {
+          "id": "s237_m4",
+          "type": "wrong_order",
+          "description": "Cilantro chopped after the pan is already heating",
+          "visual_cue": "Pan with oil shimmering on the stove while cilantro is still being chopped",
+          "correction": "Finish the egg mixture before heating the pan; turn the heat off for now and chop the cilantro.",
+          "early_cue": "Oil bottle picked up before the cilantro has been chopped"
+        }
+      ],
+      "successors": [
+        "s242"
+      ],
+      "duration": {
+        "mean_s": 113.76428648100992,
+        "std_s": 64.58875136565432,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s237"
+      ]
+    },
+    {
+      "id": "s238",
+      "name": "Stir gently with a wooden spoon so set egg moves and uncooked egg flows in",
+      "instruction_novice": "Use a wooden spoon to gently push the set egg from the base toward the centre so the runny egg flows into the gaps. Keep the movements slow and small.",
+      "instruction_expert": "Gently stir with wooden spoon",
+      "substeps": [
+        "Pick up the wooden spoon",
+        "Drag the set egg from the edge toward the middle",
+        "Tilt the pan so the runny egg fills the space",
+        "Repeat around the pan"
+      ],
+      "parts": [
+        "wooden spoon",
+        "non-stick frying pan",
+        "egg mixture"
+      ],
+      "end_state": "Soft folds of set egg sit in the pan with runny egg filling the gaps, and a wooden spoon is in hand.",
+      "view_hint": "the frying pan from above, including the spoon",
+      "checks": [
+        {
+          "id": "s238_c1",
+          "question": "Is a wooden spoon being used to stir?",
+          "kind": "part_identity",
+          "roi": "spoon in hand"
+        },
+        {
+          "id": "s238_c2",
+          "question": "Is the set egg being moved gently so runny egg fills the base?",
+          "kind": "other",
+          "roi": "pan base"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s238_m1",
+          "type": "wrong_part",
+          "description": "Metal spoon or metal spatula used instead of a wooden spoon",
+          "visual_cue": "Shiny metal utensil touching the non-stick pan",
+          "correction": "Swap to the wooden spoon so you don't scratch the non-stick pan.",
+          "early_cue": "Metal utensil picked up from the drawer"
+        },
+        {
+          "id": "s238_m2",
+          "type": "technique",
+          "description": "Egg stirred too hard or pushed to the sides, breaking it into scramble",
+          "visual_cue": "Uncooked egg smeared up the pan walls or small broken curds",
+          "correction": "Stir more gently and keep the egg flat on the base; just nudge the set parts so runny egg fills in.",
+          "early_cue": "Rapid large stirring motions"
+        },
+        {
+          "id": "s238_m3",
+          "type": "technique",
+          "description": "Heat too high so the egg sets before it can be stirred",
+          "visual_cue": "Egg browning and fully set almost immediately after pouring",
+          "correction": "Turn the heat down a bit so the egg sets slowly enough to stir.",
+          "early_cue": "Large flame or high burner setting under the pan"
+        },
+        {
+          "id": "s238_m4",
+          "type": "missing_step",
+          "description": "Not stirring at all, egg cooks unevenly",
+          "visual_cue": "Spoon not touching the egg, thick runny centre with set edges",
+          "correction": "Gently push the set edges in so the runny egg can reach the pan.",
+          "early_cue": "Wooden spoon left on the counter after pouring"
+        }
+      ],
+      "successors": [
+        "s245"
+      ],
+      "duration": {
+        "mean_s": 87.61103024657201,
+        "std_s": 51.74923819484862,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s238"
+      ]
+    },
+    {
+      "id": "s239",
+      "name": "Crack one egg in a bowl",
+      "instruction_novice": "Take one egg, tap it on the edge of the bowl, and open it so the egg drops into the bowl. Check there is no shell in the bowl.",
+      "instruction_expert": "Crack one egg into bowl",
+      "substeps": [
+        "Pick up one egg",
+        "Tap it firmly on the rim of the bowl",
+        "Open the shell over the bowl and let the egg fall in",
+        "Pick out any shell fragments"
+      ],
+      "parts": [
+        "egg",
+        "bowl"
+      ],
+      "end_state": "One egg yolk and white sit in the bowl with no shell pieces, and the empty shell is set aside.",
+      "view_hint": "inside the mixing bowl from above",
+      "checks": [
+        {
+          "id": "s239_c1",
+          "question": "Is there one cracked egg in the bowl?",
+          "kind": "quantity",
+          "roi": "bowl interior"
+        },
+        {
+          "id": "s239_c2",
+          "question": "Is the bowl free of shell fragments?",
+          "kind": "other",
+          "roi": "bowl interior"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s239_m1",
+          "type": "wrong_order",
+          "description": "Egg cracked after the tomatoes are already cooking",
+          "visual_cue": "Tomato halves sizzling in the pan while an egg is being cracked into a bowl",
+          "correction": "The egg mixture should be ready before the tomatoes cook; finish the bowl quickly and keep an eye on the pan.",
+          "early_cue": "Pan heating with tomatoes while the egg carton is still unopened"
+        },
+        {
+          "id": "s239_m2",
+          "type": "technique",
+          "description": "Shell pieces fall into the bowl",
+          "visual_cue": "White shell fragments visible in the egg",
+          "correction": "There is some shell in the bowl, scoop it out with a spoon or a piece of shell.",
+          "early_cue": "Egg crushed instead of cleanly cracked"
+        },
+        {
+          "id": "s239_m3",
+          "type": "wrong_quantity",
+          "description": "More than one egg cracked into the bowl",
+          "visual_cue": "Two yolks in the bowl",
+          "correction": "The recipe uses one egg, remove the extra or set it aside.",
+          "early_cue": "A second egg picked up after the first is in the bowl"
+        }
+      ],
+      "successors": [
+        "s248"
+      ],
+      "duration": {
+        "mean_s": 53.75665362748937,
+        "std_s": 25.719581535024645,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s239"
+      ]
+    },
+    {
+      "id": "s240",
+      "name": "Cook the tomatoes cut-side down until they start to soften and colour",
+      "instruction_novice": "Place the two tomato halves in the hot pan with the cut side facing down. Let them cook until they soften and the cut side turns golden.",
+      "instruction_expert": "Fry tomato halves cut-side down",
+      "substeps": [
+        "Put both halves in the pan cut side down",
+        "Leave them without moving",
+        "Watch for the edges to soften and the cut face to brown"
+      ],
+      "parts": [
+        "tomato halves",
+        "non-stick frying pan"
+      ],
+      "end_state": "Two tomato halves sit cut-side down in the pan with softened edges and browned cut faces.",
+      "view_hint": "the frying pan from above, close on the tomatoes",
+      "checks": [
+        {
+          "id": "s240_c1",
+          "question": "Are both tomato halves in the pan with the cut face down and the rounded skin up?",
+          "kind": "orientation",
+          "roi": "tomato halves"
+        },
+        {
+          "id": "s240_c2",
+          "question": "Do the tomatoes look softened with browned cut edges?",
+          "kind": "completion",
+          "roi": "tomato halves"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s240_m1",
+          "type": "other",
+          "description": "Tomatoes taken out before they soften and colour",
+          "visual_cue": "Firm tomato halves with pale cut faces being lifted after a short time",
+          "correction": "They aren't ready yet; leave them cut-side down until they soften and the cut side browns.",
+          "early_cue": "Spoon reaching for the tomatoes seconds after they went in"
+        },
+        {
+          "id": "s240_m2",
+          "type": "wrong_orientation",
+          "description": "Tomatoes placed skin-side down",
+          "visual_cue": "Red cut faces pointing up in the pan",
+          "correction": "Flip the tomatoes so the cut side is down against the pan.",
+          "early_cue": "Tomato half lowered with the cut face up"
+        },
+        {
+          "id": "s240_m3",
+          "type": "wrong_order",
+          "description": "Tomatoes cooked before the egg mixture is ready",
+          "visual_cue": "Tomatoes in the pan while the bowl still holds unbeaten egg",
+          "correction": "Finish beating the egg mixture now so it's ready as soon as the tomatoes are done.",
+          "early_cue": "Tomato halves carried to the stove with the egg bowl still unmixed"
+        }
+      ],
+      "successors": [
+        "s244"
+      ],
+      "duration": {
+        "mean_s": 213.63815961758624,
+        "std_s": 133.8566550864904,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s240"
+      ]
+    },
+    {
+      "id": "s241",
+      "name": "Pour the egg mixture into the pan",
+      "instruction_novice": "Pour the beaten egg mixture from the bowl into the hot pan so it spreads over the base.",
+      "instruction_expert": "Pour egg mixture into pan",
+      "substeps": [
+        "Pick up the bowl of beaten egg",
+        "Pour it into the centre of the pan",
+        "Tilt the pan slightly so it covers the base"
+      ],
+      "parts": [
+        "egg mixture",
+        "bowl",
+        "non-stick frying pan"
+      ],
+      "end_state": "A thin layer of yellow egg with green flecks covers the base of the pan and the bowl is empty.",
+      "view_hint": "the frying pan from above",
+      "checks": [
+        {
+          "id": "s241_c1",
+          "question": "Does the egg mixture cover the base of the pan?",
+          "kind": "completion",
+          "roi": "pan base"
+        },
+        {
+          "id": "s241_c2",
+          "question": "Is the bowl empty?",
+          "kind": "completion",
+          "roi": "bowl interior"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s241_m1",
+          "type": "wrong_order",
+          "description": "Egg poured in while the tomatoes are still in the pan",
+          "visual_cue": "Tomato halves sitting in the egg in the pan",
+          "correction": "Take the tomatoes out onto the plate before pouring in the egg.",
+          "early_cue": "Bowl lifted toward the pan with tomatoes still inside"
+        },
+        {
+          "id": "s241_m2",
+          "type": "incomplete",
+          "description": "Some of the mixture left in the bowl",
+          "visual_cue": "Egg still clinging in the bowl after pouring",
+          "correction": "Scrape the rest of the egg from the bowl into the pan.",
+          "early_cue": "Bowl set down quickly after a short pour"
+        },
+        {
+          "id": "s241_m3",
+          "type": "missing_step",
+          "description": "Egg poured into a pan with no oil or a cold pan",
+          "visual_cue": "Egg sits still with no sizzle and no sheen of oil",
+          "correction": "The pan should be hot with oil before the egg goes in; make sure the heat is on.",
+          "early_cue": "Burner knob in the off position"
+        }
+      ],
+      "successors": [
+        "s238"
+      ],
+      "duration": {
+        "mean_s": 28.852833389813895,
+        "std_s": 15.107041630744362,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s241"
+      ]
+    },
+    {
+      "id": "s242",
+      "name": "Add the chopped cilantro to the bowl",
+      "instruction_novice": "Scrape the two tablespoons of chopped cilantro into the bowl with the egg.",
+      "instruction_expert": "Add cilantro to bowl",
+      "substeps": [
+        "Scoop the measured cilantro with the spoon or knife",
+        "Tip it into the bowl",
+        "Scrape any leftover bits from the board"
+      ],
+      "parts": [
+        "chopped cilantro",
+        "bowl"
+      ],
+      "end_state": "Green chopped cilantro floats on the egg in the bowl and the board is clear of cilantro.",
+      "view_hint": "inside the mixing bowl from above",
+      "checks": [
+        {
+          "id": "s242_c1",
+          "question": "Is chopped cilantro visible in the bowl with the egg?",
+          "kind": "presence",
+          "roi": "bowl interior"
+        },
+        {
+          "id": "s242_c2",
+          "question": "Has all the measured cilantro left the cutting board?",
+          "kind": "completion",
+          "roi": "cutting board"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s242_m1",
+          "type": "wrong_order",
+          "description": "Cilantro added after the tomatoes have been cooked",
+          "visual_cue": "Cooked tomatoes on the plate or in the pan while cilantro goes into the bowl",
+          "correction": "The cilantro should go in before cooking the tomatoes; add it now and beat the mixture right away.",
+          "early_cue": "Tomatoes placed in the pan while cilantro remains on the board"
+        },
+        {
+          "id": "s242_m2",
+          "type": "other",
+          "description": "Cilantro added to the pan instead of the bowl",
+          "visual_cue": "Green leaves landing in the frying pan",
+          "correction": "The cilantro goes into the egg bowl, not the pan.",
+          "early_cue": "Hand with cilantro moving toward the stove"
+        },
+        {
+          "id": "s242_m3",
+          "type": "incomplete",
+          "description": "Only part of the cilantro added",
+          "visual_cue": "Pile of chopped cilantro still on the board after adding",
+          "correction": "There is still cilantro on the board, scrape the rest into the bowl.",
+          "early_cue": "Board set aside with green bits still on it"
+        }
+      ],
+      "successors": [
+        "s248"
+      ],
+      "duration": {
+        "mean_s": 37.60183517112076,
+        "std_s": 37.18353385907351,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s242"
+      ]
+    },
+    {
+      "id": "s243",
+      "name": "Transfer omelette to the plate and serve with the tomatoes",
+      "instruction_novice": "Slide the omelette out of the pan onto the serving plate next to the tomatoes. It is ready to serve.",
+      "instruction_expert": "Plate omelette beside tomatoes",
+      "substeps": [
+        "Loosen the omelette edges with the wooden spoon",
+        "Tilt the pan over the plate",
+        "Slide or fold the omelette onto the plate beside the tomatoes"
+      ],
+      "parts": [
+        "omelette",
+        "serving plate",
+        "wooden spoon",
+        "non-stick frying pan",
+        "tomato halves"
+      ],
+      "end_state": "The omelette and the two tomato halves sit together on the serving plate and the pan is empty.",
+      "view_hint": "the serving plate from above",
+      "checks": [
+        {
+          "id": "s243_c1",
+          "question": "Is the whole omelette on the serving plate?",
+          "kind": "completion",
+          "roi": "serving plate"
+        },
+        {
+          "id": "s243_c2",
+          "question": "Are the tomato halves on the same plate as the omelette?",
+          "kind": "presence",
+          "roi": "serving plate"
+        },
+        {
+          "id": "s243_c3",
+          "question": "Is the pan empty?",
+          "kind": "completion",
+          "roi": "pan base"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s243_m1",
+          "type": "other",
+          "description": "Omelette placed on the cutting board or a different plate from the tomatoes",
+          "visual_cue": "Omelette on a board or second plate, tomatoes on another",
+          "correction": "Put the omelette on the same plate as the tomatoes so they are served together.",
+          "early_cue": "Pan tilted toward the cutting board"
+        },
+        {
+          "id": "s243_m2",
+          "type": "technique",
+          "description": "Omelette breaks apart during transfer",
+          "visual_cue": "Omelette in several torn pieces on the plate",
+          "correction": "Loosen the edges first and slide it out slowly in one piece.",
+          "early_cue": "Omelette lifted from the middle with the spoon"
+        },
+        {
+          "id": "s243_m3",
+          "type": "incomplete",
+          "description": "Part of the omelette left stuck in the pan",
+          "visual_cue": "Pieces of egg remaining on the pan base after plating",
+          "correction": "Scrape the rest of the omelette onto the plate.",
+          "early_cue": "Pan set back on the stove with egg still inside"
+        }
+      ],
+      "successors": [],
+      "duration": {
+        "mean_s": 16.167811378428738,
+        "std_s": 14.313403931091184,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s243"
+      ]
+    },
+    {
+      "id": "s244",
+      "name": "Scoop the tomatoes from the pan",
+      "instruction_novice": "Use a spoon or spatula to lift both tomato halves out of the pan, keeping the pan on the heat.",
+      "instruction_expert": "Lift tomatoes out of pan",
+      "substeps": [
+        "Slide the spatula under one tomato half",
+        "Lift it out",
+        "Repeat for the second half"
+      ],
+      "parts": [
+        "tomato halves",
+        "spatula or spoon",
+        "non-stick frying pan"
+      ],
+      "end_state": "The pan is empty except for oil, and both tomato halves are held on the spatula or already on the serving plate.",
+      "view_hint": "the frying pan and the spatula",
+      "checks": [
+        {
+          "id": "s244_c1",
+          "question": "Is the pan now free of tomatoes?",
+          "kind": "completion",
+          "roi": "pan base"
+        },
+        {
+          "id": "s244_c2",
+          "question": "Are both tomato halves on the spatula or plate, not on the cutting board?",
+          "kind": "presence",
+          "roi": "spatula or plate"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s244_m1",
+          "type": "other",
+          "description": "Cooked tomatoes placed on the cutting board instead of a plate",
+          "visual_cue": "Browned tomato halves resting on the wooden cutting board",
+          "correction": "Put the cooked tomatoes on the serving plate, not back on the cutting board.",
+          "early_cue": "Spatula with tomatoes moving toward the board"
+        },
+        {
+          "id": "s244_m2",
+          "type": "wrong_order",
+          "description": "Tomatoes scooped out before the egg mixture is beaten and ready",
+          "visual_cue": "Tomatoes lifted out while the bowl still holds unbeaten egg",
+          "correction": "Beat the egg mixture now before pouring, so the pan isn't sitting empty on the heat.",
+          "early_cue": "Fork still unused next to a bowl with whole yolk"
+        },
+        {
+          "id": "s244_m3",
+          "type": "incomplete",
+          "description": "Only one tomato half removed",
+          "visual_cue": "One tomato half still sitting in the pan",
+          "correction": "There is still a tomato in the pan, take that one out too.",
+          "early_cue": "Spatula set down after lifting a single half"
+        }
+      ],
+      "successors": [
+        "s236"
+      ],
+      "duration": {
+        "mean_s": 16.74576252105779,
+        "std_s": 10.555784377150431,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s244"
+      ]
+    },
+    {
+      "id": "s245",
+      "name": "Stop stirring when nearly cooked to let it set into an omelette",
+      "instruction_novice": "When there is only a little runny egg left on top, stop stirring and let the egg set into one flat omelette.",
+      "instruction_expert": "Stop stirring, let omelette set",
+      "substeps": [
+        "Check the surface is mostly set with just a little gloss",
+        "Lift the spoon out and leave the egg alone",
+        "Wait a few seconds until the surface is set"
+      ],
+      "parts": [
+        "wooden spoon",
+        "non-stick frying pan",
+        "omelette"
+      ],
+      "end_state": "One flat round omelette sits untouched in the pan with a set surface and the spoon resting away from it.",
+      "view_hint": "the frying pan from above",
+      "checks": [
+        {
+          "id": "s245_c1",
+          "question": "Is the egg one continuous flat omelette rather than loose pieces?",
+          "kind": "completion",
+          "roi": "pan base"
+        },
+        {
+          "id": "s245_c2",
+          "question": "Is the surface set with no runny egg?",
+          "kind": "completion",
+          "roi": "omelette surface"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s245_m1",
+          "type": "technique",
+          "description": "Stirring continued too long so the egg sets into small scrambled pieces",
+          "visual_cue": "Loose broken curds in the pan instead of one sheet",
+          "correction": "Stop stirring now and let the egg set as one piece.",
+          "early_cue": "Spoon still moving when most of the egg has set"
+        },
+        {
+          "id": "s245_m2",
+          "type": "technique",
+          "description": "Stirring stopped too early, leaving lots of runny egg",
+          "visual_cue": "Pools of liquid egg across the top with set edges",
+          "correction": "There is still runny egg; give it a few more gentle stirs before letting it set.",
+          "early_cue": "Spoon put down right after the first stir"
+        },
+        {
+          "id": "s245_m3",
+          "type": "other",
+          "description": "Omelette left too long and browns or burns",
+          "visual_cue": "Dark brown underside or smoke from the pan",
+          "correction": "It is done, take it off the heat before it burns.",
+          "early_cue": "Edges darkening while the pan stays on high heat"
+        }
+      ],
+      "successors": [
+        "s243"
+      ],
+      "duration": {
+        "mean_s": 36.06675811383113,
+        "std_s": 49.027719632524544,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s245"
+      ]
+    },
+    {
+      "id": "s246",
+      "name": "Cut tomato into two pieces",
+      "instruction_novice": "Cut the tomato in half with the knife so you have two equal pieces.",
+      "instruction_expert": "Halve the tomato",
+      "substeps": [
+        "Hold the tomato steady on the board",
+        "Cut straight down through the middle",
+        "Check you have two halves"
+      ],
+      "parts": [
+        "tomato",
+        "knife",
+        "cutting board"
+      ],
+      "end_state": "Two tomato halves with flat cut faces sit on the cutting board.",
+      "view_hint": "the cutting board from above",
+      "checks": [
+        {
+          "id": "s246_c1",
+          "question": "Are there exactly two tomato pieces on the board?",
+          "kind": "quantity",
+          "roi": "cutting board"
+        },
+        {
+          "id": "s246_c2",
+          "question": "Does each piece have a single flat cut face?",
+          "kind": "completion",
+          "roi": "tomato pieces"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s246_m1",
+          "type": "technique",
+          "description": "Tomato chopped into many small pieces instead of two halves",
+          "visual_cue": "Several small tomato chunks or dice on the board",
+          "correction": "Just cut the tomato in half, two pieces only, so they can fry cut-side down.",
+          "early_cue": "Knife making a second cut on a tomato half"
+        },
+        {
+          "id": "s246_m2",
+          "type": "wrong_order",
+          "description": "Tomato cut after the pan is already heating",
+          "visual_cue": "Pan on heat with oil while the tomato is being cut",
+          "correction": "Cut the tomato before heating the pan; lower the heat while you finish.",
+          "early_cue": "Oil poured into the pan with a whole tomato still on the board"
+        }
+      ],
+      "successors": [
+        "s235"
+      ],
+      "duration": {
+        "mean_s": 15.69936044074437,
+        "std_s": 9.68455827188996,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s246"
+      ]
+    },
+    {
+      "id": "s247",
+      "name": "Take a tomato",
+      "instruction_novice": "Pick up one whole tomato and put it on the cutting board.",
+      "instruction_expert": "Take one whole tomato",
+      "substeps": [
+        "Locate the tomatoes",
+        "Pick up one whole tomato",
+        "Place it on the cutting board"
+      ],
+      "parts": [
+        "tomato",
+        "cutting board"
+      ],
+      "end_state": "One whole tomato sits on the cutting board.",
+      "view_hint": "the cutting board from above",
+      "checks": [
+        {
+          "id": "s247_c1",
+          "question": "Is there a whole tomato on the cutting board?",
+          "kind": "presence",
+          "roi": "cutting board"
+        },
+        {
+          "id": "s247_c2",
+          "question": "Is the item a tomato and not another vegetable?",
+          "kind": "part_identity",
+          "roi": "cutting board"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s247_m1",
+          "type": "wrong_quantity",
+          "description": "Only half a tomato taken instead of a whole one",
+          "visual_cue": "A tomato half with a cut face on the board",
+          "correction": "You need a whole tomato so you get two halves; pick up a whole one.",
+          "early_cue": "Hand reaching for a pre-cut tomato piece"
+        },
+        {
+          "id": "s247_m2",
+          "type": "wrong_order",
+          "description": "Tomato taken after the pan is already heating",
+          "visual_cue": "Oil shimmering in the pan while a tomato is fetched",
+          "correction": "Get the tomato cut before the pan heats; turn the heat down while you prep it.",
+          "early_cue": "Stove knob turned before any tomato is on the board"
+        }
+      ],
+      "successors": [
+        "s246"
+      ],
+      "duration": {
+        "mean_s": 31.97681126074654,
+        "std_s": 21.026842319791673,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s247"
+      ]
+    },
+    {
+      "id": "s248",
+      "name": "Beat the contents of the bowl",
+      "instruction_novice": "Use a fork to beat the egg, cilantro, and pepper together until the yolk and white are fully blended.",
+      "instruction_expert": "Beat egg mixture until blended",
+      "substeps": [
+        "Hold the bowl steady with one hand",
+        "Whisk quickly with a fork in circles",
+        "Stop when no streaks of white remain"
+      ],
+      "parts": [
+        "fork",
+        "bowl",
+        "egg mixture"
+      ],
+      "end_state": "The bowl holds a uniform pale yellow mixture with green cilantro flecks and no separate yolk or white.",
+      "view_hint": "inside the mixing bowl from above",
+      "checks": [
+        {
+          "id": "s248_c1",
+          "question": "Is the egg mixture uniformly yellow with no separate yolk or clear white?",
+          "kind": "completion",
+          "roi": "bowl interior"
+        },
+        {
+          "id": "s248_c2",
+          "question": "Are cilantro and pepper visible mixed through the egg?",
+          "kind": "presence",
+          "roi": "bowl interior"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s248_m1",
+          "type": "wrong_order",
+          "description": "Beating done after the tomatoes have already cooked",
+          "visual_cue": "Cooked tomatoes on the plate or pan while the egg is still being beaten",
+          "correction": "The egg mixture should be beaten before cooking the tomatoes; finish beating now and keep the pan on low.",
+          "early_cue": "Tomatoes placed in the pan while yolk is still whole in the bowl"
+        },
+        {
+          "id": "s248_m2",
+          "type": "incomplete",
+          "description": "Mixture not beaten enough, yolk still separate",
+          "visual_cue": "Streaks of clear white and an intact yolk in the bowl",
+          "correction": "Keep beating until the yolk and white are fully blended and even in color.",
+          "early_cue": "Fork lifted out after only a couple of strokes"
+        },
+        {
+          "id": "s248_m3",
+          "type": "wrong_order",
+          "description": "Beating before cilantro or pepper were added",
+          "visual_cue": "Beaten egg with no green flecks or pepper specks",
+          "correction": "Add the cilantro and pepper first, then beat everything together.",
+          "early_cue": "Fork picked up while cilantro is still on the board"
+        }
+      ],
+      "successors": [
+        "s235"
+      ],
+      "duration": {
+        "mean_s": 53.47545193787605,
+        "std_s": 16.80921308970653,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s248"
+      ]
+    },
+    {
+      "id": "s249",
+      "name": "Add 1/2 tsp ground black pepper to the bowl",
+      "instruction_novice": "Measure half a teaspoon of ground black pepper with a measuring spoon and tip it into the bowl with the egg.",
+      "instruction_expert": "Add 1/2 tsp pepper to bowl",
+      "substeps": [
+        "Pick up the half-teaspoon measure",
+        "Fill it level with ground black pepper over the counter, not over the bowl",
+        "Tip the pepper into the bowl"
+      ],
+      "parts": [
+        "ground black pepper",
+        "half-teaspoon measure",
+        "bowl"
+      ],
+      "end_state": "A small sprinkle of black pepper is visible on top of the egg in the bowl.",
+      "view_hint": "inside the mixing bowl and the measuring spoon",
+      "checks": [
+        {
+          "id": "s249_c1",
+          "question": "Is black pepper visible on the egg in the bowl?",
+          "kind": "presence",
+          "roi": "bowl interior"
+        },
+        {
+          "id": "s249_c2",
+          "question": "Was a measuring spoon used for the pepper?",
+          "kind": "quantity",
+          "roi": "measuring spoon"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s249_m1",
+          "type": "wrong_quantity",
+          "description": "Pepper shaken directly into the bowl without measuring",
+          "visual_cue": "Pepper shaker tilted over the bowl, no measuring spoon in hand",
+          "correction": "Use the half-teaspoon measure for the pepper instead of shaking it straight in.",
+          "early_cue": "Shaker lifted toward the bowl with no spoon in view"
+        },
+        {
+          "id": "s249_m2",
+          "type": "technique",
+          "description": "Too much pepper added because it overflowed the spoon while pouring from the shaker",
+          "visual_cue": "Heaped spoon or pepper spilling over the bowl rim",
+          "correction": "That is more than half a teaspoon; level the spoon and fill it over the counter next time.",
+          "early_cue": "Shaker poured rapidly into a small spoon held over the bowl"
+        },
+        {
+          "id": "s249_m3",
+          "type": "wrong_order",
+          "description": "Pepper added after the pan is already heating or tomatoes are done",
+          "visual_cue": "Pan on heat or cooked tomatoes on a plate while pepper is being added to the bowl",
+          "correction": "The egg mixture should be finished before the pan heats; add the pepper now and lower the heat.",
+          "early_cue": "Stove turned on before pepper has been added"
+        }
+      ],
+      "successors": [
+        "s248"
+      ],
+      "duration": {
+        "mean_s": 51.98619534537217,
+        "std_s": 21.48074145411158,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s249"
+      ]
+    }
+  ],
+  "start": [
+    "s237",
+    "s239",
+    "s247",
+    "s249"
+  ]
+}

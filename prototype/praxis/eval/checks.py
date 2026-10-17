@@ -86,6 +86,29 @@ def frames_at(video: str, t_abs: float, n: int = 3, spacing: float = 1.0, max_si
     return (out, [t_abs - x for x in ts]) if return_times else out
 
 
+def span_frames(video: str, t_abs: float, max_side: int = 640):
+    """Same evidence selection as the engine (verify.common.span_keyframes), decoding from the video file."""
+    from ..verify.common import span_keyframes
+    cap = cv2.VideoCapture(video)
+    fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+
+    def frame_at(x):
+        if x < 0:
+            return None
+        cap.set(cv2.CAP_PROP_POS_FRAMES, int(x * fps))
+        ok, bgr = cap.read()
+        if not ok:
+            return None
+        h, w = bgr.shape[:2]
+        s = min(1.0, max_side / max(h, w))
+        if s < 1:
+            bgr = cv2.resize(bgr, (int(w * s), int(h * s)), interpolation=cv2.INTER_AREA)
+        return cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+    frames, times = span_keyframes(frame_at, t_abs)
+    cap.release()
+    return frames, [t_abs - x for x in times]
+
+
 def degrade(frames: list[np.ndarray], mode: str, seed: int = 0) -> list[np.ndarray]:
     """Visual-uncertainty test: remove the evidence the check needs."""
     rng = np.random.default_rng(seed)
@@ -105,7 +128,8 @@ def degrade(frames: list[np.ndarray], mode: str, seed: int = 0) -> list[np.ndarr
 
 
 def run_verifier_on_checks(verifier, checks: list[CheckItem], library: dict, out_path, workers: int = 4,
-                           crops_fn=None, degrade_mode: str | None = None, log_every: int = 25) -> list[dict]:
+                           crops_fn=None, degrade_mode: str | None = None, log_every: int = 25,
+                           framing: str = "span") -> list[dict]:
     """Ask `verifier` every check; write one JSON line per check with the verdict + GT."""
     out_path.parent.mkdir(parents=True, exist_ok=True)
     done = {}
@@ -119,7 +143,10 @@ def run_verifier_on_checks(verifier, checks: list[CheckItem], library: dict, out
             return done[ci.check_id]
         g = library[ci.task_id]
         node = g.node(ci.node)
-        frames, ages = frames_at(ci.video, ci.t_abs, sharp_from=9, return_times=True)
+        if framing == "span":
+            frames, ages = span_frames(ci.video, ci.t_abs)
+        else:   # "recent3": 3 sharpest frames of the last 4 s
+            frames, ages = frames_at(ci.video, ci.t_abs, sharp_from=9, return_times=True)
         if degrade_mode:
             frames = degrade(frames, degrade_mode, seed=hash(ci.check_id) % 1000)
         crops = crops_fn(ci, frames) if crops_fn else []
@@ -128,7 +155,7 @@ def run_verifier_on_checks(verifier, checks: list[CheckItem], library: dict, out
                             context={"frame_ages": ages,
                                      "next_step": g.node(nxt[0]).name if nxt else None})
         v: Verdict = verifier.verify(req)
-        return {**asdict(ci), "verdict": v.model_dump(), "n_crops": len(crops), "degrade": degrade_mode}
+        return {**asdict(ci), "verdict": v.model_dump(), "n_crops": len(crops), "degrade": degrade_mode, "framing": framing}
 
     rows = []
     t0 = time.time()

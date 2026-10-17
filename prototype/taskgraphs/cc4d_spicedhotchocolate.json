@@ -1,0 +1,563 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "cc4d_spicedhotchocolate",
+  "title": "Spiced Hot Chocolate",
+  "domain": "cooking",
+  "summary": "Fill a microwave-safe mug with skimmed milk, microwave it for 1 minute, add sugar, chocolate and cinnamon, mix, then heat for another minute and serve.",
+  "source": "CaptainCook4D recipe text + task graph (Spiced Hot Chocolate); mistake hints from train split",
+  "draft": false,
+  "compiler": {
+    "model": "claude-fable-5-1",
+    "prompt_version": "compile-v1",
+    "cost_usd": 0.36134,
+    "latency_s": 144.20501325000077,
+    "input_tokens": 4334,
+    "output_tokens": 6360
+  },
+  "nodes": [
+    {
+      "id": "s83",
+      "name": "Heat for 1 minute and serve",
+      "instruction_novice": "Put the mug back in the microwave on full power for 1 minute. Then take it out carefully and serve your hot chocolate.",
+      "instruction_expert": "Microwave 1 minute high, then serve",
+      "substeps": [
+        "Place the mug in the center of the microwave.",
+        "Set full power and 1 minute, then start.",
+        "Carefully take the hot mug out.",
+        "Set it on the table ready to drink."
+      ],
+      "parts": [
+        "microwave-safe mug",
+        "microwave"
+      ],
+      "end_state": "The steaming mug of brown hot chocolate sits on the table or counter ready to drink, with the microwave empty.",
+      "view_hint": "the microwave display during heating, then the mug on the table",
+      "checks": [
+        {
+          "id": "s83_c1",
+          "question": "Is the microwave set to 1 minute at full power?",
+          "kind": "other",
+          "roi": "microwave display"
+        },
+        {
+          "id": "s83_c2",
+          "question": "Is the finished hot chocolate out of the microwave and set down to serve?",
+          "kind": "completion",
+          "roi": "mug on counter or table"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s83_m1",
+          "type": "technique",
+          "description": "Heated for 2 minutes instead of 1.",
+          "visual_cue": "Display shows 2:00 at start.",
+          "correction": "That's 2 minutes. Set it to 1 minute instead.",
+          "early_cue": "Pressing the minute button twice."
+        },
+        {
+          "id": "s83_m2",
+          "type": "technique",
+          "description": "Heated far too briefly, like 8 or 40 seconds, or stopped a long countdown early.",
+          "visual_cue": "Display under one minute, or a countdown cancelled with time left.",
+          "correction": "That wasn't a full minute. Pop it back in and finish the remaining time.",
+          "early_cue": "Hand hovering over the stop button early in the cycle."
+        },
+        {
+          "id": "s83_m3",
+          "type": "technique",
+          "description": "Used low power, or mixed low and high power settings.",
+          "visual_cue": "Display shows Low or a low power percentage during the cycle.",
+          "correction": "Power is set too low. Use full power for the whole minute.",
+          "early_cue": "Pressing the power level button before starting."
+        },
+        {
+          "id": "s83_m4",
+          "type": "other",
+          "description": "Served on an improper item like the microwave glass plate cover.",
+          "visual_cue": "Mug set on a glass microwave cover or plate instead of a table or saucer.",
+          "correction": "Take the mug off that cover and set it on the table or a saucer to serve.",
+          "early_cue": "Lifting the microwave cover out along with the mug."
+        }
+      ],
+      "successors": [],
+      "duration": {
+        "mean_s": 97.99571374507558,
+        "std_s": 36.03200922456754,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s83"
+      ]
+    },
+    {
+      "id": "s84",
+      "name": "Add 1/5 teaspoon cinnamon",
+      "instruction_novice": "Add a tiny pinch of cinnamon, about one fifth of a teaspoon, to the mug. Measure it in the spoon first rather than fixing it in the milk.",
+      "instruction_expert": "Add 1/5 tsp cinnamon",
+      "substeps": [
+        "Pick up the cinnamon jar and check the label.",
+        "Put a small amount, about a fifth of a teaspoon, in a teaspoon.",
+        "Tap it gently into the mug.",
+        "Close the cinnamon jar."
+      ],
+      "parts": [
+        "cinnamon",
+        "teaspoon",
+        "microwave-safe mug"
+      ],
+      "end_state": "A light dusting of brown cinnamon sits on the milk surface, with no spill around the mug.",
+      "view_hint": "the spice jar label, the spoon, and the surface of the milk",
+      "checks": [
+        {
+          "id": "s84_c1",
+          "question": "Does the spice jar label say cinnamon?",
+          "kind": "part_identity",
+          "roi": "spice jar label"
+        },
+        {
+          "id": "s84_c2",
+          "question": "Is only a small pinch of cinnamon, well under a quarter teaspoon, added?",
+          "kind": "quantity",
+          "roi": "spoon and milk surface"
+        },
+        {
+          "id": "s84_c3",
+          "question": "Is the counter free of spilled cinnamon?",
+          "kind": "other",
+          "roi": "counter around the mug"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s84_m1",
+          "type": "wrong_part",
+          "description": "Added cumin instead of cinnamon.",
+          "visual_cue": "Jar label reads cumin; powder is yellow-brown and coarser.",
+          "correction": "That's cumin, not cinnamon. Swap jars before you add it.",
+          "early_cue": "Hand picking up the cumin jar."
+        },
+        {
+          "id": "s84_m2",
+          "type": "wrong_quantity",
+          "description": "Added a quarter teaspoon or more instead of a fifth.",
+          "visual_cue": "Spoon clearly filled past a small pinch, or a thick brown layer on the milk.",
+          "correction": "That's a bit too much cinnamon. Aim for just a small pinch, about a fifth of a teaspoon.",
+          "early_cue": "Using a quarter-teaspoon measure or a heaped spoon."
+        },
+        {
+          "id": "s84_m3",
+          "type": "technique",
+          "description": "Added too much, then scooped cinnamon back off the milk; or spilled while adding.",
+          "visual_cue": "Spoon skimming the milk surface to remove cinnamon, or brown powder on the counter.",
+          "correction": "Measure the cinnamon in the spoon first, then add it. Don't scoop it back out of the milk, and wipe up any spill.",
+          "early_cue": "Shaking the jar directly over the mug."
+        }
+      ],
+      "successors": [
+        "s85"
+      ],
+      "duration": {
+        "mean_s": 42.395708097587736,
+        "std_s": 16.88171849382413,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s84"
+      ]
+    },
+    {
+      "id": "s85",
+      "name": "Mix the contents",
+      "instruction_novice": "Stir the mug slowly in circles with a spoon until the chocolate and sugar are dissolved. Keep the motion gentle so nothing splashes out.",
+      "instruction_expert": "Stir slowly in circles until smooth",
+      "substeps": [
+        "Put a spoon into the mug.",
+        "Stir slowly in a circular motion.",
+        "Keep stirring until no chocolate lumps remain.",
+        "Lift the spoon out and rest it on the counter."
+      ],
+      "parts": [
+        "spoon",
+        "microwave-safe mug"
+      ],
+      "end_state": "The liquid in the mug is a uniform light brown with no chocolate pieces or sugar visible, and the surface is calm.",
+      "view_hint": "straight down into the mug",
+      "checks": [
+        {
+          "id": "s85_c1",
+          "question": "Is the liquid an even brown color with no chocolate pieces visible?",
+          "kind": "completion",
+          "roi": "inside of the mug"
+        },
+        {
+          "id": "s85_c2",
+          "question": "Is the counter around the mug free of splashes?",
+          "kind": "other",
+          "roi": "counter around the mug"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s85_m1",
+          "type": "technique",
+          "description": "Stirred hastily or with up-down and sideways motions, spilling milk.",
+          "visual_cue": "Fast jerky spoon movement, liquid sloshing over the rim, drips on the counter.",
+          "correction": "Slow down and stir in gentle circles so the milk stays in the mug.",
+          "early_cue": "Spoon plunging up and down rapidly."
+        },
+        {
+          "id": "s85_m2",
+          "type": "incomplete",
+          "description": "Did not mix thoroughly; chocolate and sugar not dissolved.",
+          "visual_cue": "Chocolate lumps or sugar grains still visible, streaky color in the mug.",
+          "correction": "Keep stirring a bit longer until the chocolate is fully melted and the color is even.",
+          "early_cue": "Only two or three quick stirs before setting the spoon down."
+        },
+        {
+          "id": "s85_m3",
+          "type": "wrong_order",
+          "description": "Mixed before adding the chocolate, sugar or cinnamon.",
+          "visual_cue": "Stirring plain white milk with no chocolate, sugar or cinnamon added.",
+          "correction": "Add the sugar, chocolate and cinnamon first, then mix everything together.",
+          "early_cue": "Picking up a stirring spoon right after taking the mug out of the microwave."
+        }
+      ],
+      "successors": [
+        "s83"
+      ],
+      "duration": {
+        "mean_s": 35.84001030635057,
+        "std_s": 21.446817744018464,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s85"
+      ]
+    },
+    {
+      "id": "s87",
+      "name": "Add 1 teaspoon white sugar",
+      "instruction_novice": "Measure one level teaspoon of white sugar and tip it into the warm milk. Use the small teaspoon, not the big tablespoon.",
+      "instruction_expert": "Add 1 tsp white sugar",
+      "substeps": [
+        "Pick up a teaspoon measure.",
+        "Scoop white sugar and level it off.",
+        "Tip it into the mug.",
+        "Set the spoon aside."
+      ],
+      "parts": [
+        "white sugar",
+        "teaspoon",
+        "microwave-safe mug"
+      ],
+      "end_state": "White sugar grains are visible sinking into or dissolving in the warm milk, and a used teaspoon lies nearby.",
+      "view_hint": "the sugar container, the spoon and the mug opening",
+      "checks": [
+        {
+          "id": "s87_c1",
+          "question": "Is a small teaspoon being used, not a tablespoon?",
+          "kind": "part_identity",
+          "roi": "spoon in hand"
+        },
+        {
+          "id": "s87_c2",
+          "question": "Is the container being used labeled white sugar?",
+          "kind": "part_identity",
+          "roi": "sugar container label"
+        },
+        {
+          "id": "s87_c3",
+          "question": "Has exactly one spoonful been added to the mug?",
+          "kind": "quantity",
+          "roi": "mug opening"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s87_m1",
+          "type": "wrong_quantity",
+          "description": "Used a tablespoon instead of a teaspoon.",
+          "visual_cue": "A large spoon heaped with sugar going into the mug.",
+          "correction": "That's a tablespoon. Use the smaller teaspoon for the sugar.",
+          "early_cue": "Hand picking the largest spoon from the measuring set."
+        },
+        {
+          "id": "s87_m2",
+          "type": "wrong_quantity",
+          "description": "Added two teaspoons instead of one.",
+          "visual_cue": "Spoon dips into the sugar and goes to the mug a second time.",
+          "correction": "That's two teaspoons. The recipe only needs one, so skip the second.",
+          "early_cue": "Spoon going back to the sugar container after the first scoop."
+        },
+        {
+          "id": "s87_m3",
+          "type": "wrong_part",
+          "description": "Added corn starch or another white powder instead of sugar.",
+          "visual_cue": "Container label reads corn starch; powder is fine and dusty rather than grainy.",
+          "correction": "That's corn starch, not sugar. Grab the white sugar instead.",
+          "early_cue": "Reaching for a corn starch box."
+        }
+      ],
+      "successors": [
+        "s85"
+      ],
+      "duration": {
+        "mean_s": 59.9101844984336,
+        "std_s": 16.692868023223667,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s87"
+      ]
+    },
+    {
+      "id": "s88",
+      "name": "Fill mug with skimmed milk",
+      "instruction_novice": "Grab a clean, microwave-safe mug and fill it nearly to the top with skimmed milk. Pour slowly so nothing spills.",
+      "instruction_expert": "Fill clean mug with skimmed milk",
+      "substeps": [
+        "Pick a clean mug marked microwave-safe.",
+        "Open the skimmed milk carton or bottle.",
+        "Pour slowly until the mug is full, about a finger-width below the rim.",
+        "Set the milk down and wipe any drips."
+      ],
+      "parts": [
+        "microwave-safe mug",
+        "skimmed milk"
+      ],
+      "end_state": "A clean mug stands on the counter filled with white milk close to the rim, with no puddles around it.",
+      "view_hint": "the mug on the counter from above, including the milk carton label",
+      "checks": [
+        {
+          "id": "s88_c1",
+          "question": "Is the mug filled with milk nearly to the rim?",
+          "kind": "quantity",
+          "roi": "inside of the mug"
+        },
+        {
+          "id": "s88_c2",
+          "question": "Does the milk container say skimmed (not whole) milk?",
+          "kind": "part_identity",
+          "roi": "milk carton label"
+        },
+        {
+          "id": "s88_c3",
+          "question": "Is the counter around the mug free of spilled milk?",
+          "kind": "other",
+          "roi": "counter around the mug base"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s88_m1",
+          "type": "wrong_part",
+          "description": "Used whole milk instead of skimmed milk.",
+          "visual_cue": "Milk carton label reads whole or full-fat milk, often a blue or red cap.",
+          "correction": "That's whole milk. Swap it for the skimmed milk carton before you pour.",
+          "early_cue": "Hand reaching for the whole milk carton in the fridge."
+        },
+        {
+          "id": "s88_m2",
+          "type": "wrong_quantity",
+          "description": "Only filled the mug halfway.",
+          "visual_cue": "Milk level sits around the middle of the mug with lots of empty space above.",
+          "correction": "The mug is only half full. Top it up with skimmed milk almost to the rim.",
+          "early_cue": "Pouring stops early while the mug is still mostly empty."
+        },
+        {
+          "id": "s88_m3",
+          "type": "technique",
+          "description": "Spilled milk while filling.",
+          "visual_cue": "White puddle or drips on the counter and down the mug side.",
+          "correction": "Some milk spilled. Pour more slowly and wipe up the counter before moving on.",
+          "early_cue": "Carton tilted steeply with a fast stream of milk."
+        },
+        {
+          "id": "s88_m4",
+          "type": "other",
+          "description": "Used a dirty, unwashed mug.",
+          "visual_cue": "Residue, stains or old liquid visible inside the mug before pouring.",
+          "correction": "That mug looks dirty. Wash it or pick a clean one first.",
+          "early_cue": "Mug picked up from the sink or with visible residue inside."
+        }
+      ],
+      "successors": [
+        "s89"
+      ],
+      "duration": {
+        "mean_s": 66.86044164532099,
+        "std_s": 24.36545561136246,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s88"
+      ]
+    },
+    {
+      "id": "s89",
+      "name": "Microwave milk for 1 minute",
+      "instruction_novice": "Put the mug in the microwave and heat it on full power for exactly 1 minute. Take it out carefully when it beeps.",
+      "instruction_expert": "Microwave 1 minute, full power",
+      "substeps": [
+        "Place the mug in the center of the microwave plate.",
+        "Set power to high, 100 percent.",
+        "Set the timer to 1 minute and start.",
+        "Carefully remove the mug when done."
+      ],
+      "parts": [
+        "microwave-safe mug",
+        "skimmed milk",
+        "microwave"
+      ],
+      "end_state": "The mug of warm milk sits outside the microwave, possibly with faint steam, and the microwave display shows the cycle has ended.",
+      "view_hint": "the microwave control panel and display, then the mug inside",
+      "checks": [
+        {
+          "id": "s89_c1",
+          "question": "Does the microwave timer show 1:00 when started?",
+          "kind": "other",
+          "roi": "microwave display"
+        },
+        {
+          "id": "s89_c2",
+          "question": "Is the microwave running at full or high power?",
+          "kind": "other",
+          "roi": "microwave power setting display"
+        },
+        {
+          "id": "s89_c3",
+          "question": "Has the mug been removed from the microwave after the cycle?",
+          "kind": "completion",
+          "roi": "microwave interior and counter"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s89_m1",
+          "type": "technique",
+          "description": "Set the timer for 2 minutes instead of 1.",
+          "visual_cue": "Display reads 2:00 at start.",
+          "correction": "That's set to 2 minutes. Stop it and set it to 1 minute.",
+          "early_cue": "Pressing the 2 or the minute button twice."
+        },
+        {
+          "id": "s89_m2",
+          "type": "technique",
+          "description": "Heated for too short a time, like 35 or 45 seconds, or stopped a longer countdown early.",
+          "visual_cue": "Display shows under a minute, or a long countdown is interrupted with time remaining.",
+          "correction": "That wasn't a full minute. Put it back and heat for the rest of the time.",
+          "early_cue": "Timer set to an odd long value like 7:00 with the hand hovering over stop."
+        },
+        {
+          "id": "s89_m3",
+          "type": "technique",
+          "description": "Set the power level to low, such as 10 percent, instead of 100 percent.",
+          "visual_cue": "Display shows a low power level like P10 or Low.",
+          "correction": "The power is set too low. Change it to full power before you start.",
+          "early_cue": "Pressing the power level button repeatedly."
+        },
+        {
+          "id": "s89_m4",
+          "type": "wrong_order",
+          "description": "Added sugar, chocolate or cinnamon before microwaving.",
+          "visual_cue": "Sugar, chocolate pieces or brown powder visible in the milk before it goes into the microwave.",
+          "correction": "Microwave the plain milk first, then add the sugar, chocolate and cinnamon.",
+          "early_cue": "Reaching for sugar or chocolate while the mug is still on the counter unheated."
+        }
+      ],
+      "successors": [
+        "s84",
+        "s87",
+        "s90"
+      ],
+      "duration": {
+        "mean_s": 91.89625304793232,
+        "std_s": 30.11384003100531,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s89"
+      ]
+    },
+    {
+      "id": "s90",
+      "name": "Add 2 pieces of chocolate",
+      "instruction_novice": "Break off two pieces of chocolate and drop them into the warm milk. Just two, so count them.",
+      "instruction_expert": "Add 2 chocolate pieces",
+      "substeps": [
+        "Unwrap the chocolate bar.",
+        "Snap off two squares.",
+        "Drop both into the mug.",
+        "Put the rest of the bar away."
+      ],
+      "parts": [
+        "chocolate",
+        "microwave-safe mug"
+      ],
+      "end_state": "Two chocolate squares are in the mug, starting to melt into the milk.",
+      "view_hint": "the mug opening and the chocolate bar in hand",
+      "checks": [
+        {
+          "id": "s90_c1",
+          "question": "Are exactly two pieces of chocolate broken off?",
+          "kind": "quantity",
+          "roi": "chocolate pieces in hand"
+        },
+        {
+          "id": "s90_c2",
+          "question": "Are the chocolate pieces in the mug?",
+          "kind": "presence",
+          "roi": "mug opening"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s90_m1",
+          "type": "wrong_quantity",
+          "description": "Added four or five pieces instead of two.",
+          "visual_cue": "More than two chocolate squares in hand or floating in the mug.",
+          "correction": "That's too much chocolate. You only need two pieces, so fish out the extras.",
+          "early_cue": "Snapping off a large strip of several squares."
+        },
+        {
+          "id": "s90_m2",
+          "type": "wrong_quantity",
+          "description": "Added only one piece.",
+          "visual_cue": "A single square in the mug and the bar put away.",
+          "correction": "Only one piece went in. Add one more piece of chocolate.",
+          "early_cue": "Snapping off a single square."
+        },
+        {
+          "id": "s90_m3",
+          "type": "wrong_order",
+          "description": "Chocolate added after the mixing step.",
+          "visual_cue": "Spoon already stirring the mug before any chocolate has gone in.",
+          "correction": "Add the chocolate first, then mix everything together.",
+          "early_cue": "Picking up a stirring spoon while the chocolate bar is still wrapped."
+        }
+      ],
+      "successors": [
+        "s85"
+      ],
+      "duration": {
+        "mean_s": 38.02007011607143,
+        "std_s": 12.309802836711333,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s90"
+      ]
+    }
+  ],
+  "start": [
+    "s88"
+  ]
+}

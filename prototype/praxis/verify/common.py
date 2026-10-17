@@ -126,3 +126,23 @@ def pick_keyframes(frames: list[np.ndarray], times: list[float], n: int = 3) -> 
         keep.add(len(frames) - 1)
     idx = sorted(keep)
     return [frames[i] for i in idx], [times[i] for i in idx]
+
+
+def span_keyframes(frame_at, t: float, far_s: tuple[float, float] = (8.0, 6.0), near_s: float = 3.0, n_near: int = 2):
+    """Verifier evidence = temporal context + 'now': the sharpest frame from ~8-6 s ago plus the n_near sharpest
+    from the last near_s seconds. Measured on train-split checks, this framing beat 3 frames from the last 2 s
+    for every verifier (see RESULTS.md). frame_at(time) -> RGB or None."""
+    far_c = [(x, frame_at(x)) for x in np.arange(t - far_s[0], t - far_s[1] + 1e-6, 0.5)]
+    near_c = [(x, frame_at(x)) for x in np.arange(t - near_s, t + 1e-6, 0.5)]
+    far_c = [(x, f) for x, f in far_c if f is not None]
+    near_c = [(x, f) for x, f in near_c if f is not None]
+    frames, times = [], []
+    if far_c:
+        f, ts = pick_keyframes([f for _, f in far_c], [x for x, _ in far_c], 1)
+        frames += f
+        times += ts
+    if near_c:
+        f, ts = pick_keyframes([f for _, f in near_c], [x for x, _ in near_c], n_near)
+        frames += f
+        times += ts
+    return frames, times

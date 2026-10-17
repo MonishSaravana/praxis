@@ -1,0 +1,773 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "cc4d_breakfastburritos",
+  "title": "Breakfast Burritos",
+  "domain": "cooking",
+  "summary": "Crack and whisk an egg in a microwave-safe bowl, microwave it with a mid-way stir, season it with sweet and sour sauce, salsa, and oregano, mix, pour it onto an 8 inch tortilla on a cutting board, top with cheddar, and roll into a tight log.",
+  "source": "CaptainCook4D recipe text + task graph (Breakfast Burritos); mistake hints from train split",
+  "draft": false,
+  "compiler": {
+    "model": "claude-fable-5-1",
+    "prompt_version": "compile-v1",
+    "cost_usd": 0.51815,
+    "latency_s": 179.26858825003728,
+    "input_tokens": 4300,
+    "output_tokens": 9503
+  },
+  "nodes": [
+    {
+      "id": "s72",
+      "name": "Whisk the egg",
+      "instruction_novice": "Use a fork or whisk to beat the egg in the bowl until the yolk and white are fully blended into one even yellow liquid. Keep the whisk low so nothing splashes out.",
+      "instruction_expert": "Whisk egg until uniform",
+      "substeps": [
+        "Pick up a fork or whisk.",
+        "Break the yolk with the tines.",
+        "Stir in quick circles keeping the whisk below the rim.",
+        "Stop when the color is even with no clear streaks."
+      ],
+      "parts": [
+        "whisk or fork",
+        "bowl with egg"
+      ],
+      "end_state": "The bowl holds a uniform pale-yellow liquid with no separate yolk or clear white, and the counter around the bowl is clean.",
+      "view_hint": "down into the bowl and the counter just around it",
+      "checks": [
+        {
+          "id": "s72_c1",
+          "question": "Is the egg in the bowl a uniform yellow with no clear white or whole yolk visible?",
+          "kind": "completion",
+          "roi": "inside of the bowl"
+        },
+        {
+          "id": "s72_c2",
+          "question": "Is the counter around the bowl free of splashed egg?",
+          "kind": "other",
+          "roi": "counter area around the bowl rim"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s72_m1",
+          "type": "technique",
+          "description": "Egg splashed outside the bowl while whisking.",
+          "visual_cue": "Yellow drips or puddles on the counter or bowl exterior.",
+          "correction": "Some egg splashed out. Slow down and keep the whisk below the rim, then wipe the counter.",
+          "early_cue": "Fast, high whisking strokes with the fork lifting above the bowl rim."
+        },
+        {
+          "id": "s72_m2",
+          "type": "incomplete",
+          "description": "Egg not whisked enough, leaving streaks of white and lumps of yolk.",
+          "visual_cue": "Clear or stringy white and bright yolk patches still visible in the bowl.",
+          "correction": "The egg isn't fully blended yet. Keep whisking until it's one even yellow color.",
+          "early_cue": "Only two or three quick stirs before setting the fork down."
+        },
+        {
+          "id": "s72_m3",
+          "type": "wrong_order",
+          "description": "Whisking done after the egg was already microwaved.",
+          "visual_cue": "Fork stirring a cooked, lumpy, opaque egg instead of raw liquid.",
+          "correction": "The egg should be whisked while raw, before microwaving. Next time whisk first; for now just break it up and continue.",
+          "early_cue": "Bowl placed in the microwave while the yolk is still whole."
+        }
+      ],
+      "successors": [
+        "s73"
+      ],
+      "duration": {
+        "mean_s": 44.840333278677775,
+        "std_s": 25.467774108886303,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s72"
+      ]
+    },
+    {
+      "id": "s73",
+      "name": "Microwave for 3 minutes, stirring in between",
+      "instruction_novice": "Put the bowl in the microwave for 3 minutes total. Stop about halfway, stir the egg, then run it for the rest of the time.",
+      "instruction_expert": "Microwave 3 min, stir halfway",
+      "substeps": [
+        "Place the bowl in the center of the microwave.",
+        "Set 3 minutes and start.",
+        "Pause around the halfway mark and stir the egg with a fork.",
+        "Restart and finish the remaining time, then take the bowl out."
+      ],
+      "parts": [
+        "bowl with whisked egg",
+        "microwave",
+        "fork"
+      ],
+      "end_state": "The bowl is out of the microwave holding fully cooked, opaque, scrambled-looking egg, and the microwave display shows the cycle finished.",
+      "view_hint": "microwave keypad and display, then down into the bowl after removal",
+      "checks": [
+        {
+          "id": "s73_c1",
+          "question": "Was the microwave set to 3 minutes?",
+          "kind": "quantity",
+          "roi": "microwave display"
+        },
+        {
+          "id": "s73_c2",
+          "question": "Is the egg in the bowl fully cooked and opaque with no runny liquid?",
+          "kind": "completion",
+          "roi": "inside of the bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s73_m1",
+          "type": "other",
+          "description": "Microwave set for too short a time, such as 30 seconds, 1.5 or 2 minutes instead of 3.",
+          "visual_cue": "Microwave display shows 0:30, 1:30, or 2:00 at start; egg comes out partly liquid.",
+          "correction": "That's less than 3 minutes. Add more time so the total cooking reaches 3 minutes.",
+          "early_cue": "Fingers pressing a short time on the keypad."
+        },
+        {
+          "id": "s73_m2",
+          "type": "missing_step",
+          "description": "Egg microwaved straight through without stirring in between.",
+          "visual_cue": "Door stays closed for the full 3 minutes; egg comes out as one puffed solid disc with no fork marks.",
+          "correction": "You need to stir partway through. Stop the microwave now, break up the egg with a fork, and continue.",
+          "early_cue": "Person walks away or looks elsewhere after starting the microwave."
+        },
+        {
+          "id": "s73_m3",
+          "type": "wrong_order",
+          "description": "Microwaving done after sauce and salsa were already added, or before whisking.",
+          "visual_cue": "Red salsa or brown sauce already visible in the bowl going into the microwave, or a whole unbroken yolk.",
+          "correction": "The egg should be microwaved plain after whisking. Add the sauce and salsa only after it's cooked.",
+          "early_cue": "Sauce bottle or salsa jar opened before the microwave has been used."
+        }
+      ],
+      "successors": [
+        "s74",
+        "s80",
+        "s82"
+      ],
+      "duration": {
+        "mean_s": 202.0772672847847,
+        "std_s": 113.00186459311847,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s73"
+      ]
+    },
+    {
+      "id": "s74",
+      "name": "Add 1/2 tbsp sweet and sour sauce to the bowl",
+      "instruction_novice": "Measure half a tablespoon of sweet and sour sauce and add it to the cooked egg in the bowl.",
+      "instruction_expert": "Add 1/2 tbsp sweet and sour",
+      "substeps": [
+        "Pick up the sweet and sour sauce bottle.",
+        "Fill a 1/2 tablespoon measuring spoon.",
+        "Pour it over the egg in the bowl."
+      ],
+      "parts": [
+        "sweet and sour sauce",
+        "1/2 tbsp measuring spoon",
+        "bowl with cooked egg"
+      ],
+      "end_state": "A small amount of glossy reddish-orange sweet and sour sauce sits on top of the cooked egg in the bowl.",
+      "view_hint": "measuring spoon in hand, then down into the bowl",
+      "checks": [
+        {
+          "id": "s74_c1",
+          "question": "Is the container being used labeled sweet and sour sauce?",
+          "kind": "part_identity",
+          "roi": "sauce bottle label"
+        },
+        {
+          "id": "s74_c2",
+          "question": "Is a 1/2 tablespoon measuring spoon being used?",
+          "kind": "quantity",
+          "roi": "measuring spoon"
+        },
+        {
+          "id": "s74_c3",
+          "question": "Is sweet and sour sauce visible on the egg in the bowl?",
+          "kind": "presence",
+          "roi": "inside of the bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s74_m1",
+          "type": "wrong_quantity",
+          "description": "A full tablespoon added instead of half a tablespoon.",
+          "visual_cue": "The larger 1 tbsp spoon is filled and poured; a thick pool of sauce covers much of the egg.",
+          "correction": "That's a full tablespoon. You only need half a tablespoon, so use the smaller spoon next time.",
+          "early_cue": "The 1 tbsp spoon picked up from the set."
+        },
+        {
+          "id": "s74_m2",
+          "type": "wrong_quantity",
+          "description": "Half a teaspoon added instead of half a tablespoon.",
+          "visual_cue": "A tiny measuring spoon is used; only a small dab of sauce lands on the egg.",
+          "correction": "That's a teaspoon measure. You need half a tablespoon, which is about three times more.",
+          "early_cue": "The smallest spoon in the set picked up."
+        },
+        {
+          "id": "s74_m3",
+          "type": "wrong_part",
+          "description": "Minced garlic added instead of sweet and sour sauce.",
+          "visual_cue": "Pale chopped garlic bits in the spoon instead of a smooth reddish sauce.",
+          "correction": "That's minced garlic, not sweet and sour sauce. Grab the sweet and sour bottle instead.",
+          "early_cue": "Garlic jar picked up from the counter."
+        },
+        {
+          "id": "s74_m4",
+          "type": "wrong_order",
+          "description": "Sauce added before the egg was microwaved.",
+          "visual_cue": "Reddish sauce poured onto raw liquid egg.",
+          "correction": "Hold off on the sauce until after the egg is cooked. Microwave the egg first.",
+          "early_cue": "Sauce bottle opened while the egg is still raw in the bowl."
+        }
+      ],
+      "successors": [
+        "s76"
+      ],
+      "duration": {
+        "mean_s": 46.23670783810044,
+        "std_s": 11.758561206586487,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s74"
+      ]
+    },
+    {
+      "id": "s75",
+      "name": "Sprinkle 1 tbsp shredded cheddar cheese on top of the egg",
+      "instruction_novice": "Using a clean spoon, measure one tablespoon of shredded cheddar and sprinkle it right on top of the egg on the tortilla.",
+      "instruction_expert": "Sprinkle 1 tbsp cheddar on egg",
+      "substeps": [
+        "Pick up a clean 1 tablespoon measuring spoon.",
+        "Scoop shredded cheddar from its bag or container.",
+        "Sprinkle it evenly over the egg mound, not the bare tortilla."
+      ],
+      "parts": [
+        "shredded cheddar cheese",
+        "1 tbsp measuring spoon",
+        "tortilla with egg mixture"
+      ],
+      "end_state": "Orange shredded cheese is scattered over the egg mound on the tortilla, with none on the bare tortilla or the board.",
+      "view_hint": "down at the egg mound on the tortilla",
+      "checks": [
+        {
+          "id": "s75_c1",
+          "question": "Is shredded cheddar sitting on top of the egg mixture rather than beside it?",
+          "kind": "alignment",
+          "roi": "egg mound on the tortilla"
+        },
+        {
+          "id": "s75_c2",
+          "question": "Was a 1 tablespoon measuring spoon used for the cheese?",
+          "kind": "quantity",
+          "roi": "measuring spoon"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s75_m1",
+          "type": "technique",
+          "description": "Cheese put on the bare tortilla beside the egg instead of on top of it.",
+          "visual_cue": "Orange shreds on the tortilla or board next to the egg mound, with the egg itself uncovered.",
+          "correction": "The cheese should go on top of the egg. Pinch it up and place it on the egg mound.",
+          "early_cue": "Spoon tilting over the empty part of the tortilla."
+        },
+        {
+          "id": "s75_m2",
+          "type": "technique",
+          "description": "Cheese spilled onto the cutting board or counter.",
+          "visual_cue": "Loose orange shreds scattered on the board or counter around the tortilla.",
+          "correction": "Some cheese spilled. Hold the spoon closer to the egg and sprinkle gently.",
+          "early_cue": "Spoon held high and shaken over the tortilla."
+        },
+        {
+          "id": "s75_m3",
+          "type": "other",
+          "description": "A dirty spoon, already coated with salsa or sauce, used to scoop the cheese.",
+          "visual_cue": "Spoon with red or brown residue dipped into the cheese container.",
+          "correction": "That spoon has sauce on it. Use a clean spoon to scoop the cheese.",
+          "early_cue": "Reaching for the used spoon on the counter."
+        }
+      ],
+      "successors": [
+        "s78"
+      ],
+      "duration": {
+        "mean_s": 48.308197130090875,
+        "std_s": 25.48714238680061,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s75"
+      ]
+    },
+    {
+      "id": "s76",
+      "name": "Mix the contents of the bowl well",
+      "instruction_novice": "Stir everything in the bowl with a fork until the sauce, salsa, and oregano are evenly spread through the egg.",
+      "instruction_expert": "Mix bowl contents thoroughly",
+      "substeps": [
+        "Pick up a fork or spoon.",
+        "Fold the sauce and salsa into the egg.",
+        "Keep stirring until the color is even throughout."
+      ],
+      "parts": [
+        "fork or spoon",
+        "bowl with egg, sauce, salsa, and oregano"
+      ],
+      "end_state": "The bowl holds an evenly mixed reddish-yellow egg mixture with no separate pools of sauce or salsa.",
+      "view_hint": "down into the bowl",
+      "checks": [
+        {
+          "id": "s76_c1",
+          "question": "Is the bowl's contents evenly mixed with no separate pools of sauce or salsa?",
+          "kind": "completion",
+          "roi": "inside of the bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s76_m1",
+          "type": "wrong_order",
+          "description": "Mixing done after the mixture was already poured onto the tortilla.",
+          "visual_cue": "Fork stirring unmixed egg, sauce, and salsa sitting on top of the tortilla.",
+          "correction": "Mix everything in the bowl before pouring it out. Next time stir first; for now gently combine it on the tortilla.",
+          "early_cue": "Bowl tilted toward the tortilla with separate sauce pools still visible."
+        },
+        {
+          "id": "s76_m2",
+          "type": "incomplete",
+          "description": "Only a couple of stirs, leaving salsa and sauce in separate patches.",
+          "visual_cue": "Distinct red salsa chunks and sauce streaks still sitting on top of the egg.",
+          "correction": "Give it a few more stirs until the sauce and salsa are spread all the way through.",
+          "early_cue": "Fork set down after one or two quick strokes."
+        }
+      ],
+      "successors": [
+        "s79"
+      ],
+      "duration": {
+        "mean_s": 28.07716793054329,
+        "std_s": 14.794172050214362,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s76"
+      ]
+    },
+    {
+      "id": "s77",
+      "name": "Extract and add contents of an egg to a microwave-safe bowl",
+      "instruction_novice": "Crack one egg on the counter edge and open it over a microwave-safe bowl so the yolk and white fall in. Keep the shell out of the bowl.",
+      "instruction_expert": "Crack egg into microwave-safe bowl",
+      "substeps": [
+        "Pick up a microwave-safe bowl and set it on the counter.",
+        "Tap the egg firmly once on a flat surface to crack it.",
+        "Pull the shell halves apart over the bowl so the contents drop in.",
+        "Discard the shell and check the bowl for shell fragments."
+      ],
+      "parts": [
+        "egg",
+        "microwave-safe bowl"
+      ],
+      "end_state": "A raw egg with an intact yolk and clear white sits in the bottom of an empty microwave-safe bowl with no shell pieces visible.",
+      "view_hint": "straight down into the bowl on the counter",
+      "checks": [
+        {
+          "id": "s77_c1",
+          "question": "Is there a raw egg (yolk and white) in the bowl?",
+          "kind": "presence",
+          "roi": "inside of the bowl"
+        },
+        {
+          "id": "s77_c2",
+          "question": "Is the bowl free of eggshell fragments?",
+          "kind": "other",
+          "roi": "surface of the egg in the bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s77_m1",
+          "type": "technique",
+          "description": "Egg cracked poorly so shell pieces fall into the bowl and must be fished out.",
+          "visual_cue": "Small white or brown shell fragments floating in the egg white; fingers picking at the bowl contents.",
+          "correction": "There's some shell in the bowl. Scoop it out with a piece of the shell half before you whisk.",
+          "early_cue": "Egg smashed hard against the bowl rim with the shell crumpling instead of splitting cleanly."
+        },
+        {
+          "id": "s77_m2",
+          "type": "wrong_part",
+          "description": "Egg cracked into a bowl that is not microwave-safe, such as a metal bowl.",
+          "visual_cue": "Shiny metal bowl or a bowl with metallic trim holding the egg.",
+          "correction": "That bowl can't go in the microwave. Pour the egg into a glass or ceramic bowl instead.",
+          "early_cue": "Metal bowl picked up from the shelf."
+        }
+      ],
+      "successors": [
+        "s72"
+      ],
+      "duration": {
+        "mean_s": 63.243315425558144,
+        "std_s": 24.27811945983091,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s77"
+      ]
+    },
+    {
+      "id": "s78",
+      "name": "Roll the tortilla into a log",
+      "instruction_novice": "Starting from one edge, roll the tortilla over the filling toward the other side into a log about an inch and a half thick. Keep it snug so there are no gaps, but not so tight that the filling squeezes out.",
+      "instruction_expert": "Roll tortilla into snug 1.5-inch log",
+      "substeps": [
+        "Lift one edge of the tortilla up and over the filling.",
+        "Tuck it under the filling to start a snug cylinder.",
+        "Continue rolling toward the far edge, keeping even pressure.",
+        "Finish seam side down and check that no filling has leaked."
+      ],
+      "parts": [
+        "tortilla with egg and cheese",
+        "cutting board"
+      ],
+      "end_state": "A neat rolled log about 1.5 inches thick rests seam side down on the cutting board with no filling spilling out the sides or seam.",
+      "view_hint": "down at the rolled burrito on the cutting board, including both ends",
+      "checks": [
+        {
+          "id": "s78_c1",
+          "question": "Is the tortilla fully rolled into a log shape with no flat edge left open?",
+          "kind": "completion",
+          "roi": "the whole rolled tortilla"
+        },
+        {
+          "id": "s78_c2",
+          "question": "Is the log free of filling leaking out of the seam or ends?",
+          "kind": "other",
+          "roi": "seam and ends of the roll"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s78_m1",
+          "type": "technique",
+          "description": "Rolled too tightly or unevenly so the filling leaks out.",
+          "visual_cue": "Egg and cheese squeezing out of the ends or through the seam onto the board.",
+          "correction": "The filling is leaking. Unroll a bit, ease the pressure, and roll again more gently.",
+          "early_cue": "Hands pressing down hard while rolling, with filling pushing toward the edges."
+        },
+        {
+          "id": "s78_m2",
+          "type": "technique",
+          "description": "Rolled too loosely, leaving gaps and a floppy, oversized log.",
+          "visual_cue": "Visible air gaps in the spiral and a roll much wider than 1.5 inches that falls open.",
+          "correction": "That roll is too loose. Unroll it and start again, tucking the edge snugly under the filling.",
+          "early_cue": "First edge folded over without being tucked under the filling."
+        },
+        {
+          "id": "s78_m3",
+          "type": "incomplete",
+          "description": "Rolling stopped partway, leaving the far edge of the tortilla flat and open.",
+          "visual_cue": "Half-rolled tortilla with a flat flap still lying on the board.",
+          "correction": "Keep going and roll it all the way to the far edge so the seam closes.",
+          "early_cue": "Hands lifting away from the tortilla while a flat flap remains."
+        }
+      ],
+      "successors": [],
+      "duration": {
+        "mean_s": 31.654709984242828,
+        "std_s": 16.071317665123633,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s78"
+      ]
+    },
+    {
+      "id": "s79",
+      "name": "Pour egg mixture on top of the tortilla",
+      "instruction_novice": "Pour the mixed egg from the bowl onto the center of the tortilla, scraping the bowl so it all comes out.",
+      "instruction_expert": "Pour egg mix onto tortilla",
+      "substeps": [
+        "Bring the bowl over the tortilla.",
+        "Tilt and pour the mixture into the middle of the tortilla.",
+        "Scrape out the rest with a fork or spoon."
+      ],
+      "parts": [
+        "bowl with mixed egg",
+        "tortilla on cutting board",
+        "fork or spoon"
+      ],
+      "end_state": "The egg mixture sits in a mound in the center of the tortilla on the cutting board and the bowl is nearly empty.",
+      "view_hint": "down at the tortilla on the cutting board",
+      "checks": [
+        {
+          "id": "s79_c1",
+          "question": "Is the egg mixture sitting on top of the tortilla?",
+          "kind": "completion",
+          "roi": "center of the tortilla"
+        },
+        {
+          "id": "s79_c2",
+          "question": "Is the egg mixture centered on the tortilla rather than spilling off the edges?",
+          "kind": "alignment",
+          "roi": "tortilla edges"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s79_m1",
+          "type": "wrong_order",
+          "description": "Mixture poured before the bowl contents were mixed.",
+          "visual_cue": "Separate pools of sauce, salsa, and plain egg landing on the tortilla.",
+          "correction": "The bowl should be mixed before pouring. Stir it well first so the flavors are even.",
+          "early_cue": "Bowl lifted toward the tortilla while sauce and salsa are still in distinct patches."
+        },
+        {
+          "id": "s79_m2",
+          "type": "technique",
+          "description": "Mixture poured off-center or onto the cutting board beside the tortilla.",
+          "visual_cue": "Egg mixture on the board or hanging over one edge of the tortilla.",
+          "correction": "Some of it missed the middle. Push the egg back toward the center of the tortilla with a spoon.",
+          "early_cue": "Bowl tipped over the edge of the tortilla instead of its center."
+        }
+      ],
+      "successors": [
+        "s75"
+      ],
+      "duration": {
+        "mean_s": 19.010051738486865,
+        "std_s": 9.89318113248319,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s79"
+      ]
+    },
+    {
+      "id": "s80",
+      "name": "Add 1 tbsp salsa to the bowl",
+      "instruction_novice": "Measure one tablespoon of salsa with a clean measuring spoon and add it to the egg in the bowl.",
+      "instruction_expert": "Add 1 tbsp salsa",
+      "substeps": [
+        "Pick up a clean 1 tablespoon measuring spoon.",
+        "Scoop one level tablespoon of salsa from the jar.",
+        "Add it to the bowl on top of the egg."
+      ],
+      "parts": [
+        "salsa",
+        "1 tbsp measuring spoon",
+        "bowl with cooked egg"
+      ],
+      "end_state": "A spoonful of chunky red salsa sits on the cooked egg in the bowl.",
+      "view_hint": "measuring spoon over the jar, then down into the bowl",
+      "checks": [
+        {
+          "id": "s80_c1",
+          "question": "Is a 1 tablespoon measuring spoon being used for the salsa?",
+          "kind": "quantity",
+          "roi": "measuring spoon"
+        },
+        {
+          "id": "s80_c2",
+          "question": "Is red salsa visible in the bowl with the egg?",
+          "kind": "presence",
+          "roi": "inside of the bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s80_m1",
+          "type": "wrong_quantity",
+          "description": "Two tablespoons of salsa added instead of one.",
+          "visual_cue": "The tablespoon spoon dipped into the jar and emptied into the bowl twice; a large red pile on the egg.",
+          "correction": "That's two tablespoons. The recipe only needs one, so skip the second scoop.",
+          "early_cue": "Spoon going back toward the salsa jar after the first scoop."
+        },
+        {
+          "id": "s80_m2",
+          "type": "technique",
+          "description": "A dirty measuring spoon, already coated in sauce or egg, used to scoop salsa.",
+          "visual_cue": "Spoon with visible residue dipped into the salsa jar.",
+          "correction": "That spoon isn't clean. Rinse it or grab a fresh spoon before scooping the salsa.",
+          "early_cue": "Reaching for the used spoon lying on the counter instead of a clean one."
+        },
+        {
+          "id": "s80_m3",
+          "type": "wrong_order",
+          "description": "Salsa added before the egg was microwaved.",
+          "visual_cue": "Red salsa dropped onto raw yellow liquid egg.",
+          "correction": "Salsa goes in after cooking. Microwave the egg first, then add the salsa.",
+          "early_cue": "Salsa jar opened while the egg is still raw."
+        }
+      ],
+      "successors": [
+        "s76"
+      ],
+      "duration": {
+        "mean_s": 37.917542340904745,
+        "std_s": 12.987670100079816,
+        "n": 8,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s80"
+      ]
+    },
+    {
+      "id": "s81",
+      "name": "Place 8 inch tortilla on a cutting board",
+      "instruction_novice": "Take one clean 8 inch tortilla and lay it flat on a cutting board.",
+      "instruction_expert": "Lay 8 inch tortilla on board",
+      "substeps": [
+        "Set a cutting board on the counter.",
+        "Take a single clean 8 inch tortilla from the package.",
+        "Lay it flat and centered on the board."
+      ],
+      "parts": [
+        "8 inch tortilla",
+        "cutting board"
+      ],
+      "end_state": "A single flat, clean tortilla lies centered on a cutting board.",
+      "view_hint": "down at the cutting board on the counter",
+      "checks": [
+        {
+          "id": "s81_c1",
+          "question": "Is the tortilla lying on a cutting board rather than a plate?",
+          "kind": "part_identity",
+          "roi": "surface under the tortilla"
+        },
+        {
+          "id": "s81_c2",
+          "question": "Is the tortilla clean, flat, and free of spots or stains?",
+          "kind": "other",
+          "roi": "tortilla surface"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s81_m1",
+          "type": "wrong_part",
+          "description": "Tortilla placed on a plate instead of a cutting board.",
+          "visual_cue": "Round rimmed plate under the tortilla instead of a flat wooden or plastic board.",
+          "correction": "Use the cutting board instead of a plate so you have a flat surface to roll on.",
+          "early_cue": "Hand reaching for a plate from the stack."
+        },
+        {
+          "id": "s81_m2",
+          "type": "other",
+          "description": "A soiled or dirty tortilla used.",
+          "visual_cue": "Visible stains, crumbs, or discolored spots on the tortilla.",
+          "correction": "That tortilla looks dirty. Swap it for a clean one from the package.",
+          "early_cue": "Tortilla picked up from the counter rather than from the package."
+        }
+      ],
+      "successors": [
+        "s79"
+      ],
+      "duration": {
+        "mean_s": 40.74563280005417,
+        "std_s": 8.710137995228147,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s81"
+      ]
+    },
+    {
+      "id": "s82",
+      "name": "Sprinkle oregano in the bowl",
+      "instruction_novice": "Pick up the oregano and sprinkle a little over the egg in the bowl, keeping your hand low so it all lands inside.",
+      "instruction_expert": "Sprinkle oregano into bowl",
+      "substeps": [
+        "Find the jar labeled oregano.",
+        "Hold it just above the bowl.",
+        "Shake or pinch a light sprinkle over the egg."
+      ],
+      "parts": [
+        "dried oregano",
+        "bowl with cooked egg"
+      ],
+      "end_state": "Small dark green flakes of oregano are scattered over the egg in the bowl with none on the counter.",
+      "view_hint": "spice jar label, then down into the bowl and the counter around it",
+      "checks": [
+        {
+          "id": "s82_c1",
+          "question": "Is the spice jar being used labeled oregano?",
+          "kind": "part_identity",
+          "roi": "spice jar label"
+        },
+        {
+          "id": "s82_c2",
+          "question": "Are green herb flakes visible on the egg inside the bowl?",
+          "kind": "presence",
+          "roi": "inside of the bowl"
+        },
+        {
+          "id": "s82_c3",
+          "question": "Is the counter around the bowl free of spilled herb flakes?",
+          "kind": "other",
+          "roi": "counter around the bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s82_m1",
+          "type": "wrong_part",
+          "description": "Basil or cilantro used instead of oregano.",
+          "visual_cue": "Jar label reads basil or cilantro; flakes look larger or brighter green.",
+          "correction": "That's not oregano. Put it back and find the jar labeled oregano.",
+          "early_cue": "Hand reaching for a jar whose label does not say oregano."
+        },
+        {
+          "id": "s82_m2",
+          "type": "technique",
+          "description": "Oregano splashed outside the bowl onto the counter.",
+          "visual_cue": "Green flakes scattered on the counter around the bowl.",
+          "correction": "Some oregano landed outside. Hold the jar lower over the bowl and shake gently.",
+          "early_cue": "Jar held high above the bowl and shaken hard."
+        },
+        {
+          "id": "s82_m3",
+          "type": "wrong_order",
+          "description": "Oregano sprinkled before the egg was whisked or microwaved.",
+          "visual_cue": "Green flakes floating on raw, unwhisked egg.",
+          "correction": "The oregano goes in after the egg is cooked. Whisk and microwave first.",
+          "early_cue": "Spice jar picked up while the egg is still raw."
+        }
+      ],
+      "successors": [
+        "s76"
+      ],
+      "duration": {
+        "mean_s": 26.017242158588843,
+        "std_s": 8.34324193120746,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s82"
+      ]
+    }
+  ],
+  "start": [
+    "s77",
+    "s81"
+  ]
+}

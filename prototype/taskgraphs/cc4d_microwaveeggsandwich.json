@@ -1,0 +1,819 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "cc4d_microwaveeggsandwich",
+  "title": "Microwave Egg Sandwich",
+  "domain": "cooking",
+  "summary": "Cook one egg in a sprayed 6-oz ramekin in the microwave in short bursts, stir, top with salsa and cheese, melt the cheese, then slide the egg onto a lettuce-lined English muffin bottom and close with the muffin top.",
+  "source": "CaptainCook4D recipe text + task graph (Microwave Egg Sandwich); mistake hints from train split",
+  "draft": false,
+  "compiler": {
+    "model": "claude-fable-5-1",
+    "prompt_version": "compile-v1",
+    "cost_usd": 0.49501,
+    "latency_s": 171.4421223750105,
+    "input_tokens": 4341,
+    "output_tokens": 9032
+  },
+  "nodes": [
+    {
+      "id": "s1",
+      "name": "Pour 1 egg into ramekin",
+      "instruction_novice": "Crack one egg on the counter edge and pour it into the sprayed ramekin, making sure no shell falls in.",
+      "instruction_expert": "Crack 1 egg into ramekin",
+      "substeps": [
+        "Take one egg from the carton.",
+        "Tap it firmly once on a flat surface to crack it.",
+        "Open the shell over the ramekin and let the egg drop in.",
+        "Check for and remove any shell bits."
+      ],
+      "parts": [
+        "1 egg",
+        "6-oz ramekin cup"
+      ],
+      "end_state": "A single yolk and white sit in the bottom of the ramekin with no shell pieces visible.",
+      "view_hint": "Looking down into the ramekin.",
+      "checks": [
+        {
+          "id": "s1_c1",
+          "question": "Is there exactly one yolk in the ramekin?",
+          "kind": "quantity",
+          "roi": "inside of the ramekin"
+        },
+        {
+          "id": "s1_c2",
+          "question": "Is the ramekin free of eggshell pieces?",
+          "kind": "presence",
+          "roi": "inside of the ramekin"
+        },
+        {
+          "id": "s1_c3",
+          "question": "Did the egg go into the small ramekin rather than a bowl?",
+          "kind": "part_identity",
+          "roi": "the container holding the egg"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s1_m1",
+          "type": "wrong_quantity",
+          "description": "Cracking two eggs into the ramekin instead of one.",
+          "visual_cue": "Two yolks visible in the ramekin, or a second egg being cracked over it.",
+          "correction": "That's two eggs. This recipe uses just one, so pour one out or start with a fresh ramekin.",
+          "early_cue": "A second egg is picked up after the first is already in the cup."
+        },
+        {
+          "id": "s1_m2",
+          "type": "wrong_part",
+          "description": "Egg cracked into a bowl or large cup instead of the ramekin.",
+          "visual_cue": "Raw egg sits in a wide bowl or mug while the ramekin is empty.",
+          "correction": "The egg should go in the small ramekin, not the bowl. Pour it into the ramekin.",
+          "early_cue": "Egg is held over a bowl rather than the ramekin."
+        },
+        {
+          "id": "s1_m3",
+          "type": "technique",
+          "description": "Shell fragments left in the egg.",
+          "visual_cue": "White shell bits visible floating in the egg.",
+          "correction": "There's some shell in there. Scoop the bits out with a spoon before cooking.",
+          "early_cue": "Egg shattered unevenly during cracking."
+        },
+        {
+          "id": "s1_m4",
+          "type": "technique",
+          "description": "Egg cracked badly so it spills on the counter or floor.",
+          "visual_cue": "Raw egg running on the counter outside the ramekin.",
+          "correction": "That one spilled. Wipe it up, then crack a fresh egg gently over the ramekin.",
+          "early_cue": "Egg hit the counter edge too hard or opened away from the cup."
+        }
+      ],
+      "successors": [
+        "s4"
+      ],
+      "duration": {
+        "mean_s": 62.30323408539325,
+        "std_s": 47.31474342272047,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s1"
+      ]
+    },
+    {
+      "id": "s2",
+      "name": "Place egg over the lettuce",
+      "instruction_novice": "Slide the cooked egg out of the ramekin and set it on top of the lettuce on the muffin bottom.",
+      "instruction_expert": "Egg from cup onto lettuce",
+      "substeps": [
+        "Run a fork around the edge of the ramekin to loosen the egg.",
+        "Tip the ramekin over the lettuce-lined muffin bottom.",
+        "Let the egg drop onto the lettuce, cheese side up."
+      ],
+      "parts": [
+        "6-oz ramekin cup",
+        "cooked egg",
+        "English muffin bottom half with lettuce",
+        "fork"
+      ],
+      "end_state": "The round egg with melted cheese sits on top of the lettuce on the muffin bottom, and the ramekin is empty.",
+      "view_hint": "Muffin bottom on the plate from above.",
+      "checks": [
+        {
+          "id": "s2_c1",
+          "question": "Is the egg sitting on top of the lettuce on the muffin bottom?",
+          "kind": "alignment",
+          "roi": "muffin bottom on the plate"
+        },
+        {
+          "id": "s2_c2",
+          "question": "Is the ramekin now empty?",
+          "kind": "completion",
+          "roi": "inside of the ramekin"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s2_m1",
+          "type": "wrong_order",
+          "description": "Removing the lettuce, placing the egg on the bare muffin, then putting lettuce on top of the egg.",
+          "visual_cue": "Lettuce lifted off the muffin and later laid over the egg.",
+          "correction": "The lettuce goes under the egg. Put the lettuce back on the muffin first, then the egg on top.",
+          "early_cue": "Fingers pull the lettuce off the muffin before the ramekin is tipped."
+        },
+        {
+          "id": "s2_m2",
+          "type": "incomplete",
+          "description": "Egg left stuck in the ramekin, only partly transferred.",
+          "visual_cue": "Chunks of egg still in the ramekin while a broken piece sits on the muffin.",
+          "correction": "Loosen the rest with a fork and add it onto the lettuce too.",
+          "early_cue": "Ramekin tipped without loosening the egg first."
+        }
+      ],
+      "successors": [
+        "s7"
+      ],
+      "duration": {
+        "mean_s": 23.62147167950197,
+        "std_s": 10.73589532170422,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s2"
+      ]
+    },
+    {
+      "id": "s3",
+      "name": "Coat ramekin with cooking spray",
+      "instruction_novice": "Grab the small 6-ounce ramekin cup and give the inside a quick, even coat of cooking spray so the egg won't stick.",
+      "instruction_expert": "Spray inside of 6-oz ramekin",
+      "substeps": [
+        "Pick up the small 6-oz ramekin, not a bowl or mug.",
+        "Hold the spray can a few inches above the cup.",
+        "Spray a short burst to lightly cover the bottom and sides."
+      ],
+      "parts": [
+        "6-oz ramekin cup",
+        "cooking spray"
+      ],
+      "end_state": "The small ramekin sits on the counter with a glossy, lightly oiled interior.",
+      "view_hint": "Looking down into the ramekin on the counter.",
+      "checks": [
+        {
+          "id": "s3_c1",
+          "question": "Is the container a small 6-oz ramekin rather than a large bowl or cup?",
+          "kind": "part_identity",
+          "roi": "the container on the counter"
+        },
+        {
+          "id": "s3_c2",
+          "question": "Does the inside of the ramekin look shiny and coated with spray?",
+          "kind": "completion",
+          "roi": "inside of the ramekin"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s3_m1",
+          "type": "wrong_part",
+          "description": "Spraying a large bowl or big cup instead of the 6-oz ramekin.",
+          "visual_cue": "A wide bowl or tall mug is being held under the spray can instead of a small ramekin.",
+          "correction": "That's too big. Use the small 6-ounce ramekin instead and spray that one.",
+          "early_cue": "Hand reaches for a large bowl or mug instead of the ramekin."
+        },
+        {
+          "id": "s3_m2",
+          "type": "missing_step",
+          "description": "Skipping the spray and moving on with a dry ramekin.",
+          "visual_cue": "Ramekin interior looks dull and dry; spray can never picked up.",
+          "correction": "Give the ramekin a quick coat of cooking spray first so the egg won't stick.",
+          "early_cue": "Egg carton is opened before the spray can is touched."
+        }
+      ],
+      "successors": [
+        "s1"
+      ],
+      "duration": {
+        "mean_s": 44.8400899871589,
+        "std_s": 13.883683563738325,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s3"
+      ]
+    },
+    {
+      "id": "s4",
+      "name": "Microwave 30 seconds uncovered",
+      "instruction_novice": "Put the ramekin in the microwave with no cover and cook it on high for 30 seconds.",
+      "instruction_expert": "Microwave uncovered, high, 30 s",
+      "substeps": [
+        "Place the ramekin in the center of the microwave, no lid or plate on top.",
+        "Set power to high.",
+        "Enter 30 seconds and start."
+      ],
+      "parts": [
+        "6-oz ramekin cup",
+        "microwave"
+      ],
+      "end_state": "The microwave display shows the 30-second run finished and the egg has begun to turn opaque at the edges.",
+      "view_hint": "Microwave control panel and the ramekin through the door.",
+      "checks": [
+        {
+          "id": "s4_c1",
+          "question": "Is the ramekin inside the microwave without a cover?",
+          "kind": "presence",
+          "roi": "the ramekin inside the microwave"
+        },
+        {
+          "id": "s4_c2",
+          "question": "Does the timer show 30 seconds was set?",
+          "kind": "other",
+          "roi": "microwave display"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s4_m1",
+          "type": "technique",
+          "description": "Setting only 10 or 15 seconds instead of 30.",
+          "visual_cue": "Microwave display shows 10 or 15 seconds counting down.",
+          "correction": "That's too short. Set it for 30 seconds on high.",
+          "early_cue": "Fingers press 1 then 0 or 1 then 5 on the keypad."
+        },
+        {
+          "id": "s4_m2",
+          "type": "technique",
+          "description": "Covering the ramekin with a lid or plate before microwaving.",
+          "visual_cue": "A plate or lid sits on top of the ramekin in the microwave.",
+          "correction": "Leave the cup uncovered for this step. Take that lid off.",
+          "early_cue": "Hand picks up a lid or small plate near the ramekin."
+        }
+      ],
+      "successors": [
+        "s11"
+      ],
+      "duration": {
+        "mean_s": 54.3903044202037,
+        "std_s": 13.697378385537947,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s4"
+      ]
+    },
+    {
+      "id": "s5",
+      "name": "Sprinkle 1 tablespoon cheese",
+      "instruction_novice": "Measure one tablespoon of shredded cheese and sprinkle it evenly over the salsa and egg.",
+      "instruction_expert": "Sprinkle 1 Tbsp cheese on top",
+      "substeps": [
+        "Fill the tablespoon measure with shredded cheese.",
+        "Sprinkle it with your fingers evenly over the top.",
+        "Don't pour straight from the bag."
+      ],
+      "parts": [
+        "shredded cheese",
+        "tablespoon measure",
+        "6-oz ramekin cup"
+      ],
+      "end_state": "A thin, even layer of shredded cheese covers the salsa and egg in the ramekin.",
+      "view_hint": "Looking down into the ramekin.",
+      "checks": [
+        {
+          "id": "s5_c1",
+          "question": "Was the cheese measured with a tablespoon before adding?",
+          "kind": "quantity",
+          "roi": "measuring spoon and cheese"
+        },
+        {
+          "id": "s5_c2",
+          "question": "Is the cheese spread evenly in a thin layer rather than a thick mound?",
+          "kind": "completion",
+          "roi": "top of the ramekin"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s5_m1",
+          "type": "technique",
+          "description": "Pouring cheese directly from the bag without measuring.",
+          "visual_cue": "Cheese bag tipped over the ramekin; no measuring spoon used.",
+          "correction": "Measure one tablespoon of cheese first instead of pouring from the bag.",
+          "early_cue": "Bag lifted over the ramekin with no spoon in hand."
+        },
+        {
+          "id": "s5_m2",
+          "type": "wrong_quantity",
+          "description": "Adding two tablespoons of cheese.",
+          "visual_cue": "Second scoop of cheese added; thick pile heaped above the rim.",
+          "correction": "That's double the cheese. One tablespoon is enough, take some off.",
+          "early_cue": "Spoon goes back to the cheese after the first sprinkle."
+        },
+        {
+          "id": "s5_m3",
+          "type": "wrong_order",
+          "description": "Sprinkling cheese before the egg was microwaved.",
+          "visual_cue": "Cheese being added to raw, liquid egg.",
+          "correction": "Wait on the cheese. Cook and stir the egg first, add salsa, then cheese.",
+          "early_cue": "Cheese bag opened while the egg is still raw."
+        }
+      ],
+      "successors": [
+        "s10"
+      ],
+      "duration": {
+        "mean_s": 57.30599282274777,
+        "std_s": 19.702662103869983,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s5"
+      ]
+    },
+    {
+      "id": "s6",
+      "name": "Top with 1 tablespoon salsa",
+      "instruction_novice": "Measure one tablespoon of salsa and spoon it on top of the egg in the ramekin.",
+      "instruction_expert": "1 Tbsp salsa on egg",
+      "substeps": [
+        "Pick up the tablespoon measure.",
+        "Fill it level with salsa.",
+        "Spoon it over the egg in the ramekin."
+      ],
+      "parts": [
+        "salsa",
+        "tablespoon measure",
+        "6-oz ramekin cup"
+      ],
+      "end_state": "A single tablespoon-sized dollop of red salsa sits on top of the cooked egg in the ramekin.",
+      "view_hint": "Looking down into the ramekin.",
+      "checks": [
+        {
+          "id": "s6_c1",
+          "question": "Is a tablespoon measure being used for the salsa?",
+          "kind": "part_identity",
+          "roi": "measuring spoon in hand"
+        },
+        {
+          "id": "s6_c2",
+          "question": "Is there roughly one tablespoon of salsa on the egg, not a thin smear or a large pile?",
+          "kind": "quantity",
+          "roi": "top of the egg in the ramekin"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s6_m1",
+          "type": "wrong_quantity",
+          "description": "Using a teaspoon or half tablespoon, too little salsa.",
+          "visual_cue": "Small spoon used; only a tiny streak of salsa on the egg.",
+          "correction": "That's not quite enough. Use a full tablespoon of salsa.",
+          "early_cue": "Smallest measuring spoon picked from the set."
+        },
+        {
+          "id": "s6_m2",
+          "type": "wrong_quantity",
+          "description": "Adding two or three tablespoons of salsa.",
+          "visual_cue": "Multiple scoops added; salsa covers the egg thickly and nearly fills the cup.",
+          "correction": "That's too much salsa. Scrape some off so there's about one tablespoon.",
+          "early_cue": "Measuring spoon returns to the salsa jar after the first scoop."
+        },
+        {
+          "id": "s6_m3",
+          "type": "wrong_order",
+          "description": "Adding salsa before the egg has finished cooking.",
+          "visual_cue": "Salsa being spooned onto a still-runny egg.",
+          "correction": "The egg isn't set yet. Finish microwaving it first, then add the salsa.",
+          "early_cue": "Salsa jar opened while the egg is still in the microwave or runny."
+        }
+      ],
+      "successors": [
+        "s5"
+      ],
+      "duration": {
+        "mean_s": 49.641653276651994,
+        "std_s": 18.057519201445498,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s6"
+      ]
+    },
+    {
+      "id": "s7",
+      "name": "Replace muffin top",
+      "instruction_novice": "Put the top half of the English muffin on the egg, cut side down, to close the sandwich.",
+      "instruction_expert": "Top half on, cut side down",
+      "substeps": [
+        "Pick up the rounded top half.",
+        "Hold it with the cut side facing down.",
+        "Set it on the egg to close the sandwich."
+      ],
+      "parts": [
+        "English muffin top half",
+        "assembled sandwich"
+      ],
+      "end_state": "A closed sandwich with the domed muffin top facing up sits on the plate.",
+      "view_hint": "The sandwich on the plate from the side and above.",
+      "checks": [
+        {
+          "id": "s7_c1",
+          "question": "Is the domed, crusty side of the muffin top facing up?",
+          "kind": "orientation",
+          "roi": "top of the sandwich"
+        },
+        {
+          "id": "s7_c2",
+          "question": "Is the piece on top the rounded top half rather than another flat bottom?",
+          "kind": "part_identity",
+          "roi": "top of the sandwich"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s7_m1",
+          "type": "wrong_orientation",
+          "description": "Muffin top placed upside down with the cut side facing up.",
+          "visual_cue": "Pale, craggy cut surface visible on top of the sandwich.",
+          "correction": "That top is upside down. Flip it so the cut side touches the egg.",
+          "early_cue": "Top half picked up with the cut side facing the ceiling."
+        },
+        {
+          "id": "s7_m2",
+          "type": "wrong_part",
+          "description": "Using a bottom half as the top piece.",
+          "visual_cue": "The piece on top is flat with no dome; a rounded top half remains on the board.",
+          "correction": "That's a bottom piece. Use the rounded top half to close the sandwich.",
+          "early_cue": "Hand reaches for the flat half left on the board."
+        },
+        {
+          "id": "s7_m3",
+          "type": "wrong_order",
+          "description": "Closing the sandwich before the egg has been added.",
+          "visual_cue": "Muffin top placed on bare lettuce while the egg is still in the ramekin.",
+          "correction": "The egg isn't in yet. Lift the top, add the egg onto the lettuce, then close it.",
+          "early_cue": "Top half picked up while the ramekin still holds the egg."
+        }
+      ],
+      "successors": [],
+      "duration": {
+        "mean_s": 7.807512013399366,
+        "std_s": 6.77106146674527,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s7"
+      ]
+    },
+    {
+      "id": "s8",
+      "name": "Microwave 15-30 seconds until almost set",
+      "instruction_novice": "Put the ramekin back in and microwave for 15 to 30 more seconds, just until the egg is almost set but still a little soft on top.",
+      "instruction_expert": "Microwave 15-30 s, almost set",
+      "substeps": [
+        "Return the uncovered ramekin to the microwave.",
+        "Set 15 to 30 seconds on high.",
+        "Check that the egg is mostly firm with a slightly soft top."
+      ],
+      "parts": [
+        "6-oz ramekin cup",
+        "microwave"
+      ],
+      "end_state": "The egg in the ramekin is puffed and mostly firm, with only a slightly glossy soft spot in the center.",
+      "view_hint": "Microwave display, then looking down into the ramekin after the door opens.",
+      "checks": [
+        {
+          "id": "s8_c1",
+          "question": "Was the timer set between 15 and 30 seconds?",
+          "kind": "other",
+          "roi": "microwave display"
+        },
+        {
+          "id": "s8_c2",
+          "question": "Does the egg look mostly set with no large runny area?",
+          "kind": "completion",
+          "roi": "inside of the ramekin"
+        },
+        {
+          "id": "s8_c3",
+          "question": "Is the ramekin still free of cheese and salsa?",
+          "kind": "presence",
+          "roi": "inside of the ramekin"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s8_m1",
+          "type": "technique",
+          "description": "Microwaving for a full minute, overcooking the egg.",
+          "visual_cue": "Display shows 1:00; egg puffs high and looks dry and rubbery.",
+          "correction": "That's too long. Use 15 to 30 seconds so the egg stays tender.",
+          "early_cue": "Keypad entry of 1-0-0 or the 1 minute quick button."
+        },
+        {
+          "id": "s8_m2",
+          "type": "incomplete",
+          "description": "Microwaving less than 15 seconds so the egg is still runny.",
+          "visual_cue": "Display shows under 15 seconds; egg still liquid in the center.",
+          "correction": "The egg is still runny. Give it another 15 seconds or so until it's almost set.",
+          "early_cue": "Only a single digit entered on the keypad."
+        },
+        {
+          "id": "s8_m3",
+          "type": "wrong_order",
+          "description": "Adding cheese or salsa before this cook.",
+          "visual_cue": "Shredded cheese or salsa visible on the egg as it goes into the microwave.",
+          "correction": "Hold off on toppings. Cook the egg until almost set first, then add salsa and cheese.",
+          "early_cue": "Hand reaches for cheese bag or salsa jar before the ramekin goes back in."
+        }
+      ],
+      "successors": [
+        "s6"
+      ],
+      "duration": {
+        "mean_s": 59.74183196201792,
+        "std_s": 20.305361158997563,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s8"
+      ]
+    },
+    {
+      "id": "s9",
+      "name": "Line muffin bottom with lettuce",
+      "instruction_novice": "Take the bottom half of the muffin and lay a piece of lettuce on its cut side.",
+      "instruction_expert": "Lettuce on bottom muffin half",
+      "substeps": [
+        "Pick the bottom half, the flatter one.",
+        "Set it cut-side up.",
+        "Lay a lettuce leaf on top to cover it."
+      ],
+      "parts": [
+        "English muffin bottom half",
+        "lettuce"
+      ],
+      "end_state": "A lettuce leaf sits on the cut side of the bottom muffin half, with the top half set aside.",
+      "view_hint": "Muffin halves on the board or plate from above.",
+      "checks": [
+        {
+          "id": "s9_c1",
+          "question": "Is the lettuce on the bottom half, not the domed top half?",
+          "kind": "part_identity",
+          "roi": "muffin half with lettuce"
+        },
+        {
+          "id": "s9_c2",
+          "question": "Is lettuce present on the muffin?",
+          "kind": "presence",
+          "roi": "muffin half"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s9_m1",
+          "type": "wrong_part",
+          "description": "Putting the lettuce on the top half instead of the bottom.",
+          "visual_cue": "Lettuce lies on the domed, rounded top half while the flat bottom is bare.",
+          "correction": "That's the top half. Move the lettuce to the flatter bottom half.",
+          "early_cue": "Hand picks up the rounded top half first."
+        },
+        {
+          "id": "s9_m2",
+          "type": "missing_step",
+          "description": "Skipping the lettuce entirely.",
+          "visual_cue": "Bare muffin bottom with no lettuce as the egg is about to go on.",
+          "correction": "Add a piece of lettuce to the bottom half before the egg goes on.",
+          "early_cue": "Ramekin picked up while the muffin bottom is still bare."
+        }
+      ],
+      "successors": [
+        "s2"
+      ],
+      "duration": {
+        "mean_s": 38.778732828201754,
+        "std_s": 20.854783974837073,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s9"
+      ]
+    },
+    {
+      "id": "s10",
+      "name": "Microwave about 10 seconds to melt cheese",
+      "instruction_novice": "Pop the ramekin back in the microwave for about 10 seconds, just until the cheese melts.",
+      "instruction_expert": "Microwave ~10 s, cheese melted",
+      "substeps": [
+        "Return the ramekin to the microwave.",
+        "Set about 10 seconds.",
+        "Look for the cheese to turn glossy and melted, then stop."
+      ],
+      "parts": [
+        "6-oz ramekin cup",
+        "microwave"
+      ],
+      "end_state": "The cheese on top of the egg looks shiny and melted into the salsa.",
+      "view_hint": "Microwave display, then looking down into the ramekin.",
+      "checks": [
+        {
+          "id": "s10_c1",
+          "question": "Was the timer set to around 10 seconds?",
+          "kind": "other",
+          "roi": "microwave display"
+        },
+        {
+          "id": "s10_c2",
+          "question": "Does the cheese look melted and glossy rather than dry shreds?",
+          "kind": "completion",
+          "roi": "top of the ramekin"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s10_m1",
+          "type": "technique",
+          "description": "Microwaving 30 seconds or more, until the egg is hard.",
+          "visual_cue": "Display shows 30 seconds or more; egg puffs high and cheese bubbles and browns.",
+          "correction": "Only about 10 seconds here, just enough to melt the cheese.",
+          "early_cue": "Keypad entry of 3-0 or higher."
+        },
+        {
+          "id": "s10_m2",
+          "type": "incomplete",
+          "description": "Taking it out before the cheese has melted.",
+          "visual_cue": "Cheese still looks like loose dry shreds on top.",
+          "correction": "The cheese isn't melted yet. Give it a few more seconds.",
+          "early_cue": "Door opened after only a couple of seconds."
+        }
+      ],
+      "successors": [
+        "s2"
+      ],
+      "duration": {
+        "mean_s": 69.57334154765313,
+        "std_s": 31.045551663744693,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s10"
+      ]
+    },
+    {
+      "id": "s11",
+      "name": "Stir the egg",
+      "instruction_novice": "Take the ramekin out and gently stir the egg with a fork or spoon to mix the cooked edges into the runny center.",
+      "instruction_expert": "Gently stir egg with fork",
+      "substeps": [
+        "Carefully remove the hot ramekin.",
+        "Use a fork or spoon, not a knife.",
+        "Stir slowly a few times until mixed."
+      ],
+      "parts": [
+        "6-oz ramekin cup",
+        "fork or spoon"
+      ],
+      "end_state": "The egg in the ramekin looks evenly mixed and partly cooked, with a fork or spoon resting nearby.",
+      "view_hint": "Looking down into the ramekin.",
+      "checks": [
+        {
+          "id": "s11_c1",
+          "question": "Is a fork or spoon, not a knife, being used to stir?",
+          "kind": "part_identity",
+          "roi": "utensil in the ramekin"
+        },
+        {
+          "id": "s11_c2",
+          "question": "Does the egg look evenly mixed with no large unmixed runny pool?",
+          "kind": "completion",
+          "roi": "inside of the ramekin"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s11_m1",
+          "type": "wrong_part",
+          "description": "Stirring with a knife instead of a fork or spoon.",
+          "visual_cue": "A knife blade is in the ramekin moving the egg.",
+          "correction": "Swap that knife for a fork or spoon to stir the egg.",
+          "early_cue": "Hand picks up a knife after opening the microwave."
+        },
+        {
+          "id": "s11_m2",
+          "type": "technique",
+          "description": "Stirring too rapidly so egg splashes out.",
+          "visual_cue": "Fast whipping motion with egg flicking onto the rim or counter.",
+          "correction": "Slow down, just a few gentle stirs so it doesn't splash.",
+          "early_cue": "Rapid wrist movement as soon as the utensil enters the cup."
+        }
+      ],
+      "successors": [
+        "s8"
+      ],
+      "duration": {
+        "mean_s": 36.906298297543145,
+        "std_s": 14.568113756185717,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s11"
+      ]
+    },
+    {
+      "id": "s12",
+      "name": "Cut English muffin in two",
+      "instruction_novice": "Lay the English muffin flat and cut it into a top and bottom half with a knife.",
+      "instruction_expert": "Knife-split muffin into two halves",
+      "substeps": [
+        "Place the muffin flat on the cutting board.",
+        "Hold it steady with one hand.",
+        "Slice horizontally through the middle with the knife to make two even halves."
+      ],
+      "parts": [
+        "English muffin",
+        "knife",
+        "cutting board"
+      ],
+      "end_state": "Two even English muffin halves lie cut-side up on the board with a knife beside them.",
+      "view_hint": "Cutting board from above.",
+      "checks": [
+        {
+          "id": "s12_c1",
+          "question": "Was a knife used to split the muffin?",
+          "kind": "part_identity",
+          "roi": "knife and muffin on the board"
+        },
+        {
+          "id": "s12_c2",
+          "question": "Are there exactly two roughly equal muffin halves?",
+          "kind": "quantity",
+          "roi": "muffin pieces on the board"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s12_m1",
+          "type": "technique",
+          "description": "Tearing the muffin apart by hand instead of using a knife.",
+          "visual_cue": "Both hands pulling the muffin apart; ragged torn edges and no knife on the board.",
+          "correction": "Use the knife to cut the muffin so you get clean, even halves.",
+          "early_cue": "Muffin picked up with both hands while the knife stays on the counter."
+        },
+        {
+          "id": "s12_m2",
+          "type": "wrong_quantity",
+          "description": "Cutting into three pieces or two very uneven pieces.",
+          "visual_cue": "Three muffin pieces on the board, or one thick half and one thin sliver.",
+          "correction": "You want two even halves, a top and a bottom. Try slicing straight through the middle.",
+          "early_cue": "Knife enters the muffin off-center or at an angle."
+        }
+      ],
+      "successors": [
+        "s9"
+      ],
+      "duration": {
+        "mean_s": 62.31411276664985,
+        "std_s": 28.176484631077628,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s12"
+      ]
+    }
+  ],
+  "start": [
+    "s3",
+    "s12"
+  ]
+}

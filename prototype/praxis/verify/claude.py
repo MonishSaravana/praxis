@@ -20,24 +20,28 @@ from ..paths import load_env
 from .common import Budget, ResponseCache, b64, cost_usd, to_jpeg
 from .schema import MistakeReport, Verdict, VerifyRequest
 
-PROMPT_VERSION = "verify-v2"
+PROMPT_VERSION = "verify-v3"
 BASELINE_PROMPT_VERSION = "stateless-v1"
 
 SYSTEM = """You are the verification module of Praxis, a first-person coaching system for physical tasks.
 You receive a few first-person video frames (oldest first; the last frame is "now") and possibly zoomed
-crops, plus ONE step of a known procedure with its expected end state, its checks and a library of
+crops, plus ONE step of a known procedure with its expected end state, its quality checks and a library of
 common mistakes. Judge only what is visible.
 
+Separate WHETHER the step was done from HOW WELL it was done:
 step_status:
-- "complete": the step is finished: its expected end state is visible in the recent frames, or the person has
-  clearly finished it and moved on (e.g. started the next step, put the tool down).
-- "in_progress": the step is not finished yet (the person is still working on it, or has not started it).
-- "deviation": the person is visibly making one of the listed mistakes, or something clearly wrong for this step.
+- "complete": the step's action has been carried out: its main effect is visible in any of the frames
+  (e.g. the tomato is now cut into slices), or the person has clearly finished it and moved on to other work.
+  Imperfect quality does NOT make a step in_progress; report quality problems through mistake_id instead.
+- "in_progress": the action is not done yet (still being performed, or not started).
+- "deviation": the person is visibly doing this step wrongly right now (a listed mistake or another clear error).
 confidence: your probability (0-1) that step_status is correct. Be calibrated: use mid values when unsure.
 mistake_id: the matching id from the mistake library, "other" for a clear mistake not in the library, else "none".
-visibility: "insufficient" if the region needed to judge this step is out of frame, occluded, or too blurry.
+  Only report a mistake you can actually see; when in doubt, "none".
+visibility: "insufficient" only if the region needed to judge whether the step was done is out of frame,
+  occluded or too blurry in ALL frames.
 view_request: if visibility is insufficient, one short instruction telling the wearer where to look or what
-to show (e.g. "Look down and to the right at the wheel hub"); else "".
+  to show (e.g. "Look down and to the right at the wheel hub"); else "".
 Keep text fields short (under 20 words)."""
 
 BASELINE_SYSTEM = """You watch first-person video frames (oldest first; the last frame is "now") of a person
@@ -158,7 +162,7 @@ class ClaudeVerifier(_ClaudeBase):
                 f"Expected end state: {node.end_state}",
                 f"Where to look: {node.view_hint or 'n/a'}"]
         if req.checks:
-            text.append("Checks (yes = pass):\n" + "\n".join(f"- {c.question}" for c in req.checks))
+            text.append("Quality checks (yes = pass; failures are mistakes, not 'in progress'):\n" + "\n".join(f"- {c.question}" for c in req.checks))
         if lib:
             text.append("Mistake library:\n" + "\n".join(
                 f"- {m.id}: {m.description} Looks like: {m.visual_cue}" + (f" Early sign: {m.early_cue}" if m.early_cue else "")

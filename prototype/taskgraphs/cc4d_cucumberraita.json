@@ -1,0 +1,787 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "cc4d_cucumberraita",
+  "title": "Cucumber Raita",
+  "domain": "cooking",
+  "summary": "Rinse, peel and chop or grate a cucumber, whisk chilled curd smooth in a mixing bowl, add the cucumber plus salt, red chilli powder, cumin powder, chaat masala and chopped cilantro, then stir everything together.",
+  "source": "CaptainCook4D recipe text + task graph (Cucumber Raita); mistake hints from train split",
+  "draft": false,
+  "compiler": {
+    "model": "claude-fable-5-1",
+    "prompt_version": "compile-v1",
+    "cost_usd": 0.51604,
+    "latency_s": 175.5050639580004,
+    "input_tokens": 4624,
+    "output_tokens": 9396
+  },
+  "nodes": [
+    {
+      "id": "s181",
+      "name": "Add red chilli powder",
+      "instruction_novice": "Measure a quarter teaspoon of red chilli powder with a measuring spoon and tip it into the bowl of curd.",
+      "instruction_expert": "Add 1/4 tsp red chilli powder",
+      "substeps": [
+        "Pick up the 1/4 teaspoon measuring spoon.",
+        "Fill it level with red chilli powder.",
+        "Tip it into the bowl over the curd."
+      ],
+      "parts": [
+        "1/4 teaspoon red chilli powder",
+        "1/4 tsp measuring spoon",
+        "mixing bowl"
+      ],
+      "end_state": "A small pinch of bright red powder is visible on top of the curd in the bowl.",
+      "view_hint": "the measuring spoon and then down into the bowl",
+      "checks": [
+        {
+          "id": "s181_c1",
+          "question": "Is the red chilli powder being measured in a 1/4 teaspoon spoon?",
+          "kind": "quantity",
+          "roi": "the measuring spoon"
+        },
+        {
+          "id": "s181_c2",
+          "question": "Is a small amount of red powder now visible on the curd?",
+          "kind": "presence",
+          "roi": "inside the mixing bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s181_m1",
+          "type": "wrong_quantity",
+          "description": "Added an approximate amount without measuring.",
+          "visual_cue": "Chilli powder shaken or pinched directly from the container into the bowl with no measuring spoon.",
+          "correction": "Use the quarter-teaspoon measure for the chilli powder so the raita isn't too hot.",
+          "early_cue": "Chilli container is tilted over the bowl with no spoon in hand."
+        },
+        {
+          "id": "s181_m2",
+          "type": "wrong_order",
+          "description": "Added chilli powder before the curd was whisked.",
+          "visual_cue": "Red powder landing on lumpy curd or in an empty bowl.",
+          "correction": "Whisk the curd smooth first, then add the chilli powder.",
+          "early_cue": "Chilli container opened while curd is still lumpy."
+        }
+      ],
+      "successors": [
+        "s186"
+      ],
+      "duration": {
+        "mean_s": 51.28438837612884,
+        "std_s": 25.621521563719913,
+        "n": 11,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s181"
+      ]
+    },
+    {
+      "id": "s182",
+      "name": "Peel the cucumber",
+      "instruction_novice": "Using a vegetable peeler, run it down the length of the cucumber in long strokes, turning it until all the green skin is gone.",
+      "instruction_expert": "Peel cucumber fully with peeler",
+      "substeps": [
+        "Hold the cucumber firmly at one end on the board.",
+        "Pull the peeler from top to bottom in a long stroke.",
+        "Rotate the cucumber a little and repeat.",
+        "Check for any leftover green strips and peel them off."
+      ],
+      "parts": [
+        "rinsed cucumber",
+        "vegetable peeler",
+        "cutting board"
+      ],
+      "end_state": "A pale green, fully skinned cucumber sits on the board with a pile of green peel strips beside it.",
+      "view_hint": "the cutting board with the cucumber and the peeler",
+      "checks": [
+        {
+          "id": "s182_c1",
+          "question": "Is a vegetable peeler being used on the cucumber?",
+          "kind": "part_identity",
+          "roi": "the tool in the hand"
+        },
+        {
+          "id": "s182_c2",
+          "question": "Is the cucumber pale all over with no green skin patches remaining?",
+          "kind": "completion",
+          "roi": "the surface of the cucumber"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s182_m1",
+          "type": "wrong_part",
+          "description": "Peeling with the wrong tool such as a fork, knife or grater instead of a peeler.",
+          "visual_cue": "A fork, knife or box grater is scraping the cucumber surface; ragged or shredded skin instead of clean strips.",
+          "correction": "Swap that for the vegetable peeler. It takes the skin off cleanly without wasting the cucumber.",
+          "early_cue": "Hand picks up a fork, knife or grater while the cucumber is still unpeeled."
+        },
+        {
+          "id": "s182_m2",
+          "type": "incomplete",
+          "description": "Peeling incompletely, leaving strips or patches of green skin.",
+          "visual_cue": "Green stripes or patches are still visible on the cucumber when it is set down.",
+          "correction": "There are still some green strips on there. Turn the cucumber and peel off the rest of the skin.",
+          "early_cue": "Peeler strokes only cover one side of the cucumber and it is not being rotated."
+        },
+        {
+          "id": "s182_m3",
+          "type": "wrong_part",
+          "description": "Peeling a zucchini instead of a cucumber.",
+          "visual_cue": "The vegetable being peeled is dark green and smooth with pale, firm flesh; stem end is ribbed.",
+          "correction": "That's a zucchini. Set it aside and peel the cucumber instead.",
+          "early_cue": "Dark green smooth zucchini placed on the cutting board."
+        }
+      ],
+      "successors": [
+        "s185"
+      ],
+      "duration": {
+        "mean_s": 104.20962781023202,
+        "std_s": 39.300533726395585,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s182"
+      ]
+    },
+    {
+      "id": "s183",
+      "name": "Whisk the curd",
+      "instruction_novice": "Put 1 cup of chilled curd into a mixing bowl and whisk it with a whisk or spoon in circular strokes until it is smooth and lump-free.",
+      "instruction_expert": "Whisk 1 cup curd smooth",
+      "substeps": [
+        "Get a wide mixing bowl, not a cup or mug.",
+        "Measure 1 full cup of chilled curd into the bowl.",
+        "Whisk in circles, scraping the sides.",
+        "Stop when the curd looks smooth and glossy with no lumps."
+      ],
+      "parts": [
+        "1 cup chilled curd",
+        "mixing bowl",
+        "1-cup measuring cup",
+        "whisk or spoon"
+      ],
+      "end_state": "A mixing bowl holds a smooth, glossy layer of curd with no visible lumps.",
+      "view_hint": "straight down into the mixing bowl",
+      "checks": [
+        {
+          "id": "s183_c1",
+          "question": "Is the curd in a wide mixing bowl rather than a cup or mug?",
+          "kind": "part_identity",
+          "roi": "the container on the counter"
+        },
+        {
+          "id": "s183_c2",
+          "question": "Was a full 1-cup measure of curd added?",
+          "kind": "quantity",
+          "roi": "the measuring cup"
+        },
+        {
+          "id": "s183_c3",
+          "question": "Is the curd smooth and lump-free after whisking?",
+          "kind": "completion",
+          "roi": "the surface of the curd in the bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s183_m1",
+          "type": "wrong_part",
+          "description": "Used a coffee mug or other small container instead of a mixing bowl.",
+          "visual_cue": "Curd being spooned into a mug with a handle or a small narrow cup.",
+          "correction": "A mug is too small for this. Move the curd into a proper mixing bowl so there is room to whisk and add the cucumber.",
+          "early_cue": "Hand picks a coffee mug off the shelf."
+        },
+        {
+          "id": "s183_m2",
+          "type": "wrong_quantity",
+          "description": "Added less than 1 cup of curd, such as half a cup, or did not measure.",
+          "visual_cue": "Measuring cup only partly filled, or curd spooned straight from the container without a measuring cup.",
+          "correction": "That's less than a cup. Top it up so you have a full level cup of curd.",
+          "early_cue": "Spoon goes directly from the curd tub to the bowl with no measuring cup in view."
+        },
+        {
+          "id": "s183_m3",
+          "type": "technique",
+          "description": "Did not whisk, or just pushed the curd up and down instead of stirring in circles.",
+          "visual_cue": "Curd sits lumpy in the bowl; hand pokes or presses it vertically with no circular motion.",
+          "correction": "Move the whisk round and round in circles, scraping the sides, until the curd is completely smooth.",
+          "early_cue": "Curd is added and the hand reaches for the next ingredient without a whisk."
+        },
+        {
+          "id": "s183_m4",
+          "type": "wrong_order",
+          "description": "Whisked the curd in a separate bowl from the one spices were added to, or whisked after the other ingredients were already in.",
+          "visual_cue": "Two bowls in use, or spice powder and cucumber already sitting in the bowl before whisking starts.",
+          "correction": "Whisk the plain curd smooth first, in the one mixing bowl, before anything else goes in.",
+          "early_cue": "A second bowl is pulled out, or a spice container is opened before the curd is whisked."
+        }
+      ],
+      "successors": [
+        "s181",
+        "s184",
+        "s187",
+        "s188",
+        "s190",
+        "s191"
+      ],
+      "duration": {
+        "mean_s": 140.19227234629017,
+        "std_s": 50.025396813143715,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s183"
+      ]
+    },
+    {
+      "id": "s184",
+      "name": "Add salt",
+      "instruction_novice": "Measure a quarter teaspoon of salt with the measuring spoon and add it to the bowl.",
+      "instruction_expert": "Add 1/4 tsp salt",
+      "substeps": [
+        "Pick up the 1/4 teaspoon measuring spoon.",
+        "Fill it level with salt.",
+        "Tip it into the bowl."
+      ],
+      "parts": [
+        "1/4 teaspoon salt",
+        "1/4 tsp measuring spoon",
+        "mixing bowl"
+      ],
+      "end_state": "A small pinch of white salt crystals is sitting on top of the curd in the bowl.",
+      "view_hint": "the measuring spoon and then down into the bowl",
+      "checks": [
+        {
+          "id": "s184_c1",
+          "question": "Is the salt being measured with the 1/4 teaspoon spoon, not a larger one?",
+          "kind": "quantity",
+          "roi": "the measuring spoon"
+        },
+        {
+          "id": "s184_c2",
+          "question": "Has salt been added to the bowl?",
+          "kind": "presence",
+          "roi": "inside the mixing bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s184_m1",
+          "type": "wrong_quantity",
+          "description": "Added 1/2 teaspoon of salt instead of 1/4 teaspoon.",
+          "visual_cue": "The larger 1/2 teaspoon spoon is filled, or the 1/4 spoon is filled twice.",
+          "correction": "That's the half-teaspoon. Use the quarter-teaspoon spoon for the salt, just one level scoop.",
+          "early_cue": "Hand picks up the 1/2 tsp spoon from the set."
+        },
+        {
+          "id": "s184_m2",
+          "type": "wrong_order",
+          "description": "Added salt before whisking the curd.",
+          "visual_cue": "Salt landing on lumpy curd or an empty bowl.",
+          "correction": "Whisk the curd smooth first, then add the salt.",
+          "early_cue": "Salt container opened while curd is still unwhisked."
+        }
+      ],
+      "successors": [
+        "s186"
+      ],
+      "duration": {
+        "mean_s": 51.08204976944919,
+        "std_s": 17.744782024967584,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s184"
+      ]
+    },
+    {
+      "id": "s185",
+      "name": "Chop or grate the cucumber",
+      "instruction_novice": "On the cutting board, chop the peeled cucumber into small even pieces with a sharp knife, or grate it on a grater.",
+      "instruction_expert": "Chop or grate cucumber small",
+      "substeps": [
+        "Cut the cucumber in half lengthwise, then into strips.",
+        "Line up the strips and cut across into small cubes.",
+        "Or rub the cucumber down a grater over the board.",
+        "Gather the pieces into a pile on the board."
+      ],
+      "parts": [
+        "peeled cucumber",
+        "sharp knife or grater",
+        "cutting board"
+      ],
+      "end_state": "A pile of small, roughly even cucumber pieces or shreds sits on the cutting board.",
+      "view_hint": "the cutting board under the hands",
+      "checks": [
+        {
+          "id": "s185_c1",
+          "question": "Is a knife or grater being used, not scissors?",
+          "kind": "part_identity",
+          "roi": "the tool in the hand"
+        },
+        {
+          "id": "s185_c2",
+          "question": "Is the cucumber cut into small, fairly even pieces or shreds with no large chunks left?",
+          "kind": "completion",
+          "roi": "the pile of cucumber on the board"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s185_m1",
+          "type": "technique",
+          "description": "Cucumber not chopped properly, leaving big uneven chunks or whole slices.",
+          "visual_cue": "Large thick rounds or irregular chunks on the board instead of small dice or shreds.",
+          "correction": "Those pieces are too big. Cut them down into small, even cubes so they mix into the curd.",
+          "early_cue": "Knife makes only a few wide-spaced cuts along the cucumber."
+        },
+        {
+          "id": "s185_m2",
+          "type": "wrong_part",
+          "description": "Cutting with scissors or a blunt knife with an improper chopping action.",
+          "visual_cue": "Scissors snipping the cucumber, or a knife pressing and crushing the cucumber rather than slicing cleanly.",
+          "correction": "Use a sharp kitchen knife on the board and slice with a rocking motion instead of pressing or snipping.",
+          "early_cue": "Hand picks up scissors or a small blunt table knife."
+        },
+        {
+          "id": "s185_m3",
+          "type": "wrong_part",
+          "description": "Chopping a zucchini instead of a cucumber.",
+          "visual_cue": "Pieces are firm and pale cream with a dark green rim, not watery light green cucumber with visible seeds.",
+          "correction": "That's zucchini you're chopping. Switch to the peeled cucumber.",
+          "early_cue": "A dark green zucchini is on the board instead of the peeled cucumber."
+        }
+      ],
+      "successors": [
+        "s190"
+      ],
+      "duration": {
+        "mean_s": 67.52666929816982,
+        "std_s": 24.407293547383453,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s185"
+      ]
+    },
+    {
+      "id": "s186",
+      "name": "Combine all the ingredients",
+      "instruction_novice": "Take a spoon and stir everything in the bowl thoroughly, scraping the sides, until the spices and cucumber are evenly spread through the curd.",
+      "instruction_expert": "Stir everything with spoon until even",
+      "substeps": [
+        "Pick up a spoon.",
+        "Stir from the bottom up and around the sides.",
+        "Keep going until no streaks of powder or dry spice remain.",
+        "Check the cucumber is spread evenly through the curd."
+      ],
+      "parts": [
+        "mixing bowl with curd, cucumber, spices and cilantro",
+        "spoon"
+      ],
+      "end_state": "The raita is a uniform pale, lightly speckled mixture with cucumber and cilantro spread evenly and no dry powder visible.",
+      "view_hint": "straight down into the mixing bowl",
+      "checks": [
+        {
+          "id": "s186_c1",
+          "question": "Is a spoon being used to stir the mixture?",
+          "kind": "part_identity",
+          "roi": "the tool in the bowl"
+        },
+        {
+          "id": "s186_c2",
+          "question": "Does the mixture look uniform with no separate patches of powder or cucumber on top?",
+          "kind": "completion",
+          "roi": "the surface of the raita"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s186_m1",
+          "type": "technique",
+          "description": "Just rotated or swirled the bowl without actually stirring.",
+          "visual_cue": "Bowl turned in circles on the counter; spices still sit in distinct heaps on top of the curd.",
+          "correction": "Spinning the bowl won't mix it. Use the spoon and stir right through the curd.",
+          "early_cue": "Both hands grip the bowl rim and start turning it."
+        },
+        {
+          "id": "s186_m2",
+          "type": "wrong_part",
+          "description": "Used a knife instead of a spoon to combine.",
+          "visual_cue": "A knife blade dragged through the curd.",
+          "correction": "Put the knife down and grab a spoon to mix properly.",
+          "early_cue": "The chopping knife is lifted toward the bowl."
+        },
+        {
+          "id": "s186_m3",
+          "type": "incomplete",
+          "description": "Mixed only briefly, leaving streaks of spice and unmixed cucumber.",
+          "visual_cue": "Visible red or brown streaks of powder and cucumber piled on one side after stirring stops.",
+          "correction": "Keep stirring a bit longer until all the spice streaks disappear and everything is evenly mixed.",
+          "early_cue": "Only one or two spoon passes before the spoon is set down."
+        }
+      ],
+      "successors": [],
+      "duration": {
+        "mean_s": 41.10219014127763,
+        "std_s": 22.049554762851933,
+        "n": 11,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s186"
+      ]
+    },
+    {
+      "id": "s187",
+      "name": "Add chopped cilantro",
+      "instruction_novice": "Pick the cilantro leaves off the stems, chop them finely with a knife, then measure one tablespoon and add it to the bowl.",
+      "instruction_expert": "Add 1 tbsp chopped cilantro",
+      "substeps": [
+        "Strip the leaves from the cilantro stems.",
+        "Chop the leaves finely with a knife on the board.",
+        "Fill a tablespoon measure with the chopped leaves.",
+        "Tip it into the bowl."
+      ],
+      "parts": [
+        "fresh cilantro leaves",
+        "knife",
+        "cutting board",
+        "1 tablespoon measuring spoon",
+        "mixing bowl"
+      ],
+      "end_state": "Finely chopped green cilantro is scattered on top of the curd in the bowl.",
+      "view_hint": "the cutting board, then the tablespoon, then into the bowl",
+      "checks": [
+        {
+          "id": "s187_c1",
+          "question": "Is the cilantro finely chopped with a knife, with stems removed?",
+          "kind": "completion",
+          "roi": "the chopped cilantro on the board"
+        },
+        {
+          "id": "s187_c2",
+          "question": "Was exactly one tablespoon measure of cilantro added?",
+          "kind": "quantity",
+          "roi": "the measuring spoon"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s187_m1",
+          "type": "technique",
+          "description": "Tore the cilantro by hand or used a peeler instead of chopping with a knife, leaving stems in.",
+          "visual_cue": "Fingers ripping leaves into large ragged pieces, or a peeler scraping the herbs; long stems in the pile.",
+          "correction": "Pull the leaves off the stems and chop them finely with a knife on the board instead of tearing.",
+          "early_cue": "Hands tearing the bunch, or a peeler picked up near the cilantro."
+        },
+        {
+          "id": "s187_m2",
+          "type": "wrong_quantity",
+          "description": "Added an unmeasured or doubled amount, like two tablespoons.",
+          "visual_cue": "Cilantro scooped by hand into the bowl, or the tablespoon filled and emptied twice.",
+          "correction": "Just one level tablespoon of cilantro, measured with the spoon.",
+          "early_cue": "Hand grabs the whole chopped pile without a measuring spoon."
+        },
+        {
+          "id": "s187_m3",
+          "type": "wrong_order",
+          "description": "Added cilantro before the curd was whisked.",
+          "visual_cue": "Green herbs land on lumpy curd or in an empty bowl.",
+          "correction": "Whisk the curd smooth first, then add the cilantro.",
+          "early_cue": "Cilantro chopped and lifted toward the bowl while curd is unwhisked."
+        }
+      ],
+      "successors": [
+        "s186"
+      ],
+      "duration": {
+        "mean_s": 118.89668981529104,
+        "std_s": 45.30288602525267,
+        "n": 11,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s187"
+      ]
+    },
+    {
+      "id": "s188",
+      "name": "Add cumin powder",
+      "instruction_novice": "Measure one teaspoon of cumin powder, the brownish ground spice, and add it to the bowl.",
+      "instruction_expert": "Add 1 tsp cumin powder",
+      "substeps": [
+        "Find the cumin powder container (ground, brownish-khaki powder).",
+        "Fill the 1 teaspoon measure level.",
+        "Tip it into the bowl."
+      ],
+      "parts": [
+        "1 teaspoon cumin powder",
+        "1 tsp measuring spoon",
+        "mixing bowl"
+      ],
+      "end_state": "A small heap of khaki-brown powder is visible on the curd in the bowl.",
+      "view_hint": "the spice container label and the spoon, then into the bowl",
+      "checks": [
+        {
+          "id": "s188_c1",
+          "question": "Is the spice a khaki-brown ground powder (cumin), not reddish-brown cinnamon or whole seeds?",
+          "kind": "part_identity",
+          "roi": "the powder on the spoon"
+        },
+        {
+          "id": "s188_c2",
+          "question": "Is it measured in a 1 teaspoon spoon?",
+          "kind": "quantity",
+          "roi": "the measuring spoon"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s188_m1",
+          "type": "wrong_part",
+          "description": "Added cinnamon powder instead of cumin powder.",
+          "visual_cue": "Powder is a warm reddish-brown and very fine, and the container label reads cinnamon.",
+          "correction": "That's cinnamon. Put it back and use the cumin powder, the khaki-coloured one.",
+          "early_cue": "Hand reaches for a cinnamon container on the spice rack."
+        },
+        {
+          "id": "s188_m2",
+          "type": "wrong_part",
+          "description": "Added whole cumin seeds instead of cumin powder.",
+          "visual_cue": "Small oval brown seeds on the spoon rather than a fine powder.",
+          "correction": "Those are whole cumin seeds. The recipe needs cumin powder, so switch to the ground version.",
+          "early_cue": "A jar of whole seeds is picked up."
+        },
+        {
+          "id": "s188_m3",
+          "type": "wrong_order",
+          "description": "Added cumin before whisking the curd.",
+          "visual_cue": "Powder landing on lumpy curd or an empty bowl.",
+          "correction": "Whisk the curd smooth first, then add the cumin.",
+          "early_cue": "Cumin container opened while curd is still unwhisked."
+        }
+      ],
+      "successors": [
+        "s186"
+      ],
+      "duration": {
+        "mean_s": 67.20138333264326,
+        "std_s": 19.02797442236103,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s188"
+      ]
+    },
+    {
+      "id": "s189",
+      "name": "Rinse the cucumber",
+      "instruction_novice": "Take one medium cucumber and rinse the whole thing under running water, turning it so every side gets washed.",
+      "instruction_expert": "Rinse one cucumber all over",
+      "substeps": [
+        "Pick up one medium cucumber (not a zucchini).",
+        "Hold it under running water.",
+        "Turn it so both ends and all sides get rinsed.",
+        "Shake off the water and set it on the board."
+      ],
+      "parts": [
+        "1 medium cucumber",
+        "running water",
+        "sink"
+      ],
+      "end_state": "A wet, clean cucumber is lying on the cutting board or counter near the sink.",
+      "view_hint": "the sink and the cucumber in the hands",
+      "checks": [
+        {
+          "id": "s189_c1",
+          "question": "Is the item being rinsed a cucumber with light green, slightly bumpy skin rather than a dark green smooth zucchini?",
+          "kind": "part_identity",
+          "roi": "the vegetable in the hands"
+        },
+        {
+          "id": "s189_c2",
+          "question": "Has the entire cucumber, including both ends, been held under the water?",
+          "kind": "completion",
+          "roi": "the cucumber under the tap"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s189_m1",
+          "type": "wrong_part",
+          "description": "Used a zucchini instead of a cucumber.",
+          "visual_cue": "The vegetable is dark green, smooth and glossy with a ribbed stem end, instead of a lighter, bumpy cucumber.",
+          "correction": "That looks like a zucchini, not a cucumber. Put it back and grab the cucumber instead.",
+          "early_cue": "Hand reaches toward a dark green zucchini on the counter or in the fridge."
+        },
+        {
+          "id": "s189_m2",
+          "type": "incomplete",
+          "description": "Rinsed only one half of the cucumber and skipped the other half.",
+          "visual_cue": "Only one end goes under the tap; the other half stays dry and never gets turned toward the water.",
+          "correction": "Flip the cucumber around and rinse the other half too, so the whole thing is clean.",
+          "early_cue": "The cucumber is held by one end under the water without being rotated."
+        }
+      ],
+      "successors": [
+        "s182"
+      ],
+      "duration": {
+        "mean_s": 47.78408458976836,
+        "std_s": 17.75519489793447,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s189"
+      ]
+    },
+    {
+      "id": "s190",
+      "name": "Add cucumber to the curd",
+      "instruction_novice": "Scoop the chopped or grated cucumber off the board with your hand or a spoon and add it into the whisked curd.",
+      "instruction_expert": "Add cucumber to whisked curd",
+      "substeps": [
+        "Bring the board next to the bowl.",
+        "Scoop the cucumber up with a spoon or cupped hand.",
+        "Drop it into the curd.",
+        "Scrape any leftover pieces off the board into the bowl."
+      ],
+      "parts": [
+        "chopped or grated cucumber",
+        "mixing bowl with whisked curd",
+        "spoon"
+      ],
+      "end_state": "The cucumber pieces are sitting on top of the smooth curd in the bowl, with the board nearly clean.",
+      "view_hint": "down into the mixing bowl and the board beside it",
+      "checks": [
+        {
+          "id": "s190_c1",
+          "question": "Are the cucumber pieces now inside the bowl on top of the whisked curd?",
+          "kind": "presence",
+          "roi": "inside the mixing bowl"
+        },
+        {
+          "id": "s190_c2",
+          "question": "Is the counter around the bowl free of spilled cucumber pieces?",
+          "kind": "other",
+          "roi": "the counter around the bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s190_m1",
+          "type": "technique",
+          "description": "Tipped the entire cutting board over the bowl, spilling cucumber onto the counter.",
+          "visual_cue": "Whole board lifted and tilted over the bowl; cucumber pieces scattered on the kitchen platform.",
+          "correction": "Use a spoon or your hand to move the cucumber instead of tipping the whole board, then pick up the spilled bits.",
+          "early_cue": "Both hands lift the cutting board off the counter."
+        },
+        {
+          "id": "s190_m2",
+          "type": "wrong_order",
+          "description": "Adding cucumber before the curd has been whisked.",
+          "visual_cue": "Cucumber lands on lumpy, unwhisked curd or an empty bowl.",
+          "correction": "Hold on, whisk the curd smooth first, then add the cucumber.",
+          "early_cue": "Curd in bowl still looks lumpy when the board is brought over."
+        }
+      ],
+      "successors": [
+        "s186"
+      ],
+      "duration": {
+        "mean_s": 22.129083107046352,
+        "std_s": 12.420823511268068,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s190"
+      ]
+    },
+    {
+      "id": "s191",
+      "name": "Add chaat masala",
+      "instruction_novice": "Measure half a teaspoon of chaat masala and tip it carefully into the bowl without spilling.",
+      "instruction_expert": "Add 1/2 tsp chaat masala",
+      "substeps": [
+        "Pick up the 1/2 teaspoon measuring spoon.",
+        "Fill it level from the chaat masala packet or jar, over the counter.",
+        "Carry it over the bowl and tip it in gently."
+      ],
+      "parts": [
+        "1/2 teaspoon chaat masala powder",
+        "1/2 tsp measuring spoon",
+        "mixing bowl"
+      ],
+      "end_state": "A pinch of greyish-brown chaat masala sits on the curd with no powder spilled on the counter.",
+      "view_hint": "the measuring spoon and the counter around the bowl",
+      "checks": [
+        {
+          "id": "s191_c1",
+          "question": "Is the chaat masala measured in the 1/2 teaspoon spoon rather than a full teaspoon?",
+          "kind": "quantity",
+          "roi": "the measuring spoon"
+        },
+        {
+          "id": "s191_c2",
+          "question": "Is the counter around the bowl free of spilled powder?",
+          "kind": "other",
+          "roi": "the counter around the bowl"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s191_m1",
+          "type": "wrong_quantity",
+          "description": "Measured 1 teaspoon instead of 1/2 teaspoon.",
+          "visual_cue": "The larger 1 tsp measuring spoon is filled with chaat masala.",
+          "correction": "That's the full teaspoon. Use the half-teaspoon spoon for the chaat masala.",
+          "early_cue": "Hand selects the 1 tsp spoon from the set."
+        },
+        {
+          "id": "s191_m2",
+          "type": "technique",
+          "description": "Spilled powder while transferring from the packet to the bowl.",
+          "visual_cue": "Greyish powder dusted on the counter or the rim of the bowl, packet tilted and pouring.",
+          "correction": "Hold the spoon right over the bowl and pour slowly so it doesn't spill, then wipe up the counter.",
+          "early_cue": "Packet tilted steeply while filling the spoon away from the bowl."
+        },
+        {
+          "id": "s191_m3",
+          "type": "wrong_order",
+          "description": "Added chaat masala before whisking the curd.",
+          "visual_cue": "Powder lands on lumpy curd or in an empty bowl.",
+          "correction": "Whisk the curd smooth first, then add the chaat masala.",
+          "early_cue": "Chaat masala packet opened while curd is still unwhisked."
+        }
+      ],
+      "successors": [
+        "s186"
+      ],
+      "duration": {
+        "mean_s": 55.13126114418467,
+        "std_s": 23.223906075669568,
+        "n": 11,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s191"
+      ]
+    }
+  ],
+  "start": [
+    "s183",
+    "s189"
+  ]
+}

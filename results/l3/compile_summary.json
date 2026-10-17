@@ -1,0 +1,122 @@
+{
+  "cc4d_tomatomozzarellasalad": {
+    "title": "Tomato Mozzarella Salad",
+    "nodes": 9,
+    "mistakes": 32,
+    "checks": 21,
+    "compiler": {
+      "model": "claude-fable-5-1",
+      "prompt_version": "compile-v1",
+      "cost_usd": 0.43819,
+      "latency_s": 166.34547787497286,
+      "input_tokens": 4014,
+      "output_tokens": 7961
+    },
+    "duration_priors_from_train": 9
+  },
+  "cc4d_spicedhotchocolate": {
+    "title": "Spiced Hot Chocolate",
+    "nodes": 7,
+    "mistakes": 24,
+    "checks": 18,
+    "compiler": {
+      "model": "claude-fable-5-1",
+      "prompt_version": "compile-v1",
+      "cost_usd": 0.36134,
+      "latency_s": 144.20501325000077,
+      "input_tokens": 4334,
+      "output_tokens": 6360
+    },
+    "duration_priors_from_train": 7
+  },
+  "cc4d_breakfastburritos": {
+    "title": "Breakfast Burritos",
+    "nodes": 11,
+    "mistakes": 30,
+    "checks": 23,
+    "compiler": {
+      "model": "claude-fable-5-1",
+      "prompt_version": "compile-v1",
+      "cost_usd": 0.51815,
+      "latency_s": 179.26858825003728,
+      "input_tokens": 4300,
+      "output_tokens": 9503
+    },
+    "duration_priors_from_train": 11
+  },
+  "cc4d_microwaveeggsandwich": {
+    "title": "Microwave Egg Sandwich",
+    "nodes": 12,
+    "mistakes": 30,
+    "checks": 26,
+    "compiler": {
+      "model": "claude-fable-5-1",
+      "prompt_version": "compile-v1",
+      "cost_usd": 0.49501,
+      "latency_s": 171.4421223750105,
+      "input_tokens": 4341,
+      "output_tokens": 9032
+    },
+    "duration_priors_from_train": 12
+  },
+  "cc4d_pinwheels": {
+    "title": "Pinwheels (nut butter and jelly tortilla roll-ups)",
+    "nodes": 17,
+    "mistakes": 43,
+    "checks": 35,
+    "compiler": {
+      "model": "claude-fable-5-1",
+      "prompt_version": "compile-v1",
+      "cost_usd": 0.64284,
+      "latency_s": 206.1107053749729,
+      "input_tokens": 4664,
+      "output_tokens": 11924
+    },
+    "duration_priors_from_train": 17
+  },
+  "cc4d_microwavemugpizza": {
+    "title": "Microwave Mug Pizza",
+    "nodes": 14,
+    "mistakes": 32,
+    "checks": 29,
+    "compiler": {
+      "model": "claude-fable-5-1",
+      "prompt_version": "compile-v1",
+      "cost_usd": 0.5526,
+      "latency_s": 190.4433291660389,
+      "input_tokens": 3155,
+      "output_tokens": 10421
+    },
+    "duration_priors_from_train": 14
+  },
+  "cc4d_herbomeletwithfriedtomatoes": {
+    "title": "Herb Omelet with Fried Tomatoes",
+    "nodes": 15,
+    "mistakes": 46,
+    "checks": 32,
+    "compiler": {
+      "model": "claude-fable-5-1",
+      "prompt_version": "compile-v1",
+      "cost_usd": 0.63941,
+      "latency_s": 200.9295162500348,
+      "input_tokens": 4556,
+      "output_tokens": 11877
+    },
+    "duration_priors_from_train": 15
+  },
+  "cc4d_cucumberraita": {
+    "title": "Cucumber Raita",
+    "nodes": 11,
+    "mistakes": 30,
+    "checks": 23,
+    "compiler": {
+      "model": "claude-fable-5-1",
+      "prompt_version": "compile-v1",
+      "cost_usd": 0.51604,
+      "latency_s": 175.5050639580004,
+      "input_tokens": 4624,
+      "output_tokens": 9396
+    },
+    "duration_priors_from_train": 11
+  }
+}

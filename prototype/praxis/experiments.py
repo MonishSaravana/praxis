@@ -105,6 +105,9 @@ def make_verifier(kind: str, budget=None):
     if kind == "claude_fast":
         from .verify.claude import ClaudeVerifier
         return ClaudeVerifier("claude-haiku-5-5", budget, role="fast")
+    if kind == "claude_sonnet":
+        from .verify.claude import ClaudeVerifier
+        return ClaudeVerifier("claude-sonnet-5-5", budget, role="fast")
     if kind == "claude_strong":
         from .verify.claude import ClaudeVerifier
         return ClaudeVerifier("claude-opus-5-5", budget, role="strong")
@@ -125,7 +128,8 @@ def build_check_sets(max_train_per_task: int = 5) -> dict:
     per = collections.Counter()
     train = []
     for c in man["train"]:
-        if (FEATURES / f"{c['clip_id']}.npz").exists() and per[c["task_id"]] < max_train_per_task:
+        from pathlib import Path as _P
+        if _P(c["video"]).exists() and per[c["task_id"]] < max_train_per_task:
             per[c["task_id"]] += 1
             train.append(Clip.from_json(c))
     ev = [Clip.from_json(c) for c in man["eval"]]
@@ -261,6 +265,38 @@ def tune_tracker(max_s: float = 420.0) -> dict:
     (RESULTS / "l4").mkdir(parents=True, exist_ok=True)
     (RESULTS / "l4" / "tracker_tuning.json").write_text(json.dumps(res, indent=2))
     print(json.dumps(res["best"]), table[:3])
+    return res
+
+
+
+def framing_ablation(n: int = 100, kinds=("jev", "claude_fast", "claude_sonnet", "claude_strong")) -> dict:
+    """Same n train-split checks, two evidence framings: 3 sharpest frames of the last 4 s vs temporal span."""
+    import random
+    from sklearn.metrics import roc_auc_score
+    from .eval.checks import load_checks, run_verifier_on_checks
+    from .tasks.compiler import load_library
+    from .verify.calibration import raw_p_complete
+    lib = load_library()
+    tr = [c for c in load_checks("train") if c.task_id in lib]
+    random.seed(0)
+    sub = random.sample(tr, 200)[:n]
+    res = {"n": n, "split": "train", "rows": []}
+    for framing in ("recent3", "span"):
+        for kind in kinds:
+            out = RESULTS.parent / "data" / "verdicts" / f"framing_{framing}_{kind}.jsonl"
+            rows = run_verifier_on_checks(make_verifier(kind), sub, lib, out, workers=6, framing=framing, log_every=0)
+            rows = [r for r in rows if not r["verdict"].get("error")]
+            p = np.array([raw_p_complete(r["verdict"]["step_status"], r["verdict"]["confidence"]) for r in rows])
+            y = np.array([r["y_complete"] for r in rows])
+            lat = [r["verdict"]["latency_ms"] for r in rows]
+            cost = [r["verdict"]["raw"].get("orig_cost_usd", r["verdict"]["cost_usd"]) for r in rows]
+            row = {"framing": framing, "verifier": kind, "model": rows[0]["verdict"]["model"] if rows else None, "n": len(rows),
+                   "accuracy": float(((p >= 0.5) == (y == 1)).mean()), "auroc": float(roc_auc_score(y, p)),
+                   "latency_ms_p50": float(np.median(lat)), "cost_usd_per_check": float(np.mean(cost))}
+            res["rows"].append(row)
+            print(row, flush=True)
+    (RESULTS / "l5").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l5" / "framing_ablation.json").write_text(json.dumps(res, indent=2))
     return res
 
 

@@ -1,0 +1,1143 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "cc4d_pinwheels",
+  "title": "Pinwheels (nut butter and jelly tortilla roll-ups)",
+  "domain": "cooking",
+  "summary": "Spread nut butter and jelly on an 8-inch flour tortilla, roll it into a tight log, pin it with five toothpicks, trim the ends, then slice between the toothpicks with dental floss and plate the pinwheels.",
+  "source": "CaptainCook4D recipe text + task graph (Pinwheels); mistake hints from train split",
+  "draft": false,
+  "compiler": {
+    "model": "claude-fable-5-1",
+    "prompt_version": "compile-v1",
+    "cost_usd": 0.64284,
+    "latency_s": 206.1107053749729,
+    "input_tokens": 4664,
+    "output_tokens": 11924
+  },
+  "nodes": [
+    {
+      "id": "s102",
+      "name": "Slice next pinwheel with floss",
+      "instruction_novice": "Repeat with the floss: slide it under, center it between the next two toothpicks, cross the ends on top, and pull to make another pinwheel. Keep going until every toothpick has its own slice.",
+      "instruction_expert": "Floss-slice next pinwheel",
+      "substeps": [
+        "Slide the floss under the log between the next two toothpicks",
+        "Cross the floss ends over the top",
+        "Pull the ends apart to slice",
+        "Repeat until each toothpick has its own pinwheel"
+      ],
+      "parts": [
+        "dental floss",
+        "tortilla log",
+        "toothpicks"
+      ],
+      "end_state": "Another round pinwheel, each with one toothpick, sits separated on the board beside the remaining log.",
+      "view_hint": "Down at the log and the cut pinwheels on the cutting board",
+      "checks": [
+        {
+          "id": "s102_c1",
+          "question": "Has a new pinwheel been separated from the log since the last cut?",
+          "kind": "completion",
+          "roi": "cut pinwheels on the board"
+        },
+        {
+          "id": "s102_c2",
+          "question": "Does each cut pinwheel have exactly one toothpick in it?",
+          "kind": "quantity",
+          "roi": "individual pinwheels"
+        },
+        {
+          "id": "s102_c3",
+          "question": "Is floss, not a knife or scissors, being used?",
+          "kind": "part_identity",
+          "roi": "hands and tool"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s102_m1",
+          "type": "wrong_part",
+          "description": "Switches to a knife for the remaining slices",
+          "visual_cue": "A knife pressing through the log, flattening the spiral",
+          "correction": "Stay with the floss for the rest of the slices; the knife squashes them.",
+          "early_cue": "Hand picks up a knife"
+        },
+        {
+          "id": "s102_m2",
+          "type": "wrong_part",
+          "description": "Uses scissors instead of floss",
+          "visual_cue": "Scissors snipping at the log",
+          "correction": "Scissors won't give a clean round slice; use the floss again.",
+          "early_cue": "Hand reaches for scissors"
+        },
+        {
+          "id": "s102_m3",
+          "type": "technique",
+          "description": "Cuts in the wrong place so one slice has two toothpicks and another has none",
+          "visual_cue": "A pinwheel with two toothpicks next to one with none",
+          "correction": "Cut halfway between the toothpicks so each pinwheel gets one pick.",
+          "early_cue": "Floss placed right beside a toothpick"
+        },
+        {
+          "id": "s102_m4",
+          "type": "incomplete",
+          "description": "Stops slicing while a section with more than one toothpick remains",
+          "visual_cue": "A remaining piece of log with two or more toothpicks still in it",
+          "correction": "There's still a piece with more than one toothpick; keep slicing until each pinwheel has just one.",
+          "early_cue": null
+        }
+      ],
+      "successors": [
+        "s102",
+        "s109"
+      ],
+      "duration": {
+        "mean_s": 18.036684210526314,
+        "std_s": 23.413497951805095,
+        "n": 19,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s102"
+      ]
+    },
+    {
+      "id": "s103",
+      "name": "Discard tortilla ends",
+      "instruction_novice": "Pick up the two cut-off end pieces and throw them away or set them aside off the board.",
+      "instruction_expert": "Discard the cut ends",
+      "substeps": [
+        "Pick up both end pieces from the board",
+        "Drop them in the trash or a scrap bowl"
+      ],
+      "parts": [
+        "tortilla end pieces"
+      ],
+      "end_state": "The cutting board shows only the trimmed log; the two end pieces are gone.",
+      "view_hint": "Down at the cutting board around the log",
+      "checks": [
+        {
+          "id": "s103_c1",
+          "question": "Are the cut-off end pieces gone from the cutting board?",
+          "kind": "completion",
+          "roi": "board around the log"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s103_m1",
+          "type": "missing_step",
+          "description": "End pieces left on the board and later mixed with the pinwheels",
+          "visual_cue": "Ragged end pieces still lying next to the log or on the plate",
+          "correction": "Those ragged ends shouldn't be served; toss them before you slice.",
+          "early_cue": null
+        },
+        {
+          "id": "s103_m2",
+          "type": "wrong_part",
+          "description": "A good pinwheel discarded by mistake instead of an end piece",
+          "visual_cue": "A neat spiral slice with a toothpick dropped in the trash",
+          "correction": "Hold on, that's a good pinwheel. Only the ragged end pieces get thrown out.",
+          "early_cue": "Hand picks up a toothpicked slice while heading to the trash"
+        }
+      ],
+      "successors": [],
+      "duration": {
+        "mean_s": 7.213400000000007,
+        "std_s": 1.3422605186773318,
+        "n": 5,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s103"
+      ]
+    },
+    {
+      "id": "s104",
+      "name": "Wipe knife clean (after jelly)",
+      "instruction_novice": "Wipe the jelly off the butter knife with a paper towel and set the knife down for later.",
+      "instruction_expert": "Wipe knife with paper towel",
+      "substeps": [
+        "Take a paper towel",
+        "Pinch the blade in the towel and pull the knife through",
+        "Set the clean knife down on the board"
+      ],
+      "parts": [
+        "butter knife",
+        "paper towel"
+      ],
+      "end_state": "The butter knife is clean and resting beside the tortilla, with a jelly-smeared paper towel nearby.",
+      "view_hint": "The knife and paper towel in hands",
+      "checks": [
+        {
+          "id": "s104_c1",
+          "question": "Is the knife blade clean with no jelly left on it?",
+          "kind": "completion",
+          "roi": "knife blade"
+        },
+        {
+          "id": "s104_c2",
+          "question": "Is a paper towel being used to wipe the knife?",
+          "kind": "presence",
+          "roi": "hands"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s104_m1",
+          "type": "missing_step",
+          "description": "Knife is left dirty and not wiped",
+          "visual_cue": "Knife set down with jelly still on the blade; no paper towel used",
+          "correction": "Give the knife a wipe with a paper towel now so it's clean for trimming later.",
+          "early_cue": "Knife put down on the counter straight from the tortilla"
+        },
+        {
+          "id": "s104_m2",
+          "type": "wrong_part",
+          "description": "Wiping a spoon or other utensil instead of the butter knife",
+          "visual_cue": "A spoon is being wiped instead of the butter knife",
+          "correction": "It's the butter knife that needs cleaning; wipe that one.",
+          "early_cue": null
+        }
+      ],
+      "successors": [
+        "s116"
+      ],
+      "duration": {
+        "mean_s": 18.665499999999998,
+        "std_s": 9.682090760780946,
+        "n": 6,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s104"
+      ]
+    },
+    {
+      "id": "s105",
+      "name": "Cross floss ends over top",
+      "instruction_novice": "Bring the two floss ends up and cross them over the top of the log, one over the other.",
+      "instruction_expert": "Cross floss ends on top",
+      "substeps": [
+        "Lift both floss ends up the sides of the log",
+        "Cross one end over the other on top",
+        "Keep the floss snug against the log"
+      ],
+      "parts": [
+        "dental floss",
+        "tortilla log"
+      ],
+      "end_state": "The floss wraps fully around the log, with the two ends crossed in an X on top.",
+      "view_hint": "Down at the top of the log where the floss crosses",
+      "checks": [
+        {
+          "id": "s105_c1",
+          "question": "Do the two floss ends cross each other on top of the log?",
+          "kind": "completion",
+          "roi": "top of the log"
+        },
+        {
+          "id": "s105_c2",
+          "question": "Is the floss still between the same two toothpicks?",
+          "kind": "alignment",
+          "roi": "floss and neighboring toothpicks"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s105_m1",
+          "type": "incomplete",
+          "description": "Ends lifted but not crossed, floss just forms a U around the log",
+          "visual_cue": "Both floss ends rise straight up on each side without overlapping",
+          "correction": "Cross the two ends over each other on top so the floss makes a full loop.",
+          "early_cue": null
+        },
+        {
+          "id": "s105_m2",
+          "type": "technique",
+          "description": "Floss shifts off-center while crossing",
+          "visual_cue": "Floss now sits close to a toothpick instead of midway",
+          "correction": "The floss slipped; nudge it back to the middle between the toothpicks before pulling.",
+          "early_cue": null
+        }
+      ],
+      "successors": [
+        "s108"
+      ],
+      "duration": {
+        "mean_s": 14.114999999999995,
+        "std_s": 15.561301230938243,
+        "n": 4,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s105"
+      ]
+    },
+    {
+      "id": "s106",
+      "name": "Slide floss under roll",
+      "instruction_novice": "Take a length of dental floss and slide it under the log so it crosses the log sideways, at a right angle to its length.",
+      "instruction_expert": "Floss under roll, perpendicular",
+      "substeps": [
+        "Pull off a piece of floss about 12 inches long",
+        "Hold one end in each hand",
+        "Slip the floss under the log, running crosswise, not along it"
+      ],
+      "parts": [
+        "dental floss",
+        "tortilla log"
+      ],
+      "end_state": "A strand of floss runs under the log at a right angle, with its two ends sticking out on either side.",
+      "view_hint": "Down at the log with both floss ends visible on either side",
+      "checks": [
+        {
+          "id": "s106_c1",
+          "question": "Is a strand of floss under the log with an end out on each side?",
+          "kind": "presence",
+          "roi": "underside of the log"
+        },
+        {
+          "id": "s106_c2",
+          "question": "Is the floss crossing the log at a right angle to its length?",
+          "kind": "orientation",
+          "roi": "floss and log"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s106_m1",
+          "type": "wrong_orientation",
+          "description": "Floss placed along the length of the log instead of across it",
+          "visual_cue": "Floss runs parallel to the log with ends poking out the ends",
+          "correction": "Turn the floss so it runs across the log, not along it; you want to cut slices.",
+          "early_cue": "Floss ends held at the two ends of the log"
+        },
+        {
+          "id": "s106_m2",
+          "type": "wrong_part",
+          "description": "A knife or scissors picked up instead of floss",
+          "visual_cue": "A knife or scissors in hand approaching the log",
+          "correction": "Put that down and use the dental floss; it slices cleanly without squashing the roll.",
+          "early_cue": "Hand reaches for scissors or a knife"
+        }
+      ],
+      "successors": [
+        "s117"
+      ],
+      "duration": {
+        "mean_s": 34.457,
+        "std_s": 25.656064195429533,
+        "n": 4,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s106"
+      ]
+    },
+    {
+      "id": "s107",
+      "name": "Spread jelly over nut butter",
+      "instruction_novice": "Spread the jelly in a thin layer right on top of the nut butter, keeping that bare half-inch edge clear.",
+      "instruction_expert": "Spread jelly over nut butter",
+      "substeps": [
+        "Drop the jelly onto the middle of the nut butter",
+        "Spread it gently outward with the flat of the knife",
+        "Keep the jelly inside the nut butter area, leaving the edge bare"
+      ],
+      "parts": [
+        "butter knife",
+        "jelly",
+        "tortilla"
+      ],
+      "end_state": "A thin, shiny layer of jelly covers the nut butter, with the bare border still visible around the edge.",
+      "view_hint": "Straight down at the whole tortilla",
+      "checks": [
+        {
+          "id": "s107_c1",
+          "question": "Is jelly spread over most of the nut butter layer?",
+          "kind": "completion",
+          "roi": "center of tortilla"
+        },
+        {
+          "id": "s107_c2",
+          "question": "Is the bare border around the edge still clear of jelly?",
+          "kind": "alignment",
+          "roi": "outer rim of tortilla"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s107_m1",
+          "type": "wrong_part",
+          "description": "Jelly spread with a spoon instead of the butter knife",
+          "visual_cue": "A spoon is being dragged across the tortilla",
+          "correction": "Use the butter knife to spread the jelly evenly.",
+          "early_cue": "Spoon in hand over the tortilla"
+        },
+        {
+          "id": "s107_m2",
+          "type": "technique",
+          "description": "Jelly pushed out to the edge of the tortilla",
+          "visual_cue": "Jelly reaches the rim; no pale tortilla border visible",
+          "correction": "Scrape the jelly back from the edge so there's still half an inch bare; it will leak when rolled otherwise.",
+          "early_cue": "Knife strokes reach the edge of the tortilla"
+        },
+        {
+          "id": "s107_m3",
+          "type": "incomplete",
+          "description": "Too much jelly piled in the middle instead of spread thin",
+          "visual_cue": "A thick mound of jelly in the center with bare nut butter around it",
+          "correction": "Spread the jelly thinner across the whole nut butter layer.",
+          "early_cue": null
+        }
+      ],
+      "successors": [
+        "s104"
+      ],
+      "duration": {
+        "mean_s": 28.62979999999999,
+        "std_s": 8.006526662667149,
+        "n": 5,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s107"
+      ]
+    },
+    {
+      "id": "s108",
+      "name": "Pull floss to slice",
+      "instruction_novice": "Pull the two floss ends firmly in opposite directions so the floss tightens and slices straight through the log.",
+      "instruction_expert": "Pull ends apart to slice",
+      "substeps": [
+        "Grip one end in each hand",
+        "Pull steadily and firmly in opposite directions",
+        "Keep pulling until the floss passes all the way through",
+        "Pull the floss out"
+      ],
+      "parts": [
+        "dental floss",
+        "tortilla log"
+      ],
+      "end_state": "The log is cut into two pieces at the floss line with a clean spiral face showing.",
+      "view_hint": "Down at the cut line on the log",
+      "checks": [
+        {
+          "id": "s108_c1",
+          "question": "Is the log separated into two pieces with a clean spiral cut face?",
+          "kind": "completion",
+          "roi": "cut line"
+        },
+        {
+          "id": "s108_c2",
+          "question": "Was floss, not a knife or scissors, used to make the cut?",
+          "kind": "part_identity",
+          "roi": "hands and tool"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s108_m1",
+          "type": "technique",
+          "description": "Floss not pulled tightly enough so the roll is only dented, not cut",
+          "visual_cue": "A groove around the log but the pieces are still joined",
+          "correction": "Pull harder and keep going; the floss needs to go all the way through.",
+          "early_cue": "Hands move apart slowly with slack floss"
+        },
+        {
+          "id": "s108_m2",
+          "type": "wrong_part",
+          "description": "Scissors used instead of floss",
+          "visual_cue": "Scissors cutting the log or the floss cut away",
+          "correction": "Use the floss to slice, not scissors; it gives a clean round pinwheel.",
+          "early_cue": "Hand picks up scissors"
+        },
+        {
+          "id": "s108_m3",
+          "type": "wrong_part",
+          "description": "Knife used instead of floss",
+          "visual_cue": "A knife pressing down on the log, squashing it",
+          "correction": "Put the knife down and slice with the floss so the roll doesn't get squashed.",
+          "early_cue": "Hand reaches for a knife"
+        }
+      ],
+      "successors": [
+        "s102"
+      ],
+      "duration": {
+        "mean_s": 19.230666666666675,
+        "std_s": 16.940776389134786,
+        "n": 6,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s108"
+      ]
+    },
+    {
+      "id": "s109",
+      "name": "Place pinwheels on plate",
+      "instruction_novice": "Pick up each pinwheel and set it on a plate, spiral side up, so you can see the swirl.",
+      "instruction_expert": "Pinwheels on plate, spiral up",
+      "substeps": [
+        "Pick up a pinwheel by its toothpick or sides",
+        "Set it on the plate with the cut spiral facing up",
+        "Repeat for all the pinwheels"
+      ],
+      "parts": [
+        "pinwheels",
+        "plate"
+      ],
+      "end_state": "All five pinwheels sit on a plate with their spiral faces up and a toothpick in each.",
+      "view_hint": "Down at the plate",
+      "checks": [
+        {
+          "id": "s109_c1",
+          "question": "Are all the pinwheels on the plate and none left on the cutting board?",
+          "kind": "completion",
+          "roi": "plate and cutting board"
+        },
+        {
+          "id": "s109_c2",
+          "question": "Are the pinwheels placed with the spiral face up?",
+          "kind": "orientation",
+          "roi": "pinwheels on plate"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s109_m1",
+          "type": "incomplete",
+          "description": "Some pinwheels left behind on the cutting board",
+          "visual_cue": "One or more spiral slices still on the board while the plate is set aside",
+          "correction": "You've left a pinwheel on the board; add it to the plate.",
+          "early_cue": null
+        },
+        {
+          "id": "s109_m2",
+          "type": "wrong_orientation",
+          "description": "Pinwheels placed on their side so the spiral isn't visible",
+          "visual_cue": "Slices lying on their curved edge with the toothpick horizontal",
+          "correction": "Turn them so the swirl faces up; it looks nicer and they sit stable.",
+          "early_cue": null
+        },
+        {
+          "id": "s109_m3",
+          "type": "wrong_part",
+          "description": "Discarded end pieces added to the plate",
+          "visual_cue": "Ragged, toothpick-less end pieces among the neat pinwheels",
+          "correction": "Those are the trimmed ends; take them off the plate.",
+          "early_cue": "Hand picks up an end piece from the board"
+        }
+      ],
+      "successors": [],
+      "duration": {
+        "mean_s": 40.20100000000003,
+        "std_s": 18.356103388246645,
+        "n": 6,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s109"
+      ]
+    },
+    {
+      "id": "s110",
+      "name": "Secure roll with 5 toothpicks",
+      "instruction_novice": "Push five toothpicks straight down through the log, spaced about an inch apart, to hold it closed.",
+      "instruction_expert": "Five toothpicks, one inch apart",
+      "substeps": [
+        "Hold the seam closed with one hand",
+        "Push the first toothpick straight down through the roll near one end",
+        "Add the next toothpick about an inch over",
+        "Continue until five toothpicks are evenly spaced along the log"
+      ],
+      "parts": [
+        "toothpicks",
+        "tortilla log"
+      ],
+      "end_state": "Five toothpicks stand upright in a straight row along the log, roughly one inch apart.",
+      "view_hint": "Down along the top of the log so all toothpicks are visible",
+      "checks": [
+        {
+          "id": "s110_c1",
+          "question": "Are exactly five toothpicks in the log?",
+          "kind": "quantity",
+          "roi": "top of the log"
+        },
+        {
+          "id": "s110_c2",
+          "question": "Are the toothpicks evenly spaced about an inch apart in a line?",
+          "kind": "alignment",
+          "roi": "top of the log"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s110_m1",
+          "type": "technique",
+          "description": "Toothpicks inserted at random uneven spacing",
+          "visual_cue": "Gaps between toothpicks vary widely, some bunched together and some far apart",
+          "correction": "Those toothpicks are uneven. Pull them out and re-space them about one inch apart.",
+          "early_cue": "Second toothpick placed right next to or far from the first"
+        },
+        {
+          "id": "s110_m2",
+          "type": "wrong_quantity",
+          "description": "Wrong number of toothpicks",
+          "visual_cue": "Fewer or more than five toothpicks sticking out of the log",
+          "correction": "You need five toothpicks in total, about an inch apart. Adjust the count.",
+          "early_cue": "Only a few toothpicks taken from the box"
+        },
+        {
+          "id": "s110_m3",
+          "type": "technique",
+          "description": "Toothpicks inserted at an angle or only through the top layer",
+          "visual_cue": "Toothpicks leaning sideways or barely poking into the log",
+          "correction": "Push each toothpick straight down through the whole roll so it holds the seam.",
+          "early_cue": null
+        }
+      ],
+      "successors": [
+        "s114"
+      ],
+      "duration": {
+        "mean_s": 64.9498,
+        "std_s": 27.88101534557163,
+        "n": 5,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s110"
+      ]
+    },
+    {
+      "id": "s111",
+      "name": "Scoop jelly with knife",
+      "instruction_novice": "With the clean butter knife, scoop a dollop of jelly out of the jelly jar.",
+      "instruction_expert": "Butter knife scoop jelly",
+      "substeps": [
+        "Open the jelly jar",
+        "Dip the clean butter knife in",
+        "Lift out a dollop of jelly on the blade"
+      ],
+      "parts": [
+        "butter knife",
+        "jelly jar"
+      ],
+      "end_state": "The butter knife is out of the jar with a glossy blob of jelly on its blade.",
+      "view_hint": "The open jelly jar and the knife in hand",
+      "checks": [
+        {
+          "id": "s111_c1",
+          "question": "Is jelly visible on the butter knife blade?",
+          "kind": "completion",
+          "roi": "knife blade"
+        },
+        {
+          "id": "s111_c2",
+          "question": "Is the utensil a dull butter knife rather than a spoon or sharp knife?",
+          "kind": "part_identity",
+          "roi": "utensil in hand"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s111_m1",
+          "type": "wrong_part",
+          "description": "A spoon is used instead of a butter knife",
+          "visual_cue": "A spoon dips into the jelly jar",
+          "correction": "Use the butter knife for the jelly too; it spreads more evenly than a spoon.",
+          "early_cue": "Hand picks up a spoon"
+        },
+        {
+          "id": "s111_m2",
+          "type": "wrong_part",
+          "description": "A sharp kitchen knife is used instead of a butter knife",
+          "visual_cue": "A pointed sharp blade goes into the jelly jar",
+          "correction": "Switch to the butter knife so you don't slice the tortilla while spreading.",
+          "early_cue": "Hand reaches toward the knife block"
+        }
+      ],
+      "successors": [
+        "s107"
+      ],
+      "duration": {
+        "mean_s": 35.93333333333334,
+        "std_s": 21.556641906073093,
+        "n": 6,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s111"
+      ]
+    },
+    {
+      "id": "s112",
+      "name": "Spread nut butter on tortilla",
+      "instruction_novice": "Spread the nut butter in an even layer over the tortilla, but stop about half an inch before the edge all the way around.",
+      "instruction_expert": "Spread nut butter, half-inch border",
+      "substeps": [
+        "Drop the nut butter in the center of the tortilla",
+        "Push it outward with the flat of the butter knife",
+        "Stop about half an inch from the edge all the way around",
+        "Scoop more if needed to cover evenly"
+      ],
+      "parts": [
+        "butter knife",
+        "nut butter",
+        "tortilla"
+      ],
+      "end_state": "The tortilla has an even brown layer of nut butter with a clean bare ring about half an inch wide around the edge.",
+      "view_hint": "Straight down at the whole tortilla on the cutting board",
+      "checks": [
+        {
+          "id": "s112_c1",
+          "question": "Is nut butter spread over most of the tortilla surface?",
+          "kind": "completion",
+          "roi": "center of tortilla"
+        },
+        {
+          "id": "s112_c2",
+          "question": "Is there an uncovered ring of tortilla visible around the edge?",
+          "kind": "alignment",
+          "roi": "outer rim of the tortilla"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s112_m1",
+          "type": "technique",
+          "description": "Nut butter is spread all the way to the edge with no border",
+          "visual_cue": "Brown nut butter reaches the rim of the tortilla with no pale tortilla showing",
+          "correction": "Scrape the nut butter back from the edge so about half an inch is bare; otherwise it squeezes out when you roll.",
+          "early_cue": "Knife strokes extend past the edge of the tortilla"
+        },
+        {
+          "id": "s112_m2",
+          "type": "wrong_part",
+          "description": "Spreading with a spoon instead of a butter knife",
+          "visual_cue": "A spoon back is being dragged across the tortilla",
+          "correction": "Use the butter knife to spread; the spoon leaves it lumpy.",
+          "early_cue": "Spoon in hand over the tortilla"
+        },
+        {
+          "id": "s112_m3",
+          "type": "incomplete",
+          "description": "Only a small patch is covered; tortilla left mostly bare",
+          "visual_cue": "Large pale areas of tortilla with nut butter only in the middle",
+          "correction": "Scoop a little more and spread it out until only the half-inch border is bare.",
+          "early_cue": null
+        }
+      ],
+      "successors": [
+        "s118"
+      ],
+      "duration": {
+        "mean_s": 65.02559999999998,
+        "std_s": 17.07134884243187,
+        "n": 5,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s112"
+      ]
+    },
+    {
+      "id": "s113",
+      "name": "Scoop nut butter with butter knife",
+      "instruction_novice": "Pick up a butter knife, open the nut butter jar, and scoop out a good spoonful of nut butter on the blade.",
+      "instruction_expert": "Butter knife scoop nut butter",
+      "substeps": [
+        "Pick up the butter knife, not a sharp knife or spoon",
+        "Open the nut butter jar",
+        "Dip the knife in and lift out a generous dollop"
+      ],
+      "parts": [
+        "butter knife",
+        "nut butter jar"
+      ],
+      "end_state": "The butter knife is out of the jar with a visible lump of nut butter on its blade.",
+      "view_hint": "The open nut butter jar and the knife in hand",
+      "checks": [
+        {
+          "id": "s113_c1",
+          "question": "Is the tool in hand a rounded, dull butter knife?",
+          "kind": "part_identity",
+          "roi": "blade of the knife"
+        },
+        {
+          "id": "s113_c2",
+          "question": "Is there nut butter on the knife blade?",
+          "kind": "completion",
+          "roi": "tip of the knife"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s113_m1",
+          "type": "wrong_part",
+          "description": "A spoon is used instead of a butter knife",
+          "visual_cue": "A spoon with a bowl-shaped end is dipped into the jar",
+          "correction": "Swap the spoon for a butter knife; the flat blade spreads much more evenly.",
+          "early_cue": "Hand picks a spoon from the drawer or utensil holder"
+        },
+        {
+          "id": "s113_m2",
+          "type": "wrong_part",
+          "description": "A sharp kitchen knife is used instead of a butter knife",
+          "visual_cue": "A pointed blade with a sharp edge goes into the jar",
+          "correction": "Put the sharp knife down and use a butter knife, so you don't cut the tortilla when spreading.",
+          "early_cue": "Hand reaches for the knife block or a chef's knife"
+        }
+      ],
+      "successors": [
+        "s112"
+      ],
+      "duration": {
+        "mean_s": 32.208600000000004,
+        "std_s": 13.918823308742734,
+        "n": 5,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s113"
+      ]
+    },
+    {
+      "id": "s114",
+      "name": "Trim ends of roll",
+      "instruction_novice": "Use the butter knife to cut off the ragged ends of the log, leaving about half an inch between the last toothpick and each cut end.",
+      "instruction_expert": "Trim ends, half-inch past toothpicks",
+      "substeps": [
+        "Pick up the clean butter knife",
+        "At one end, line the knife up half an inch outside the last toothpick",
+        "Press and saw gently to cut off the end piece",
+        "Repeat at the other end"
+      ],
+      "parts": [
+        "butter knife",
+        "tortilla log"
+      ],
+      "end_state": "Both ends of the log are cut flat, each about half an inch past the outer toothpicks, with two small end pieces lying on the board.",
+      "view_hint": "Down at both ends of the log on the cutting board",
+      "checks": [
+        {
+          "id": "s114_c1",
+          "question": "Are both ends of the log cut flat and square?",
+          "kind": "completion",
+          "roi": "ends of the log"
+        },
+        {
+          "id": "s114_c2",
+          "question": "Is the gap between each outer toothpick and the cut end about half an inch?",
+          "kind": "alignment",
+          "roi": "outer toothpick and adjacent end"
+        },
+        {
+          "id": "s114_c3",
+          "question": "Is a butter knife being used for the trim?",
+          "kind": "part_identity",
+          "roi": "knife in hand"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s114_m1",
+          "type": "wrong_part",
+          "description": "A sharp kitchen knife used instead of the butter knife",
+          "visual_cue": "A pointed sharp blade cutting the log",
+          "correction": "Use the butter knife to trim, as the recipe calls for.",
+          "early_cue": "Hand reaches for the knife block"
+        },
+        {
+          "id": "s114_m2",
+          "type": "technique",
+          "description": "Too much margin left, about an inch beyond the last toothpick",
+          "visual_cue": "A long unpinned stretch of log beyond the outer toothpick, roughly the same as the toothpick spacing",
+          "correction": "That end is too long. Trim a bit more so only about half an inch is left past the last toothpick.",
+          "early_cue": "Knife positioned far from the outer toothpick"
+        },
+        {
+          "id": "s114_m3",
+          "type": "incomplete",
+          "description": "Ends not actually trimmed; cut not completed through the log",
+          "visual_cue": "Ragged, unrolled ends still attached, or a partial cut mark only",
+          "correction": "Saw gently back and forth with the butter knife until the end piece comes all the way off.",
+          "early_cue": "Knife pressed once then lifted away"
+        }
+      ],
+      "successors": [
+        "s103",
+        "s106"
+      ],
+      "duration": {
+        "mean_s": 40.53566666666665,
+        "std_s": 24.906398099015963,
+        "n": 6,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s114"
+      ]
+    },
+    {
+      "id": "s115",
+      "name": "Place tortilla on cutting board",
+      "instruction_novice": "Take one 8-inch flour tortilla and lay it flat on the cutting board. Don't heat it, just use it as it is.",
+      "instruction_expert": "Tortilla flat on cutting board",
+      "substeps": [
+        "Get one 8-inch flour tortilla from the package",
+        "Place the cutting board on the counter in front of you",
+        "Lay the tortilla flat in the middle of the board, smoothing out folds"
+      ],
+      "parts": [
+        "8-inch flour tortilla",
+        "cutting board"
+      ],
+      "end_state": "A single round flour tortilla lies flat and centered on the cutting board.",
+      "view_hint": "Looking down at the cutting board on the counter",
+      "checks": [
+        {
+          "id": "s115_c1",
+          "question": "Is a flour tortilla lying flat on a cutting board?",
+          "kind": "presence",
+          "roi": "cutting board surface"
+        },
+        {
+          "id": "s115_c2",
+          "question": "Is the tortilla resting on a cutting board rather than a plate?",
+          "kind": "part_identity",
+          "roi": "surface under the tortilla"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s115_m1",
+          "type": "wrong_part",
+          "description": "Tortilla is placed on a plate instead of a cutting board",
+          "visual_cue": "The tortilla sits on a round ceramic plate with a raised rim instead of a flat board",
+          "correction": "Move the tortilla onto the cutting board; you'll need the flat board for rolling and trimming.",
+          "early_cue": "Hand reaches for a plate from the cupboard or rack instead of the cutting board"
+        },
+        {
+          "id": "s115_m2",
+          "type": "other",
+          "description": "Tortilla is toasted or heated in a pan before being used",
+          "visual_cue": "A pan on the stove with the tortilla in it, or browned spots on the tortilla",
+          "correction": "No need to heat the tortilla. Use it straight from the package so it stays soft and rolls without cracking.",
+          "early_cue": "Stove is turned on or a pan is placed on a burner"
+        }
+      ],
+      "successors": [
+        "s113"
+      ],
+      "duration": {
+        "mean_s": 62.697833333333335,
+        "std_s": 63.554805563125335,
+        "n": 6,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s115"
+      ]
+    },
+    {
+      "id": "s116",
+      "name": "Roll tortilla into a log",
+      "instruction_novice": "Starting at one edge, roll the tortilla up snugly into a log about an inch and a half thick. Keep it tight enough that there are no gaps, but not so tight that filling squeezes out.",
+      "instruction_expert": "Roll tight log, 1.5 inches",
+      "substeps": [
+        "Lift one edge of the tortilla and fold it over the filling",
+        "Keep rolling toward the far edge, tucking as you go",
+        "Press gently so there are no air gaps inside",
+        "Finish with the seam side down"
+      ],
+      "parts": [
+        "tortilla",
+        "filling"
+      ],
+      "end_state": "A snug tortilla log about 1.5 inches thick lies seam-side down on the board with no filling oozing out.",
+      "view_hint": "Down at the log on the cutting board, including its open ends",
+      "checks": [
+        {
+          "id": "s116_c1",
+          "question": "Is the tortilla fully rolled into a log shape?",
+          "kind": "completion",
+          "roi": "whole log"
+        },
+        {
+          "id": "s116_c2",
+          "question": "Is the log about 1.5 inches thick, not fat and loose?",
+          "kind": "quantity",
+          "roi": "end of the log"
+        },
+        {
+          "id": "s116_c3",
+          "question": "Are the sides and ends free of leaked filling?",
+          "kind": "other",
+          "roi": "seam and ends of the log"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s116_m1",
+          "type": "technique",
+          "description": "Rolled too tight so filling leaks out",
+          "visual_cue": "Nut butter or jelly squeezing out of the ends or along the seam onto the board",
+          "correction": "That's rolled too tight and the filling is leaking. Ease off a little and wipe the extra off the ends.",
+          "early_cue": "Filling bulging at the edges while rolling"
+        },
+        {
+          "id": "s116_m2",
+          "type": "technique",
+          "description": "Rolled too loose so the log is thick with gaps",
+          "visual_cue": "Log looks about 2.5 inches thick with visible air gaps in the spiral at the end",
+          "correction": "That roll is too loose. Unroll it and roll again snugly so the log is about an inch and a half thick.",
+          "early_cue": "Large loose first fold at the start of the roll"
+        },
+        {
+          "id": "s116_m3",
+          "type": "technique",
+          "description": "Rolling started before the knife was cleaned, or tortilla folded instead of rolled",
+          "visual_cue": "Tortilla folded in half like a taco instead of a spiral log",
+          "correction": "Don't fold it, roll it from one edge to the other into a log.",
+          "early_cue": "Tortilla edge lifted and brought across to the opposite edge in one motion"
+        }
+      ],
+      "successors": [
+        "s110"
+      ],
+      "duration": {
+        "mean_s": 31.77140000000001,
+        "std_s": 19.230868968925975,
+        "n": 5,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s116"
+      ]
+    },
+    {
+      "id": "s117",
+      "name": "Position floss between toothpicks",
+      "instruction_novice": "Slide the floss along until it sits halfway between two toothpicks.",
+      "instruction_expert": "Floss halfway between toothpicks",
+      "substeps": [
+        "Pick a pair of neighboring toothpicks",
+        "Shift the floss sideways under the log",
+        "Stop when it is centered between those two toothpicks"
+      ],
+      "parts": [
+        "dental floss",
+        "tortilla log",
+        "toothpicks"
+      ],
+      "end_state": "The floss sits under the log exactly midway between two adjacent toothpicks.",
+      "view_hint": "Down at the top of the log where the floss passes between toothpicks",
+      "checks": [
+        {
+          "id": "s117_c1",
+          "question": "Is the floss centered midway between two neighboring toothpicks?",
+          "kind": "alignment",
+          "roi": "floss and nearest two toothpicks"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s117_m1",
+          "type": "technique",
+          "description": "Floss positioned right next to or against a toothpick",
+          "visual_cue": "Floss touching or almost touching one toothpick with a big gap to the next",
+          "correction": "Slide the floss over so it's right in the middle between the two toothpicks, or that slice won't have a pick to hold it.",
+          "early_cue": null
+        },
+        {
+          "id": "s117_m2",
+          "type": "technique",
+          "description": "Floss positioned outside the outer toothpick in the end margin",
+          "visual_cue": "Floss between the outer toothpick and the cut end of the log",
+          "correction": "That's the trimmed end. Move the floss between two toothpicks instead.",
+          "early_cue": null
+        }
+      ],
+      "successors": [
+        "s105"
+      ],
+      "duration": {
+        "mean_s": 9.421999999999997,
+        "std_s": 10.159187434698417,
+        "n": 4,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s117"
+      ]
+    },
+    {
+      "id": "s118",
+      "name": "Wipe knife clean (after nut butter)",
+      "instruction_novice": "Wipe the nut butter off the butter knife with a paper towel so it's clean for the jelly.",
+      "instruction_expert": "Wipe knife with paper towel",
+      "substeps": [
+        "Tear off a paper towel",
+        "Pinch the blade in the towel and pull the knife through",
+        "Check both sides of the blade are clean"
+      ],
+      "parts": [
+        "butter knife",
+        "paper towel"
+      ],
+      "end_state": "The butter knife blade is shiny and free of nut butter, with a smeared paper towel on the counter.",
+      "view_hint": "The knife and paper towel in hands",
+      "checks": [
+        {
+          "id": "s118_c1",
+          "question": "Is the knife blade clean with no nut butter on it?",
+          "kind": "completion",
+          "roi": "knife blade"
+        },
+        {
+          "id": "s118_c2",
+          "question": "Is a paper towel being used to wipe the knife?",
+          "kind": "presence",
+          "roi": "hands"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s118_m1",
+          "type": "missing_step",
+          "description": "Knife is not wiped before going into the jelly",
+          "visual_cue": "Knife with brown nut butter still on it heads to the jelly jar",
+          "correction": "Wipe the knife on a paper towel first so you don't get nut butter in the jelly.",
+          "early_cue": "Hand reaches for the jelly jar with a dirty knife"
+        },
+        {
+          "id": "s118_m2",
+          "type": "wrong_part",
+          "description": "Picks up a different utensil such as a spoon or sharp knife instead of cleaning the butter knife",
+          "visual_cue": "Butter knife set aside dirty and a spoon or sharp knife picked up",
+          "correction": "Stick with the butter knife; just wipe it clean and keep using it.",
+          "early_cue": "Hand moves to the drawer or knife block"
+        }
+      ],
+      "successors": [
+        "s111"
+      ],
+      "duration": {
+        "mean_s": 20.824833333333334,
+        "std_s": 8.594629216357536,
+        "n": 6,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s118"
+      ]
+    }
+  ],
+  "start": [
+    "s115"
+  ]
+}

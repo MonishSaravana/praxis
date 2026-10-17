@@ -1,0 +1,925 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "cc4d_microwavemugpizza",
+  "title": "Microwave Mug Pizza",
+  "domain": "cooking",
+  "summary": "Make a single-serving pizza in a microwavable mug: combine flour, salt, baking powder and baking soda, stir, add milk and olive oil, mix into a batter, top with marinara, mozzarella and Italian herbs, then microwave for about 1 minute 20 seconds until risen and bubbling.",
+  "source": "CaptainCook4D recipe text + task graph (Microwave Mug Pizza); mistake hints from train split",
+  "draft": false,
+  "compiler": {
+    "model": "claude-fable-5-1",
+    "prompt_version": "compile-v1",
+    "cost_usd": 0.5526,
+    "latency_s": 190.4433291660389,
+    "input_tokens": 3155,
+    "output_tokens": 10421
+  },
+  "nodes": [
+    {
+      "id": "s28",
+      "name": "Add 1/8 teaspoon salt",
+      "instruction_novice": "Measure an eighth of a teaspoon of salt and tip it into the mug. That's just a small pinch.",
+      "instruction_expert": "Add 1/8 tsp salt.",
+      "substeps": [
+        "Find the 1/8 teaspoon measuring spoon, or use a tiny pinch.",
+        "Scoop salt and level it off.",
+        "Tip the salt into the mug."
+      ],
+      "parts": [
+        "salt",
+        "1/8 teaspoon measuring spoon",
+        "mug"
+      ],
+      "end_state": "A small amount of white salt grains sits in the bottom of the mug or on top of the dry ingredients.",
+      "view_hint": "looking down into the mug and at the measuring spoon in hand",
+      "checks": [
+        {
+          "id": "s28_c1",
+          "question": "Was the salt added to the mug using a small measuring spoon?",
+          "kind": "quantity",
+          "roi": "measuring spoon and mug opening"
+        },
+        {
+          "id": "s28_c2",
+          "question": "Are white grains visible inside the mug?",
+          "kind": "completion",
+          "roi": "inside bottom of mug"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s28_m1",
+          "type": "wrong_quantity",
+          "description": "Used a large measuring spoon, adding far too much salt.",
+          "visual_cue": "A full teaspoon or tablespoon of salt being tipped into the mug.",
+          "correction": "That's too much salt. You only need an eighth of a teaspoon, a tiny pinch. Start over with a fresh mug if it's already in.",
+          "early_cue": "A teaspoon or tablespoon-size measuring spoon dipping into the salt."
+        },
+        {
+          "id": "s28_m2",
+          "type": "wrong_part",
+          "description": "Added sugar instead of salt.",
+          "visual_cue": "Spoon dipping into a sugar container or bag labeled sugar.",
+          "correction": "That looks like sugar. You want salt here, so check the container.",
+          "early_cue": "Hand reaching toward the sugar container."
+        }
+      ],
+      "successors": [
+        "s38"
+      ],
+      "duration": {
+        "mean_s": 34.35510695477111,
+        "std_s": 11.068846173239557,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s28"
+      ]
+    },
+    {
+      "id": "s29",
+      "name": "Sprinkle Italian herbs",
+      "instruction_novice": "Sprinkle a pinch of dried Italian herbs over the cheese in the mug.",
+      "instruction_expert": "Sprinkle dried Italian herbs.",
+      "substeps": [
+        "Pick up the dried Italian herb jar.",
+        "Shake or pinch a small amount over the cheese.",
+        "Spread it lightly so it isn't all in one spot."
+      ],
+      "parts": [
+        "dried Italian herbs",
+        "mug"
+      ],
+      "end_state": "Small green flecks of dried herbs are scattered over the white cheese on top of the mug.",
+      "view_hint": "looking straight down into the mug",
+      "checks": [
+        {
+          "id": "s29_c1",
+          "question": "Are green herb flecks visible on top of the cheese?",
+          "kind": "completion",
+          "roi": "top of mug contents"
+        },
+        {
+          "id": "s29_c2",
+          "question": "Is the jar in hand a dried herb seasoning rather than another spice?",
+          "kind": "part_identity",
+          "roi": "jar label"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s29_m1",
+          "type": "wrong_part",
+          "description": "Sprinkled a different spice such as cinnamon or chili flakes instead of Italian herbs.",
+          "visual_cue": "Brown or red powder or flakes on the cheese instead of green flecks.",
+          "correction": "That doesn't look like Italian herbs. Check the label, you want the green dried herb mix.",
+          "early_cue": "Hand reaching for a jar with brown or red contents."
+        },
+        {
+          "id": "s29_m2",
+          "type": "wrong_quantity",
+          "description": "Dumped a thick layer of herbs over the top.",
+          "visual_cue": "Cheese almost completely hidden under a green layer.",
+          "correction": "That's a lot of herbs, just a light sprinkle is enough. Brush some off if you can.",
+          "early_cue": "Jar tipped with the lid fully open rather than using the shaker holes."
+        }
+      ],
+      "successors": [
+        "s32"
+      ],
+      "duration": {
+        "mean_s": 19.423917119691122,
+        "std_s": 5.727004320878142,
+        "n": 5,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s29"
+      ]
+    },
+    {
+      "id": "s30",
+      "name": "Take 1 tablespoon marinara sauce",
+      "instruction_novice": "Scoop one tablespoon of marinara sauce out of the jar with your measuring spoon.",
+      "instruction_expert": "Scoop 1 tbsp marinara.",
+      "substeps": [
+        "Open the marinara jar.",
+        "Dip the tablespoon measure in and fill it.",
+        "Lift it out and hold it over the mug."
+      ],
+      "parts": [
+        "marinara sauce",
+        "tablespoon measuring spoon"
+      ],
+      "end_state": "A tablespoon measure full of red marinara sauce is held in hand, lifted out of the jar.",
+      "view_hint": "looking at the sauce jar and the measuring spoon in hand",
+      "checks": [
+        {
+          "id": "s30_c1",
+          "question": "Is a tablespoon filled with red sauce in hand?",
+          "kind": "completion",
+          "roi": "measuring spoon"
+        },
+        {
+          "id": "s30_c2",
+          "question": "Is the sauce being taken from a marinara or pizza sauce jar?",
+          "kind": "part_identity",
+          "roi": "jar label"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s30_m1",
+          "type": "wrong_part",
+          "description": "Picked up ketchup or another red sauce instead of marinara.",
+          "visual_cue": "A squeeze bottle or jar labeled ketchup or salsa in hand.",
+          "correction": "That's not marinara. Look for the pasta or pizza sauce jar instead.",
+          "early_cue": "Hand reaching for a squeeze bottle rather than a sauce jar."
+        },
+        {
+          "id": "s30_m2",
+          "type": "wrong_quantity",
+          "description": "Scooped a lot more than one tablespoon of sauce.",
+          "visual_cue": "A heaping serving spoon of sauce rather than a level tablespoon.",
+          "correction": "That's a bit much sauce for one mug. Level it to one tablespoon so the batter doesn't go soggy.",
+          "early_cue": "Large serving spoon dipped into the jar."
+        }
+      ],
+      "successors": [
+        "s31"
+      ],
+      "duration": {
+        "mean_s": 58.768654316602316,
+        "std_s": 20.969877820125447,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s30"
+      ]
+    },
+    {
+      "id": "s31",
+      "name": "Spread sauce over the batter",
+      "instruction_novice": "Drop the sauce onto the batter and gently spread it across the surface with the back of the spoon, leaving it sitting on top.",
+      "instruction_expert": "Spread sauce over batter surface.",
+      "substeps": [
+        "Tip the sauce onto the middle of the batter.",
+        "Use the back of the spoon to push it outward to the edges.",
+        "Keep it on the surface, don't stir it in."
+      ],
+      "parts": [
+        "marinara sauce",
+        "spoon",
+        "mug with batter"
+      ],
+      "end_state": "A thin, even red layer of sauce covers the top of the pale batter in the mug.",
+      "view_hint": "looking straight down into the mug",
+      "checks": [
+        {
+          "id": "s31_c1",
+          "question": "Is the batter surface covered with a red layer of sauce?",
+          "kind": "completion",
+          "roi": "batter surface"
+        },
+        {
+          "id": "s31_c2",
+          "question": "Is the sauce sitting on top rather than mixed into the batter?",
+          "kind": "other",
+          "roi": "batter surface and edges"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s31_m1",
+          "type": "technique",
+          "description": "Stirred the sauce into the batter instead of spreading it on top.",
+          "visual_cue": "Batter turning uniformly pink or orange with no distinct red layer.",
+          "correction": "Try not to stir the sauce in, it should stay on top like a pizza. Spread it gently with the back of the spoon.",
+          "early_cue": "Fork plunged deep into the batter with circular stirring after the sauce is added."
+        },
+        {
+          "id": "s31_m2",
+          "type": "incomplete",
+          "description": "Left the sauce as a blob in the center without spreading.",
+          "visual_cue": "A single red mound in the middle with pale batter visible around the edges.",
+          "correction": "Spread the sauce out to the edges so the whole top is covered.",
+          "early_cue": "Spoon pulled away immediately after dropping the sauce."
+        }
+      ],
+      "successors": [
+        "s39"
+      ],
+      "duration": {
+        "mean_s": 20.02910657142858,
+        "std_s": 12.972327158606314,
+        "n": 6,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s31"
+      ]
+    },
+    {
+      "id": "s32",
+      "name": "Microwave 1 min 20 s",
+      "instruction_novice": "Put the mug in the microwave and cook it for one minute twenty seconds, until the batter rises and the cheese is bubbling. Let it cool a moment before eating.",
+      "instruction_expert": "Microwave 1:20 until bubbling.",
+      "substeps": [
+        "Place the mug in the center of the microwave.",
+        "Set the time to 1 minute 20 seconds and start.",
+        "Watch for it to rise and the cheese to melt and bubble.",
+        "Carefully remove with a towel, it will be hot."
+      ],
+      "parts": [
+        "microwave",
+        "mug pizza"
+      ],
+      "end_state": "The mug sits in the microwave with the pizza risen near the rim, cheese melted and bubbling, and the microwave stopped.",
+      "view_hint": "through the microwave door, then the top of the mug after removal",
+      "checks": [
+        {
+          "id": "s32_c1",
+          "question": "Is the mug inside the microwave with the door closed and the timer running or finished?",
+          "kind": "completion",
+          "roi": "microwave door and display"
+        },
+        {
+          "id": "s32_c2",
+          "question": "Has the batter risen with melted, bubbling cheese on top?",
+          "kind": "other",
+          "roi": "top of mug contents"
+        },
+        {
+          "id": "s32_c3",
+          "question": "Does the display show about 1:20 as the set time?",
+          "kind": "quantity",
+          "roi": "microwave display"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s32_m1",
+          "type": "other",
+          "description": "Batter rose above the brim and spilled over the side of the mug.",
+          "visual_cue": "Batter or cheese running down the outside of the mug or pooled on the microwave plate.",
+          "correction": "It's overflowing. Stop the microwave, let it settle, and next time use a larger mug or microwave in shorter bursts.",
+          "early_cue": "Batter rising right up to the rim within the first 30 seconds."
+        },
+        {
+          "id": "s32_m2",
+          "type": "wrong_order",
+          "description": "Microwaved before the toppings were added, or before the batter was mixed.",
+          "visual_cue": "Mug going into the microwave with pale batter and no red sauce or cheese on top.",
+          "correction": "Wait, the toppings aren't on yet. Take it out and add the sauce, cheese and herbs first.",
+          "early_cue": "Microwave door opened while the sauce jar and cheese are still untouched."
+        },
+        {
+          "id": "s32_m3",
+          "type": "wrong_quantity",
+          "description": "Set the wrong time, cooking far too long or too short.",
+          "visual_cue": "Microwave display showing a time well off 1:20, such as 5:00 or 0:20.",
+          "correction": "Check the timer, you want one minute twenty seconds. Adjust it before you start.",
+          "early_cue": "Fingers pressing many digits on the keypad."
+        },
+        {
+          "id": "s32_m4",
+          "type": "incomplete",
+          "description": "Removed the mug before the batter had risen and the cheese melted.",
+          "visual_cue": "Pale, wet batter and unmelted shredded cheese when the mug is taken out.",
+          "correction": "It's not done yet, the cheese should be bubbling. Pop it back in for another 15 to 20 seconds.",
+          "early_cue": "Microwave door opened well before the timer ends."
+        }
+      ],
+      "successors": [],
+      "duration": {
+        "mean_s": 129.52729833480413,
+        "std_s": 22.44470258946171,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s32"
+      ]
+    },
+    {
+      "id": "s33",
+      "name": "Add 4 tablespoons flour",
+      "instruction_novice": "Measure four level tablespoons of flour and add them to the mug. Add the flour before any liquids.",
+      "instruction_expert": "Add 4 tbsp flour.",
+      "substeps": [
+        "Pick up the tablespoon measuring spoon.",
+        "Scoop flour and level it with your finger or a knife.",
+        "Tip it into the mug and repeat until you have four.",
+        "Count out loud so you don't lose track."
+      ],
+      "parts": [
+        "all-purpose flour",
+        "tablespoon measuring spoon",
+        "mug"
+      ],
+      "end_state": "The mug is roughly a quarter full of loose white flour.",
+      "view_hint": "looking down into the mug while scooping from the flour container",
+      "checks": [
+        {
+          "id": "s33_c1",
+          "question": "Is there a visible pile of white flour inside the mug?",
+          "kind": "completion",
+          "roi": "inside of mug"
+        },
+        {
+          "id": "s33_c2",
+          "question": "Was the flour added using a tablespoon measure, four times?",
+          "kind": "quantity",
+          "roi": "measuring spoon and flour container"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s33_m1",
+          "type": "wrong_order",
+          "description": "Flour added after the milk and olive oil are already in the mug.",
+          "visual_cue": "Liquid already visible in the mug as flour is tipped in.",
+          "correction": "The flour should go in before the wet ingredients. It's okay, just stir really well now to get rid of lumps.",
+          "early_cue": "Milk or oil container opened before the flour has been measured."
+        },
+        {
+          "id": "s33_m2",
+          "type": "wrong_quantity",
+          "description": "Wrong number of tablespoons, for example three or five.",
+          "visual_cue": "Mug noticeably underfilled or overfilled with flour compared with a quarter mug.",
+          "correction": "Double-check your count, you need exactly four tablespoons of flour.",
+          "early_cue": "Scooping motion repeated fewer or more than four times."
+        },
+        {
+          "id": "s33_m3",
+          "type": "technique",
+          "description": "Heaped, unleveled tablespoons giving too much flour.",
+          "visual_cue": "Flour mounded high above the rim of the measuring spoon.",
+          "correction": "Level each spoonful off with a knife so you don't end up with a dry, doughy pizza.",
+          "early_cue": "Spoon lifted from the flour with a tall mound on it."
+        }
+      ],
+      "successors": [
+        "s38"
+      ],
+      "duration": {
+        "mean_s": 66.32216947421401,
+        "std_s": 27.277991497998165,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s33"
+      ]
+    },
+    {
+      "id": "s34",
+      "name": "Add 1 tablespoon olive oil",
+      "instruction_novice": "Measure one tablespoon of olive oil and pour it into the mug on top of the stirred flour mix.",
+      "instruction_expert": "Add 1 tbsp olive oil.",
+      "substeps": [
+        "Open the olive oil bottle.",
+        "Fill the tablespoon measure level to the top.",
+        "Pour it into the mug."
+      ],
+      "parts": [
+        "olive oil",
+        "tablespoon measuring spoon",
+        "mug"
+      ],
+      "end_state": "A yellow-green pool of oil sits on top of the dry mixture in the mug.",
+      "view_hint": "looking at the tablespoon under the oil bottle and the mug opening",
+      "checks": [
+        {
+          "id": "s34_c1",
+          "question": "Is oil visible on top of the flour mixture in the mug?",
+          "kind": "completion",
+          "roi": "inside of mug"
+        },
+        {
+          "id": "s34_c2",
+          "question": "Was the oil measured with a tablespoon before pouring?",
+          "kind": "quantity",
+          "roi": "measuring spoon in hand"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s34_m1",
+          "type": "wrong_order",
+          "description": "Oil added before the flour was in the mug.",
+          "visual_cue": "Oil pooling in the bottom of a mug that has no flour in it.",
+          "correction": "The flour should go in first. Add the dry ingredients now and stir well so the oil mixes in.",
+          "early_cue": "Oil bottle opened while the flour container is untouched."
+        },
+        {
+          "id": "s34_m2",
+          "type": "technique",
+          "description": "Poured oil straight from the bottle without measuring, adding too much.",
+          "visual_cue": "Bottle tipped directly over the mug with a long glug of oil.",
+          "correction": "Measure the oil with a tablespoon instead of pouring straight in, or the batter will be greasy.",
+          "early_cue": "Bottle lifted over the mug with no measuring spoon in the other hand."
+        }
+      ],
+      "successors": [
+        "s37"
+      ],
+      "duration": {
+        "mean_s": 32.054975419608375,
+        "std_s": 7.5555320252047515,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s34"
+      ]
+    },
+    {
+      "id": "s35",
+      "name": "Add 1/16 teaspoon baking soda",
+      "instruction_novice": "Measure a sixteenth of a teaspoon of baking soda and tip it into the mug. That's about half of the smallest measuring spoon, just a tiny pinch.",
+      "instruction_expert": "Add 1/16 tsp baking soda.",
+      "substeps": [
+        "Open the baking soda container.",
+        "Fill the 1/8 teaspoon spoon half way, or use a tiny pinch.",
+        "Tip it into the mug on top of the other dry ingredients."
+      ],
+      "parts": [
+        "baking soda",
+        "1/8 teaspoon measuring spoon",
+        "mug"
+      ],
+      "end_state": "A tiny pinch of fine white powder has been added to the dry ingredients in the mug.",
+      "view_hint": "looking at the baking soda container and the mug opening",
+      "checks": [
+        {
+          "id": "s35_c1",
+          "question": "Is the container being used labeled baking soda?",
+          "kind": "part_identity",
+          "roi": "label on the container in hand"
+        },
+        {
+          "id": "s35_c2",
+          "question": "Was only a very small amount tipped into the mug?",
+          "kind": "quantity",
+          "roi": "measuring spoon"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s35_m1",
+          "type": "wrong_part",
+          "description": "Confused baking soda with baking powder, or added both from the same container.",
+          "visual_cue": "Spoon dipping into a container labeled baking powder during this step.",
+          "correction": "Check the label, that one is baking powder. You need the baking soda now, just a tiny pinch.",
+          "early_cue": "Hand reaching for the baking powder container."
+        },
+        {
+          "id": "s35_m2",
+          "type": "wrong_quantity",
+          "description": "Added too much baking soda, giving a soapy taste.",
+          "visual_cue": "A full spoon of baking soda going into the mug.",
+          "correction": "That's a lot of baking soda. You only want a sixteenth of a teaspoon, so scoop a little out.",
+          "early_cue": "Measuring spoon filled heaping with baking soda."
+        }
+      ],
+      "successors": [
+        "s38"
+      ],
+      "duration": {
+        "mean_s": 57.22709713320463,
+        "std_s": 37.208165966227284,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s35"
+      ]
+    },
+    {
+      "id": "s36",
+      "name": "Take a microwavable mug",
+      "instruction_novice": "Grab a microwave-safe mug and set it on the counter in front of you. Pick a bigger one if you can, so the batter has room to rise.",
+      "instruction_expert": "Get a microwave-safe mug.",
+      "substeps": [
+        "Open the cupboard and pick a ceramic or glass mug with no metal trim.",
+        "Check it is empty and clean inside.",
+        "Set it upright on the counter within reach of your ingredients."
+      ],
+      "parts": [
+        "microwavable mug"
+      ],
+      "end_state": "An empty, clean mug stands upright on the counter with its opening facing up.",
+      "view_hint": "the counter in front of you, looking down into the mug",
+      "checks": [
+        {
+          "id": "s36_c1",
+          "question": "Is there an empty mug standing upright on the counter?",
+          "kind": "presence",
+          "roi": "mug on counter"
+        },
+        {
+          "id": "s36_c2",
+          "question": "Is the mug free of metallic rims or decorations?",
+          "kind": "part_identity",
+          "roi": "rim and outside of the mug"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s36_m1",
+          "type": "wrong_part",
+          "description": "Picked a mug with a metallic rim or metal paint, which is not microwave safe.",
+          "visual_cue": "Shiny gold or silver band or lettering on the mug.",
+          "correction": "That mug has metal on it, so it can't go in the microwave. Swap it for a plain ceramic one.",
+          "early_cue": "Hand reaching for a mug with a shiny metallic band."
+        },
+        {
+          "id": "s36_m2",
+          "type": "wrong_part",
+          "description": "Chose a very small mug, so the batter will overflow when it rises.",
+          "visual_cue": "An espresso-size or small cup on the counter instead of a standard mug.",
+          "correction": "That cup is a bit small. Grab a regular or large mug so the pizza has room to rise.",
+          "early_cue": "Hand picking up a small cup from the cupboard."
+        }
+      ],
+      "successors": [
+        "s28",
+        "s33",
+        "s35",
+        "s40"
+      ],
+      "duration": {
+        "mean_s": 15.702937806260346,
+        "std_s": 6.297541646771771,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s36"
+      ]
+    },
+    {
+      "id": "s37",
+      "name": "Mix into a batter",
+      "instruction_novice": "Mix everything in the mug thoroughly with a fork until it becomes a thick batter. A few small lumps are fine.",
+      "instruction_expert": "Mix into thick batter.",
+      "substeps": [
+        "Push the fork to the bottom and stir in circles.",
+        "Scrape the sides to pull in any dry flour.",
+        "Stop when no dry pockets remain, even if a few lumps are left."
+      ],
+      "parts": [
+        "fork or spoon",
+        "mug with batter"
+      ],
+      "end_state": "The mug holds a thick, pale, smooth-ish batter with no dry flour visible on the sides or bottom.",
+      "view_hint": "looking down into the mug while mixing",
+      "checks": [
+        {
+          "id": "s37_c1",
+          "question": "Does the mug contain a thick wet batter with no dry flour pockets?",
+          "kind": "completion",
+          "roi": "batter surface and sides of mug"
+        },
+        {
+          "id": "s37_c2",
+          "question": "Is the batter mostly uniform in color?",
+          "kind": "other",
+          "roi": "batter surface"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s37_m1",
+          "type": "wrong_order",
+          "description": "Mixed before the flour was added, so there is nothing to form a batter.",
+          "visual_cue": "Stirring a mug containing only liquid or only a thin paste while the flour is untouched.",
+          "correction": "The flour isn't in yet. Add the four tablespoons of flour and then mix it all together.",
+          "early_cue": "Flour container still closed when the wet ingredients are in the mug."
+        },
+        {
+          "id": "s37_m2",
+          "type": "incomplete",
+          "description": "Stopped mixing too soon, leaving dry flour stuck to the bottom and sides.",
+          "visual_cue": "White dry streaks visible along the inside wall or a dry layer at the bottom of the mug.",
+          "correction": "There's still dry flour on the sides. Scrape it in and keep mixing until it's all wet.",
+          "early_cue": "Fork lifted out after only a few turns."
+        }
+      ],
+      "successors": [
+        "s30"
+      ],
+      "duration": {
+        "mean_s": 69.95886933365507,
+        "std_s": 34.818838167687595,
+        "n": 6,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s37"
+      ]
+    },
+    {
+      "id": "s38",
+      "name": "Stir the dry ingredients",
+      "instruction_novice": "Use a fork or spoon to stir the dry ingredients in the mug until the salt, baking powder and baking soda are mixed evenly into the flour.",
+      "instruction_expert": "Stir dry ingredients well.",
+      "substeps": [
+        "Put a fork or small spoon into the mug.",
+        "Stir in circles, scraping the bottom and sides.",
+        "Keep going until the powders look evenly blended."
+      ],
+      "parts": [
+        "fork or spoon",
+        "mug with dry ingredients"
+      ],
+      "end_state": "The flour mixture in the mug looks uniform with no separate clumps of powder, and a fork or spoon rests in or beside the mug.",
+      "view_hint": "looking down into the mug while stirring",
+      "checks": [
+        {
+          "id": "s38_c1",
+          "question": "Is a fork or spoon stirring inside the mug?",
+          "kind": "completion",
+          "roi": "mug opening and utensil"
+        },
+        {
+          "id": "s38_c2",
+          "question": "Do the dry ingredients look evenly blended with no separate piles?",
+          "kind": "other",
+          "roi": "surface of the dry mixture"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s38_m1",
+          "type": "wrong_order",
+          "description": "Stirred before all the dry ingredients were added to the mug.",
+          "visual_cue": "Stirring an empty or nearly empty mug, or stirring while flour or leavening containers are still untouched.",
+          "correction": "Hold on, not everything is in yet. Add the rest of the dry ingredients first, then stir.",
+          "early_cue": "Picking up a fork while the flour or baking powder is still unopened."
+        },
+        {
+          "id": "s38_m2",
+          "type": "incomplete",
+          "description": "Stirred only briefly, leaving clumps of salt or leavening in one spot.",
+          "visual_cue": "Visible separate white patches or granules on top of the flour after stirring stops.",
+          "correction": "Give it a few more stirs so the salt and baking powder are spread through the flour.",
+          "early_cue": "Fork lifted out of the mug after only one or two turns."
+        },
+        {
+          "id": "s38_m3",
+          "type": "technique",
+          "description": "Stirred so vigorously that flour spilled over the rim.",
+          "visual_cue": "Flour dust scattered on the counter around the mug.",
+          "correction": "Stir a little more gently so you don't lose flour over the side.",
+          "early_cue": "Fast, wide stirring strokes with flour puffing up."
+        }
+      ],
+      "successors": [
+        "s34",
+        "s41"
+      ],
+      "duration": {
+        "mean_s": 29.3383587225593,
+        "std_s": 20.487278060157962,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s38"
+      ]
+    },
+    {
+      "id": "s39",
+      "name": "Sprinkle mozzarella on the sauce",
+      "instruction_novice": "Sprinkle a generous tablespoon of shredded mozzarella evenly over the sauce.",
+      "instruction_expert": "Add 1 generous tbsp mozzarella.",
+      "substeps": [
+        "Grab a generous tablespoon of shredded mozzarella.",
+        "Sprinkle it over the sauce from side to side.",
+        "Make sure the cheese covers most of the red surface."
+      ],
+      "parts": [
+        "shredded mozzarella cheese",
+        "tablespoon",
+        "mug"
+      ],
+      "end_state": "White shredded cheese covers most of the red sauce layer on top of the batter.",
+      "view_hint": "looking straight down into the mug",
+      "checks": [
+        {
+          "id": "s39_c1",
+          "question": "Is shredded white cheese visible on top of the sauce?",
+          "kind": "completion",
+          "roi": "top of mug contents"
+        },
+        {
+          "id": "s39_c2",
+          "question": "Does the cheese cover most of the sauce surface?",
+          "kind": "quantity",
+          "roi": "top of mug contents"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s39_m1",
+          "type": "wrong_order",
+          "description": "Added the cheese before the sauce was spread, so cheese sits directly on the batter.",
+          "visual_cue": "White cheese on pale batter with no red sauce layer underneath.",
+          "correction": "The sauce goes on before the cheese. Lift off what cheese you can, spread the sauce, then add the cheese back.",
+          "early_cue": "Reaching for the cheese bag while the sauce jar is still closed."
+        },
+        {
+          "id": "s39_m2",
+          "type": "wrong_quantity",
+          "description": "Only a few shreds of cheese added, leaving most of the sauce bare.",
+          "visual_cue": "Mostly red surface with scattered white strands.",
+          "correction": "Add a bit more cheese, you want a generous tablespoon covering the sauce.",
+          "early_cue": "Fingers pinching a very small amount from the bag."
+        }
+      ],
+      "successors": [
+        "s29"
+      ],
+      "duration": {
+        "mean_s": 54.97109006287919,
+        "std_s": 17.061021575803505,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s39"
+      ]
+    },
+    {
+      "id": "s40",
+      "name": "Add 1/8 teaspoon baking powder",
+      "instruction_novice": "Measure an eighth of a teaspoon of baking powder and add it to the mug. This helps the pizza rise.",
+      "instruction_expert": "Add 1/8 tsp baking powder.",
+      "substeps": [
+        "Open the baking powder container.",
+        "Fill and level the 1/8 teaspoon spoon.",
+        "Tip it into the mug with the other dry ingredients."
+      ],
+      "parts": [
+        "baking powder",
+        "1/8 teaspoon measuring spoon",
+        "mug"
+      ],
+      "end_state": "A small level spoonful of white baking powder has joined the dry ingredients in the mug.",
+      "view_hint": "looking at the baking powder container label and the mug opening",
+      "checks": [
+        {
+          "id": "s40_c1",
+          "question": "Is the container being used labeled baking powder?",
+          "kind": "part_identity",
+          "roi": "label on the container in hand"
+        },
+        {
+          "id": "s40_c2",
+          "question": "Has a small spoonful of powder been tipped into the mug?",
+          "kind": "completion",
+          "roi": "inside of mug"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s40_m1",
+          "type": "wrong_part",
+          "description": "Used baking soda instead of baking powder.",
+          "visual_cue": "Spoon dipping into a container labeled baking soda during this step.",
+          "correction": "That's the baking soda. For this step you want baking powder, an eighth of a teaspoon.",
+          "early_cue": "Hand reaching for the baking soda box."
+        },
+        {
+          "id": "s40_m2",
+          "type": "missing_step",
+          "description": "Skipped the baking powder, so the pizza will not rise.",
+          "visual_cue": "Moving on to stirring without the baking powder container ever being opened.",
+          "correction": "Don't forget the baking powder, an eighth of a teaspoon, or the base will stay flat.",
+          "early_cue": "Reaching for the spoon to stir while the baking powder is still closed."
+        }
+      ],
+      "successors": [
+        "s38"
+      ],
+      "duration": {
+        "mean_s": 42.63817120808052,
+        "std_s": 16.258072826609688,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s40"
+      ]
+    },
+    {
+      "id": "s41",
+      "name": "Add 3 tablespoons milk",
+      "instruction_novice": "Measure three tablespoons of milk and pour them into the mug on top of the flour mixture.",
+      "instruction_expert": "Add 3 tbsp milk.",
+      "substeps": [
+        "Open the milk.",
+        "Fill the tablespoon measure and pour it into the mug.",
+        "Repeat two more times, counting to three."
+      ],
+      "parts": [
+        "milk",
+        "tablespoon measuring spoon",
+        "mug"
+      ],
+      "end_state": "White milk is pooled over the flour and oil in the mug, starting to soak into the dry mix.",
+      "view_hint": "looking at the tablespoon being filled and the mug opening",
+      "checks": [
+        {
+          "id": "s41_c1",
+          "question": "Is liquid milk visible on top of the mixture in the mug?",
+          "kind": "completion",
+          "roi": "inside of mug"
+        },
+        {
+          "id": "s41_c2",
+          "question": "Was the milk measured with a tablespoon rather than poured freely?",
+          "kind": "quantity",
+          "roi": "measuring spoon and milk container"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s41_m1",
+          "type": "wrong_order",
+          "description": "Milk added before the flour was in the mug.",
+          "visual_cue": "Milk sitting in a mug with no flour in it.",
+          "correction": "Flour goes in before the milk. Add the dry ingredients now and mix well to avoid lumps.",
+          "early_cue": "Milk carton opened while the flour is still untouched."
+        },
+        {
+          "id": "s41_m2",
+          "type": "wrong_quantity",
+          "description": "Poured milk directly from the carton, adding far more than three tablespoons.",
+          "visual_cue": "Carton tipped over the mug with the mixture turning soupy and thin.",
+          "correction": "That's too much milk, the batter should be thick. Measure three tablespoons next time, and add a little more flour to thicken it.",
+          "early_cue": "Carton lifted over the mug with no measuring spoon."
+        }
+      ],
+      "successors": [
+        "s37"
+      ],
+      "duration": {
+        "mean_s": 47.595644404715934,
+        "std_s": 13.142815223831848,
+        "n": 7,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s41"
+      ]
+    }
+  ],
+  "start": [
+    "s36"
+  ]
+}

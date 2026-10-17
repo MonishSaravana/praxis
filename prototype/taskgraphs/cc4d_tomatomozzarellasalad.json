@@ -1,0 +1,714 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "cc4d_tomatomozzarellasalad",
+  "title": "Tomato Mozzarella Salad",
+  "domain": "cooking",
+  "summary": "Rinse and dry one tomato, slice it into 1/2 inch rounds, lay them in a single layer on a platter, then top with salt, mozzarella, black pepper and Italian seasoning, finishing with a tablespoon of extra-virgin olive oil.",
+  "source": "CaptainCook4D recipe text + task graph (Tomato Mozzarella Salad); mistake hints from train split",
+  "draft": false,
+  "compiler": {
+    "model": "claude-fable-5-1",
+    "prompt_version": "compile-v1",
+    "cost_usd": 0.43819,
+    "latency_s": 166.34547787497286,
+    "input_tokens": 4014,
+    "output_tokens": 7961
+  },
+  "nodes": [
+    {
+      "id": "s119",
+      "name": "Slice the tomato into 1/2 inch slices",
+      "instruction_novice": "On a clean cutting board, slice the tomato into even rounds about half an inch thick, like a thick coin stack.",
+      "instruction_expert": "Slice tomato, 1/2 inch rounds",
+      "substeps": [
+        "Set the tomato on a clean cutting board, stem side to one side",
+        "Hold it steady with curled fingertips",
+        "Cut straight down through the tomato with a knife",
+        "Repeat, keeping each slice about 1/2 inch thick and even"
+      ],
+      "parts": [
+        "dried tomato",
+        "knife",
+        "clean cutting board"
+      ],
+      "end_state": "A row of round tomato slices of roughly equal half-inch thickness lying on a clean cutting board.",
+      "view_hint": "Cutting board from above, knife and slices",
+      "checks": [
+        {
+          "id": "s119_c1",
+          "question": "Are the tomato pieces round slices rather than chunks or dice?",
+          "kind": "other",
+          "roi": "slices on board"
+        },
+        {
+          "id": "s119_c2",
+          "question": "Are the slices roughly uniform and about 1/2 inch thick?",
+          "kind": "quantity",
+          "roi": "slice edges"
+        },
+        {
+          "id": "s119_c3",
+          "question": "Is the cutting board clean with no leftover food debris?",
+          "kind": "presence",
+          "roi": "cutting board surface"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s119_m1",
+          "type": "technique",
+          "description": "Chops the tomato into chunks instead of slicing rounds",
+          "visual_cue": "Irregular cubes or wedges on the board instead of flat rounds",
+          "correction": "Those are chunks. Cut straight across the tomato to make flat round slices instead.",
+          "early_cue": "Knife cutting a slice again crosswise"
+        },
+        {
+          "id": "s119_m2",
+          "type": "wrong_quantity",
+          "description": "Slices are too thick, about 1 inch",
+          "visual_cue": "Only two or three very fat slices from the whole tomato",
+          "correction": "Those slices are too thick. Aim for about half an inch, roughly the width of your finger.",
+          "early_cue": "Knife positioned far from the previous cut"
+        },
+        {
+          "id": "s119_m3",
+          "type": "technique",
+          "description": "Slices are uneven in thickness",
+          "visual_cue": "Mix of thin and thick slices side by side on the board",
+          "correction": "Try to keep each slice the same thickness, about half an inch, so they cook and look even.",
+          "early_cue": "Knife angled rather than straight down"
+        },
+        {
+          "id": "s119_m4",
+          "type": "other",
+          "description": "Uses a soiled cutting board",
+          "visual_cue": "Visible crumbs, residue or stains on the board under the tomato",
+          "correction": "That board is dirty. Wipe it clean or grab a clean one before slicing.",
+          "early_cue": "Setting the tomato down on a board with visible debris"
+        }
+      ],
+      "successors": [
+        "s120"
+      ],
+      "duration": {
+        "mean_s": 65.5072518885157,
+        "std_s": 22.51819399448712,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s119"
+      ]
+    },
+    {
+      "id": "s120",
+      "name": "Place slices on platter in a single layer",
+      "instruction_novice": "Gently lay each tomato slice flat on the platter so they sit side by side in one layer, not stacked on each other.",
+      "instruction_expert": "Lay slices flat, single layer",
+      "substeps": [
+        "Get a flat platter or plate",
+        "Pick up one slice at a time",
+        "Lay it flat on the platter",
+        "Place the next slice beside it, not on top, until all are placed"
+      ],
+      "parts": [
+        "tomato slices",
+        "platter"
+      ],
+      "end_state": "Tomato slices arranged flat across the platter in one layer, none overlapping or stacked.",
+      "view_hint": "Platter from above showing the whole surface",
+      "checks": [
+        {
+          "id": "s120_c1",
+          "question": "Are all tomato slices on a platter or plate (not a lid or the cutting board)?",
+          "kind": "part_identity",
+          "roi": "platter"
+        },
+        {
+          "id": "s120_c2",
+          "question": "Are the slices in a single layer with no slice sitting on top of another?",
+          "kind": "alignment",
+          "roi": "slice arrangement"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s120_m1",
+          "type": "technique",
+          "description": "Slices are stacked in a double layer or piled up",
+          "visual_cue": "Slices overlapping or sitting on top of each other",
+          "correction": "Some slices are stacked. Spread them out so each one sits flat on the platter in a single layer.",
+          "early_cue": "Placing a slice onto one already on the platter"
+        },
+        {
+          "id": "s120_m2",
+          "type": "technique",
+          "description": "Slices are tossed or dropped onto the platter",
+          "visual_cue": "Slices landing at random angles, folded or splashing juice",
+          "correction": "Place each slice gently with your hand rather than tossing it, so they lie flat.",
+          "early_cue": "Hand releasing the slice from above the platter"
+        },
+        {
+          "id": "s120_m3",
+          "type": "wrong_part",
+          "description": "Uses a lid or wrong item as the platter",
+          "visual_cue": "Slices placed on a pot lid or shallow container lid",
+          "correction": "That's a lid. Use a flat plate or platter for the salad.",
+          "early_cue": "Reaching for a lid instead of a plate"
+        },
+        {
+          "id": "s120_m4",
+          "type": "wrong_order",
+          "description": "Platter was already seasoned or garnished before slices were placed",
+          "visual_cue": "Salt, pepper, cheese or herbs on the bare platter before any tomato",
+          "correction": "Put the tomato slices on the platter first, then season them.",
+          "early_cue": "Shaker or cheese held over an empty platter"
+        }
+      ],
+      "successors": [
+        "s123",
+        "s124",
+        "s126",
+        "s127"
+      ],
+      "duration": {
+        "mean_s": 38.870917830092836,
+        "std_s": 10.888878764636704,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s120"
+      ]
+    },
+    {
+      "id": "s121",
+      "name": "Drizzle olive oil over the platter",
+      "instruction_novice": "Finish by drizzling about one tablespoon of extra-virgin olive oil in a thin stream over the whole platter.",
+      "instruction_expert": "Drizzle 1 tbsp olive oil",
+      "substeps": [
+        "Pick up the extra-virgin olive oil bottle",
+        "Measure about one tablespoon, or pour slowly",
+        "Move the stream across the whole platter",
+        "Set the bottle down"
+      ],
+      "parts": [
+        "extra-virgin olive oil",
+        "tablespoon (optional)",
+        "finished platter"
+      ],
+      "end_state": "Glossy oil sheen over the tomatoes, cheese and seasonings across the entire platter.",
+      "view_hint": "Platter from above with the oil bottle over it",
+      "checks": [
+        {
+          "id": "s121_c1",
+          "question": "Is the bottle extra-virgin olive oil (not vegetable oil or vinegar)?",
+          "kind": "part_identity",
+          "roi": "bottle label"
+        },
+        {
+          "id": "s121_c2",
+          "question": "Does the whole platter have a visible oil sheen, not just one spot?",
+          "kind": "completion",
+          "roi": "platter surface"
+        },
+        {
+          "id": "s121_c3",
+          "question": "Has the oil been added after the salt, cheese, pepper and seasoning are already on?",
+          "kind": "other",
+          "roi": "platter surface"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s121_m1",
+          "type": "wrong_part",
+          "description": "Uses vegetable oil instead of extra-virgin olive oil",
+          "visual_cue": "Pale yellow oil from a vegetable oil bottle label",
+          "correction": "That's vegetable oil. Use the extra-virgin olive oil bottle instead.",
+          "early_cue": "Hand reaching for the vegetable oil bottle"
+        },
+        {
+          "id": "s121_m2",
+          "type": "wrong_part",
+          "description": "Uses apple cider vinegar instead of olive oil",
+          "visual_cue": "Thin brown liquid from a vinegar bottle",
+          "correction": "That's vinegar, not oil. Put it back and drizzle extra-virgin olive oil.",
+          "early_cue": "Vinegar bottle picked up"
+        },
+        {
+          "id": "s121_m3",
+          "type": "wrong_quantity",
+          "description": "Adds only 2 teaspoons instead of 1 tablespoon",
+          "visual_cue": "Teaspoon measure used, sparse oil only on part of the platter",
+          "correction": "That's a bit short. Use a full tablespoon so the oil covers the whole platter.",
+          "early_cue": "Teaspoon-size measuring spoon picked up"
+        },
+        {
+          "id": "s121_m4",
+          "type": "technique",
+          "description": "Oil poured in one puddle instead of drizzled across",
+          "visual_cue": "Oil pooling on one slice or in one corner of the platter",
+          "correction": "Move the bottle as you pour so the oil drizzles over all the slices.",
+          "early_cue": "Bottle held still over one spot"
+        }
+      ],
+      "successors": [],
+      "duration": {
+        "mean_s": 67.75767993872637,
+        "std_s": 14.16131006134712,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s121"
+      ]
+    },
+    {
+      "id": "s122",
+      "name": "Gently dry the tomato with a towel",
+      "instruction_novice": "Pat the rinsed tomato gently all over with a dry paper towel or tea towel until the skin is no longer wet.",
+      "instruction_expert": "Pat tomato dry with towel",
+      "substeps": [
+        "Pick up a clean, dry paper towel or tea towel",
+        "Cup the tomato in the towel",
+        "Pat and turn until no water droplets remain",
+        "Set the dry tomato on the clean cutting board"
+      ],
+      "parts": [
+        "rinsed tomato",
+        "dry paper towel or tea towel"
+      ],
+      "end_state": "The tomato skin looks matte with no water droplets, resting on a towel or cutting board next to a used towel.",
+      "view_hint": "Tomato and towel in the hands, close-up on skin",
+      "checks": [
+        {
+          "id": "s122_c1",
+          "question": "Is the tomato being patted with a towel?",
+          "kind": "completion",
+          "roi": "hands and towel"
+        },
+        {
+          "id": "s122_c2",
+          "question": "Is the towel dry (not soaked or dripping)?",
+          "kind": "part_identity",
+          "roi": "towel"
+        },
+        {
+          "id": "s122_c3",
+          "question": "Is the tomato skin free of visible water droplets?",
+          "kind": "completion",
+          "roi": "tomato skin"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s122_m1",
+          "type": "incomplete",
+          "description": "Tomato is left visibly wet / not dried completely",
+          "visual_cue": "Shiny water beads on the tomato skin after the towel is put down",
+          "correction": "There's still water on it. Give the tomato a few more pats until the skin looks dry.",
+          "early_cue": "Only a quick single dab with the towel"
+        },
+        {
+          "id": "s122_m2",
+          "type": "wrong_part",
+          "description": "Uses a wet or damp towel to dry the tomato",
+          "visual_cue": "Towel is darkened, limp or dripping while wiping",
+          "correction": "That towel is wet. Grab a dry paper towel so the tomato actually dries.",
+          "early_cue": "Reaching for a towel lying in the sink or a damp dish rag"
+        },
+        {
+          "id": "s122_m3",
+          "type": "technique",
+          "description": "Rubs the tomato roughly instead of patting gently",
+          "visual_cue": "Fast scrubbing motion, tomato skin squeezed or dented",
+          "correction": "Go easy, just pat it gently so you don't bruise the tomato.",
+          "early_cue": null
+        }
+      ],
+      "successors": [
+        "s119"
+      ],
+      "duration": {
+        "mean_s": 22.857296288732392,
+        "std_s": 10.571637589658607,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s122"
+      ]
+    },
+    {
+      "id": "s123",
+      "name": "Season the slices with salt",
+      "instruction_novice": "Sprinkle a light, even pinch of salt over the tomato slices on the platter.",
+      "instruction_expert": "Salt the slices lightly",
+      "substeps": [
+        "Pick up the salt container",
+        "Take a pinch or shake lightly",
+        "Move your hand across the platter so every slice gets a little",
+        "Set the salt down"
+      ],
+      "parts": [
+        "salt",
+        "platter with tomato slices"
+      ],
+      "end_state": "Fine white salt grains visible scattered across the tomato slices on the platter.",
+      "view_hint": "Platter from above, close on slice surfaces",
+      "checks": [
+        {
+          "id": "s123_c1",
+          "question": "Is the container being used labelled or recognizable as salt rather than sugar?",
+          "kind": "part_identity",
+          "roi": "seasoning container"
+        },
+        {
+          "id": "s123_c2",
+          "question": "Are salt grains visible on the tomato slices on the platter?",
+          "kind": "completion",
+          "roi": "tomato slice surfaces"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s123_m1",
+          "type": "wrong_part",
+          "description": "Uses sugar or powdered sugar instead of salt",
+          "visual_cue": "Sugar bowl or powdered-sugar container held over the platter; fine powder dusting the slices",
+          "correction": "That's sugar, not salt. Use the salt shaker for the tomatoes.",
+          "early_cue": "Hand reaching for the sugar container"
+        },
+        {
+          "id": "s123_m2",
+          "type": "wrong_order",
+          "description": "Seasons the slices on the cutting board instead of on the platter",
+          "visual_cue": "Salt falling onto slices still on the cutting board",
+          "correction": "Season the slices after they're on the platter, not on the cutting board.",
+          "early_cue": "Salt held over the cutting board"
+        },
+        {
+          "id": "s123_m3",
+          "type": "technique",
+          "description": "Theatrical 'salt bae' sprinkle from high up, salt scatters off the platter",
+          "visual_cue": "Arm raised high, salt landing on the counter around the platter",
+          "correction": "Keep your hand low over the platter so the salt lands on the tomatoes, not the counter.",
+          "early_cue": "Arm raised well above shoulder height with salt"
+        }
+      ],
+      "successors": [
+        "s121"
+      ],
+      "duration": {
+        "mean_s": 34.49783394962081,
+        "std_s": 7.441491022754675,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s123"
+      ]
+    },
+    {
+      "id": "s124",
+      "name": "Sprinkle mozzarella on the tomatoes",
+      "instruction_novice": "Take a handful of mozzarella cheese and sprinkle it evenly over all the tomato slices on the platter.",
+      "instruction_expert": "Sprinkle mozzarella over all slices",
+      "substeps": [
+        "Pick up the mozzarella cheese",
+        "Take a small amount in your fingers",
+        "Scatter it over the slices, moving across the whole platter",
+        "Repeat until every slice has some cheese"
+      ],
+      "parts": [
+        "mozzarella cheese",
+        "platter with tomato slices"
+      ],
+      "end_state": "White mozzarella pieces scattered evenly across the tomato slices covering the whole platter.",
+      "view_hint": "Platter from above showing all slices",
+      "checks": [
+        {
+          "id": "s124_c1",
+          "question": "Is the cheese white mozzarella rather than orange cheddar?",
+          "kind": "part_identity",
+          "roi": "cheese in hand"
+        },
+        {
+          "id": "s124_c2",
+          "question": "Is cheese spread across the tomato slices over the whole platter, not just one spot or the rim?",
+          "kind": "completion",
+          "roi": "platter surface"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s124_m1",
+          "type": "technique",
+          "description": "Pours or dumps the cheese in one pile instead of sprinkling",
+          "visual_cue": "A single mound of cheese on one area of the platter",
+          "correction": "Don't dump it in one spot. Sprinkle the cheese with your fingers so it spreads over every slice.",
+          "early_cue": "Whole bag or container tipped over the platter"
+        },
+        {
+          "id": "s124_m2",
+          "type": "wrong_part",
+          "description": "Uses cheddar cheese and puts it around the rim of the platter",
+          "visual_cue": "Orange shredded cheese sitting on the platter edge rather than on the tomatoes",
+          "correction": "That's cheddar. Use the mozzarella, and put it on top of the tomatoes, not around the edge.",
+          "early_cue": "Hand reaching for orange cheese"
+        },
+        {
+          "id": "s124_m3",
+          "type": "wrong_order",
+          "description": "Sprinkles cheese onto the cutting board instead of the platter",
+          "visual_cue": "Cheese landing on the cutting board surface",
+          "correction": "The cheese goes on the tomato slices on the platter, not on the cutting board.",
+          "early_cue": "Cheese held over the cutting board"
+        },
+        {
+          "id": "s124_m4",
+          "type": "technique",
+          "description": "Spills cheese onto the counter around the platter",
+          "visual_cue": "Cheese pieces scattered on the counter outside the platter edge",
+          "correction": "Keep your hand lower and over the platter so the cheese doesn't spill onto the counter.",
+          "early_cue": "Hand sprinkling from far above the platter"
+        }
+      ],
+      "successors": [
+        "s121"
+      ],
+      "duration": {
+        "mean_s": 49.58460684431202,
+        "std_s": 15.134977625502856,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s124"
+      ]
+    },
+    {
+      "id": "s125",
+      "name": "Rinse a tomato",
+      "instruction_novice": "Take one regular tomato and rinse it under cool running water, rubbing the skin with your fingers.",
+      "instruction_expert": "Rinse one tomato under water",
+      "substeps": [
+        "Pick up one full-size tomato",
+        "Hold it under cool running tap water",
+        "Rub the skin all over with your fingers",
+        "Turn off the tap and hold the wet tomato over the sink"
+      ],
+      "parts": [
+        "one regular tomato",
+        "sink / running water"
+      ],
+      "end_state": "A single whole, wet, glistening full-size tomato held in hand or sitting beside the sink.",
+      "view_hint": "Hands and tomato over the sink basin",
+      "checks": [
+        {
+          "id": "s125_c1",
+          "question": "Is exactly one regular-size tomato (not cherry tomatoes) being rinsed?",
+          "kind": "part_identity",
+          "roi": "tomato in hands"
+        },
+        {
+          "id": "s125_c2",
+          "question": "Is water visibly running over the tomato skin?",
+          "kind": "completion",
+          "roi": "tomato under tap"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s125_m1",
+          "type": "wrong_part",
+          "description": "Uses a cherry tomato instead of a regular tomato",
+          "visual_cue": "A small, bite-size tomato in the hand instead of a palm-size one",
+          "correction": "That's a cherry tomato. Grab one regular, full-size tomato instead.",
+          "early_cue": "Hand reaching toward the cherry tomato container"
+        },
+        {
+          "id": "s125_m2",
+          "type": "wrong_quantity",
+          "description": "Uses two cherry tomatoes instead of one regular tomato",
+          "visual_cue": "Two small tomatoes being rinsed together",
+          "correction": "You need just one large tomato, not two small ones. Put those back and take one regular tomato.",
+          "early_cue": "Picking up more than one small tomato"
+        },
+        {
+          "id": "s125_m3",
+          "type": "missing_step",
+          "description": "Skips rinsing and goes straight to drying or slicing",
+          "visual_cue": "Dry tomato goes directly to the towel or cutting board without water contact",
+          "correction": "Rinse the tomato under running water first, then dry it.",
+          "early_cue": "Tomato carried toward the cutting board instead of the sink"
+        }
+      ],
+      "successors": [
+        "s122"
+      ],
+      "duration": {
+        "mean_s": 36.50270731960997,
+        "std_s": 8.503246243517227,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s125"
+      ]
+    },
+    {
+      "id": "s126",
+      "name": "Season with 1/4 teaspoon black pepper",
+      "instruction_novice": "Measure a quarter teaspoon of black pepper and sprinkle it evenly over the platter.",
+      "instruction_expert": "1/4 tsp black pepper over platter",
+      "substeps": [
+        "Find the 1/4 teaspoon measuring spoon",
+        "Fill it level with black pepper",
+        "Hold it over the platter",
+        "Sprinkle it evenly across all the slices"
+      ],
+      "parts": [
+        "black pepper",
+        "1/4 teaspoon measuring spoon",
+        "platter with tomato slices"
+      ],
+      "end_state": "Dark pepper specks visible across the tomato and cheese on the platter, with an empty 1/4 teaspoon nearby.",
+      "view_hint": "Measuring spoon in hand, then platter from above",
+      "checks": [
+        {
+          "id": "s126_c1",
+          "question": "Is the measuring spoon the 1/4 teaspoon size?",
+          "kind": "quantity",
+          "roi": "measuring spoon"
+        },
+        {
+          "id": "s126_c2",
+          "question": "Are black pepper specks spread across the platter?",
+          "kind": "completion",
+          "roi": "platter surface"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s126_m1",
+          "type": "wrong_quantity",
+          "description": "Uses 1/8 teaspoon instead of 1/4 teaspoon",
+          "visual_cue": "Smallest measuring spoon in hand, very sparse pepper on the platter",
+          "correction": "That's the 1/8 teaspoon. Use the 1/4 teaspoon so there's enough pepper.",
+          "early_cue": "Picking the smallest spoon from the set"
+        },
+        {
+          "id": "s126_m2",
+          "type": "wrong_quantity",
+          "description": "Uses 1/2 teaspoon instead of 1/4 teaspoon",
+          "visual_cue": "Larger measuring spoon heaped with pepper; heavy dark coating on slices",
+          "correction": "That's the 1/2 teaspoon, too much. Use the 1/4 teaspoon instead.",
+          "early_cue": "Picking a larger spoon from the set"
+        },
+        {
+          "id": "s126_m3",
+          "type": "technique",
+          "description": "Spills pepper while measuring",
+          "visual_cue": "Pepper scattered on the counter around the pepper container",
+          "correction": "Measure over the pepper container or a plate so spills are caught, then level the spoon.",
+          "early_cue": "Spoon tipping while being filled"
+        },
+        {
+          "id": "s126_m4",
+          "type": "wrong_order",
+          "description": "Seasons before the tomato slices are on the platter or onto a lid",
+          "visual_cue": "Pepper falling on an empty plate, a lid, or the cutting board",
+          "correction": "Wait until the tomato slices are on the platter, then add the pepper over them.",
+          "early_cue": "Pepper held over an empty plate or lid"
+        }
+      ],
+      "successors": [
+        "s121"
+      ],
+      "duration": {
+        "mean_s": 56.66752875514553,
+        "std_s": 24.38134823642646,
+        "n": 9,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s126"
+      ]
+    },
+    {
+      "id": "s127",
+      "name": "Garnish with Italian seasoning",
+      "instruction_novice": "Sprinkle a little Italian seasoning over the whole platter as a garnish.",
+      "instruction_expert": "Sprinkle Italian seasoning over platter",
+      "substeps": [
+        "Pick up the Italian seasoning jar",
+        "Open the shaker lid",
+        "Shake lightly over the slices, moving across the platter",
+        "Close and set it down"
+      ],
+      "parts": [
+        "Italian seasoning",
+        "platter with tomato slices"
+      ],
+      "end_state": "Flecks of dried green herbs scattered across the tomato and cheese on the platter.",
+      "view_hint": "Platter from above",
+      "checks": [
+        {
+          "id": "s127_c1",
+          "question": "Is the jar being used the Italian seasoning (dried green herb blend)?",
+          "kind": "part_identity",
+          "roi": "seasoning jar"
+        },
+        {
+          "id": "s127_c2",
+          "question": "Are green herb flecks visible across the platter?",
+          "kind": "completion",
+          "roi": "platter surface"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "s127_m1",
+          "type": "wrong_order",
+          "description": "Garnishes the cutting board instead of the platter",
+          "visual_cue": "Herb flecks falling onto the cutting board",
+          "correction": "The seasoning goes over the slices on the platter, not the cutting board.",
+          "early_cue": "Jar held above the cutting board"
+        },
+        {
+          "id": "s127_m2",
+          "type": "wrong_order",
+          "description": "Garnishes before slices are placed on the platter",
+          "visual_cue": "Herbs scattered on an empty platter",
+          "correction": "Lay the tomato slices on the platter first, then garnish with the seasoning.",
+          "early_cue": "Jar held over an empty platter"
+        },
+        {
+          "id": "s127_m3",
+          "type": "technique",
+          "description": "Seasoning dumped in one spot instead of across the platter",
+          "visual_cue": "A clump of herbs on one slice, others bare",
+          "correction": "Spread the seasoning around so every slice gets a little.",
+          "early_cue": "Jar held still in one place while shaking"
+        }
+      ],
+      "successors": [
+        "s121"
+      ],
+      "duration": {
+        "mean_s": 38.70377402212817,
+        "std_s": 23.096548996687723,
+        "n": 10,
+        "source": "dataset-train-split"
+      },
+      "dataset_labels": [
+        "s127"
+      ]
+    }
+  ],
+  "start": [
+    "s125"
+  ]
+}
