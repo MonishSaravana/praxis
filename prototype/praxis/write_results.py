@@ -68,7 +68,9 @@ def build() -> tuple[str, str]:
     md.append("  - Verifier tiers: Jev 1.14 is the fast tier; Claude Opus 5.5 is the strong tier for ambiguity, "
               "possible mistakes and poor views.")
     md.append("  - Policy: calibrated, with precision-first thresholds.")
-    md.append("  - Task identity is not given: L3b recognizes it.")
+    md.append("  - Two settings: `fused` recognizes the task itself (L3b); `fused_oracle` is told the task, which is the "
+              "like-for-like comparison with the baseline.")
+    md.append("  - The design was chosen on the train split only (see 'Design selection' below).")
     md.append("- **Stateless baseline:** the same strong model (Claude Opus 5.5) every 5 s, given the same frames. "
               "It gets no task graph, no state and no history: only the task name and the list of step names.\n")
 
@@ -82,8 +84,9 @@ def build() -> tuple[str, str]:
             mk = a["mistakes"]
             rows.append([name, pct(a["step_acc"]), pct(mk["precision"]), pct(mk["recall"]), f"{mk['tp']} / {mk['fp']}",
                          num(a["false_alarms_per_min"], 3), str(a["verifier_calls"]), f"${a['cost_usd_per_video_min']:.3f}"])
-        md.append(table(rows, ["System", "Step acc.", "Mistake precision", "Mistake recall", "Caught / false alarms",
-                               "False alarms/min", "Model calls", "Cost / video-min"]))
+        md.append(table(rows, ["System", "Step acc.", "Mistake precision (time-window)", "Mistake recall (time-window)",
+                               "Caught / false alarms (time-window)", "False alarms/min (time-window)", "Model calls",
+                               "Cost / video-min"]))
         md.append("")
         md.append(f"- **Step tracking:** Praxis {pct(FO['step_acc'])} vs baseline {pct(B['step_acc'])}, so Praxis is "
                   f"{'higher' if FO['step_acc'] > B['step_acc'] else 'lower'}. This counts frames inside annotated steps. "
@@ -103,7 +106,7 @@ def build() -> tuple[str, str]:
                   f"says; this is optimistic): Praxis caught {FO['mistakes']['tp']} of "
                   f"{FO['mistakes']['tp'] + FO['mistakes']['fn']} "
                   f"annotated errors with {FO['mistakes']['fp']} false alarms. The baseline caught {B['mistakes']['tp']} "
-                  f"with {B['mistakes']['fp']} false alarms. "
+                  f"with {B['mistakes']['fp']} false alarm{'s' if B['mistakes']['fp'] != 1 else ''}. "
                   f"{pct(FO['mistakes'].get('share_caught_before_step_end'))} of Praxis's catches came before the erroneous "
                   f"step ended.")
         md.append(f"- **Cost:** ${FO['cost_usd_per_video_min']:.3f} vs ${B['cost_usd_per_video_min']:.3f} per video-minute "
@@ -118,9 +121,12 @@ def build() -> tuple[str, str]:
         md.append(f"- Step accuracy is {pct(F['step_acc'])} over the whole clip, and {pct(F['step_acc_after_recognition'])} "
                   f"after recognition. Frames before recognition, and clips where the wrong recipe was recognized, count "
                   f"as wrong.")
-        md.append(f"- Mistakes: {F['mistakes']['tp']} caught, {F['mistakes']['fp']} false alarms (precision "
-                  f"{pct(F['mistakes']['precision'])}, recall {pct(F['mistakes']['recall'])}). That is "
-                  f"{num(F['false_alarms_per_min'], 3)} false alarms per minute.")
+        sf = m.get("semantic_fused")
+        if sf:
+            md.append(f"- Mistakes, strict: {sf['semantic_yes']} of {sf['n_alerts']} alerts identified an annotated error "
+                      f"(strict precision {pct(sf['strict_precision'])}, recall {pct(sf['strict_recall'], 1)}).")
+        md.append(f"- Mistakes, time-window: {F['mistakes']['tp']} caught, {F['mistakes']['fp']} false alarms "
+                  f"({num(F['false_alarms_per_min'], 3)} per minute).")
         md.append("- Recognition mistakes are between visually similar recipes (see `results/l3b/recognition.json`). "
                   "One wrong recognition costs that clip's whole step track.")
         md.append(f"\nSource: {src(m, 'run_fused')}.\n")
@@ -129,6 +135,10 @@ def build() -> tuple[str, str]:
         md.append(f"- **Feedback latency** (GT end of an action → Praxis says 'verified' or flags a mistake about that "
                   f"step), p50 / p95: **{lat(F['feedback_latency_s'])}** (n={F['feedback_latency_s'].get('n')}). "
                   f"Part of this is policy: Praxis waits for evidence before speaking.")
+        if F.get("progress_latency_s"):
+            md.append(f"- **Progress latency** (GT end of a step → Praxis marks it done, either verified or because the "
+                      f"belief moved on; signed), p50 / p95: {lat(F['progress_latency_s'])}. The long tails come from the "
+                      f"'stuck belief' failures (see the failure analysis).")
         md.append(f"- **Verifier call latency** (live calls inside engine runs), p50 / p95: "
                   f"{lat(F['verifier_latency_ms_live'], 'ms', scale=1, dd=0)}.")
         md.append(f"- **Share of frames escalated to the slow path:** {pct(F['escalated_frame_share'], 1)}. "
@@ -150,7 +160,10 @@ def build() -> tuple[str, str]:
     q = m.get("l1_quality")
     if q:
         md.append("**L1 backbone quality.** A linear probe on frozen features measures held-out frame-level step "
-                  "accuracy. The per-frame backbone was picked from this plus the speed table.\n")
+                  "accuracy. The engine's probe uses SigLIP2 + V-JEPA 2. That was chosen by leave-one-recording-out on "
+                  "the train split, where it narrowly beat SigLIP2 alone (`results/dev/probe_features_loro.json`). On "
+                  "the held-out clips below, SigLIP2 alone came out slightly ahead. We did not switch after seeing test "
+                  "data.\n")
         md.append(table([[k, pct(v["mean_heldout_step_acc"], 1), str(v["n_tasks"])] for k, v in q.items()],
                         ["Features", "Held-out step acc.", "Procedures"]))
         md.append(f"\nSource: {src(m, 'l1_quality')}.\n")
@@ -166,7 +179,7 @@ def build() -> tuple[str, str]:
                                  pct(x["precision"]), pct(x["recall"]), num(x["f1"]), f"{x['n_clips']}"])
         md.append(table(rows, ["Test set", "Tolerance", "Detector", "Precision", "Recall", "F1", "Clips"]))
         hf = l2["test"].get("heldout_videos", {}).get("tol5s", {}).get("learned", {}).get("head_fps")
-        md.append(f"\nThe detector head runs at {num(hf, 0)} frames/s on CPU. That excludes L1 features; the ≥10 fps "
+        md.append(f"\nThe detector head alone runs at about {num((hf or 0) / 1000, 0)}k frames/s on CPU. That excludes L1 features; the ≥10 fps "
                   f"target applies to the whole fast path (see the L1 speed table). Source: {src(m, 'l2')}.\n")
     c3 = m.get("l3_compile")
     if c3:
