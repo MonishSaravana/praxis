@@ -64,6 +64,9 @@ def collect() -> dict:
     put("uncertainty", _j("l5/visual_uncertainty.json"), "results/l5/visual_uncertainty.json")
     put("policy_thresholds", (_j("l6/policy_thresholds.json") or {}).get("chosen"), "results/l6/policy_thresholds.json")
     put("adaptive_detail", _j("l6/adaptive_detail.json"), "results/l6/adaptive_detail.json")
+    for v in ("fused_oracle", "fused", "baseline_stateless"):
+        r = _j(f"l6/mistake_semantic_{v}.json")
+        put(f"semantic_{v}", {k: r[k] for k in r if k != "pairs"} if r else None, f"results/l6/mistake_semantic_{v}.json")
     put("distillation", _j("l7/distill.json"), "results/l7/distill.json")
     put("spend", _j("spend.json"), "results/spend.json")
     (RESULTS / "metrics.json").write_text(json.dumps(m, indent=1, default=float))

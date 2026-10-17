@@ -31,25 +31,30 @@ def _window(t: float, dur: float, before: float = 12.0, after: float = 18.0) -> 
 
 def pick(run: str = "fused") -> dict:
     clips = _clips()
-    picks: dict = {"tp_mistake": [], "view_request": [], "false_alarm": [], "tracking": []}
+    picks: dict = {"tp_mistake": [], "view_request": [], "false_alarm": [], "tracking": [], "wrong_task": []}
     for cid, c in clips.items():
         p = RUNS / run / f"{cid}.jsonl"
         if not p.exists():
             continue
         recs = read_log(p)
         acts = by_kind(recs, "action")
+        tasks = by_kind(recs, "task")
         gwin = [(m["start"], m["end"], m) for m in c.mistakes()]
         for a in acts:
             if a["action"] == "mistake":
                 hit = [m for s, e, m in gwin if s - MISTAKE_TOL_BEFORE <= a["t"] <= e + MISTAKE_TOL_AFTER]
                 (picks["tp_mistake"] if hit else picks["false_alarm"]).append(
-                    {"clip": cid, "t": a["t"], "text": a["text"], "gt": hit[0]["description"] if hit else None})
+                    {"run": run, "clip": cid, "t": a["t"], "text": a["text"], "gt": hit[0]["description"] if hit else None})
             if a["action"] == "view_request":
-                picks["view_request"].append({"clip": cid, "t": a["t"], "text": a["text"]})
-        ver = [a for a in acts if a["action"] in ("verified", "instruct")]
-        if ver:
-            picks["tracking"].append({"clip": cid, "n": len(ver), "t": ver[min(2, len(ver) - 1)]["t"]})
-    picks["tracking"].sort(key=lambda x: -x["n"])
+                picks["view_request"].append({"run": run, "clip": cid, "t": a["t"], "text": a["text"]})
+        if tasks and tasks[0]["task_id"] != c.task_id:
+            picks["wrong_task"].append({"run": run, "clip": cid, "t": tasks[0]["t"], "pred": tasks[0]["task_id"]})
+        if tasks and tasks[0]["task_id"] == c.task_id:
+            t_rec = tasks[0]["t"]
+            n = sum(1 for a in acts if a["action"] in ("verified", "instruct") and t_rec <= a["t"] <= t_rec + 35)
+            picks["tracking"].append({"run": run, "clip": cid, "t": t_rec, "n": n})
+    picks["tracking"].sort(key=lambda x: (-x["n"], x["t"]))
+    picks["tp_mistake"].sort(key=lambda x: x["t"])
     return picks
 
 
@@ -66,32 +71,47 @@ def render_pick(run: str, clip_id: str, t: float, name: str, view: str = "user",
     return out
 
 
-def main(run: str = "fused") -> dict:
+def main(run: str = "fused", fallback: str = "fused_oracle") -> dict:
     RENDERS.mkdir(parents=True, exist_ok=True)
     p = pick(run)
+    pf = pick(fallback)
     made = {}
     if p["tracking"]:
-        x = p["tracking"][0]
-        made["step_tracking"] = [str(render_pick(run, x["clip"], x["t"], "showcase_step_tracking", "user", before=6, after=32)),
-                                 str(render_pick(run, x["clip"], x["t"], "showcase_step_tracking", "engineer", before=6, after=32))]
-    if p["tp_mistake"]:
-        x = p["tp_mistake"][0]
-        made["caught_mistake"] = [str(render_pick(run, x["clip"], x["t"], "showcase_caught_mistake", "user")),
-                                  str(render_pick(run, x["clip"], x["t"], "showcase_caught_mistake", "engineer"))]
-    if p["view_request"]:
-        x = p["view_request"][0]
-        made["view_request"] = [str(render_pick(run, x["clip"], x["t"], "showcase_view_request", "user"))]
-    if p["false_alarm"]:
-        x = p["false_alarm"][0]
-        made["failure"] = [str(render_pick(run, x["clip"], x["t"], "failure_false_alarm", "user",
-                                           label="real model output · FAILURE CASE"))]
-    (RESULTS / "renders_index.json").write_text(json.dumps({"run": run, "picks": {k: v[:5] for k, v in p.items()},
+        x = p["tracking"][0]     # starts just before "Task recognized"
+        made["recognition_and_tracking"] = [
+            str(render_pick(x["run"], x["clip"], x["t"], "showcase_recognition_tracking", "user", before=4, after=34)),
+            str(render_pick(x["run"], x["clip"], x["t"], "showcase_recognition_tracking", "engineer", before=4, after=34))]
+    tp = p["tp_mistake"] or pf["tp_mistake"]
+    if tp:
+        x = tp[0]
+        made["caught_mistake"] = [str(render_pick(x["run"], x["clip"], x["t"], "showcase_caught_mistake", "user", before=14, after=14)),
+                                  str(render_pick(x["run"], x["clip"], x["t"], "showcase_caught_mistake", "engineer", before=14, after=14))]
+        if len(tp) > 1:
+            y = tp[1]
+            made["caught_mistake_2"] = [str(render_pick(y["run"], y["clip"], y["t"], "showcase_caught_mistake_2", "user",
+                                                        before=14, after=14))]
+    vr = p["view_request"] or pf["view_request"]
+    if vr:
+        x = vr[0]
+        made["view_request"] = [str(render_pick(x["run"], x["clip"], x["t"], "showcase_view_request", "user", before=10, after=12))]
+    fa = p["false_alarm"] or pf["false_alarm"]
+    if fa:
+        x = fa[0]
+        made["failure_false_alarm"] = [str(render_pick(x["run"], x["clip"], x["t"], "failure_false_alarm", "user",
+                                                       label="real model output · FAILURE CASE: false alarm", before=12, after=12))]
+    if p["wrong_task"]:
+        x = p["wrong_task"][0]
+        made["failure_wrong_task"] = [str(render_pick(x["run"], x["clip"], x["t"], "failure_wrong_task", "user",
+                                                      label="real model output · FAILURE CASE: wrong task", before=4, after=20))]
+    (RESULTS / "renders_index.json").write_text(json.dumps({"run": run, "fallback": fallback,
+                                                            "picks": {k: v[:5] for k, v in p.items()},
+                                                            "fallback_picks": {k: v[:3] for k, v in pf.items()},
                                                             "rendered": made}, indent=2))
     for files in made.values():
         for f in files:
             sz = Path(f).stat().st_size / 1e6
             if sz > 24:
-                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", f, "-c:v", "libx264", "-crf", "30",
+                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", f, "-c:v", "libx264", "-crf", "31",
                                 "-preset", "slow", "-pix_fmt", "yuv420p", f + ".tmp.mp4"], check=True)
                 Path(f + ".tmp.mp4").replace(f)
     return made

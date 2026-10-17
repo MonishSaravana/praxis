@@ -1,0 +1,181 @@
+{
+  "run": "fused",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 20,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.06386222551935097,
+  "time_window_hits": 16,
+  "semantic_yes": 5,
+  "semantic_partial": 3,
+  "strict_precision": 0.25,
+  "lenient_precision": 0.4,
+  "strict_recall": 0.029411764705882353,
+  "n_gt_mistakes": 170,
+  "pairs": [
+    {
+      "clip": "12_48_0",
+      "t": 42.1192,
+      "alert": "Rinse the tomato under running water first, then dry it.",
+      "annotated": [
+        "Cut instead of slice"
+      ],
+      "label": "no",
+      "reason": "The alert is about rinsing the tomato. The annotated error is cutting instead of slicing the tomato into 1/2 inch slices, which is a different step and problem."
+    },
+    {
+      "clip": "12_48_0",
+      "t": 83.0783,
+      "alert": "Some slices are stacked. Spread them out so each one sits flat on the platter in a single layer.",
+      "annotated": [
+        "Instead of a single layer, pile up the cut tomatoes"
+      ],
+      "label": "yes",
+      "reason": "The alert flags stacked slices instead of a single layer, which is the annotated piling error."
+    },
+    {
+      "clip": "8_45_0",
+      "t": 282.7584,
+      "alert": "The power is set too low. Change it to full power before you start.",
+      "annotated": [
+        "Used lower power than specified"
+      ],
+      "label": "yes",
+      "reason": "The alert flags that the microwave power is set too low, which matches the annotated temperature error of using lower power than specified."
+    },
+    {
+      "clip": "7_48_0",
+      "t": 155.5454,
+      "alert": "Use the butter knife for the jelly too; it spreads more evenly than a spoon.",
+      "annotated": [
+        "Step performed before whisking and microwaving"
+      ],
+      "label": "no",
+      "reason": "The alert gives generic advice about spreading jelly with a knife. The annotated error is about adding sweet and sour sauce out of order, before whisking and microwaving, which the alert does not mention."
+    },
+    {
+      "clip": "1_143_0",
+      "t": 82.4066,
+      "alert": "Give the ramekin a quick coat of cooking spray first so the egg won't stick.",
+      "annotated": [
+        "Set microwave to medium temperature instead of high"
+      ],
+      "label": "no",
+      "reason": "The alert is a generic reminder about spraying the ramekin. The annotated error is microwaving at medium power instead of high, which the alert never addresses."
+    },
+    {
+      "clip": "1_37_0",
+      "t": 64.3045,
+      "alert": "That mug looks dirty. Wash it or pick a clean one first.",
+      "annotated": [
+        "Step performed before correct order"
+      ],
+      "label": "no",
+      "reason": "The alert complains about a dirty mug, while the annotated error is an ordering mistake (pouring the egg into the ramekin too early); the alert does not identify the sequencing problem."
+    },
+    {
+      "clip": "1_42_0",
+      "t": 128.4435,
+      "alert": "The egg should be microwaved plain after whisking. Add the sauce and salsa only after it's cooked.",
+      "annotated": [
+        "60 instead of 30 seconds; medium instead of high; Step performed before coating with cooking spray",
+        "Step performed before coating with cooking spray"
+      ],
+      "label": "no",
+      "reason": "The alert is about when the sauce and salsa get added. The annotated errors are the wrong microwave time and power, and microwaving or stirring before coating with cooking spray, which is a different problem."
+    },
+    {
+      "clip": "1_43_0",
+      "t": 48.6817,
+      "alert": "Give the ramekin a quick coat of cooking spray first so the egg won't stick.",
+      "annotated": [
+        "2 instead of 1 egg"
+      ],
+      "label": "no",
+      "reason": "The alert is a generic reminder about spraying the ramekin. The annotated error is pouring 2 eggs instead of 1, which the alert does not address."
+    },
+    {
+      "clip": "1_43_0",
+      "t": 155.1071,
+      "alert": "Use the knife to cut the muffin so you get clean, even halves.",
+      "annotated": [
+        "Using hand instead of knife"
+      ],
+      "label": "yes",
+      "reason": "The alert tells the person to use the knife to cut the muffin, which is the annotated error of using a hand instead of a knife."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 72.2355,
+      "alert": "Use the butter knife to spread the jelly evenly.",
+      "annotated": [
+        "Did not spread jelly completely over the nut butter; Step performed before spreading nut butter",
+        "Step performed before spreading nut butter"
+      ],
+      "label": "partial",
+      "reason": "The alert is about spreading the jelly evenly, which loosely relates to the incomplete-coverage technique error. It does not say the jelly isn't fully covering the nut butter, and it misses the order error of spreading jelly before the nut butter."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 199.0067,
+      "alert": "Use the butter knife for the jelly too; it spreads more evenly than a spoon.",
+      "annotated": [
+        "Spread on the boundary; Step performed before applying nut butter"
+      ],
+      "label": "no",
+      "reason": "The alert is about using a knife instead of a spoon to scoop jelly. The annotated errors are spreading jelly on the boundary and applying it before the nut butter, which the alert does not mention."
+    },
+    {
+      "clip": "3_46_0",
+      "t": 50.9862,
+      "alert": "That's the baking soda. For this step you want baking powder, an eighth of a teaspoon.",
+      "annotated": [
+        "add-Measure 1 teaspoon of baking soda and add it to the mug instead of 1/16 teaspoon"
+      ],
+      "label": "partial",
+      "reason": "The annotated error is the wrong amount of baking soda (1 tsp instead of 1/16 tsp). The alert instead flags using baking soda in place of baking powder. Both concern the leavening, but the alert does not identify the measurement error."
+    },
+    {
+      "clip": "22_37_0",
+      "t": 249.9117,
+      "alert": "Finish beating the egg mixture now so it's ready as soon as the tomatoes are done.",
+      "annotated": [
+        "Step performed before beating the egg mixture; Using a cherry tomato instead of a tomato.",
+        "Step performed after cooking the tomatoes and before adding cilantro to the bowl"
+      ],
+      "label": "partial",
+      "reason": "The alert addresses the egg mixture timing, which is related to the order issue. But it does not flag that the tomatoes were started before beating the eggs. Instead it treats that order as acceptable. It also misses the cherry tomato substitution."
+    },
+    {
+      "clip": "17_40_0",
+      "t": 239.1602,
+      "alert": "That looks like a zucchini, not a cucumber. Put it back and grab the cucumber instead.",
+      "annotated": [
+        "Use zucchini instead of cucumber"
+      ],
+      "label": "yes",
+      "reason": "The alert flags that zucchini is being used instead of cucumber, which is exactly the annotated error."
+    },
+    {
+      "clip": "17_43_0",
+      "t": 230.3823,
+      "alert": "Pull the leaves off the stems and chop them finely with a knife on the board instead of tearing.",
+      "annotated": [
+        "Step performed before whisking curd in the bowl"
+      ],
+      "label": "no",
+      "reason": "The alert is about how to prepare the cilantro (chopping vs tearing), but the annotated error is about order: cilantro was added before the curd was whisked."
+    },
+    {
+      "clip": "17_45_0",
+      "t": 137.3205,
+      "alert": "Whisk the curd smooth first, then add the cumin.",
+      "annotated": [
+        "add 2 teaspoons instead of 1 teaspoon; Step performed before whisking curd in the bowl"
+      ],
+      "label": "yes",
+      "reason": "The alert flags the annotated order error, adding the cumin before the curd was whisked. It misses the measurement error, but one matching error is enough."
+    }
+  ],
+  "spend_usd": 0.0
+}

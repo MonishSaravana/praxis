@@ -89,7 +89,19 @@ def build() -> tuple[str, str]:
                   f"{'higher' if FO['step_acc'] > B['step_acc'] else 'lower'}. This counts frames inside annotated steps. "
                   f"Excluding the 3 dev clips: {pct(m['run_fused_oracle_excl'].get('step_acc'))} vs "
                   f"{pct(m['run_baseline_excl'].get('step_acc'))}.")
-        md.append(f"- **Mistakes:** Praxis caught {FO['mistakes']['tp']} of {FO['mistakes']['tp'] + FO['mistakes']['fn']} "
+        so, sb = m.get("semantic_fused_oracle"), m.get("semantic_baseline_stateless")
+        if so and sb:
+            md.append(f"- **Mistakes, strict scoring** (a judge model checks that the alert names the same problem as the "
+                      f"annotation; see Methods): Praxis raised {so['n_alerts']} alerts and {so['semantic_yes']} identified "
+                      f"an annotated error ({so['semantic_partial']} more were partially right). That is a strict "
+                      f"precision of {pct(so['strict_precision'])} and strict recall of {pct(so['strict_recall'], 1)}. The "
+                      f"baseline raised {sb['n_alerts']} alerts and {sb['semantic_yes']} were right ("
+                      f"{pct(sb['strict_precision'])}, recall {pct(sb['strict_recall'], 1)}). Praxis catches more real "
+                      f"mistakes but is less precise. Strictly counted false alarms: "
+                      f"{num(so['strict_false_alarms_per_min'], 3)}/min vs {num(sb['strict_false_alarms_per_min'], 3)}/min.")
+        md.append(f"- **Mistakes, time-window scoring** (an alert counts if it lands near any annotated error, whatever it "
+                  f"says; this is optimistic): Praxis caught {FO['mistakes']['tp']} of "
+                  f"{FO['mistakes']['tp'] + FO['mistakes']['fn']} "
                   f"annotated errors with {FO['mistakes']['fp']} false alarms. The baseline caught {B['mistakes']['tp']} "
                   f"with {B['mistakes']['fp']} false alarms. "
                   f"{pct(FO['mistakes'].get('share_caught_before_step_end'))} of Praxis's catches came before the erroneous "
@@ -266,6 +278,11 @@ def build() -> tuple[str, str]:
     sp = m.get("spend")
     if sp:
         md.append(f"## Spend\n\nTotal API spend for this build: **${sp['total_usd']:.2f}** (see `results/spend.json`).\n")
+    md.append("## Methods notes\n\n- **Mistake matching.** Time-window matching counts an alert that lands within "
+              "[annotated error start − 5 s, end + 10 s] as a hit. Strict matching additionally has Claude Opus 5.5 judge each "
+              "such pair with a fixed rubric (yes / partial / no: does the alert name the same problem?). Code: "
+              "`prototype/praxis/eval/semantic_match.py`. The judged pairs, with reasons, are in "
+              "`results/l6/mistake_semantic_*.json`.\n")
     md.append("## Failure analysis and limitations\n\nSee `results/FAILURES.md` (qualitative, with example frames) and the "
               "limitations below.\n")
     return "\n".join(md), m
@@ -307,14 +324,15 @@ def claims(m: dict) -> str:
         say(f"It costs about {B['cost_usd_per_video_min'] / max(FO['cost_usd_per_video_min'], 1e-9):.0f}x less to run: "
             f"${FO['cost_usd_per_video_min']:.3f} vs ${B['cost_usd_per_video_min']:.3f} per minute of video, because "
             f"most checks are fast typed questions and the frontier model is only called to escalate.", "run_fused_oracle")
-        if FO["mistakes"]["tp"]:
-            say(f"Praxis flagged {FO['mistakes']['tp'] + FO['mistakes']['fp']} mistakes; {FO['mistakes']['tp']} of "
-                f"them were real (precision {FO['mistakes']['precision'] * 100:.0f}%), and "
-                f"{(FO['mistakes'].get('share_caught_before_step_end') or 0) * 100:.0f}% were caught before the "
-                f"step was finished. The stateless baseline caught {B['mistakes']['tp']}.", "run_fused_oracle")
-            say(f"Mistake recall is low ({FO['mistakes']['recall'] * 100:.0f}%). Most annotated cooking errors, like "
-                f"the wrong amount or water temperature, can't be seen from a few frames. We tuned for precision "
-                f"because false alarms are what make people stop using a coach.", "run_fused_oracle")
+        so, sb = m.get("semantic_fused_oracle"), m.get("semantic_baseline_stateless")
+        if so and sb:
+            say(f"On mistakes, both systems are weak and we're honest about it. Strictly scored, Praxis's alerts named "
+                f"the actual annotated error {so['semantic_yes']} times out of {so['n_alerts']}; the stateless baseline "
+                f"did {sb['semantic_yes']} out of {sb['n_alerts']}. So Praxis catches more real mistakes but is less "
+                f"precise. Most annotated cooking errors, like the wrong amount or water temperature, can't be seen "
+                f"from a few frames.", "semantic_fused_oracle")
+            say(f"The mistakes Praxis does catch tend to be ones that need state: doing steps in the wrong order, or "
+                f"using the wrong tool for the step it knows you're on.", "semantic_fused_oracle")
         say(f"False alarms: {FO['false_alarms_per_min']:.3f} per minute, i.e. about one every "
             f"{1 / max(FO['false_alarms_per_min'], 1e-9):.0f} minutes.", "run_fused_oracle")
         say(f"Only {FO['escalated_frame_share'] * 100:.0f}% of frames leave the local layers, and most of those go to a "

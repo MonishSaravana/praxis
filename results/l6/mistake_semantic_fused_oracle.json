@@ -1,0 +1,150 @@
+{
+  "run": "fused_oracle",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 17,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.05534726211677084,
+  "time_window_hits": 13,
+  "semantic_yes": 4,
+  "semantic_partial": 4,
+  "strict_precision": 0.23529411764705882,
+  "lenient_precision": 0.47058823529411764,
+  "strict_recall": 0.023529411764705882,
+  "n_gt_mistakes": 170,
+  "pairs": [
+    {
+      "clip": "12_48_0",
+      "t": 42.0777,
+      "alert": "Rinse the tomato under running water first, then dry it.",
+      "annotated": [
+        "Cut instead of slice"
+      ],
+      "label": "no",
+      "reason": "The alert is about rinsing the tomato. The annotated error is cutting instead of slicing the tomato into 1/2 inch slices, which is a different step and problem."
+    },
+    {
+      "clip": "8_44_0",
+      "t": 180.5809,
+      "alert": "That mug looks dirty. Wash it or pick a clean one first.",
+      "annotated": [
+        "Mix the contents of the mug by rotating motion of the cup and not mixing the contents properly"
+      ],
+      "label": "no",
+      "reason": "The alert is about a dirty mug at the milk-filling step. The annotated error is improper mixing by swirling the cup, which is a different problem."
+    },
+    {
+      "clip": "8_45_0",
+      "t": 128.4572,
+      "alert": "Microwave the plain milk first, then add the sugar, chocolate and cinnamon.",
+      "annotated": [
+        "Microwave the contents of the mug for 2 minutes; Step performed after adding cinnamon and sugar"
+      ],
+      "label": "partial",
+      "reason": "The alert catches the order error (microwaving after adding sugar and cinnamon), but it misses the annotated timing error of 2 minutes instead of 1. It identifies one of the two annotated problems."
+    },
+    {
+      "clip": "7_135_0",
+      "t": 230.8855,
+      "alert": "The egg should be microwaved plain after whisking. Add the sauce and salsa only after it's cooked.",
+      "annotated": [
+        "Step performed before microwaving the contents of the bowl"
+      ],
+      "label": "yes",
+      "reason": "The alert flags that the salsa was added before microwaving, which matches the annotated order error."
+    },
+    {
+      "clip": "1_42_0",
+      "t": 178.7727,
+      "alert": "Use the knife to cut the muffin so you get clean, even halves.",
+      "annotated": [
+        "hands instead of knife; Step performed after correct order"
+      ],
+      "label": "yes",
+      "reason": "The alert tells the person to use a knife instead of their hands, which is the annotated preparation error. It does not address the order error, but it does identify one annotated problem."
+    },
+    {
+      "clip": "1_43_0",
+      "t": 304.1229,
+      "alert": "Wait on the cheese. Cook and stir the egg first, add salsa, then cheese.",
+      "annotated": [
+        "2 tbsp instead of 1 tablespoon; Step performed before adding salsa"
+      ],
+      "label": "partial",
+      "reason": "The alert correctly flags the order error (cheese should go after the salsa). It misses the measurement error of using 2 tbsp instead of 1, so it captures only part of the annotated problems."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 72.2387,
+      "alert": "Use the butter knife to spread the jelly evenly.",
+      "annotated": [
+        "Did not spread jelly completely over the nut butter; Step performed before spreading nut butter",
+        "Step performed before spreading nut butter"
+      ],
+      "label": "partial",
+      "reason": "The alert is about spreading the jelly evenly, which loosely relates to the incomplete-coverage technique error. It does not say the jelly isn't fully covering the nut butter, and it misses the order error of spreading jelly before the nut butter."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 107.8982,
+      "alert": "Swap the spoon for a butter knife; the flat blade spreads much more evenly.",
+      "annotated": [
+        "Use spoon instead of butter knife; Step performed after spreading jelly"
+      ],
+      "label": "yes",
+      "reason": "The alert flags the spoon being used instead of a butter knife, which is one of the annotated errors. It does not mention the order problem."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 129.5479,
+      "alert": "Use the butter knife to spread; the spoon leaves it lumpy.",
+      "annotated": [
+        "Spreading around the jelly; Step performed after spreading jelly"
+      ],
+      "label": "no",
+      "reason": "The alert is about which tool to spread with (knife vs. spoon). The annotated errors are spreading the nut butter around the jelly and doing it after the jelly, which is a technique and order problem the alert does not mention."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 199.0145,
+      "alert": "Use the butter knife for the jelly too; it spreads more evenly than a spoon.",
+      "annotated": [
+        "Spread on the boundary; Step performed before applying nut butter"
+      ],
+      "label": "no",
+      "reason": "The alert is about using a knife instead of a spoon to scoop jelly. The annotated errors are spreading jelly on the boundary and applying it before the nut butter, which the alert does not mention."
+    },
+    {
+      "clip": "22_37_0",
+      "t": 257.4788,
+      "alert": "Finish beating the egg mixture now so it's ready as soon as the tomatoes are done.",
+      "annotated": [
+        "Step performed before beating the egg mixture; Using a cherry tomato instead of a tomato.",
+        "Step performed after cooking the tomatoes and before adding cilantro to the bowl"
+      ],
+      "label": "partial",
+      "reason": "The alert addresses the egg mixture timing, which is related to the order issue. But it does not flag that the tomatoes were started before beating the eggs. Instead it treats that order as acceptable. It also misses the cherry tomato substitution."
+    },
+    {
+      "clip": "17_43_0",
+      "t": 53.8986,
+      "alert": "Hold on: it looks like you skipped 'Peel the cucumber'. Peel cucumber fully with peeler first.",
+      "annotated": [
+        "slice the cucumber into discs"
+      ],
+      "label": "no",
+      "reason": "The alert is about skipping peeling, but the annotated error is a technique error: slicing the cucumber into discs instead of chopping or grating it."
+    },
+    {
+      "clip": "17_45_0",
+      "t": 137.3741,
+      "alert": "Whisk the curd smooth first, then add the cumin.",
+      "annotated": [
+        "add 2 teaspoons instead of 1 teaspoon; Step performed before whisking curd in the bowl"
+      ],
+      "label": "yes",
+      "reason": "The alert flags the annotated order error, adding the cumin before the curd was whisked. It misses the measurement error, but one matching error is enough."
+    }
+  ],
+  "spend_usd": 0.0
+}

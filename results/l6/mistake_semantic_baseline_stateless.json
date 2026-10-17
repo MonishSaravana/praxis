@@ -1,0 +1,38 @@
+{
+  "run": "baseline_stateless",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 3,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.004257481701290065,
+  "time_window_hits": 2,
+  "semantic_yes": 2,
+  "semantic_partial": 0,
+  "strict_precision": 0.6666666666666666,
+  "lenient_precision": 0.6666666666666666,
+  "strict_recall": 0.011764705882352941,
+  "n_gt_mistakes": 170,
+  "pairs": [
+    {
+      "clip": "1_143_0",
+      "t": 273.8126,
+      "alert": "Split the English muffin horizontally into a top and bottom half only.",
+      "annotated": [
+        "Cut the muffin into multiple pieces instead of two halves"
+      ],
+      "label": "yes",
+      "reason": "The alert says to cut the muffin into only two halves. That corrects the annotated error of cutting it into multiple pieces."
+    },
+    {
+      "clip": "22_38_0",
+      "t": 302.4473,
+      "alert": "Stop slicing; cut the tomato only in half for frying cut-side down.",
+      "annotated": [
+        "Cut some small pieces, not two pieces; Step performed after heating the pan"
+      ],
+      "label": "yes",
+      "reason": "The alert flags that the tomato is being sliced into more than two pieces. That is the annotated technique error (small pieces instead of halves). It does not mention the order error."
+    }
+  ],
+  "spend_usd": 0.0
+}
