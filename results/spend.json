@@ -1,0 +1,36 @@
+{
+  "total_usd": 92.07629396599998,
+  "items": {
+    "L3 compile (8 recipes, Fable 5.1)": 4.16358,
+    "L3 compile (IndustReal graph)": 0.43374,
+    "GT check runs (Jev/Haiku/Opus, train+eval)": 12.815837750000009,
+    "framing ablation": 2.884172446,
+    "crops experiment": 0.0,
+    "visual-uncertainty first run (from data/uncert.log)": 3.283867599999996,
+    "visual-uncertainty (last re-run, new calls only)": 0.2666216,
+    "engine run: baseline_stateless": 18.352767600000085,
+    "engine run: fused": 3.5941585419999997,
+    "engine run: fused_distilled_alone": 5.276787,
+    "engine run: fused_heuristic_gate": 3.831941284000001,
+    "engine run: fused_no_escalation": 0.2835729960000002,
+    "engine run: fused_oracle": 4.307100345999991,
+    "engine run: local_only": 0.0,
+    "engine run: verifier_only": 18.054604169999912,
+    "design selection (train split): design_selection_v2": 8.711087671999989,
+    "design selection (train split): design_selection_v3": 1.9959670859999992,
+    "design selection (train split): design_selection_v4": 2.0962831100000003,
+    "design selection (train split): design_selection_v5": 1.5288205539999997,
+    "mistake judge: mistake_semantic_baseline_stateless": 0.0,
+    "mistake judge: mistake_semantic_fused": 0.0,
+    "mistake judge: mistake_semantic_fused_heuristic_gate": 0.04137999999999999,
+    "mistake judge: mistake_semantic_fused_no_escalation": 0.053136,
+    "mistake judge: mistake_semantic_fused_oracle": 0.0,
+    "mistake judge: mistake_semantic_verifier_only": 0.076424,
+    "demo: industreal_demo.json": 0.02273438999999999,
+    "M2 two-clip test": 0.00170982
+  },
+  "untracked": [
+    "hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total"
+  ],
+  "note": "Cached re-runs are counted once. The Anthropic and TypeSafe consoles are the source of truth."
+}

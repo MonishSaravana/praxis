@@ -1,0 +1,94 @@
+{
+  "run": "fused_oracle",
+  "counts": {
+    "stuck_belief": 42,
+    "missed_mistake": 155,
+    "false_alarm": 4
+  },
+  "missed_by_error_type": {
+    "Temperature Error": 8,
+    "Technique Error": 36,
+    "Measurement Error": 31,
+    "Preparation Error": 57,
+    "Order Error": 84,
+    "Timing Error": 9
+  },
+  "caught_by_error_type": {
+    "Technique Error": 6,
+    "Timing Error": 1,
+    "Order Error": 12,
+    "Preparation Error": 3,
+    "Measurement Error": 2
+  },
+  "examples": {
+    "stuck_belief": [
+      {
+        "clip": "7_18_0",
+        "t": 299.5,
+        "seconds": 138.0,
+        "gt": "Microwave for 3 minutes, stirring in between",
+        "pred": "Extract and add contents of an egg to a microwave-safe bowl",
+        "frames": "results/figures/failures/stuck_belief_0.jpg"
+      },
+      {
+        "clip": "8_44_0",
+        "t": 299.5,
+        "seconds": 132.5,
+        "gt": "Heat for 1 minute and serve",
+        "pred": "Microwave milk for 1 minute",
+        "frames": "results/figures/failures/stuck_belief_1.jpg"
+      },
+      {
+        "clip": "17_40_0",
+        "t": 217.5,
+        "seconds": 92.5,
+        "gt": "Add chopped cilantro",
+        "pred": "Chop or grate the cucumber",
+        "frames": "results/figures/failures/stuck_belief_2.jpg"
+      }
+    ],
+    "missed_mistake": [
+      {
+        "clip": "12_43_0",
+        "t": 43.43,
+        "gt": "Temperature Error: Rinse with hot water",
+        "step": "Rinse a tomato",
+        "frames": "results/figures/failures/missed_mistake_0.jpg"
+      },
+      {
+        "clip": "12_43_0",
+        "t": 97.618,
+        "gt": "Technique Error: Cut tomato instead of slicing; Cut into big chunks",
+        "step": "Slice the tomato into 1/2 inch slices",
+        "frames": "results/figures/failures/missed_mistake_1.jpg"
+      },
+      {
+        "clip": "12_43_0",
+        "t": 148.791,
+        "gt": "Technique Error: Spill tomatoes while placing",
+        "step": "Place slices on platter in a single layer",
+        "frames": "results/figures/failures/missed_mistake_2.jpg"
+      }
+    ],
+    "false_alarm": [
+      {
+        "clip": "12_51_63",
+        "t": 6.6965,
+        "said": "Rinse the tomato under running water first, then dry it.",
+        "frames": "results/figures/failures/false_alarm_0.jpg"
+      },
+      {
+        "clip": "10_50_0",
+        "t": 243.881,
+        "said": "Put that down and use the dental floss; it slices cleanly without squashing the roll.",
+        "frames": "results/figures/failures/false_alarm_1.jpg"
+      },
+      {
+        "clip": "3_13_0",
+        "t": 36.5933,
+        "said": "That mug has metal on it, so it can't go in the microwave. Swap it for a plain ceramic one.",
+        "frames": "results/figures/failures/false_alarm_2.jpg"
+      }
+    ]
+  }
+}

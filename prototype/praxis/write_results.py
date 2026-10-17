@@ -35,6 +35,11 @@ def table(rows: list[list[str]], head: list[str]) -> str:
     return "\n".join(out)
 
 
+def _jload(rel: str):
+    p = RESULTS / rel
+    return json.loads(p.read_text()) if p.exists() else None
+
+
 def build() -> tuple[str, str]:
     m = collect()
     d = m.get("data", {})
@@ -241,11 +246,14 @@ def build() -> tuple[str, str]:
     if u:
         md.append("**Visual-uncertainty test.** On degraded views of mid-step eval checks, Praxis's typed verifier "
                   "can say 'can't see'; the stateless baseline must answer.\n")
-        rows = [[mode, pct(x["engine_view_request_rate"]), pct(x["engine_confident_wrong_rate"]),
-                 pct(x["baseline_confident_wrong_step_rate"]), pct(x["baseline_confident_false_mistake_rate"])]
+        rows = [[mode, pct(x["engine_view_request_rate"]), pct(x["threshold_sweep"]["0.5"]["engine_confident_wrong"]),
+                 pct(x["threshold_sweep"]["0.5"]["baseline_confident_wrong_step"]),
+                 pct(x["threshold_sweep"]["0.7"]["baseline_confident_wrong_step"]), pct(x.get("baseline_step_accuracy"))]
                 for mode, x in u["modes"].items()]
-        md.append(table(rows, ["Degradation", "Praxis asks for a view", "Praxis confident & wrong",
-                               "Baseline confident & wrong step", "Baseline confident false mistake"]))
+        md.append(table(rows, ["Degradation", "Praxis asks for a view", "Praxis confident (≥0.5) & wrong",
+                               "Baseline confident (≥0.5) & wrong step", "Baseline confident (≥0.7) & wrong step",
+                               "Baseline step accuracy"]))
+        md.append(f"\n{u['n']} mid-step eval checks per condition; Claude Opus 5.5 in both arms.")
         md.append(f"\nSource: {src(m, 'uncertainty')}.\n")
     ad = m.get("adaptive_detail")
     if ad:
@@ -269,6 +277,11 @@ def build() -> tuple[str, str]:
         md.append(f"- Accuracy vs GT: student {pct(ds['student_acc_vs_gt'])}, teacher {pct(ds['teacher_acc_vs_gt'])}.")
         md.append(f"- Latency: {num(ds['student_latency_ms_p50'], 2)} ms on CPU vs {num(ds['teacher_latency_ms_p50'], 0)} ms.")
         md.append(f"- Cost per 1,000 checks: $0 vs ${ds['teacher_cost_per_1k_checks_usd']:.2f}.")
+        r5 = ds.get("routed_conf0.5")
+        if r5:
+            md.append(f"- Routing at |p−0.5| ≥ 0.25 instead: the student handles {pct(r5['share_handled_locally'])} of checks, "
+                      f"accuracy {pct(r5['acc_vs_gt'])}, at {pct(r5['cost_per_1k_usd'] / max(ds['teacher_cost_per_1k_checks_usd'], 1e-9))} "
+                      f"of the teacher's cost.")
         rt = ds.get("routed_conf0.7")
         if rt:
             md.append(f"- Routing a check to the student only when it is confident (|p−0.5| ≥ 0.35): it handles "
@@ -281,16 +294,48 @@ def build() -> tuple[str, str]:
                   f"Source: {src(m, 'run_fused_distilled')}.\n")
     if F and F.get("per_category"):
         pass
+    fd = _jload("dev/final_design.json")
+    if fd:
+        md.append("## Design selection (train split only)\n")
+        md.append("Engine design choices were compared on train-split recordings, never on the eval clips. Step probes "
+                  "were trained leave-one-recording-out, the task was given, and the first 300 s of 24 recordings were "
+                  "used. The chosen design is the one evaluated above.\n")
+        rows = [[k.split(":")[1], pct(v["step_acc"], 1), str(v["calls"]), f"${v['cost_usd']:.2f}",
+                 f"{v['mistakes_tp']} / {v['mistakes_fp']}"] for k, v in fd["all_designs"].items()]
+        md.append(table(rows, ["Design (train split)", "Step acc.", "Calls", "Cost", "Mistakes TP / FP (time-window)"]))
+        md.append(f"\nChosen: {json.dumps({k: v for k, v in fd['chosen'].items() if k != 'policy_thresholds'})}. "
+                  f"Source: `results/dev/final_design.json`.\n")
+    tn = _jload("l1/tapnext_speed.json")
+    if tn:
+        rows = [[r["device"], str(r["points"]), num(r.get("ms_per_frame_p50"), 0), num(r.get("max_fps"), 1),
+                 pct(r.get("visible_share_end"))] for r in tn["rows"] if "error" not in r]
+        md.append("## TAPNext++ point tracking on this Mac\n")
+        md.append(table(rows, ["Device", "Query points", "ms / frame (p50)", "Max fps", "Points still visible after 3 s"]))
+        md.append("\nMeasured while other jobs were running on the machine. TAPNext++ is far from real time here, and "
+                  "on head-mounted cooking video most points are lost within a few seconds. Crops were therefore "
+                  "computed offline for the crop experiment only; the live plan is in docs/MODEL_ROADMAP.md. Source: "
+                  "`results/l1/tapnext_speed.json`.\n")
+    ird = _jload("industreal_demo.json")
+    if ird:
+        md.append("## Assembly demo (IndustReal, qualitative only, no ground truth)\n")
+        for cid, rr in ird["runs"].items():
+            md.append(f"- `{cid}`: recognized as `{rr['recognized']}` at {num(rr['t_recognize'], 0)} s from a library of "
+                      f"9 procedures. Renders: `renders/assembly_{cid[3:]}_user.mp4` and `_engineer.mp4`.")
+        md.append("\nNo metric is computed from these clips. The official step labels were unreachable this weekend, "
+                  "and local evidence for this graph is zero-shot. Source: `results/industreal_demo.json`.\n")
     if FO:
         md.append("## Per-category results (Praxis, task given)\n")
         fo_full = json.loads((RESULTS / "runs" / "fused_oracle.json").read_text())
         rows = [[k.replace("cc4d_", ""), str(v["n_clips"]), pct(v["step_acc"]), pct(v["mistakes"]["precision"]),
                  pct(v["mistakes"]["recall"]), num(v["false_alarms_per_min"])] for k, v in fo_full["per_category"].items()]
-        md.append(table(rows, ["Procedure", "Clips", "Step acc.", "Mistake precision", "Mistake recall", "False alarms/min"]))
+        md.append(table(rows, ["Procedure", "Clips", "Step acc.", "Mistake precision (time-window)",
+                               "Mistake recall (time-window)", "False alarms/min (time-window)"]))
         md.append("")
-    sp = m.get("spend")
+    sp = _jload("spend.json")
     if sp:
-        md.append(f"## Spend\n\nTotal API spend for this build: **${sp['total_usd']:.2f}** (see `results/spend.json`).\n")
+        md.append(f"## Spend\n\nTracked API spend for this build: **${sp['total_usd']:.2f}**, summed from recorded "
+                  f"costs (`results/spend.json`; untracked: {sp['untracked'][0]}). The brief's approval threshold "
+                  f"was $150.\n")
     md.append("## Methods notes\n\n- **Mistake matching.** Time-window matching counts an alert that lands within "
               "[annotated error start − 5 s, end + 10 s] as a hit. Strict matching additionally has Claude Opus 5.5 judge each "
               "such pair with a fixed rubric (yes / partial / no: does the alert name the same problem?). Code: "
@@ -434,7 +479,7 @@ def failures_section() -> str:
         for tag in sorted(set(f["missed_by_error_type"]) | set(f.get("caught_by_error_type", {}))):
             c, mi = f.get("caught_by_error_type", {}).get(tag, 0), f["missed_by_error_type"].get(tag, 0)
             rows.append([tag, str(c), str(mi), pct(c / (c + mi)) if c + mi else "n/a"])
-        out.append("Mistakes caught vs. missed, by annotated error type:\n")
+        out.append("Mistakes caught vs. missed, by annotated error type (time-window matching):\n")
         out.append(table(rows, ["Error type", "Caught", "Missed", "Recall"]))
         out.append("")
     for k, ex in f["examples"].items():
