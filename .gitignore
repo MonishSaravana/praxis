@@ -1,0 +1,23 @@
+# secrets
+.env
+*.env
+# data & heavy artifacts
+data/
+cache/
+prototype/.venv/
+**/__pycache__/
+*.pyc
+.DS_Store
+*.pt
+*.ckpt
+*.npz
+*.npy
+*.safetensors
+.claude/
+# large intermediate logs/renders (showcase renders are committed via LFS-free small mp4s)
+runs/
+renders/_work/
+
+# local env / tooling
+.venv/
+*.log
