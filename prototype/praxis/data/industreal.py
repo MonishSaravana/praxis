@@ -103,9 +103,6 @@ def poll_and_fetch(every_s: int = 300, max_hours: float = 30) -> None:
             time.sleep(every_s)
 
 
-if __name__ == "__main__":
-    poll_and_fetch()
-
 
 # ------------------------------------------------------------------------------------------- demo clips
 # Without the official labels we can still run the engine on IndustReal video for qualitative assembly
@@ -136,3 +133,7 @@ def demo_clips() -> list[dict]:
                     "video": str(v), "start": 0.0, "end": float(dur), "split": "demo_no_gt", "segments": [],
                     "missing_steps": [], "person": rec.split("_")[0]})
     return out
+
+
+if __name__ == "__main__":
+    poll_and_fetch()
