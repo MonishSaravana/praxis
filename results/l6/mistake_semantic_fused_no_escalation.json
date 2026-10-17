@@ -1,0 +1,171 @@
+{
+  "run": "fused_no_escalation",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 24,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.08940711572709135,
+  "time_window_hits": 15,
+  "semantic_yes": 3,
+  "semantic_partial": 3,
+  "strict_precision": 0.125,
+  "lenient_precision": 0.25,
+  "strict_recall": 0.01764705882352941,
+  "n_gt_mistakes": 170,
+  "pairs": [
+    {
+      "clip": "12_43_0",
+      "t": 153.1488,
+      "alert": "Those are chunks. Cut straight across the tomato to make flat round slices instead.",
+      "annotated": [
+        "Spill tomatoes while placing"
+      ],
+      "label": "no",
+      "reason": "The alert is about cutting chunks instead of slices, while the annotated error is spilling tomatoes while placing them on the platter."
+    },
+    {
+      "clip": "7_135_0",
+      "t": 226.1188,
+      "alert": "Hold off on the sauce until after the egg is cooked. Microwave the egg first.",
+      "annotated": [
+        "Step performed before microwaving the contents of the bowl"
+      ],
+      "label": "partial",
+      "reason": "The alert flags the same kind of ordering mistake, adding a topping before microwaving. However, it targets the sweet and sour sauce step, not the annotated salsa step."
+    },
+    {
+      "clip": "7_44_0",
+      "t": 266.1428,
+      "alert": "The egg should be whisked while raw, before microwaving. Next time whisk first; for now just break it up and continue.",
+      "annotated": [
+        "Microwave without stirring in between; Microwave 2 mins instead of 3 mins; Using a mug instead of a bowl",
+        "1 tbsp instead of 1/2 tbsp; Using a mug instead of a bowl"
+      ],
+      "label": "no",
+      "reason": "The alert is about the order of whisking versus microwaving. The annotated errors are skipping the stirring, microwaving 2 minutes instead of 3, using a mug instead of a bowl, and using too much sauce. None of these match."
+    },
+    {
+      "clip": "7_50_0",
+      "t": 135.1091,
+      "alert": "The egg isn't fully blended yet. Keep whisking until it's one even yellow color.",
+      "annotated": [
+        "Spilling the egg contents while mixing."
+      ],
+      "label": "partial",
+      "reason": "The alert is about the same whisking step, but it flags under-mixing rather than the annotated error of spilling the egg."
+    },
+    {
+      "clip": "1_143_0",
+      "t": 13.149,
+      "alert": "Give the ramekin a quick coat of cooking spray first so the egg won't stick.",
+      "annotated": [
+        "2 instead of 1 egg; Step performed before correct order"
+      ],
+      "label": "partial",
+      "reason": "The alert is about spraying the ramekin before adding the egg, which touches on the order error. It misses the actual annotated problem, though: the egg was poured too early and 2 eggs were used instead of 1."
+    },
+    {
+      "clip": "1_37_0",
+      "t": 136.104,
+      "alert": "That's too short. Set it for 30 seconds on high.",
+      "annotated": [
+        "20 secs; Microwave set on power level low instead of high"
+      ],
+      "label": "yes",
+      "reason": "The alert says the time is too short and asks for 30 seconds on high. That matches the annotated timing error (20 seconds) and the power level error (low instead of high)."
+    },
+    {
+      "clip": "1_42_0",
+      "t": 178.177,
+      "alert": "Use the knife to cut the muffin so you get clean, even halves.",
+      "annotated": [
+        "hands instead of knife; Step performed after correct order"
+      ],
+      "label": "yes",
+      "reason": "The alert tells the person to use a knife instead of their hands, which is the annotated preparation error. It does not address the order error, but it does identify one annotated problem."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 59.1519,
+      "alert": "Swap the spoon for a butter knife; the flat blade spreads much more evenly.",
+      "annotated": [
+        "use spoon instead of knife; Step performed before spreading nut butter",
+        "Did not spread jelly completely over the nut butter; Step performed before spreading nut butter"
+      ],
+      "label": "no",
+      "reason": "The alert is about using a spoon instead of a knife for the nut butter. The annotated errors concern the jelly: a spoon was used, the jelly step came before the nut butter, and the jelly was spread incompletely. The tool mix-up is on a different ingredient and step, so it does not match."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 198.1065,
+      "alert": "Move the tortilla onto the cutting board; you'll need the flat board for rolling and trimming.",
+      "annotated": [
+        "Spread on the boundary; Step performed before applying nut butter"
+      ],
+      "label": "no",
+      "reason": "The alert is about placing the tortilla on the cutting board. The annotated error is about spreading jelly before the nut butter and spreading it onto the boundary, which is a different problem."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 220.1376,
+      "alert": "Swap the spoon for a butter knife; the flat blade spreads much more evenly.",
+      "annotated": [
+        "Used normal butter instead of nut butter; Step performed after applying jelly"
+      ],
+      "label": "no",
+      "reason": "The alert is about the utensil (spoon vs. butter knife). The annotated errors are using regular butter instead of nut butter and doing the step after the jelly, neither of which the alert mentions."
+    },
+    {
+      "clip": "10_50_0",
+      "t": 54.1309,
+      "alert": "Move the tortilla onto the cutting board; you'll need the flat board for rolling and trimming.",
+      "annotated": [
+        "Spill some jelly while scooping"
+      ],
+      "label": "no",
+      "reason": "The alert is about placing the tortilla on the cutting board. The annotated error is spilling jelly while scooping, which is a different step and a different problem."
+    },
+    {
+      "clip": "22_40_0",
+      "t": 271.1955,
+      "alert": "There is still cilantro on the board, scrape the rest into the bowl.",
+      "annotated": [
+        "Step performed after heating the pan",
+        "Slowly stir the contents; Step performed after heating the pan"
+      ],
+      "label": "no",
+      "reason": "The annotated error is an order error, adding the cilantro after the pan was heated. The alert is about leftover cilantro on the board, which is a different problem."
+    },
+    {
+      "clip": "22_41_0",
+      "t": 233.1181,
+      "alert": "The recipe uses one egg, remove the extra or set it aside.",
+      "annotated": [
+        "Step performed before preparing egg mixture"
+      ],
+      "label": "no",
+      "reason": "The alert flags an extra egg (an amount issue), whereas the annotated error is an order problem: the tomatoes were cooked before the egg mixture was prepared."
+    },
+    {
+      "clip": "17_40_0",
+      "t": 134.1049,
+      "alert": "That looks like a zucchini, not a cucumber. Put it back and grab the cucumber instead.",
+      "annotated": [
+        "add scallions instead of cilantro; Step performed before whisking curd in the bowl"
+      ],
+      "label": "no",
+      "reason": "The alert is about grabbing zucchini instead of cucumber at the rinse step. The annotated error is about using scallions instead of cilantro and adding them before whisking the curd, which is a different problem."
+    },
+    {
+      "clip": "17_49_0",
+      "t": 71.141,
+      "alert": "Whisk the curd smooth first, then add the chilli powder.",
+      "annotated": [
+        "Added tablespoon instead of teaspoon; Step performed before whisking curd in the bowl"
+      ],
+      "label": "yes",
+      "reason": "The alert flags that the chilli powder was added before whisking the curd, which is the annotated order error. It does not mention the measurement error, but matching one annotated error is enough."
+    }
+  ],
+  "spend_usd": 0.053136
+}

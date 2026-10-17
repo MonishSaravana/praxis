@@ -14,10 +14,17 @@ def main() -> list[str]:
     runs = {n: F.load(f"runs/{n}.json") for n in ("baseline_stateless", "fused", "fused_oracle", "local_only",
                                                    "verifier_only", "fused_heuristic_gate", "fused_no_escalation",
                                                    "fused_claude_fast", "fused_distilled")}
-    if runs["baseline_stateless"] and runs["fused"]:
-        m = {"Stateless baseline\n(Opus 5.5 every 5 s)": runs["baseline_stateless"]["aggregate"],
-             "Praxis (stateful)": runs["fused"]["aggregate"]}
-        out.append(str(F.stateful_vs_stateless(m, note=f"{runs['fused']['aggregate']['n_clips']} CaptainCook4D clips")))
+    so, sb = F.load("l6/mistake_semantic_fused_oracle.json"), F.load("l6/mistake_semantic_baseline_stateless.json")
+    if runs["baseline_stateless"] and runs["fused_oracle"] and so and sb:
+        B, O = runs["baseline_stateless"]["aggregate"], runs["fused_oracle"]["aggregate"]
+        rows = {"Stateless baseline\n(Opus 5.5 every 5 s)": {"step_acc": B["step_acc"], "mistakes_correct": sb["semantic_yes"],
+                                                             "strict_fa_per_min": sb["strict_false_alarms_per_min"],
+                                                             "cost_per_min": B["cost_usd_per_video_min"]},
+                "Praxis\n(stateful)": {"step_acc": O["step_acc"], "mistakes_correct": so["semantic_yes"],
+                                       "strict_fa_per_min": so["strict_false_alarms_per_min"],
+                                       "cost_per_min": O["cost_usd_per_video_min"]}}
+        out.append(str(F.stateful_vs_stateless(rows, note=f"{O['n_clips']} held-out CaptainCook4D clips; mistakes judged "
+                                                           f"against {so['n_gt_mistakes']} annotated errors")))
     # L4 ablation
     abl = {k: v["aggregate"]["step_acc"] for k, v in (("Local evidence only", runs["local_only"]),
                                                       ("Verifier only", runs["verifier_only"]),
@@ -65,12 +72,16 @@ def main() -> list[str]:
     u = F.load("l5/visual_uncertainty.json")
     if u:
         modes = [m for m in u["modes"] if m != "none"]
-        vals = {}
+        vals, cols = {}, []
         for m in modes:
-            vals[f"{m}\nPraxis asks"] = u["modes"][m]["engine_view_request_rate"]
-            vals[f"{m}\nbaseline wrong"] = u["modes"][m]["baseline_confident_wrong_step_rate"]
-        out.append(str(F.bars(vals, "Degraded views: Praxis asks for a better view vs. baseline confidently wrong",
-                              "visual_uncertainty", "{:.0%}", colors=[F.C_OURS, F.C_BASE] * len(modes))))
+            x = u["modes"][m]
+            vals[f"{m}\nPraxis asks"] = x["engine_view_request_rate"]
+            vals[f"{m}\nbaseline wrong\n(conf ≥ 0.5)"] = x["threshold_sweep"]["0.5"]["baseline_confident_wrong_step"]
+            vals[f"{m}\nbaseline wrong\n(conf ≥ 0.7)"] = x["threshold_sweep"]["0.7"]["baseline_confident_wrong_step"]
+            cols += [F.C_OURS, F.C_BASE, "#c9ccd1"]
+        out.append(str(F.bars(vals, "Degraded views: Praxis asks for a better view (and is never confidently wrong)\n"
+                                    "vs. the stateless baseline answering confidently and wrongly",
+                              "visual_uncertainty", "{:.0%}", colors=cols)))
     return out
 
 

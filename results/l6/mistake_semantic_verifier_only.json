@@ -1,0 +1,260 @@
+{
+  "run": "verifier_only",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 41,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.131981932739992,
+  "time_window_hits": 24,
+  "semantic_yes": 10,
+  "semantic_partial": 3,
+  "strict_precision": 0.24390243902439024,
+  "lenient_precision": 0.3170731707317073,
+  "strict_recall": 0.058823529411764705,
+  "n_gt_mistakes": 170,
+  "pairs": [
+    {
+      "clip": "12_48_0",
+      "t": 85.5836,
+      "alert": "Some slices are stacked. Spread them out so each one sits flat on the platter in a single layer.",
+      "annotated": [
+        "Instead of a single layer, pile up the cut tomatoes"
+      ],
+      "label": "yes",
+      "reason": "The alert flags stacked slices instead of a single layer, which is the annotated piling error."
+    },
+    {
+      "clip": "8_44_0",
+      "t": 98.0635,
+      "alert": "Microwave the plain milk first, then add the sugar, chocolate and cinnamon.",
+      "annotated": [
+        "add more (5) pieces of choclate"
+      ],
+      "label": "no",
+      "reason": "The alert is about the order of microwaving and adding ingredients. The annotated error is the wrong amount of chocolate (5 pieces instead of 2)."
+    },
+    {
+      "clip": "8_45_0",
+      "t": 56.0288,
+      "alert": "Microwave the plain milk first, then add the sugar, chocolate and cinnamon.",
+      "annotated": [
+        "Add 1 piece of chocolate to the mug; Step performed before microwaving"
+      ],
+      "label": "yes",
+      "reason": "The alert flags that the chocolate was added before microwaving the milk, which matches the annotated order error. It misses the measurement error (1 piece instead of 2), but it identifies one annotated problem."
+    },
+    {
+      "clip": "7_135_0",
+      "t": 136.5358,
+      "alert": "The egg should be microwaved plain after whisking. Add the sauce and salsa only after it's cooked.",
+      "annotated": [
+        "Add 1/2 tsp instead of 1/2 tbsp to the bowl; Step performed before microwaving the contents of the bowl"
+      ],
+      "label": "yes",
+      "reason": "The alert flags the sauce being added before microwaving, which is the annotated order error. It misses the measurement error, but it still names one of the annotated problems."
+    },
+    {
+      "clip": "7_135_0",
+      "t": 192.0673,
+      "alert": "Check the label; use sweet and sour sauce for this step.",
+      "annotated": [
+        "Step performed before microwaving the contents of the bowl"
+      ],
+      "label": "no",
+      "reason": "The alert concerns using the wrong sauce for the sweet and sour step. The annotated error is about adding salsa before microwaving the bowl, which is an order problem at a different step."
+    },
+    {
+      "clip": "7_135_0",
+      "t": 212.3823,
+      "alert": "Set the salsa aside; pick up the oregano jar and sprinkle a little over the egg.",
+      "annotated": [
+        "Step performed before microwaving the contents of the bowl"
+      ],
+      "label": "partial",
+      "reason": "The alert notices the salsa being handled during the oregano step, but it only redirects the person to oregano. It does not say the salsa was added before microwaving the bowl, which is the annotated order error."
+    },
+    {
+      "clip": "7_48_0",
+      "t": 150.4498,
+      "alert": "The egg should be microwaved plain after whisking. Add the sauce and salsa only after it's cooked.",
+      "annotated": [
+        "Step performed before whisking and microwaving"
+      ],
+      "label": "yes",
+      "reason": "The alert flags the sauce being added before the egg is cooked, which is the same order error as the annotated one: sauce added before whisking and microwaving."
+    },
+    {
+      "clip": "1_37_0",
+      "t": 15.3482,
+      "alert": "That's too big. Use the small 6-ounce ramekin instead and spray that one.",
+      "annotated": [
+        "use mug instead of ramekin cup"
+      ],
+      "label": "yes",
+      "reason": "Both identify the wrong vessel being used instead of the ramekin; the alert redirects to the correct ramekin."
+    },
+    {
+      "clip": "1_43_0",
+      "t": 54.3218,
+      "alert": "That's two eggs. This recipe uses just one, so pour one out or start with a fresh ramekin.",
+      "annotated": [
+        "2 instead of 1 egg"
+      ],
+      "label": "yes",
+      "reason": "The alert flags two eggs instead of one, which is exactly the annotated measurement error."
+    },
+    {
+      "clip": "10_46_0",
+      "t": 120.6551,
+      "alert": "Scrape the nut butter back from the edge so about half an inch is bare; otherwise it squeezes out when you roll.",
+      "annotated": [
+        "spread the butter without leaving any edge gap"
+      ],
+      "label": "yes",
+      "reason": "The alert flags nut butter spread right to the edge with no bare margin, which is the annotated technique error of not leaving an edge gap."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 57.0828,
+      "alert": "Swap the spoon for a butter knife; the flat blade spreads much more evenly.",
+      "annotated": [
+        "use spoon instead of knife; Step performed before spreading nut butter",
+        "Did not spread jelly completely over the nut butter; Step performed before spreading nut butter"
+      ],
+      "label": "no",
+      "reason": "The alert is about using a spoon instead of a knife for the nut butter. The annotated errors concern the jelly: a spoon was used, the jelly step came before the nut butter, and the jelly was spread incompletely. The tool mix-up is on a different ingredient and step, so it does not match."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 70.4803,
+      "alert": "Use the butter knife to spread; the spoon leaves it lumpy.",
+      "annotated": [
+        "Did not spread jelly completely over the nut butter; Step performed before spreading nut butter",
+        "Step performed before spreading nut butter"
+      ],
+      "label": "no",
+      "reason": "The alert is about the tool used to spread the nut butter. The annotated errors concern the jelly being spread before the nut butter, not fully covering it, and wiping the knife out of order."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 35.159,
+      "alert": "Move the tortilla onto the cutting board; you'll need the flat board for rolling and trimming.",
+      "annotated": [
+        "Placed on a plate instead of cutting board"
+      ],
+      "label": "yes",
+      "reason": "The alert says the tortilla is not on the cutting board, which is the annotated error of placing it on a plate instead."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 96.4802,
+      "alert": "Put the sharp knife down and use a butter knife, so you don't cut the tortilla when spreading.",
+      "annotated": [
+        "Did not scoop properly; Step performed before applying nut butter"
+      ],
+      "label": "no",
+      "reason": "The alert is about using the wrong knife to scoop nut butter. The annotated error is improper jelly scooping and doing that step before the nut butter, which is a different problem."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 144.5672,
+      "alert": "Wipe the knife on a paper towel first so you don't get nut butter in the jelly.",
+      "annotated": [
+        "Did not scoop properly; Step performed before applying nut butter"
+      ],
+      "label": "no",
+      "reason": "The alert is about wiping nut butter off the knife before the jelly. The annotated errors are scooping the jelly improperly and scooping it before the nut butter was applied. The alert identifies neither problem."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 219.9528,
+      "alert": "Stick with the butter knife; just wipe it clean and keep using it.",
+      "annotated": [
+        "Used normal butter instead of nut butter; Step performed after applying jelly"
+      ],
+      "label": "no",
+      "reason": "The annotated errors are using regular butter instead of nut butter and spreading it after the jelly. The alert only says to keep using the butter knife and wipe it, which addresses neither."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 254.7818,
+      "alert": "Use the butter knife to spread the jelly evenly.",
+      "annotated": [
+        "Did not spread the butter properly, instead leave drops of butter on the tortilla; Step performed after applying jelly"
+      ],
+      "label": "no",
+      "reason": "The alert is a generic instruction about spreading jelly evenly. The annotated error is about the nut butter: it was left in drops rather than spread properly, and it was applied after the jelly. The alert identifies neither problem."
+    },
+    {
+      "clip": "10_50_0",
+      "t": 17.1595,
+      "alert": "Move the tortilla onto the cutting board; you'll need the flat board for rolling and trimming.",
+      "annotated": [
+        "Use a plate instead of a cutting board"
+      ],
+      "label": "yes",
+      "reason": "The alert tells the person to move the tortilla onto the cutting board. That matches the annotated error of using a plate instead of a cutting board."
+    },
+    {
+      "clip": "10_50_0",
+      "t": 78.6116,
+      "alert": "Spread nut butter first, leaving a half-inch bare edge, then add jelly.",
+      "annotated": [
+        "Spill some jelly while scooping"
+      ],
+      "label": "no",
+      "reason": "The alert covers spreading order and the bare edge. The annotated error is spilling jelly while scooping, which the alert does not mention."
+    },
+    {
+      "clip": "10_50_0",
+      "t": 191.059,
+      "alert": "You need five toothpicks in total, about an inch apart. Adjust the count.",
+      "annotated": [
+        "Trim too much"
+      ],
+      "label": "no",
+      "reason": "The alert is about the toothpick count, but the annotated error is trimming too much off the ends of the roll, which is a different step and a different problem."
+    },
+    {
+      "clip": "10_50_0",
+      "t": 201.8206,
+      "alert": "Stop cutting; push five toothpicks through the log about an inch apart first.",
+      "annotated": [
+        "Trim too much"
+      ],
+      "label": "no",
+      "reason": "The alert is about inserting the toothpicks before cutting, which is an ordering issue. The annotated error is trimming too much off the ends of the roll, a measurement error."
+    },
+    {
+      "clip": "3_36_0",
+      "t": 68.2642,
+      "alert": "The flour should go in before the wet ingredients. It's okay, just stir really well now to get rid of lumps.",
+      "annotated": [
+        "Add vegetable oil instead of olive oil; Step performed before adding flour, baking powder, salt, and baking soda"
+      ],
+      "label": "partial",
+      "reason": "The alert catches the order problem (wet ingredients added before flour), which matches the order part of the annotation. It misses the annotated substitution of vegetable oil for olive oil."
+    },
+    {
+      "clip": "3_36_0",
+      "t": 186.7536,
+      "alert": "That's the baking soda. For this step you want baking powder, an eighth of a teaspoon.",
+      "annotated": [
+        "add baking soda instead of baking powder; Step performed after adding oil to the mug"
+      ],
+      "label": "yes",
+      "reason": "The alert flags baking soda being used instead of baking powder, which matches the annotated preparation error. The order error is not mentioned, but one match is enough."
+    },
+    {
+      "clip": "3_46_0",
+      "t": 39.3972,
+      "alert": "That's the baking soda. For this step you want baking powder, an eighth of a teaspoon.",
+      "annotated": [
+        "add-Measure 1 teaspoon of baking soda and add it to the mug instead of 1/16 teaspoon"
+      ],
+      "label": "partial",
+      "reason": "The annotated error is the wrong amount of baking soda (1 tsp instead of 1/16 tsp). The alert instead flags using baking soda in place of baking powder. Both concern the leavening, but the alert does not identify the measurement error."
+    }
+  ],
+  "spend_usd": 0.076424
+}

@@ -1,0 +1,193 @@
+{
+  "run": "fused_heuristic_gate",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 22,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.059604743818060905,
+  "time_window_hits": 17,
+  "semantic_yes": 8,
+  "semantic_partial": 1,
+  "strict_precision": 0.36363636363636365,
+  "lenient_precision": 0.4090909090909091,
+  "strict_recall": 0.047058823529411764,
+  "n_gt_mistakes": 170,
+  "pairs": [
+    {
+      "clip": "12_48_0",
+      "t": 35.0483,
+      "alert": "Rinse the tomato under running water first, then dry it.",
+      "annotated": [
+        "Cut instead of slice"
+      ],
+      "label": "no",
+      "reason": "The alert is about rinsing the tomato. The annotated error is cutting instead of slicing the tomato into 1/2 inch slices, which is a different step and problem."
+    },
+    {
+      "clip": "8_44_0",
+      "t": 180.5821,
+      "alert": "That mug looks dirty. Wash it or pick a clean one first.",
+      "annotated": [
+        "Mix the contents of the mug by rotating motion of the cup and not mixing the contents properly"
+      ],
+      "label": "no",
+      "reason": "The alert is about a dirty mug at the milk-filling step. The annotated error is improper mixing by swirling the cup, which is a different problem."
+    },
+    {
+      "clip": "8_45_0",
+      "t": 269.498,
+      "alert": "The power is set too low. Change it to full power before you start.",
+      "annotated": [
+        "Used lower power than specified"
+      ],
+      "label": "yes",
+      "reason": "The alert flags that the microwave power is set too low, which matches the annotated temperature error of using lower power than specified."
+    },
+    {
+      "clip": "1_143_0",
+      "t": 191.659,
+      "alert": "Hold on: it looks like you skipped 'Stir the egg'. Gently stir egg with fork first.",
+      "annotated": [
+        "Set microwave to medium temperature instead of high",
+        "Egg is not stirred properly leaving yolk unmixed and did not stir properly"
+      ],
+      "label": "partial",
+      "reason": "The alert concerns the stir-egg step, but it claims the step was skipped entirely. The annotated error is improper stirring that left the yolk unmixed, so the alert is related but not the same problem."
+    },
+    {
+      "clip": "1_143_0",
+      "t": 278.1358,
+      "alert": "You want two even halves, a top and a bottom. Try slicing straight through the middle.",
+      "annotated": [
+        "Cut the muffin into multiple pieces instead of two halves"
+      ],
+      "label": "yes",
+      "reason": "The alert says to cut the muffin into just two halves, a top and a bottom. That addresses the annotated error of cutting it into multiple pieces instead of two."
+    },
+    {
+      "clip": "1_42_0",
+      "t": 178.1331,
+      "alert": "Use the knife to cut the muffin so you get clean, even halves.",
+      "annotated": [
+        "hands instead of knife; Step performed after correct order"
+      ],
+      "label": "yes",
+      "reason": "The alert tells the person to use a knife instead of their hands, which is the annotated preparation error. It does not address the order error, but it does identify one annotated problem."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 139.8857,
+      "alert": "Use the butter knife to spread the jelly evenly.",
+      "annotated": [
+        "Spreading around the jelly; Step performed after spreading jelly"
+      ],
+      "label": "no",
+      "reason": "The alert is a generic spreading instruction. It does not identify the annotated error, which is that the nut butter was spread after the jelly, around it, so the order was reversed."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 231.777,
+      "alert": "Swap the spoon for a butter knife; the flat blade spreads much more evenly.",
+      "annotated": [
+        "Used normal butter instead of nut butter; Step performed after applying jelly",
+        "Did not spread the butter properly, instead leave drops of butter on the tortilla; Step performed after applying jelly"
+      ],
+      "label": "no",
+      "reason": "The alert is about using a spoon instead of a butter knife. The annotated errors are using regular butter instead of nut butter, doing the step after the jelly, and uneven spreading. A tool swap is not among them."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 262.4304,
+      "alert": "Use the butter knife to spread the jelly evenly.",
+      "annotated": [
+        "Improper Cleaning of the knife with paper towel. paper towel did not cover down side of the knife."
+      ],
+      "label": "no",
+      "reason": "The alert is a generic instruction about spreading jelly. It does not mention the knife being improperly wiped clean after the nut butter."
+    },
+    {
+      "clip": "3_36_0",
+      "t": 256.673,
+      "alert": "That's the baking soda. For this step you want baking powder, an eighth of a teaspoon.",
+      "annotated": [
+        "add baking soda instead of baking powder; Step performed after adding oil to the mug",
+        "spill some out; Step performed after adding oil to the mug and before adding salt"
+      ],
+      "label": "yes",
+      "reason": "The alert flags baking soda being used in place of baking powder, which is the annotated preparation error for this step."
+    },
+    {
+      "clip": "22_37_0",
+      "t": 215.5744,
+      "alert": "The egg mixture should be ready before the tomatoes cook; finish the bowl quickly and keep an eye on the pan.",
+      "annotated": [
+        "Step performed before beating the egg mixture; Using a cherry tomato instead of a tomato.",
+        "Step performed after cooking the tomatoes"
+      ],
+      "label": "yes",
+      "reason": "The alert flags the ordering problem: the egg mixture should be ready before the tomatoes cook. This matches the annotated order error of cracking the egg after cooking the tomatoes."
+    },
+    {
+      "clip": "22_41_0",
+      "t": 192.4376,
+      "alert": "The egg mixture should be ready before the tomatoes cook; finish the bowl quickly and keep an eye on the pan.",
+      "annotated": [
+        "Step performed before preparing egg mixture"
+      ],
+      "label": "yes",
+      "reason": "The alert says the egg mixture should be ready before the tomatoes cook. That is the same ordering problem as the annotated error, where the tomatoes were cooked before the egg mixture was prepared."
+    },
+    {
+      "clip": "22_41_0",
+      "t": 287.6985,
+      "alert": "Hold on: it looks like you skipped 'Heat 1 tbsp oil in a non-stick frying pan'. Heat 1 tbsp oil, non-stick pan first.",
+      "annotated": [
+        "Step performed after cooking the tomatoes"
+      ],
+      "label": "no",
+      "reason": "The alert says the oil-heating step was skipped. The annotated error is about adding cilantro to the bowl out of order, after the tomatoes were cooked. These are different problems."
+    },
+    {
+      "clip": "17_40_0",
+      "t": 226.4452,
+      "alert": "Whisk the plain curd smooth first, in the one mixing bowl, before anything else goes in.",
+      "annotated": [
+        "add scallions instead of cilantro; Step performed before whisking curd in the bowl",
+        "Use zucchini instead of cucumber"
+      ],
+      "label": "yes",
+      "reason": "The alert says to whisk the curd before anything else goes in. That matches the annotated order error, where the herb was added before the curd was whisked."
+    },
+    {
+      "clip": "17_40_0",
+      "t": 235.8668,
+      "alert": "That looks like a zucchini, not a cucumber. Put it back and grab the cucumber instead.",
+      "annotated": [
+        "Use zucchini instead of cucumber"
+      ],
+      "label": "yes",
+      "reason": "The alert flags that zucchini is being used instead of cucumber, which is exactly the annotated error."
+    },
+    {
+      "clip": "17_43_0",
+      "t": 58.8156,
+      "alert": "Hold on: it looks like you skipped 'Peel the cucumber'. Peel cucumber fully with peeler first.",
+      "annotated": [
+        "slice the cucumber into discs"
+      ],
+      "label": "no",
+      "reason": "The alert is about skipping peeling, but the annotated error is a technique error: slicing the cucumber into discs instead of chopping or grating it."
+    },
+    {
+      "clip": "17_49_0",
+      "t": 194.421,
+      "alert": "Stop peeling, rinse the whole cucumber under running water first.",
+      "annotated": [
+        "donot peel the cucumber properly"
+      ],
+      "label": "no",
+      "reason": "The alert is about doing the steps out of order: rinse before peeling. The annotated error is improper peeling technique, which the alert never mentions."
+    }
+  ],
+  "spend_usd": 0.04137999999999999
+}

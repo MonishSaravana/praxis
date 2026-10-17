@@ -40,21 +40,23 @@ def _label(ax, bars, fmt="{:.2f}"):
         ax.text(b.get_x() + b.get_width() / 2, h, fmt.format(h), ha="center", va="bottom", fontsize=13, color=INK)
 
 
-def stateful_vs_stateless(m: dict, note: str = "") -> Path:
-    """m: {'Stateless baseline': {...aggregate}, 'Praxis (stateful)': {...}}"""
-    names = list(m)
-    metrics = [("Step accuracy", "step_acc", "{:.0%}"), ("Mistake precision", ("mistakes", "precision"), "{:.0%}"),
-               ("Mistake recall", ("mistakes", "recall"), "{:.0%}"), ("False alarms / min", "false_alarms_per_min", "{:.2f}")]
-    fig, axes = plt.subplots(1, len(metrics), figsize=(16, 4.6))
+def stateful_vs_stateless(rows: dict, note: str = "") -> Path:
+    """rows: {label: {"step_acc", "mistakes_correct", "strict_fa_per_min", "cost_per_min"}}"""
+    names = list(rows)
+    metrics = [("Step accuracy (task given)", "step_acc", "{:.0%}"),
+               ("Real mistakes caught\n(judge-verified)", "mistakes_correct", "{:.0f}"),
+               ("Strict false alarms / min", "strict_fa_per_min", "{:.3f}"),
+               ("Cost per video-minute (USD)", "cost_per_min", "${:.3f}")]
+    fig, axes = plt.subplots(1, len(metrics), figsize=(17, 4.8))
     for ax, (title, key, fmt) in zip(axes, metrics):
-        vals = [(m[n][key[0]][key[1]] if isinstance(key, tuple) else m[n][key]) or 0.0 for n in names]
+        vals = [rows[n][key] or 0.0 for n in names]
         bars = ax.bar(range(len(names)), vals, color=[C_BASE if "tateless" in n else C_OURS for n in names], width=0.6)
         _label(ax, bars, fmt)
-        ax.set_xticks(range(len(names)), [n.replace(" (", "\n(") for n in names], fontsize=12)
-        ax.set_title(title)
-        ax.set_ylim(0, max(vals + [1e-3]) * 1.25)
-    fig.suptitle("Stateful engine vs. stateless baseline (same model, same clips)" + (f"\n{note}" if note else ""),
-                 fontsize=16, color=SUB, y=1.08)
+        ax.set_xticks(range(len(names)), names, fontsize=12)
+        ax.set_title(title, fontsize=16)
+        ax.set_ylim(0, max(vals + [1e-3]) * 1.3)
+    fig.suptitle("Stateful engine vs. stateless baseline (same strong model, same clips, task given to both)"
+                 + (f"\n{note}" if note else ""), fontsize=15, color=SUB, y=1.1)
     return _save(fig, "stateful_vs_stateless")
 
 
@@ -62,7 +64,7 @@ def latency(dist: dict[str, list[float]], title: str = "Latency", unit: str = "m
     fig, ax = plt.subplots(figsize=(10, 4.8))
     labels = list(dist)
     data = [np.asarray(dist[k], float) for k in labels]
-    parts = ax.boxplot(data, vert=False, labels=labels, showfliers=False, patch_artist=True, widths=0.5)
+    parts = ax.boxplot(data, orientation="horizontal", tick_labels=labels, showfliers=False, patch_artist=True, widths=0.5)
     for i, b in enumerate(parts["boxes"]):
         b.set_facecolor([C_OURS, C_ALT, C_BASE, C_WARN][i % 4])
         b.set_alpha(0.75)
@@ -117,7 +119,7 @@ def student_vs_teacher(d: dict) -> Path:
     lat = [d["teacher_latency_ms_p50"], d["student_latency_ms_p50"]]
     cost = [d["teacher_cost_per_1k_checks_usd"], d["student_cost_per_1k_checks_usd"]]
     for ax, vals, title, fmt, log in ((axes[0], acc, "Accuracy vs ground truth", "{:.0%}", False),
-                                      (axes[1], lat, "Latency per check (ms, log)", "{:.1f}", True),
+                                      (axes[1], lat, "Latency per check (ms, log)", "{:.3g}", True),
                                       (axes[2], cost, "Cost per 1,000 checks (USD)", "${:.3f}", False)):
         bars = ax.bar(names, vals, color=[C_ALT, C_OURS], width=0.55)
         _label(ax, bars, fmt)
