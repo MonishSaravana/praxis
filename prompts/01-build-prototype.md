@@ -155,7 +155,14 @@ Budget: spend what the work needs, and use the fast layers to avoid wasting call
 - `docs/CLAIMS.md`: a list of exact sentences I can safely say in the interview (e.g. "On N clips from <dataset>, the stateful engine cut false alarms per minute from X to Y versus a stateless baseline"), each linked to the file that backs it. Also a list of things I should **not** claim yet.
 
 ## How to work
-- Initialize a git repo and commit at each milestone. Use Python with `uv`; ffmpeg is already installed.
+- **Git/GitHub.** The repo already exists and is pushed: `github.com/MonishSaravana/praxis` (private), branch `main`, remote `origin`. An earlier run left a scaffold (`prototype/pyproject.toml`, `uv.lock`, `praxis/__init__.py`, `.gitignore`); build on it.
+  - **Commit after each feature**, not just each milestone. Examples: frame sources, hand tracking, V-JEPA features, event detector training, the task-graph compiler, the task recognizer, the state tracker, the Jev verifier, the Claude verifier, calibration, the policy, the renderer, the eval harness, each ablation, distillation, and each doc.
+  - Use clear messages (`feat(state-tracker): Bayesian filter over task graph`, `eval: stateful vs stateless ablation`), and **push after every commit** so progress is visible on GitHub.
+  - Tag each milestone when it's done (`m1`, `m2`, … `m5`) and push the tags.
+  - Never commit secrets, raw datasets, extracted features, model checkpoints, or the uv cache; `.gitignore` already covers these, so extend it as needed.
+  - Commit showcase renders and figures only if each file is under ~25 MB; compress them, or leave them out and note where they live.
+  - `git`/`gh` commands may need to run outside the sandbox.
+- Use Python with `uv`; ffmpeg is already installed.
 - Milestones:
   - **M1**: dataset chosen, subset downloaded, L1 features extracted, task graphs compiled.
   - **M2**: one clip end to end through L0–L6 with the heuristic gate, with a render.
