@@ -103,7 +103,7 @@ def run_live(stack: dict, verifier=None, escalation=None, calibrator=None, dev_c
 
 def _actions(log: RunLog):
     import json
-    with open(log.path) as f:
+    with open(log.tmp_path if log.tmp_path.exists() else log.path) as f:
         for line in f:
             r = json.loads(line)
             if r["kind"] == "action":

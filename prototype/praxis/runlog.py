@@ -3,6 +3,7 @@ so every overlay and every metric traces back to something the pipeline actually
 from __future__ import annotations
 
 import json
+import os
 import time
 import uuid
 from pathlib import Path
@@ -34,7 +35,10 @@ class RunLog:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.run_id = uuid.uuid4().hex[:12]
-        self._f = self.path.open("w")
+        # write to a private temp file and atomically move it into place on close, so two processes writing the
+        # same run can never interleave lines (last finished wins, whole-file)
+        self.tmp_path = self.path.with_name(f".{self.path.name}.{os.getpid()}.{self.run_id}.tmp")
+        self._f = self.tmp_path.open("w")
         self.write("meta", t=0.0, schema=SCHEMA_VERSION, run_id=self.run_id, **(meta or {}))
 
     def write(self, kind: str, t: float, **fields: Any) -> None:
@@ -45,7 +49,9 @@ class RunLog:
         self._f.flush()
 
     def close(self) -> None:
-        self._f.close()
+        if not self._f.closed:
+            self._f.close()
+            os.replace(self.tmp_path, self.path)
 
     def __enter__(self) -> "RunLog":
         return self
