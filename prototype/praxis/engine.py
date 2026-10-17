@@ -9,11 +9,20 @@ read only that log.
 Two drivers use the same Engine.tick():
   replay(clip)   offline over precomputed L1 features + decoded frames (eval, renders)
   live(source)   real time from a FrameSource (webcam / file), computing L1 on the fly (praxis live)
+
+The slow path runs inline or async. replay() runs model calls inline: a tick waits for its answers, so every
+evaluation is synchronous and deterministic. Live mode sets EngineConfig.async_slow_path: model calls go to worker
+threads and the fast path keeps ticking. An answer is folded in when it arrives (Engine.poll): the tracker applies it
+at the tick its frames were taken and re-runs the filter forward over the fast-path inputs since then (_late), and
+the policy acts on it at the time it arrived. Both modes run the same decision code; only the timing differs.
 """
 from __future__ import annotations
 
+import collections
 import time
+from concurrent.futures import Future, ThreadPoolExecutor, wait
 from dataclasses import dataclass, field, replace
+from functools import partial
 from typing import Callable
 
 import numpy as np
@@ -63,8 +72,41 @@ class EngineConfig:
     order_min_p: float = 0.8
     order_unseen_mass: float = 0.3
     order_conf: float = 0.6
+    # live mode (praxis.live): model calls run on worker threads while the fast path keeps ticking, and each answer is
+    # folded in when it arrives. replay() leaves this off, so the evaluation stays synchronous and deterministic.
+    async_slow_path: bool = False
+    async_workers: int = 4
     tracker: TrackerConfig = field(default_factory=TrackerConfig)
     policy: PolicyConfig = field(default_factory=PolicyConfig)
+
+
+@dataclass(eq=False)
+class _Job:
+    """A slow-path call out on a worker thread (async mode)."""
+    kind: str                 # verify | localize | order | task | draft
+    key: tuple                # at most one job per key in flight: one check per step, one "which step?", one task check
+    t: float                  # tick of the request: its frames end here, and the tracker applies its answer here
+    fut: Future
+    ctx: dict
+    ticks: int = 0            # ticks the loop ran while the call was out
+
+
+def _timed(call):
+    """Worker-thread wrapper: (answer, exception, seconds). The exception is raised again where the answer is folded
+    in, so it is handled exactly as on the inline path."""
+    t0 = time.perf_counter()
+    try:
+        return call(), None, time.perf_counter() - t0
+    except Exception as e:  # noqa: BLE001
+        return None, e, time.perf_counter() - t0
+
+
+def _choose_step(loc, frames, opts: dict, title: str, screen: dict | None) -> dict:
+    """Typed "which step?" call; the mistake screen rides along when the localizer supports it."""
+    import inspect
+    can_screen = "mistakes" in inspect.signature(loc.choose_step).parameters
+    return loc.choose_step(frames, opts, title, mistakes=screen) if screen and can_screen \
+        else loc.choose_step(frames, opts, title)
 
 
 class Engine:
@@ -107,6 +149,13 @@ class Engine:
         self._last_task_probs: dict[str, float] = {}
         self._last_choice: str | None = None
         self._choice_streak = 0
+        self._last_r = None           # the recognizer's latest result (a late task-check answer is folded into it)
+        # async slow path: worker threads, the calls in flight, and the journal of each tick's tracker inputs that a
+        # late answer is replayed against
+        self._pool: ThreadPoolExecutor | None = None
+        self._jobs: list[_Job] = []
+        self._journal: list[dict] = []
+        self.async_stats: collections.Counter = collections.Counter()
         if task_id is not None:
             self._start_task(0.0, task_id, oracle=True)
 
@@ -118,6 +167,7 @@ class Engine:
     def _start_task(self, t: float, task_id: str, oracle: bool = False, posterior: dict | None = None) -> list[Action]:
         self.task_id, self.graph = task_id, self.lib[task_id]
         self.tracker = StateTracker(self.graph, self.cfg.tracker, join_mid_task=self.cfg.join_mid_task)
+        self._journal = []
         if not self.cfg.join_mid_task and self.cfg.start_prior_mass < 1.0:
             a = self.tracker.alpha
             a *= self.cfg.start_prior_mass
@@ -152,6 +202,10 @@ class Engine:
         n = len(rows["t"])
         if n == 0:
             return
+        if self.cfg.async_slow_path:
+            self.poll(t)
+            for j in self._jobs:
+                j.ticks += 1
         self.n_frames += n
         fe, we = rows["frame"], rows["window"]
         self._feat_now = {"siglip": fe.mean(0), "window": we[-1]}     # local features at t (for the distilled student)
@@ -169,75 +223,48 @@ class Engine:
             r = None
             for i in range(n):
                 r = self.rec.update(float(rows["t"][i]), fe[i], we[i], dt=1.0 / n)
-            # slow path for L3b: a typed "which task is this?" verifier check at 4 s, then every 8 s until recognized
-            if self.ver is not None and hasattr(self.ver, "choose_task") and t >= self._next_task_check:
+            self._last_r = r
+            # slow path for L3b: a typed "which task is this?" verifier check at 4 s, then every 6 s until recognized
+            if self.ver is not None and hasattr(self.ver, "choose_task") and t >= self._next_task_check \
+                    and not self._busy(("task",)):
                 self._next_task_check = t + 6.0
                 frames, _ = span_keyframes(frame_at, t)
                 if frames:
                     opts = {tid: f"{g.title}: {g.summary[:160]}" for tid, g in self.lib.items()}
-                    try:
-                        ans = self.ver.choose_task(frames, opts)
-                        self.rec.observe_verifier(ans["probs"])
-                        self._last_task_probs = ans["probs"]
-                        self._w("task_check", t, choice=ans["choice"], probs=ans["probs"], latency_ms=ans["latency_ms"],
-                                model=ans["model"], cost_usd=ans["cost_usd"])
-                        post = self.rec.posterior()
-                        top = max(post, key=post.get)
-                        ch = ans["choice"]
-                        self._choice_streak = self._choice_streak + 1 if ch == self._last_choice else 1
-                        self._last_choice = ch
-                        self._none_streak = self._none_streak + 1 if ch not in self.lib else 0
-                        if ch in self.lib and ch not in self.rec.task_ids:
-                            # library task the local recognizer was never trained on (e.g. a newly compiled graph):
-                            # recognized from two consecutive confident verifier answers
-                            if ans["probs"].get(ch, 0.0) >= 0.8 and self._choice_streak >= 2:
-                                r = replace(r, task_id=ch, posterior={**post, ch: ans["probs"][ch]}, recognized=True)
-                                self._last_task_probs = ans["probs"]
-                            else:
-                                r = replace(r, posterior=post, recognized=False)
-                        elif post[top] >= self.rec.threshold:
-                            r = replace(r, task_id=top, posterior=post, recognized=True)
-                        else:
-                            r = replace(r, posterior=post, recognized=False)
-                    except Exception as e:  # noqa: BLE001
-                        self._w("task_check", t, error=str(e)[:200])
-            if r.recognized and self.ver is not None and hasattr(self.ver, "choose_task") and \
-                    self._last_task_probs.get(r.task_id, 0.0) < 0.5:
-                r = replace(r, recognized=False)       # announce only what the latest verifier check also supports
+                    call = partial(self.ver.choose_task, frames, opts)
+                    if self.cfg.async_slow_path:
+                        self._submit("task", ("task",), t, call)        # poll() folds the answer in when it arrives
+                    else:
+                        r = self._task_answer(t, r, call)
+            r = self._gate(r)
             self._w("recognizer", t, top=r.task_id, posterior=r.posterior, recognized=r.recognized, open_set=r.open_set)
             if (not r.recognized and self.cfg.open_set_draft and self.drafter is not None and not self._drafted
                     and t >= self.cfg.open_set_min_s and (self._none_streak >= self.cfg.open_set_none_streak
                                                           or t >= self.cfg.open_set_max_wait_s)):
                 self._drafted = True
                 from .tasks.drafter import keyframes_for_draft
-                try:
-                    g, ev = self.drafter(keyframes_for_draft(frame_at, max(0.0, t - self.cfg.open_set_window_s), t))
-                except Exception as e:  # noqa: BLE001
-                    self._w("task_draft", t, error=str(e)[:200])
-                    return
-                self.lib = {**self.lib, g.task_id: g}
-                self.evidence = {**self.evidence, g.task_id: ev}
-                self._w("task_draft", t, task_id=g.task_id, title=g.title, steps=[n.name for n in g.nodes],
-                        **{k: g.compiler.get(k) for k in ("model", "confidence", "cost_usd", "latency_s", "cached")})
-                acts = self._start_task(t, g.task_id)
-                acts += self.policy.start(t, self.tracker.belief().map_id)
-                self._emit(acts)
-                return
+                t0 = max(0.0, t - self.cfg.open_set_window_s)
+                if self.cfg.async_slow_path:                            # poll() installs the draft when it arrives
+                    self._submit("draft", ("draft",), t, partial(self.drafter, keyframes_for_draft(frame_at, t0, t)))
+                else:
+                    return self._draft_answer(t, lambda: self.drafter(keyframes_for_draft(frame_at, t0, t)))
             if r.recognized:
-                acts = self._start_task(t, r.task_id, posterior=r.posterior)
-                start = self.tracker.belief().map_id
-                acts += self.policy.start(t, start)
-                self._emit(acts)
+                self._start_recognized(t, r)
             return
 
         tr, pol = self.tracker, self.policy
         tr.predict()
+        ops = [("predict",)]                    # this tick's tracker inputs (journaled in async mode)
         # L4 fast evidence
         if self.cfg.tracker_mode in ("fused", "local"):
             ev = self.evidence.get(self.task_id)
             if ev is not None:
-                tr.observe_local(ev.loglik(fe, we))
-            tr.observe_boundary(float(rows["boundary"].max()))
+                ll = ev.loglik(fe, we)
+                tr.observe_local(ll)
+                ops.append(("local", ll))
+            b = float(rows["boundary"].max())
+            tr.observe_boundary(b)
+            ops.append(("boundary", b))
         belief = tr.belief()
 
         for nid, pk in zip(belief.ids, belief.p):
@@ -249,12 +276,15 @@ class Engine:
         if prev and belief.map_id != prev and prev != DONE and belief.map_p >= self.cfg.commit_on_switch_p \
                 and prev not in tr.completed and self.cfg.tracker_mode != "verifier":
             tr.mark_complete(prev)
+            ops.append(("commit", prev))
             belief = tr.belief()
             self._w("commit", t, node=prev, reason="belief_switch")
             if belief.map_id != DONE:
                 self._check_order(t, belief, frame_at)
                 self._emit(pol.start(t, belief.map_id))
         self._last_switch_map = belief.map_id
+        if self.cfg.async_slow_path:
+            self._journal.append({"t": t, "ops": ops, "snap": self._snapshot(), "late": []})
 
         # L2 peaks (causal: a peak is confirmed one frame after it)
         bpeak = self._causal_peak(self._bscores, self.cfg.boundary_thr, "_last_peak_t")
@@ -284,6 +314,8 @@ class Engine:
         bd = belief.as_dict()
         bd.pop("t", None)
         self._w("belief", t, **bd, user=self.user.state())
+        if self.cfg.async_slow_path:
+            self._prune()
 
     def _causal_peak(self, scores, thr, attr) -> float | None:
         if len(scores) < 3:
@@ -295,12 +327,78 @@ class Engine:
         return None
 
     # ------------------------------------------------------------------ slow path
-    def _verify(self, t: float, belief, reason: str, frame_at, update_tracker: bool = True) -> None:
+    # Each slow-path call has a request half (main thread: pick frames, build the question), a call (the model calls;
+    # a worker thread in async mode) and an answer half (main thread: log, tracker, policy). Inline, the three run in a
+    # row; async, the answer half runs when poll() finds the call done.
+    def _task_answer(self, t: float, r, call, **extra):
+        """Fold a typed "which task?" answer into the recognizer. call() returns it, or raises the call's error."""
+        try:
+            ans = call()
+            self.rec.observe_verifier(ans["probs"])
+            self._last_task_probs = ans["probs"]
+            self._w("task_check", t, choice=ans["choice"], probs=ans["probs"], latency_ms=ans["latency_ms"],
+                    model=ans["model"], cost_usd=ans["cost_usd"], **extra)
+            post = self.rec.posterior()
+            top = max(post, key=post.get)
+            ch = ans["choice"]
+            self._choice_streak = self._choice_streak + 1 if ch == self._last_choice else 1
+            self._last_choice = ch
+            self._none_streak = self._none_streak + 1 if ch not in self.lib else 0
+            if ch in self.lib and ch not in self.rec.task_ids:
+                # library task the local recognizer was never trained on (e.g. a newly compiled graph):
+                # recognized from two consecutive confident verifier answers
+                if ans["probs"].get(ch, 0.0) >= 0.8 and self._choice_streak >= 2:
+                    r = replace(r, task_id=ch, posterior={**post, ch: ans["probs"][ch]}, recognized=True)
+                    self._last_task_probs = ans["probs"]
+                else:
+                    r = replace(r, posterior=post, recognized=False)
+            elif post[top] >= self.rec.threshold:
+                r = replace(r, task_id=top, posterior=post, recognized=True)
+            else:
+                r = replace(r, posterior=post, recognized=False)
+        except Exception as e:  # noqa: BLE001
+            self._w("task_check", t, error=str(e)[:200], **extra)
+        return r
+
+    def _gate(self, r):
+        """Announce only what the latest verifier task check also supports."""
+        if r.recognized and self.ver is not None and hasattr(self.ver, "choose_task") and \
+                self._last_task_probs.get(r.task_id, 0.0) < 0.5:
+            r = replace(r, recognized=False)
+        return r
+
+    def _start_recognized(self, t: float, r) -> None:
+        acts = self._start_task(t, r.task_id, posterior=r.posterior)
+        start = self.tracker.belief().map_id
+        acts += self.policy.start(t, start)
+        self._emit(acts)
+
+    def _draft_answer(self, t: float, call, t_now: float | None = None, **extra) -> None:
+        """Install an open-set draft graph and start tracking it. call() returns (graph, evidence) or raises."""
+        try:
+            g, ev = call()
+        except Exception as e:  # noqa: BLE001
+            self._w("task_draft", t, error=str(e)[:200], **extra)
+            return
+        self.lib = {**self.lib, g.task_id: g}
+        self.evidence = {**self.evidence, g.task_id: ev}
+        self._w("task_draft", t, task_id=g.task_id, title=g.title, steps=[n.name for n in g.nodes],
+                **{k: g.compiler.get(k) for k in ("model", "confidence", "cost_usd", "latency_s", "cached")}, **extra)
+        ts = t if t_now is None else t_now
+        acts = self._start_task(ts, g.task_id)
+        acts += self.policy.start(ts, self.tracker.belief().map_id)
+        self._emit(acts)
+
+    def _verify(self, t: float, belief, reason: str, frame_at, update_tracker: bool = True,
+                frames: list | None = None, times: list | None = None) -> None:
         tr, pol, g = self.tracker, self.policy, self.graph
         node = g.node(belief.map_id)
+        if self._busy(("verify", node.id)):
+            return self._skip(t, "verify", node.id)
         # evidence: sharpest frame from ~8-6 s ago (context) + 2 sharpest of the last 3 s ("now");
         # head-mounted video is often motion-blurred, so frames are picked by sharpness
-        frames, times = span_keyframes(frame_at, t)
+        if frames is None:
+            frames, times = span_keyframes(frame_at, t)
         if not frames:
             return
         crops = []
@@ -313,31 +411,47 @@ class Engine:
                             context={"frame_ages": [t - x for x in times], "time_on_step": belief.time_on_step,
                                      "next_step": g.node(nxt_ids[0]).name if nxt_ids else None},
                             features=dict(self._feat_now))
+        call = partial(self._verify_call, req, reason, pol)
+        ctx = {"node": node, "reason": reason, "n_frames": len(frames), "update_tracker": update_tracker}
+        if self.cfg.async_slow_path:
+            return self._submit("verify", ("verify", node.id), t, call, **ctx)
+        self._verify_answer(t, call(), **ctx)
+
+    def _verify_call(self, req: VerifyRequest, reason: str, pol: Policy) -> list[tuple]:
+        """The model calls of one completion check: the fast verifier, then the strong one when the policy says so.
+        Returns [(verdict, reason, calibrated P(complete), P(deviation)), ...]."""
         v = self.ver.verify(req)
         pc, pdv = self._calibrated(v, "primary")
-        roles = [self._log_verdict(t, v, reason, pc)]
+        chain = [(v, reason, pc, pdv)]
         # two-tier verification: the fast verifier handles clear cases; ambiguity, possible mistakes and
         # "can't see" go to the strong model before the wearer hears anything
         if self.cfg.escalate and self.esc is not None and v.error is None and pol.needs_escalation(v, pc):
             v2 = self.esc.verify(req)
             pc2, pdv2 = self._calibrated(v2, "escalation")
-            roles.append(self._log_verdict(t, v2, "escalation", pc2))
-            if v2.error is None:
-                v, pc, pdv = v2, pc2, pdv2
-        self.n_escalated_frames += len(frames)
+            chain.append((v2, "escalation", pc2, pdv2))
+        return chain
+
+    def _verify_answer(self, t: float, chain: list[tuple], node, reason: str, n_frames: int, update_tracker: bool,
+                       t_now: float | None = None, extra: dict | None = None) -> None:
+        """Act on a completion check's verdicts. t: the tick its frames were taken. t_now: when the answer arrived
+        (async); inline, the wearer hears it after the calls' latency."""
+        tr, pol = self.tracker, self.policy
+        roles = [self._log_verdict(t, v, why, pc, extra) for v, why, pc, _ in chain]
+        v, _, pc, pdv = chain[-1] if len(chain) > 1 and chain[-1][0].error is None else chain[0]
+        self.n_escalated_frames += n_frames
         if v.error:
             return
         if update_tracker:
-            tr.observe_verdict(node.id, "complete" if pc >= 0.5 else ("deviation" if v.step_status == "deviation" else "in_progress"),
-                               pc if pc >= 0.5 else 1 - pc)
-        t_out = t + sum(r["latency_ms"] for r in roles) / 1000.0    # when the user would actually hear it
+            self._observe(t, ("verdict", node.id, "complete" if pc >= 0.5 else
+                              ("deviation" if v.step_status == "deviation" else "in_progress"), pc if pc >= 0.5 else 1 - pc))
+        t_out = t + sum(r["latency_ms"] for r in roles) / 1000.0 if t_now is None else t_now
         acts, commit = pol.on_verdict(t_out, v, pc, pdv, tr.belief())
         if not update_tracker:          # mistake screen: only mistake alerts may come out of it
             acts = [a for a in acts if a.kind == "mistake"]
             commit = False
         self._emit(acts)
-        if commit:
-            tr.mark_complete(node.id)
+        if commit and node.id not in tr.completed:     # async: the belief may have moved past it meanwhile
+            self._observe(t, ("commit", node.id))
             self._w("commit", t_out, node=node.id, reason="verified", p=pc)
             b = tr.belief()
             self._last_switch_map = b.map_id
@@ -345,6 +459,8 @@ class Engine:
 
     def _localize(self, t: float, belief, frame_at) -> None:
         """Belief is spread over several steps: ask the fast verifier which of the top candidates is happening."""
+        if self._busy(("localize",)):
+            return self._skip(t, "localize")
         frames, times = span_keyframes(frame_at, t)
         if not frames:
             return
@@ -354,26 +470,29 @@ class Engine:
         opts = {k: f"{self.graph.node(k).name}: {self.graph.node(k).end_state}" for k in cands}
         top = self.graph.node(cands[0])
         screen = {m.id: f"{m.description} Looks like: {m.visual_cue}" for m in top.mistakes} if self.cfg.mistake_screen else None
+        call = partial(_choose_step, self.loc or self.ver, frames, opts, self.graph.title, screen)
+        ctx = {"cands": cands, "frames": frames, "times": times}
+        if self.cfg.async_slow_path:
+            return self._submit("localize", ("localize",), t, call, **ctx)
+        self._localize_answer(t, call, frame_at=frame_at, **ctx)
+
+    def _localize_answer(self, t: float, call, cands: list[str], frames: list, times: list, frame_at=None,
+                         t_now: float | None = None, extra: dict | None = None) -> None:
         try:
-            loc = self.loc or self.ver
-            import inspect
-            can_screen = "mistakes" in inspect.signature(loc.choose_step).parameters
-            ans = loc.choose_step(frames, opts, self.graph.title, mistakes=screen) if screen and can_screen \
-                else loc.choose_step(frames, opts, self.graph.title)
+            ans = call()
         except Exception as e:  # noqa: BLE001
-            self._w("step_choice", t, error=str(e)[:200])
+            self._w("step_choice", t, error=str(e)[:200], **(extra or {}))
             return
-        self.tracker.observe_step_choice(ans["probs"], weight=self.cfg.step_choice_weight)
+        b = self._observe(t, ("choice", ans["probs"], self.cfg.step_choice_weight))
         self.n_escalated_frames += len(frames)
         self._w("step_choice", t, options=cands, probs=ans["probs"], choice=ans["choice"], latency_ms=ans["latency_ms"],
-                model=ans["model"], cost_usd=ans["cost_usd"], mistake_screen=ans.get("mistake"))
+                model=ans["model"], cost_usd=ans["cost_usd"], mistake_screen=ans.get("mistake"), **(extra or {}))
         # a positive mistake screen goes through the full verify path (fast verifier + strong-tier escalation +
-        # calibrated, precision-tuned policy) before the wearer hears anything
+        # calibrated, precision-tuned policy) before the wearer hears anything; it looks at the same frames
         ms = ans.get("mistake")
-        if ms and ms["choice"] != "none" and ms["p"] >= self.cfg.mistake_screen_p:
-            b = self.tracker.belief()
-            if b.map_id == cands[0]:
-                self._verify(t, b, "mistake_screen", frame_at, update_tracker=self.cfg.screen_updates_tracker)
+        if ms and ms["choice"] != "none" and ms["p"] >= self.cfg.mistake_screen_p and b.map_id == cands[0]:
+            self._verify(t, b, "mistake_screen", frame_at, update_tracker=self.cfg.screen_updates_tracker,
+                         frames=frames, times=times)
 
     def _check_order(self, t: float, belief, frame_at) -> None:
         """Stateful early warning: the person has started step j but a prerequisite of j was never seen.
@@ -389,26 +508,41 @@ class Engine:
                    and self._max_mass.get(p, 0.0) < self.cfg.order_unseen_mass]
         if not missing:
             return
+        if self._busy(("order", j)):
+            return self._skip(t, "order", j)
         frames, times = span_keyframes(frame_at, t)
         if not frames:
             return
         node = self.graph.node(j)
         req = VerifyRequest(t=t, frames=frames, node=node, graph=self.graph, checks=node.checks,
                             context={"frame_ages": [t - x for x in times]}, features=dict(self._feat_now))
+        call = partial(self._order_call, req)
+        if self.cfg.async_slow_path:
+            return self._submit("order", ("order", j), t, call, j=j, missing=missing)
+        self._order_answer(t, call(), j, missing)
+
+    def _order_call(self, req: VerifyRequest) -> tuple[Verdict, float]:
         v = (self.esc or self.ver).verify(req)
-        pc, _ = self._calibrated(v, "escalation" if self.esc else "primary")
-        self._log_verdict(t, v, "order_check", pc)
+        return v, self._calibrated(v, "escalation" if self.esc else "primary")[0]
+
+    def _order_answer(self, t: float, res: tuple, j: str, missing: list[str], t_now: float | None = None,
+                      extra: dict | None = None) -> None:
+        v, pc = res
+        self._log_verdict(t, v, "order_check", pc, extra)
         # 'in_progress' or 'deviation' on j with low P(complete) => j is underway now
-        if v.error is None and v.visibility == "ok" and pc <= 0.5 and v.confidence >= self.cfg.order_conf:
-            self._order_flagged.add(j)
-            self.policy.last_card_t = t
-            first = self.graph.node(missing[0])
-            t_out = t + v.latency_ms / 1000.0
-            self.user.on_mistake()
-            self._emit([Action(t_out, "mistake", f"Hold on: it looks like you skipped '{first.name}'. "
-                                                f"{first.instruction_expert} first.", j,
-                               {"what": f"'{node.name}' started before '{first.name}'", "type": "wrong_order",
-                                "mistake_id": "order", "missing": missing, "p": round(v.confidence, 3)})])
+        if not (v.error is None and v.visibility == "ok" and pc <= 0.5 and v.confidence >= self.cfg.order_conf):
+            return
+        t_out = t + v.latency_ms / 1000.0 if t_now is None else t_now
+        if j in self._order_flagged or t_out - self.policy.last_card_t < self.policy.cfg.cooldown_s:
+            return                      # async: flagged, or another card went out, while the call was out
+        self._order_flagged.add(j)
+        self.policy.last_card_t = t if t_now is None else t_now
+        first, node = self.graph.node(missing[0]), self.graph.node(j)
+        self.user.on_mistake()
+        self._emit([Action(t_out, "mistake", f"Hold on: it looks like you skipped '{first.name}'. "
+                                            f"{first.instruction_expert} first.", j,
+                           {"what": f"'{node.name}' started before '{first.name}'", "type": "wrong_order",
+                            "mistake_id": "order", "missing": missing, "p": round(v.confidence, 3)})])
 
     def _calibrated(self, v: Verdict, which: str) -> tuple[float, float]:
         cal, dcal = self.cals.get(which, (None, None))
@@ -418,7 +552,7 @@ class Engine:
         pdv = float(dcal(v.confidence if v.step_status == "deviation" else 0.0)[0])
         return pc, pdv
 
-    def _log_verdict(self, t: float, v: Verdict, reason: str, pc: float | None = None) -> dict:
+    def _log_verdict(self, t: float, v: Verdict, reason: str, pc: float | None = None, extra: dict | None = None) -> dict:
         rec = {"node": v.node_id, "reason": reason, "status": v.step_status, "confidence": v.confidence,
                "mistake": v.mistake.model_dump() if v.mistake else None, "visibility": v.visibility,
                "view_request": v.view_request, "model": v.model, "role": v.role, "prompt_version": v.prompt_version,
@@ -427,8 +561,158 @@ class Engine:
                "cached": v.raw.get("cached", False), "error": v.error,
                "p_complete_cal": pc}
         self.calls.append({"t": t, **rec})
-        self._w("verdict", t, **rec)
+        self._w("verdict", t, **rec, **(extra or {}))
         return rec
+
+    # ------------------------------------------------------------------ tracker updates from the slow path
+    def _observe(self, t: float, op: tuple):
+        """Apply a slow-path observation that belongs to tick t; returns the belief at t right after it. Inline, t is
+        the current tick. Async, the answer is late: it goes in at tick t and the filter is re-run forward (_late)."""
+        if not self.cfg.async_slow_path:
+            self._apply(op)
+            return self.tracker.belief()
+        return self._late(t, op)
+
+    def _apply(self, op: tuple) -> None:
+        tr, k = self.tracker, op[0]
+        if k == "predict":
+            tr.predict()
+        elif k == "local":
+            tr.observe_local(op[1])
+        elif k == "boundary":
+            tr.observe_boundary(op[1])
+        elif k == "commit":
+            tr.mark_complete(op[1])
+        elif k == "verdict":
+            tr.observe_verdict(op[1], op[2], op[3])
+        elif k == "choice":
+            tr.observe_step_choice(op[1], weight=op[2])
+
+    def _late(self, t: float, op: tuple):
+        """Async: an answer about tick t arrived after later ticks ran. Insert it at tick t and re-run the filter
+        forward over the journaled inputs since then (fast-path evidence, commits, other late answers). The filter is
+        predict-then-multiply, so this gives the state it would have reached had the answer come at once (with the
+        commits that were made meanwhile). Returns the belief at tick t right after the answer."""
+        tr = self.tracker
+        i = next((k for k, e in enumerate(self._journal) if e["t"] == t), None)
+        if i is None:                   # tick no longer journaled (should not happen): apply to the current state
+            self._apply(op)
+            return tr.belief()
+        e = self._journal[i]
+        e["late"].append(op)
+        self._restore(e["snap"])
+        for o in e["late"]:
+            self._apply(o)
+        b = tr.belief()
+        for e2 in self._journal[i + 1:]:
+            for o in e2["ops"]:
+                self._apply(o)
+            e2["snap"] = self._snapshot()
+            for o in e2["late"]:
+                self._apply(o)
+        return b
+
+    def _snapshot(self) -> tuple:
+        tr = self.tracker
+        return tr.alpha.copy(), set(tr.completed), tr.t
+
+    def _restore(self, s: tuple) -> None:
+        tr = self.tracker
+        tr.alpha, tr.completed, tr.t = s[0].copy(), set(s[1]), s[2]
+
+    def _prune(self) -> None:
+        """Keep the journal back to the oldest call in flight that may still update the tracker."""
+        keep = min((j.t for j in self._jobs if j.kind in ("verify", "localize")), default=None)
+        self._journal = [] if keep is None else [e for e in self._journal if e["t"] >= keep]
+
+    # ------------------------------------------------------------------ async slow path (live mode)
+    def poll(self, t: float) -> int:
+        """Async mode: fold in every answer that has arrived, at media time t (praxis.live calls this after every
+        frame; tick() calls it first). Returns how many answers were folded in."""
+        done = sorted((j for j in self._jobs if j.fut.done()), key=lambda j: j.t)
+        for j in done:
+            self._jobs.remove(j)
+            self._fold(j, t)
+        if done:
+            self._prune()
+        return len(done)
+
+    def close(self, t: float, timeout_s: float = 20.0) -> None:
+        """Async mode: wait (at most timeout_s) for calls still out, fold in what came back, stop the workers."""
+        if self._pool is None:
+            return
+        wait([j.fut for j in self._jobs], timeout=timeout_s)
+        for j in sorted((j for j in self._jobs if j.fut.done()), key=lambda j: j.t):
+            self._jobs.remove(j)
+            self._fold(j, t, final=True)
+        self.async_stats["unfinished_at_close"] += len(self._jobs)
+        self._jobs = []
+        self._pool.shutdown(wait=False, cancel_futures=True)
+        self._pool = None
+
+    def _submit(self, kind: str, key: tuple, t: float, call, **ctx) -> None:
+        if self._pool is None:
+            self._pool = ThreadPoolExecutor(self.cfg.async_workers, thread_name_prefix="praxis-slow")
+        self._jobs.append(_Job(kind, key, t, self._pool.submit(_timed, call), ctx))
+        self.async_stats[f"submitted_{kind}"] += 1
+
+    def _busy(self, key: tuple) -> bool:
+        return any(j.key == key for j in self._jobs)
+
+    def _skip(self, t: float, kind: str, node: str | None = None) -> None:
+        """Async: the same question is still out (e.g. an Opus escalation on this step); don't ask it twice."""
+        self.async_stats[f"skipped_{kind}"] += 1
+        self._w("slow_skip", t, what=kind, node=node)
+
+    @staticmethod
+    def _answer_of(j: _Job):
+        res, err, _ = j.fut.result()
+
+        def call():
+            if err is not None:
+                raise err
+            return res
+        return call
+
+    @staticmethod
+    def _landing(j: _Job, t_now: float) -> dict:
+        """Logged with every async answer: when it was applied (media time), how long its calls took, and how many
+        ticks the loop ran meanwhile."""
+        return {"applied_t": round(float(t_now), 3), "call_s": round(j.fut.result()[2], 3), "ticks_during_call": j.ticks}
+
+    def _fold(self, j: _Job, t_now: float, final: bool = False) -> None:
+        self.async_stats[f"folded_{j.kind}"] += 1
+        call, extra = self._answer_of(j), self._landing(j, t_now)
+        if j.kind == "verify":
+            self._verify_answer(j.t, call(), t_now=t_now, extra=extra, **j.ctx)
+        elif j.kind == "localize":
+            self._localize_answer(j.t, call, t_now=t_now, extra=extra, **j.ctx)
+        elif j.kind == "order":
+            self._order_answer(j.t, call(), t_now=t_now, extra=extra, **j.ctx)
+        elif self.graph is None and not final:          # still looking for the task: same steps as the inline tick
+            if j.kind == "task":
+                r = self._gate(self._task_answer(j.t, self._last_r, call, **extra))
+                self._w("recognizer", t_now, top=r.task_id, posterior=r.posterior, recognized=r.recognized,
+                        open_set=r.open_set)
+                if r.recognized:
+                    self._start_recognized(t_now, r)
+            else:
+                self._draft_answer(j.t, call, t_now=t_now, **extra)
+        else:       # a task check or draft that came back after a task started (or at the end): logged, not applied
+            self.async_stats["ignored_late"] += 1
+            kind = "task_check" if j.kind == "task" else "task_draft"
+            extra["ignored"] = "session ended" if final and self.graph is None else "a task had already started"
+            try:
+                ans = call()
+            except Exception as e:  # noqa: BLE001
+                return self._w(kind, j.t, error=str(e)[:200], **extra)
+            if j.kind == "task":
+                self._w(kind, j.t, choice=ans["choice"], probs=ans["probs"], latency_ms=ans["latency_ms"],
+                        model=ans["model"], cost_usd=ans["cost_usd"], **extra)
+            else:
+                g = ans[0]
+                self._w(kind, j.t, task_id=g.task_id, title=g.title,
+                        **{k: g.compiler.get(k) for k in ("model", "confidence", "cost_usd", "latency_s", "cached")}, **extra)
 
 
 def activity_phrase(g: TaskGraph) -> str:

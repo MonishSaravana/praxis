@@ -74,6 +74,8 @@ def main() -> dict:
             items[f"demo: {f}"] = json.loads(p.read_text()).get("spend_usd", 0.0)
     for f in sorted((RESULTS / "live").glob("*.json")):
         items[f"live mode: {f.stem}"] = json.loads(f.read_text()).get("spend_usd", 0.0)
+    for f in sorted((RESULTS / "live" / "checks").glob("*.json")):     # replay checks (live calls on cache misses)
+        items[f"live mode check: {f.stem}"] = json.loads(f.read_text()).get("spend_usd", 0.0)
     m2 = RESULTS / "m2" / "two_clip_test.json"
     if m2.exists():
         items["M2 two-clip test"] = json.loads(m2.read_text()).get("spend", 0.0)

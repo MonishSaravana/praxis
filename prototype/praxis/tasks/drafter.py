@@ -113,16 +113,21 @@ def draft_task(frames: list[np.ndarray], hint: str | None = None, model: str = "
 
 
 class Drafter:
-    """Engine hook: frames -> (draft graph, zero-shot evidence for it). Holds the SigLIP2 text encoder."""
+    """Engine hook: frames -> (draft graph, zero-shot evidence for it). Holds the SigLIP2 text encoder.
+    gpu_lock: the live loop's GPU lock. With the async slow path the drafter runs on a worker thread, and MPS must not
+    be used from two threads at once, so the text embedding takes the lock (the Claude call does not)."""
 
-    def __init__(self, siglip=None, hint: str | None = None, model: str = "claude-opus-5-5"):
-        self._sig, self.hint, self.model = siglip, hint, model
+    def __init__(self, siglip=None, hint: str | None = None, model: str = "claude-opus-5-5", gpu_lock=None):
+        self._sig, self.hint, self.model, self.gpu_lock = siglip, hint, model, gpu_lock
 
     def __call__(self, frames: list[np.ndarray]):
+        import contextlib
         from ..evidence import ZeroShotEvidence
         from .compiler import embed_graph
         g = draft_task(frames, hint=self.hint, model=self.model)
-        if self._sig is None:
-            from ..perception.backbones import SigLIP
-            self._sig = SigLIP()
-        return g, ZeroShotEvidence(g, embed_graph(g, self._sig))
+        with self.gpu_lock or contextlib.nullcontext():
+            if self._sig is None:
+                from ..perception.backbones import SigLIP
+                self._sig = SigLIP()
+            emb = embed_graph(g, self._sig)
+        return g, ZeroShotEvidence(g, emb)

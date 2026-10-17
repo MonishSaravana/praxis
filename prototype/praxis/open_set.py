@@ -91,8 +91,8 @@ class _SavingDrafter:
     """Drafter that also saves each draft graph under results/open_set/drafts/ (one SigLIP2 for all threads)."""
     _lock = threading.Lock()
 
-    def __init__(self, inner):
-        self.inner = inner
+    def __init__(self, inner, save: bool = True):
+        self.inner, self.save = inner, save       # save=False: replay checks (eval/replay_check.py) leave results alone
 
     def __call__(self, frames):
         from .tasks.compiler import embed_graph
@@ -104,8 +104,9 @@ class _SavingDrafter:
                 from .perception.backbones import SigLIP
                 self.inner._sig = SigLIP()
             emb = embed_graph(g, self.inner._sig)
-        (OUT / "drafts").mkdir(parents=True, exist_ok=True)
-        g.save(OUT / "drafts" / f"{g.task_id}.json")
+        if self.save:
+            (OUT / "drafts").mkdir(parents=True, exist_ok=True)
+            g.save(OUT / "drafts" / f"{g.task_id}.json")
         return g, ZeroShotEvidence(g, emb)
 
 
