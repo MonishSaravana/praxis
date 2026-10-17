@@ -1,0 +1,90 @@
+{
+  "protocol": "train-split recordings, leave-one-recording-out probes, first 300s, task given",
+  "n_recordings": 24,
+  "designs": {
+    "ent0.15_screen_off": {
+      "step_acc": 0.6829881096441482,
+      "verifier_calls": 1237,
+      "cost_usd": 0.717658304,
+      "false_alarms_per_min": 0.0,
+      "mistakes": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 36,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "detect_minus_step_end_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "detect_minus_step_start_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "share_caught_before_step_end": null
+      },
+      "spend_usd": 0.11478230400000017
+    },
+    "ent0.15_screen_p0.5": {
+      "step_acc": 0.6147433615557277,
+      "verifier_calls": 1437,
+      "cost_usd": 1.89262852,
+      "false_alarms_per_min": 0.008333333333333333,
+      "mistakes": {
+        "tp": 4,
+        "fp": 1,
+        "fn": 32,
+        "precision": 0.8,
+        "recall": 0.1111111111111111,
+        "f1": 0.19512195121951217,
+        "detect_minus_step_end_s": {
+          "n": 4,
+          "p50": -1.4969500000000089,
+          "p95": 2.3358199999999947,
+          "mean": -2.499821225269349
+        },
+        "detect_minus_step_start_s": {
+          "n": 4,
+          "p50": 32.86446934133203,
+          "p95": 54.482964999999986,
+          "mean": 31.45598467066601
+        },
+        "share_caught_before_step_end": 0.5
+      },
+      "spend_usd": 1.6290693200000002
+    },
+    "ent0.15_screen_p0.7": {
+      "step_acc": 0.6388105644386718,
+      "verifier_calls": 1220,
+      "cost_usd": 1.039960886,
+      "false_alarms_per_min": 0.008333333333333333,
+      "mistakes": {
+        "tp": 3,
+        "fp": 1,
+        "fn": 33,
+        "precision": 0.75,
+        "recall": 0.08333333333333333,
+        "f1": 0.15,
+        "detect_minus_step_end_s": {
+          "n": 3,
+          "p50": -3.0134000000000043,
+          "p95": 2.2620399999999914,
+          "mean": -3.2942283003591277
+        },
+        "detect_minus_step_start_s": {
+          "n": 3,
+          "p50": 40.0746,
+          "p95": 55.43723999999998,
+          "mean": 40.98017956088802
+        },
+        "share_caught_before_step_end": 0.6666666666666666
+      },
+      "spend_usd": 0.35243148600000007
+    }
+  }
+}

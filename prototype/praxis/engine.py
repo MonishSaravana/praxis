@@ -52,6 +52,7 @@ class EngineConfig:
     step_choice_weight: float = 1.0
     mistake_screen: bool = True         # localization calls also screen the likeliest step's mistake library
     mistake_screen_p: float = 0.5
+    screen_updates_tracker: bool = True
     order_min_p: float = 0.8
     order_unseen_mass: float = 0.3
     order_conf: float = 0.6
@@ -262,7 +263,7 @@ class Engine:
         return None
 
     # ------------------------------------------------------------------ slow path
-    def _verify(self, t: float, belief, reason: str, frame_at) -> None:
+    def _verify(self, t: float, belief, reason: str, frame_at, update_tracker: bool = True) -> None:
         tr, pol, g = self.tracker, self.policy, self.graph
         node = g.node(belief.map_id)
         # evidence: sharpest frame from ~8-6 s ago (context) + 2 sharpest of the last 3 s ("now");
@@ -294,10 +295,14 @@ class Engine:
         self.n_escalated_frames += len(frames)
         if v.error:
             return
-        tr.observe_verdict(node.id, "complete" if pc >= 0.5 else ("deviation" if v.step_status == "deviation" else "in_progress"),
-                           pc if pc >= 0.5 else 1 - pc)
+        if update_tracker:
+            tr.observe_verdict(node.id, "complete" if pc >= 0.5 else ("deviation" if v.step_status == "deviation" else "in_progress"),
+                               pc if pc >= 0.5 else 1 - pc)
         t_out = t + sum(r["latency_ms"] for r in roles) / 1000.0    # when the user would actually hear it
         acts, commit = pol.on_verdict(t_out, v, pc, pdv, tr.belief())
+        if not update_tracker:          # mistake screen: only mistake alerts may come out of it
+            acts = [a for a in acts if a.kind == "mistake"]
+            commit = False
         self._emit(acts)
         if commit:
             tr.mark_complete(node.id)
@@ -334,7 +339,7 @@ class Engine:
         if ms and ms["choice"] != "none" and ms["p"] >= self.cfg.mistake_screen_p:
             b = self.tracker.belief()
             if b.map_id == cands[0]:
-                self._verify(t, b, "mistake_screen", frame_at)
+                self._verify(t, b, "mistake_screen", frame_at, update_tracker=self.cfg.screen_updates_tracker)
 
     def _check_order(self, t: float, belief, frame_at) -> None:
         """Stateful early warning: the person has started step j but a prerequisite of j was never seen.
