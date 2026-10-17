@@ -52,7 +52,7 @@ class EngineConfig:
     step_choice_weight: float = 1.0
     mistake_screen: bool = True         # localization calls also screen the likeliest step's mistake library
     mistake_screen_p: float = 0.5
-    screen_updates_tracker: bool = True
+    screen_updates_tracker: bool = False   # screen-triggered verdicts drive mistake alerts only (train-split choice)
     order_min_p: float = 0.8
     order_unseen_mass: float = 0.3
     order_conf: float = 0.6

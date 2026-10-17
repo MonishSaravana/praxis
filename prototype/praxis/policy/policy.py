@@ -32,7 +32,7 @@ class PolicyConfig:
     cooldown_s: float = 4.0         # min gap between prominent cards
     view_cooldown_s: float = 30.0
     view_entropy: float = 0.5       # view requests only when the step belief is genuinely uncertain
-    entropy_verify: float = 0.85    # belief entropy above which we spend a verifier call
+    entropy_verify: float = 0.15    # belief entropy above which we ask "which step?" (chosen on train split, results/dev)
     verify_min_gap_s: float = 3.0
     escalate_band: tuple[float, float] = (0.3, 0.7)
     # per verifier tier (Verdict.role): (verify_conf, mistake_conf), tuned on train-split checks; overrides above

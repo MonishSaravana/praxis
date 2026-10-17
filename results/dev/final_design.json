@@ -1,0 +1,137 @@
+{
+  "chosen": {
+    "tracker": {
+      "local_weight": 0.1,
+      "boundary_weight": 0.0,
+      "commit_on_switch_p": 0.7
+    },
+    "policy.entropy_verify": 0.15,
+    "step_choice": true,
+    "step_choice_weight": 1.0,
+    "localizer": "jev",
+    "mistake_screen": true,
+    "mistake_screen_p": 0.5,
+    "screen_updates_tracker": false,
+    "verifier": "jev (fast tier)",
+    "escalation": "claude-opus-5-5 (strong tier)",
+    "policy_thresholds": {
+      "verify_conf": 0.75,
+      "mistake_conf": 0.3
+    }
+  },
+  "why": "All choices made on train-split recordings with leave-one-recording-out probes (results/dev/*). Final pick balances step accuracy against mistake recall: screening (alerts only) costs ~3 points of step accuracy on the train split but catches mistakes at 0.67 precision instead of none.",
+  "all_designs": {
+    "design_selection_v2:jev_ent0.85_default": {
+      "step_acc": 0.5668888132919644,
+      "calls": 206,
+      "cost_usd": 1.114312768,
+      "mistakes_tp": 1,
+      "mistakes_fp": 0,
+      "false_alarms_per_min": 0.0
+    },
+    "design_selection_v2:jev_ent0.40": {
+      "step_acc": 0.5706923382771748,
+      "calls": 538,
+      "cost_usd": 0.85043386,
+      "mistakes_tp": 0,
+      "mistakes_fp": 0,
+      "false_alarms_per_min": 0.0
+    },
+    "design_selection_v2:jev_ent0.25": {
+      "step_acc": 0.6503025369839582,
+      "calls": 945,
+      "cost_usd": 0.815813234,
+      "mistakes_tp": 1,
+      "mistakes_fp": 1,
+      "false_alarms_per_min": 0.008333333333333333
+    },
+    "design_selection_v2:opus_ent0.40": {
+      "step_acc": 0.561592595478401,
+      "calls": 568,
+      "cost_usd": 3.709108638,
+      "mistakes_tp": 0,
+      "mistakes_fp": 0,
+      "false_alarms_per_min": 0.0
+    },
+    "design_selection_v2:opus_ent0.25": {
+      "step_acc": 0.6175415898287386,
+      "calls": 913,
+      "cost_usd": 5.580852372,
+      "mistakes_tp": 1,
+      "mistakes_fp": 0,
+      "false_alarms_per_min": 0.0
+    },
+    "design_selection_v3:jev_ent0.15": {
+      "step_acc": 0.6829881096441482,
+      "calls": 1238,
+      "cost_usd": 0.725285758,
+      "mistakes_tp": 0,
+      "mistakes_fp": 0,
+      "false_alarms_per_min": 0.0
+    },
+    "design_selection_v3:jev_ent0.10": {
+      "step_acc": 0.6836230259828798,
+      "calls": 1387,
+      "cost_usd": 0.635659956,
+      "mistakes_tp": 0,
+      "mistakes_fp": 0,
+      "false_alarms_per_min": 0.0
+    },
+    "design_selection_v3:jev_ent0.25_w0.5": {
+      "step_acc": 0.5669167333081894,
+      "calls": 979,
+      "cost_usd": 0.792570446,
+      "mistakes_tp": 0,
+      "mistakes_fp": 0,
+      "false_alarms_per_min": 0.0
+    },
+    "design_selection_v3:jev_ent0.25_w2": {
+      "step_acc": 0.5394190348751374,
+      "calls": 929,
+      "cost_usd": 0.862713726,
+      "mistakes_tp": 0,
+      "mistakes_fp": 7,
+      "false_alarms_per_min": 0.058333333333333334
+    },
+    "design_selection_v4:ent0.15_screen_off": {
+      "step_acc": 0.6829881096441482,
+      "calls": 1237,
+      "cost_usd": 0.717658304,
+      "mistakes_tp": 0,
+      "mistakes_fp": 0,
+      "false_alarms_per_min": 0.0
+    },
+    "design_selection_v4:ent0.15_screen_p0.5": {
+      "step_acc": 0.6147433615557277,
+      "calls": 1437,
+      "cost_usd": 1.89262852,
+      "mistakes_tp": 4,
+      "mistakes_fp": 1,
+      "false_alarms_per_min": 0.008333333333333333
+    },
+    "design_selection_v4:ent0.15_screen_p0.7": {
+      "step_acc": 0.6388105644386718,
+      "calls": 1220,
+      "cost_usd": 1.039960886,
+      "mistakes_tp": 3,
+      "mistakes_fp": 1,
+      "false_alarms_per_min": 0.008333333333333333
+    },
+    "design_selection_v5:ent0.15_screen_p0.5_alerts_only": {
+      "step_acc": 0.651759453808431,
+      "calls": 1440,
+      "cost_usd": 1.953362246,
+      "mistakes_tp": 4,
+      "mistakes_fp": 2,
+      "false_alarms_per_min": 0.016666666666666666
+    },
+    "design_selection_v5:ent0.15_screen_p0.3_alerts_only": {
+      "step_acc": 0.651759453808431,
+      "calls": 1507,
+      "cost_usd": 2.311223508,
+      "mistakes_tp": 4,
+      "mistakes_fp": 2,
+      "false_alarms_per_min": 0.016666666666666666
+    }
+  }
+}

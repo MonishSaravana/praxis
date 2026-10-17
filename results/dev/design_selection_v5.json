@@ -1,0 +1,62 @@
+{
+  "protocol": "train-split recordings, leave-one-recording-out probes, first 300s, task given",
+  "n_recordings": 24,
+  "designs": {
+    "ent0.15_screen_p0.5_alerts_only": {
+      "step_acc": 0.651759453808431,
+      "verifier_calls": 1440,
+      "cost_usd": 1.953362246,
+      "false_alarms_per_min": 0.016666666666666666,
+      "mistakes": {
+        "tp": 4,
+        "fp": 2,
+        "fn": 32,
+        "precision": 0.6666666666666666,
+        "recall": 0.1111111111111111,
+        "f1": 0.1904761904761905,
+        "detect_minus_step_end_s": {
+          "n": 4,
+          "p50": -5.119192450538687,
+          "p95": 0.962664999999985,
+          "mean": -4.9429712252693445
+        },
+        "detect_minus_step_start_s": {
+          "n": 4,
+          "p50": 31.06636934133202,
+          "p95": 39.085584999999995,
+          "mean": 30.374334670666013
+        },
+        "share_caught_before_step_end": 0.75
+      },
+      "spend_usd": 1.0065356460000001
+    },
+    "ent0.15_screen_p0.3_alerts_only": {
+      "step_acc": 0.651759453808431,
+      "verifier_calls": 1507,
+      "cost_usd": 2.311223508,
+      "false_alarms_per_min": 0.016666666666666666,
+      "mistakes": {
+        "tp": 4,
+        "fp": 2,
+        "fn": 32,
+        "precision": 0.6666666666666666,
+        "recall": 0.1111111111111111,
+        "f1": 0.1904761904761905,
+        "detect_minus_step_end_s": {
+          "n": 4,
+          "p50": -5.156492450538682,
+          "p95": 0.970219999999985,
+          "mean": -4.9627712252693446
+        },
+        "detect_minus_step_start_s": {
+          "n": 4,
+          "p50": 31.035219341332024,
+          "p95": 39.08453,
+          "mean": 30.354534670666013
+        },
+        "share_caught_before_step_end": 0.75
+      },
+      "spend_usd": 0.5222849079999996
+    }
+  }
+}
