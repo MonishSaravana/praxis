@@ -87,6 +87,8 @@ class Engine:
         self._max_mass: dict[str, float] = {}
         self._order_flagged: set[str] = set()
         self._last_task_probs: dict[str, float] = {}
+        self._last_choice: str | None = None
+        self._choice_streak = 0
         if task_id is not None:
             self._start_task(0.0, task_id, oracle=True)
 
@@ -161,7 +163,18 @@ class Engine:
                                 model=ans["model"], cost_usd=ans["cost_usd"])
                         post = self.rec.posterior()
                         top = max(post, key=post.get)
-                        if post[top] >= self.rec.threshold:
+                        ch = ans["choice"]
+                        self._choice_streak = self._choice_streak + 1 if ch == self._last_choice else 1
+                        self._last_choice = ch
+                        if ch in self.lib and ch not in self.rec.task_ids:
+                            # library task the local recognizer was never trained on (e.g. a newly compiled graph):
+                            # recognized from two consecutive confident verifier answers
+                            if ans["probs"].get(ch, 0.0) >= 0.8 and self._choice_streak >= 2:
+                                r = replace(r, task_id=ch, posterior={**post, ch: ans["probs"][ch]}, recognized=True)
+                                self._last_task_probs = ans["probs"]
+                            else:
+                                r = replace(r, posterior=post, recognized=False)
+                        elif post[top] >= self.rec.threshold:
                             r = replace(r, task_id=top, posterior=post, recognized=True)
                         else:
                             r = replace(r, posterior=post, recognized=False)
