@@ -18,6 +18,8 @@ from dataclasses import asdict, dataclass
 import cv2
 import numpy as np
 
+cv2.setNumThreads(1)      # check runs decode in many threads already; keep CPU free for the feature extractor
+
 from ..data.cc4d import Clip
 from ..paths import DATA
 from ..verify.schema import Verdict, VerifyRequest
