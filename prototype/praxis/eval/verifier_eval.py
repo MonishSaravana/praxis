@@ -89,3 +89,31 @@ def compare(kinds: list[str], split: str = "eval") -> dict:
     (RESULTS / "l5").mkdir(parents=True, exist_ok=True)
     (RESULTS / "l5" / f"compare_{'_vs_'.join(kinds)}.json").write_text(json.dumps(res, indent=2))
     return res
+
+
+def tune_policy(kind: str = "claude_fast", target_verify_precision: float = 0.9, target_mistake_precision: float = 0.6) -> dict:
+    """Precision-first thresholds from TRAIN-split checks only (false alarms are what users hate)."""
+    tr = load(f"{kind}_train")
+    cals = fit_calibrators(kind)
+    if not tr or not cals:
+        return {}
+    cal, dcal = cals
+    p, y, _, pdev, ye = arrays(tr)
+    pc, pd = cal(p), dcal(pdev)
+    curve_v, curve_m = [], []
+    for t in np.round(np.arange(0.3, 0.96, 0.05), 2):
+        sel = pc >= t
+        curve_v.append({"thr": float(t), "n": int(sel.sum()), "precision": float(y[sel].mean()) if sel.any() else None,
+                        "recall": float(sel[y == 1].mean()) if (y == 1).any() else None})
+        selm = pd >= t
+        curve_m.append({"thr": float(t), "n": int(selm.sum()), "precision": float(ye[selm].mean()) if selm.any() else None,
+                        "recall": float(selm[ye == 1].mean()) if (ye == 1).any() else None})
+    ok_v = [c["thr"] for c in curve_v if c["precision"] is not None and c["precision"] >= target_verify_precision and c["n"] >= 10]
+    ok_m = [c["thr"] for c in curve_m if c["precision"] is not None and c["precision"] >= target_mistake_precision and c["n"] >= 5]
+    chosen = {"verify_conf": min(ok_v) if ok_v else 0.8, "mistake_conf": min(ok_m) if ok_m else 0.9,
+              "verify_target_met": bool(ok_v), "mistake_target_met": bool(ok_m)}
+    res = {"verifier": kind, "targets": {"verify_precision": target_verify_precision, "mistake_precision": target_mistake_precision},
+           "chosen": chosen, "verify_curve": curve_v, "mistake_curve": curve_m, "n_train_checks": len(tr)}
+    (RESULTS / "l6").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l6" / "policy_thresholds.json").write_text(json.dumps(res, indent=2))
+    return res
