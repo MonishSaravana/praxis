@@ -160,6 +160,16 @@ Source: `results/l6/adaptive_detail.json`.
 
 Source: `results/l7/distill.json`.
 
+**Verifier tiers inside the full engine** (task given; same clips, tracker and policy):
+
+| Configuration | Run | Step acc. | Judge-verified catches / alerts | Strict false alarms/min | Model calls | Cost / video-min |
+|---|---|---|---|---|---|---|
+| Jev fast tier + Opus escalation (ours) | `fused_oracle` | 54% | 4 / 17 | 0.055 | 3030 | $0.0183 |
+| Jev only, no escalation | `fused_no_escalation` | 53% | 3 / 24 | 0.089 | 2726 | $0.0012 |
+| Distilled student as the only fast tier (no localization) + Opus escalation | `fused_distilled_alone` | 20% | 2 / 8 | 0.026 | 2183 | $0.0227 |
+
+The student has no localization head, so `fused_distilled_alone` loses the typed "which step?" question; `fused_distilled` keeps Jev for it. Swapping tiers is one line of config (`verifier.primary`). Sources: `results/runs/fused_oracle.json`, `results/runs/fused_no_escalation.json`, `results/runs/fused_distilled_alone.json`.
+
 ## Design selection (train split only)
 
 Engine design choices were compared on train-split recordings, never on the eval clips. Step probes were trained leave-one-recording-out, the task was given, and the first 300 s of 24 recordings were used. The chosen design is the one evaluated above.
@@ -218,7 +228,26 @@ No metric is computed from these clips. The official step labels were unreachabl
 
 ## Spend
 
-Tracked API spend for this build: **$92.08**, summed from recorded costs (`results/spend.json`; untracked: hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total). The brief's approval threshold was $150.
+Tracked API spend for this build: **$93.10**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
+
+- hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total
+- 72 mistake-judge calls (Opus 5.5, effort low, one short text prompt each) made before the judge stored per-call cost
+- design-selection runs deleted after two processes wrote the same logs (WHAT_DIDNT_WORK.md); their re-runs reused the cached answers, so those calls' original cost is not in the total
+
+## Showcase renders (real model output)
+
+Every clip is drawn from a saved run log by `prototype/praxis/make_renders.py`, which also picks the clips by fixed rules (below). Development clips are excluded. These are chosen examples, so read them next to the aggregate numbers above; two are failure cases and are labeled as such on screen.
+
+| Render | Files | Run · clip · time | What Praxis said | Annotated error | Selection rule |
+|---|---|---|---|---|---|
+| recognition and tracking | `renders/showcase_recognition_tracking_user.mp4`<br>`renders/showcase_recognition_tracking_engineer.mp4` | `fused` · `22_24_0` · 34 s |  |  | highest step accuracy after recognition among clips recognized within 40 s |
+| caught mistake | `renders/showcase_caught_mistake_user.mp4`<br>`renders/showcase_caught_mistake_engineer.mp4` | `fused` · `1_43_0` · 155 s | Use the knife to cut the muffin so you get clean, even halves. | Using hand instead of knife | first mistake alert the strict judge rated 'yes' (matches an annotated error) |
+| caught mistake 2 | `renders/showcase_caught_mistake_2_user.mp4` | `fused` · `17_40_0` · 239 s | That looks like a zucchini, not a cucumber. Put it back and grab the cucumber instead. | Use zucchini instead of cucumber | second mistake alert the strict judge rated 'yes' |
+| view request | `renders/showcase_view_request_user.mp4` | `fused_oracle` · `17_43_0` · 31 s | Look back at the sink and show the cucumber in your hands |  | first view request |
+| failure false alarm | `renders/failure_false_alarm_user.mp4` | `fused` · `1_25_0` · 74 s | Give the ramekin a quick coat of cooking spray first so the egg won't stick. |  | first mistake alert with no annotated error within the matching window |
+| failure wrong task | `renders/failure_wrong_task_user.mp4` | `fused` · `8_50_0` · 52 s | announced task `cc4d_microwavemugpizza` |  | first clip whose first announced task was wrong |
+
+Source: `results/renders_index.json`.
 
 ## Methods notes
 
@@ -373,6 +402,12 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
     - Similarly, using the distilled student as the *only* fast tier removed localization entirely (the student has no
       localization head). It is reported as `fused_distilled_alone`, next to the intended configuration: the student
       on completion checks plus Jev localization.
+
+13. **The crop experiment deadlocked on the first try.**
+    - Two verifier threads shared one TAPNext++ tracker, so each overwrote the other's online tracking state. They
+      made no progress for about 40 minutes.
+    - Fix: compute crops sequentially with a single tracker and cache them, then run the verifier calls in parallel
+      over the cached crops.
 
 ## Limitations
 

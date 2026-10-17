@@ -12,6 +12,13 @@
   "lenient_precision": 0.4090909090909091,
   "strict_recall": 0.047058823529411764,
   "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+    "Temperature Error": 1,
+    "Measurement Error": 1,
+    "Order Error": 5,
+    "Preparation Error": 5,
+    "Technique Error": 1
+  },
   "pairs": [
     {
       "clip": "12_48_0",
@@ -19,6 +26,9 @@
       "alert": "Rinse the tomato under running water first, then dry it.",
       "annotated": [
         "Cut instead of slice"
+      ],
+      "annotated_tags": [
+        "Technique Error"
       ],
       "label": "no",
       "reason": "The alert is about rinsing the tomato. The annotated error is cutting instead of slicing the tomato into 1/2 inch slices, which is a different step and problem."
@@ -30,6 +40,9 @@
       "annotated": [
         "Mix the contents of the mug by rotating motion of the cup and not mixing the contents properly"
       ],
+      "annotated_tags": [
+        "Technique Error"
+      ],
       "label": "no",
       "reason": "The alert is about a dirty mug at the milk-filling step. The annotated error is improper mixing by swirling the cup, which is a different problem."
     },
@@ -39,6 +52,9 @@
       "alert": "The power is set too low. Change it to full power before you start.",
       "annotated": [
         "Used lower power than specified"
+      ],
+      "annotated_tags": [
+        "Temperature Error"
       ],
       "label": "yes",
       "reason": "The alert flags that the microwave power is set too low, which matches the annotated temperature error of using lower power than specified."
@@ -51,6 +67,10 @@
         "Set microwave to medium temperature instead of high",
         "Egg is not stirred properly leaving yolk unmixed and did not stir properly"
       ],
+      "annotated_tags": [
+        "Technique Error",
+        "Temperature Error"
+      ],
       "label": "partial",
       "reason": "The alert concerns the stir-egg step, but it claims the step was skipped entirely. The annotated error is improper stirring that left the yolk unmixed, so the alert is related but not the same problem."
     },
@@ -60,6 +80,9 @@
       "alert": "You want two even halves, a top and a bottom. Try slicing straight through the middle.",
       "annotated": [
         "Cut the muffin into multiple pieces instead of two halves"
+      ],
+      "annotated_tags": [
+        "Measurement Error"
       ],
       "label": "yes",
       "reason": "The alert says to cut the muffin into just two halves, a top and a bottom. That addresses the annotated error of cutting it into multiple pieces instead of two."
@@ -71,6 +94,10 @@
       "annotated": [
         "hands instead of knife; Step performed after correct order"
       ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
       "label": "yes",
       "reason": "The alert tells the person to use a knife instead of their hands, which is the annotated preparation error. It does not address the order error, but it does identify one annotated problem."
     },
@@ -80,6 +107,10 @@
       "alert": "Use the butter knife to spread the jelly evenly.",
       "annotated": [
         "Spreading around the jelly; Step performed after spreading jelly"
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Technique Error"
       ],
       "label": "no",
       "reason": "The alert is a generic spreading instruction. It does not identify the annotated error, which is that the nut butter was spread after the jelly, around it, so the order was reversed."
@@ -92,6 +123,11 @@
         "Used normal butter instead of nut butter; Step performed after applying jelly",
         "Did not spread the butter properly, instead leave drops of butter on the tortilla; Step performed after applying jelly"
       ],
+      "annotated_tags": [
+        "Measurement Error",
+        "Order Error",
+        "Preparation Error"
+      ],
       "label": "no",
       "reason": "The alert is about using a spoon instead of a butter knife. The annotated errors are using regular butter instead of nut butter, doing the step after the jelly, and uneven spreading. A tool swap is not among them."
     },
@@ -101,6 +137,9 @@
       "alert": "Use the butter knife to spread the jelly evenly.",
       "annotated": [
         "Improper Cleaning of the knife with paper towel. paper towel did not cover down side of the knife."
+      ],
+      "annotated_tags": [
+        "Technique Error"
       ],
       "label": "no",
       "reason": "The alert is a generic instruction about spreading jelly. It does not mention the knife being improperly wiped clean after the nut butter."
@@ -113,6 +152,11 @@
         "add baking soda instead of baking powder; Step performed after adding oil to the mug",
         "spill some out; Step performed after adding oil to the mug and before adding salt"
       ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error",
+        "Technique Error"
+      ],
       "label": "yes",
       "reason": "The alert flags baking soda being used in place of baking powder, which is the annotated preparation error for this step."
     },
@@ -124,6 +168,10 @@
         "Step performed before beating the egg mixture; Using a cherry tomato instead of a tomato.",
         "Step performed after cooking the tomatoes"
       ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
       "label": "yes",
       "reason": "The alert flags the ordering problem: the egg mixture should be ready before the tomatoes cook. This matches the annotated order error of cracking the egg after cooking the tomatoes."
     },
@@ -134,6 +182,9 @@
       "annotated": [
         "Step performed before preparing egg mixture"
       ],
+      "annotated_tags": [
+        "Order Error"
+      ],
       "label": "yes",
       "reason": "The alert says the egg mixture should be ready before the tomatoes cook. That is the same ordering problem as the annotated error, where the tomatoes were cooked before the egg mixture was prepared."
     },
@@ -143,6 +194,9 @@
       "alert": "Hold on: it looks like you skipped 'Heat 1 tbsp oil in a non-stick frying pan'. Heat 1 tbsp oil, non-stick pan first.",
       "annotated": [
         "Step performed after cooking the tomatoes"
+      ],
+      "annotated_tags": [
+        "Order Error"
       ],
       "label": "no",
       "reason": "The alert says the oil-heating step was skipped. The annotated error is about adding cilantro to the bowl out of order, after the tomatoes were cooked. These are different problems."
@@ -155,6 +209,10 @@
         "add scallions instead of cilantro; Step performed before whisking curd in the bowl",
         "Use zucchini instead of cucumber"
       ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
       "label": "yes",
       "reason": "The alert says to whisk the curd before anything else goes in. That matches the annotated order error, where the herb was added before the curd was whisked."
     },
@@ -164,6 +222,9 @@
       "alert": "That looks like a zucchini, not a cucumber. Put it back and grab the cucumber instead.",
       "annotated": [
         "Use zucchini instead of cucumber"
+      ],
+      "annotated_tags": [
+        "Preparation Error"
       ],
       "label": "yes",
       "reason": "The alert flags that zucchini is being used instead of cucumber, which is exactly the annotated error."
@@ -175,6 +236,9 @@
       "annotated": [
         "slice the cucumber into discs"
       ],
+      "annotated_tags": [
+        "Technique Error"
+      ],
       "label": "no",
       "reason": "The alert is about skipping peeling, but the annotated error is a technique error: slicing the cucumber into discs instead of chopping or grating it."
     },
@@ -185,9 +249,12 @@
       "annotated": [
         "donot peel the cucumber properly"
       ],
+      "annotated_tags": [
+        "Technique Error"
+      ],
       "label": "no",
       "reason": "The alert is about doing the steps out of order: rinse before peeling. The annotated error is improper peeling technique, which the alert never mentions."
     }
   ],
-  "spend_usd": 0.04137999999999999
+  "spend_usd": 0.0
 }

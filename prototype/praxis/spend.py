@@ -54,8 +54,13 @@ def main() -> dict:
     for f in sorted((RESULTS / "dev").glob("design_selection_v*.json")):
         r = json.loads(f.read_text())
         items[f"design selection (train split): {f.stem}"] = sum(d.get("spend_usd", 0.0) for d in r["designs"].values())
-    for f in sorted((RESULTS / "l6").glob("mistake_semantic_*.json")):
-        items[f"mistake judge: {f.stem}"] = json.loads(f.read_text()).get("spend_usd", 0.0)
+    for f in sorted((RESULTS / "invalid_runs").glob("*.json")):
+        items[f"invalid engine run (quarantined): {f.stem}"] = json.loads(f.read_text()).get("spend_usd", 0.0)
+    # mistake judge: each call is paid once, so sum the cost stored with each cached answer
+    from .paths import CACHE
+    judge = [json.loads(f.read_text()) for f in sorted((CACHE / "api").glob("judge_*/*.json"))]
+    items["mistake judge (Opus 5.5)"] = sum(j.get("_cost_usd", 0.0) for j in judge)
+    n_judge_unrecorded = sum("_cost_usd" not in j for j in judge)
     for f in ("industreal_demo.json", "policy_demo.json"):
         p = RESULTS / f
         if p.exists():
@@ -66,7 +71,11 @@ def main() -> dict:
     out = {"total_usd": sum(items.values()), "items": items,
            "untracked": ["hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check "
                          "prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not "
-                         "recorded per call; small relative to the total"],
+                         "recorded per call; small relative to the total",
+                         f"{n_judge_unrecorded} mistake-judge calls (Opus 5.5, effort low, one short text prompt each) made "
+                         "before the judge stored per-call cost",
+                         "design-selection runs deleted after two processes wrote the same logs (WHAT_DIDNT_WORK.md); "
+                         "their re-runs reused the cached answers, so those calls' original cost is not in the total"],
            "note": "Cached re-runs are counted once. The Anthropic and TypeSafe consoles are the source of truth."}
     (RESULTS / "spend.json").write_text(json.dumps(out, indent=2))
     return out

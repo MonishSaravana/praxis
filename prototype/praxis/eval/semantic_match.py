@@ -11,6 +11,7 @@ Strict precision counts only "yes".
 """
 from __future__ import annotations
 
+import collections
 import json
 
 from ..data.cc4d import Clip, load_manifest
@@ -68,9 +69,12 @@ def judge_pairs(run: str, model: str = "claude-opus-5-5") -> dict:
                         "properties": {"label": {"type": "string", "enum": ["yes", "partial", "no"]},
                                        "reason": {"type": "string"}}}}, "effort": "low"})
                 hit = json.loads(next(b.text for b in resp.content if b.type == "text"))
-                budget.add(cost_usd(model, resp.usage.input_tokens, resp.usage.output_tokens))
+                c_ = cost_usd(model, resp.usage.input_tokens, resp.usage.output_tokens)
+                budget.add(c_)
+                hit["_cost_usd"] = c_        # kept with the cached answer so tracked spend counts each call once
                 cache.put(key, hit)
             rows.append({"clip": cid, "t": a["t"], "alert": a["text"], "annotated": [m["description"] for m in hits],
+                         "annotated_tags": sorted({t for m in hits for t in m["tags"]}),
                          "label": hit["label"], "reason": hit["reason"]})
     yes = sum(r["label"] == "yes" for r in rows)
     part = sum(r["label"] == "partial" for r in rows)
@@ -81,7 +85,9 @@ def judge_pairs(run: str, model: str = "claude-opus-5-5") -> dict:
            "time_window_hits": len(rows), "semantic_yes": yes, "semantic_partial": part,
            "strict_precision": yes / n_alerts if n_alerts else None,
            "lenient_precision": (yes + part) / n_alerts if n_alerts else None,
-           "strict_recall": yes / n_gt if n_gt else None, "n_gt_mistakes": n_gt, "pairs": rows, "spend_usd": budget.usd}
+           "strict_recall": yes / n_gt if n_gt else None, "n_gt_mistakes": n_gt,
+           "yes_by_annotated_tag": dict(collections.Counter(t for r in rows if r["label"] == "yes" for t in r["annotated_tags"])),
+           "pairs": rows, "spend_usd": budget.usd}
     (RESULTS / "l6").mkdir(parents=True, exist_ok=True)
     (RESULTS / "l6" / f"mistake_semantic_{run}.json").write_text(json.dumps(res, indent=2))
     return res

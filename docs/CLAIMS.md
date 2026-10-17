@@ -8,7 +8,7 @@ Every sentence below comes from a file under `results/`, linked after it. This f
 - "On 48 held-out clips, with the task known, our stateful engine tracked the current step correctly 54% of the time. Calling the same frontier model every 5 seconds without state got 48%." (`results/runs/fused_oracle.json`)
 - "It costs about 5x less to run: $0.018 vs $0.085 per minute of video, because most checks are fast typed questions and the frontier model is only called to escalate." (`results/runs/fused_oracle.json`)
 - "On mistakes, both systems are weak and we're honest about it. Strictly scored, Praxis's alerts named the actual annotated error 4 times out of 17; the stateless baseline did 2 out of 3. So Praxis catches more real mistakes but is less precise. Most annotated cooking errors, like the wrong amount or water temperature, can't be seen from a few frames." (`results/l6/mistake_semantic_fused_oracle.json`)
-- "The mistakes Praxis does catch tend to be ones that need state: doing steps in the wrong order, or using the wrong tool for the step it knows you're on." (`results/l6/mistake_semantic_fused_oracle.json`)
+- "The mistakes Praxis does catch tend to need task state: 4 of the 4 annotated errors its alerts correctly named are in steps the dataset marks as done out of order. You can only see that kind of error if you know where the person is in the task." (`results/l6/mistake_semantic_fused_oracle.json`)
 - "Counting every alert that didn't name an annotated error as a false alarm, which is strict because some may be real but unannotated, Praxis raised about one every 18 minutes of video." (`results/l6/mistake_semantic_fused_oracle.json`)
 - "Only 14% of frames leave the local layers, and 88% of those model calls are answered by the fast tier (Jev, ~0.2 s); the rest escalate to the frontier model." (`results/metrics.json: call_mix_fused_oracle (counted from the run logs)`)
 - "With no setup at all, it recognized which recipe was being made on 73% of held-out clips, with a median of 40 seconds." (`results/runs/fused.json`)
@@ -16,6 +16,8 @@ Every sentence below comes from a file under `results/`, linked after it. This f
 - "On the same 469 labeled checks, Jev answered in 151 ms (median) at AUROC 0.70. Claude Opus answered in 3.8 s at AUROC 0.84. So we use Jev as the fast tier and escalate ambiguous cases to Opus." (`results/l5/compare_jev_vs_claude_fast.json`)
 - "Calibration on training data cut Jev's expected calibration error from 0.22 to 0.02 on held-out checks." (`results/l5/calibration.json`)
 - "We distilled the frontier verifier into a local model that agrees with it on 69% of held-out checks. It answers in 0.03 ms on a laptop CPU and costs nothing per check. Sending it only the checks it's confident about keeps teacher-level accuracy while removing 34% of frontier calls." (`results/l7/distill.json`)
+- "When we degraded the view (blur, occlude, crop away), Praxis asked for a better view on 77-98% of checks and was never confidently wrong. The stateless baseline has to answer, and it named the wrong step with at least 50% confidence on 12-73% of them (2-17% at 70% confidence)." (`results/l5/visual_uncertainty.json`)
+- "Escalating to the frontier model mostly cuts false alarms: with it, 4 of 17 mistake alerts named a real annotated error; without it, 3 of 24 (0.055 vs 0.089 strict false alarms per minute). Step accuracy barely changes (54% with it, 53% without). It costs $0.018 vs $0.001 per video-minute." (`results/runs/fused_no_escalation.json`)
 
 ## Do NOT claim (not measured or not true yet)
 

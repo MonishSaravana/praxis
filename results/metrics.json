@@ -12,6 +12,7 @@
   "run_fused_heuristic_gate": "results/runs/fused_heuristic_gate.json",
   "run_local_only": "results/runs/local_only.json",
   "run_verifier_only": "results/runs/verifier_only.json",
+  "run_fused_distilled_alone": "results/runs/fused_distilled_alone.json",
   "run_fused_no_escalation": "results/runs/fused_no_escalation.json",
   "run_baseline_stateless": "results/runs/baseline_stateless.json",
   "run_fused_oracle_excl": "results/runs/fused_oracle.json (aggregate_excl_dev_clips)",
@@ -25,9 +26,14 @@
   "uncertainty": "results/l5/visual_uncertainty.json",
   "policy_thresholds": "results/l6/policy_thresholds.json",
   "adaptive_detail": "results/l6/adaptive_detail.json",
-  "semantic_fused_oracle": "results/l6/mistake_semantic_fused_oracle.json",
-  "semantic_fused": "results/l6/mistake_semantic_fused.json",
   "semantic_baseline_stateless": "results/l6/mistake_semantic_baseline_stateless.json",
+  "semantic_fused": "results/l6/mistake_semantic_fused.json",
+  "semantic_fused_distilled_alone": "results/l6/mistake_semantic_fused_distilled_alone.json",
+  "semantic_fused_heuristic_gate": "results/l6/mistake_semantic_fused_heuristic_gate.json",
+  "semantic_fused_no_escalation": "results/l6/mistake_semantic_fused_no_escalation.json",
+  "semantic_fused_oracle": "results/l6/mistake_semantic_fused_oracle.json",
+  "semantic_verifier_only": "results/l6/mistake_semantic_verifier_only.json",
+  "renders": "results/renders_index.json",
   "distillation": "results/l7/distill.json",
   "spend": "results/spend.json"
  },
@@ -2926,6 +2932,74 @@
   "view_requests": 9,
   "hints": 38
  },
+ "run_fused_distilled_alone": {
+  "n_clips": 48,
+  "minutes": 234.8806337081822,
+  "step_acc": 0.1997917084227009,
+  "step_acc_after_recognition": 0.1997917084227009,
+  "step_acc_incl_between": 0.20007361173948068,
+  "transition_err_s": {
+   "n": 245,
+   "p50": 46.9644,
+   "p95": 205.98796559420842,
+   "mean": 69.30404545364031
+  },
+  "task_top1": 1.0,
+  "t_recognize_s": {
+   "n": 48,
+   "p50": 0.0,
+   "p95": 0.0,
+   "mean": 0.0
+  },
+  "mistakes": {
+   "tp": 7,
+   "fp": 1,
+   "fn": 163,
+   "precision": 0.875,
+   "recall": 0.041176470588235294,
+   "f1": 0.07865168539325842,
+   "detect_minus_step_end_s": {
+    "n": 7,
+    "p50": -5.070499999999996,
+    "p95": 7.208660000000002,
+    "mean": -9.294476870271595
+   },
+   "detect_minus_step_start_s": {
+    "n": 7,
+    "p50": 24.4435,
+    "p95": 48.31472747354304,
+    "mean": 27.42385093419447
+   },
+   "share_caught_before_step_end": 0.7142857142857143
+  },
+  "false_alarms_per_min": 0.004257481701290065,
+  "alerts_per_min": 0.03405985361032052,
+  "feedback_latency_s": {
+   "n": 237,
+   "p50": -34.03721555501931,
+   "p95": 67.39465999999999,
+   "mean": -50.81301681425673
+  },
+  "progress_latency_s": {
+   "n": 245,
+   "p50": -33.95500000000001,
+   "p95": 72.39617999999993,
+   "mean": -48.89804846513117
+  },
+  "verifier_latency_ms_live": {
+   "n": 2180,
+   "p50": 0.4004369839094579,
+   "p95": 4384.433656226606,
+   "mean": 872.8832635518544
+  },
+  "verifier_calls": 2183,
+  "verifier_errors": 0,
+  "escalated_frame_share": 0.08530307618318163,
+  "cost_usd": 5.3204936,
+  "cost_usd_per_video_min": 0.0226519041438309,
+  "view_requests": 7,
+  "hints": 26
+ },
  "run_fused_no_escalation": {
   "n_clips": 48,
   "minutes": 234.8806337081822,
@@ -5120,20 +5194,25 @@
    "error_rate_all_steps": 0.5629139072847682
   }
  },
- "semantic_fused_oracle": {
-  "run": "fused_oracle",
+ "semantic_baseline_stateless": {
+  "run": "baseline_stateless",
   "judge": "claude-opus-5-5",
   "judge_version": "mistake-judge-v1",
-  "n_alerts": 17,
+  "n_alerts": 3,
   "minutes": 234.8806337081822,
-  "strict_false_alarms_per_min": 0.05534726211677084,
-  "time_window_hits": 13,
-  "semantic_yes": 4,
-  "semantic_partial": 4,
-  "strict_precision": 0.23529411764705882,
-  "lenient_precision": 0.47058823529411764,
-  "strict_recall": 0.023529411764705882,
+  "strict_false_alarms_per_min": 0.004257481701290065,
+  "time_window_hits": 2,
+  "semantic_yes": 2,
+  "semantic_partial": 0,
+  "strict_precision": 0.6666666666666666,
+  "lenient_precision": 0.6666666666666666,
+  "strict_recall": 0.011764705882352941,
   "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+   "Measurement Error": 1,
+   "Order Error": 1,
+   "Technique Error": 1
+  },
   "spend_usd": 0.0
  },
  "semantic_fused": {
@@ -5150,24 +5229,217 @@
   "lenient_precision": 0.4,
   "strict_recall": 0.029411764705882353,
   "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+   "Technique Error": 1,
+   "Temperature Error": 1,
+   "Preparation Error": 2,
+   "Measurement Error": 1,
+   "Order Error": 1
+  },
   "spend_usd": 0.0
  },
- "semantic_baseline_stateless": {
-  "run": "baseline_stateless",
+ "semantic_fused_distilled_alone": {
+  "run": "fused_distilled_alone",
   "judge": "claude-opus-5-5",
   "judge_version": "mistake-judge-v1",
-  "n_alerts": 3,
+  "n_alerts": 8,
   "minutes": 234.8806337081822,
-  "strict_false_alarms_per_min": 0.004257481701290065,
-  "time_window_hits": 2,
+  "strict_false_alarms_per_min": 0.025544890207740388,
+  "time_window_hits": 7,
   "semantic_yes": 2,
-  "semantic_partial": 0,
-  "strict_precision": 0.6666666666666666,
-  "lenient_precision": 0.6666666666666666,
+  "semantic_partial": 3,
+  "strict_precision": 0.25,
+  "lenient_precision": 0.625,
   "strict_recall": 0.011764705882352941,
   "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+   "Technique Error": 1,
+   "Measurement Error": 1,
+   "Order Error": 1
+  },
+  "spend_usd": 0.020048000000000003
+ },
+ "semantic_fused_heuristic_gate": {
+  "run": "fused_heuristic_gate",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 22,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.059604743818060905,
+  "time_window_hits": 17,
+  "semantic_yes": 8,
+  "semantic_partial": 1,
+  "strict_precision": 0.36363636363636365,
+  "lenient_precision": 0.4090909090909091,
+  "strict_recall": 0.047058823529411764,
+  "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+   "Temperature Error": 1,
+   "Measurement Error": 1,
+   "Order Error": 5,
+   "Preparation Error": 5,
+   "Technique Error": 1
+  },
   "spend_usd": 0.0
  },
+ "semantic_fused_no_escalation": {
+  "run": "fused_no_escalation",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 24,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.08940711572709135,
+  "time_window_hits": 15,
+  "semantic_yes": 3,
+  "semantic_partial": 3,
+  "strict_precision": 0.125,
+  "lenient_precision": 0.25,
+  "strict_recall": 0.01764705882352941,
+  "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+   "Temperature Error": 1,
+   "Timing Error": 1,
+   "Order Error": 2,
+   "Preparation Error": 1,
+   "Measurement Error": 1
+  },
+  "spend_usd": 0.0
+ },
+ "semantic_fused_oracle": {
+  "run": "fused_oracle",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 17,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.05534726211677084,
+  "time_window_hits": 13,
+  "semantic_yes": 4,
+  "semantic_partial": 4,
+  "strict_precision": 0.23529411764705882,
+  "lenient_precision": 0.47058823529411764,
+  "strict_recall": 0.023529411764705882,
+  "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+   "Order Error": 4,
+   "Preparation Error": 2,
+   "Measurement Error": 1
+  },
+  "spend_usd": 0.0
+ },
+ "semantic_verifier_only": {
+  "run": "verifier_only",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 41,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.131981932739992,
+  "time_window_hits": 24,
+  "semantic_yes": 10,
+  "semantic_partial": 3,
+  "strict_precision": 0.24390243902439024,
+  "lenient_precision": 0.3170731707317073,
+  "strict_recall": 0.058823529411764705,
+  "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+   "Technique Error": 2,
+   "Measurement Error": 3,
+   "Order Error": 4,
+   "Preparation Error": 4
+  },
+  "spend_usd": 0.0
+ },
+ "renders": [
+  {
+   "kind": "recognition_and_tracking",
+   "run": "fused",
+   "clip": "22_24_0",
+   "t": 34.0,
+   "text": null,
+   "pred": null,
+   "gt": null,
+   "label": "real model output",
+   "selection": "highest step accuracy after recognition among clips recognized within 40 s",
+   "files": [
+    "renders/showcase_recognition_tracking_user.mp4",
+    "renders/showcase_recognition_tracking_engineer.mp4"
+   ]
+  },
+  {
+   "kind": "caught_mistake",
+   "run": "fused",
+   "clip": "1_43_0",
+   "t": 155.1071,
+   "text": "Use the knife to cut the muffin so you get clean, even halves.",
+   "pred": null,
+   "gt": [
+    "Using hand instead of knife"
+   ],
+   "label": "real model output",
+   "selection": "first mistake alert the strict judge rated 'yes' (matches an annotated error)",
+   "files": [
+    "renders/showcase_caught_mistake_user.mp4",
+    "renders/showcase_caught_mistake_engineer.mp4"
+   ]
+  },
+  {
+   "kind": "caught_mistake_2",
+   "run": "fused",
+   "clip": "17_40_0",
+   "t": 239.1602,
+   "text": "That looks like a zucchini, not a cucumber. Put it back and grab the cucumber instead.",
+   "pred": null,
+   "gt": [
+    "Use zucchini instead of cucumber"
+   ],
+   "label": "real model output",
+   "selection": "second mistake alert the strict judge rated 'yes'",
+   "files": [
+    "renders/showcase_caught_mistake_2_user.mp4"
+   ]
+  },
+  {
+   "kind": "view_request",
+   "run": "fused_oracle",
+   "clip": "17_43_0",
+   "t": 30.5615,
+   "text": "Look back at the sink and show the cucumber in your hands",
+   "pred": null,
+   "gt": null,
+   "label": "real model output",
+   "selection": "first view request",
+   "files": [
+    "renders/showcase_view_request_user.mp4"
+   ]
+  },
+  {
+   "kind": "failure_false_alarm",
+   "run": "fused",
+   "clip": "1_25_0",
+   "t": 73.7966,
+   "text": "Give the ramekin a quick coat of cooking spray first so the egg won't stick.",
+   "pred": null,
+   "gt": null,
+   "label": "real model output \u00b7 FAILURE CASE: false alarm",
+   "selection": "first mistake alert with no annotated error within the matching window",
+   "files": [
+    "renders/failure_false_alarm_user.mp4"
+   ]
+  },
+  {
+   "kind": "failure_wrong_task",
+   "run": "fused",
+   "clip": "8_50_0",
+   "t": 52.0,
+   "text": null,
+   "pred": "cc4d_microwavemugpizza",
+   "gt": null,
+   "label": "real model output \u00b7 FAILURE CASE: wrong task",
+   "selection": "first clip whose first announced task was wrong",
+   "files": [
+    "renders/failure_wrong_task_user.mp4"
+   ]
+  }
+ ],
  "distillation": {
   "teacher": "claude_strong",
   "teacher_model": "claude-opus-5-5",
@@ -5208,13 +5480,13 @@
   }
  },
  "spend": {
-  "total_usd": 92.07629396599998,
+  "total_usd": 93.10468003599998,
   "items": {
    "L3 compile (8 recipes, Fable 5.1)": 4.16358,
    "L3 compile (IndustReal graph)": 0.43374,
    "GT check runs (Jev/Haiku/Opus, train+eval)": 12.815837750000009,
    "framing ablation": 2.884172446,
-   "crops experiment": 0.0,
+   "crops experiment": 0,
    "visual-uncertainty first run (from data/uncert.log)": 3.283867599999996,
    "visual-uncertainty (last re-run, new calls only)": 0.2666216,
    "engine run: baseline_stateless": 18.352767600000085,
@@ -5229,17 +5501,15 @@
    "design selection (train split): design_selection_v3": 1.9959670859999992,
    "design selection (train split): design_selection_v4": 2.0962831100000003,
    "design selection (train split): design_selection_v5": 1.5288205539999997,
-   "mistake judge: mistake_semantic_baseline_stateless": 0.0,
-   "mistake judge: mistake_semantic_fused": 0.0,
-   "mistake judge: mistake_semantic_fused_heuristic_gate": 0.04137999999999999,
-   "mistake judge: mistake_semantic_fused_no_escalation": 0.053136,
-   "mistake judge: mistake_semantic_fused_oracle": 0.0,
-   "mistake judge: mistake_semantic_verifier_only": 0.076424,
+   "invalid engine run (quarantined): fused_claude_fast_localization_errors": 1.1792780700000007,
+   "mistake judge (Opus 5.5)": 0.020048,
    "demo: industreal_demo.json": 0.02273438999999999,
    "M2 two-clip test": 0.00170982
   },
   "untracked": [
-   "hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total"
+   "hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total",
+   "72 mistake-judge calls (Opus 5.5, effort low, one short text prompt each) made before the judge stored per-call cost",
+   "design-selection runs deleted after two processes wrote the same logs (WHAT_DIDNT_WORK.md); their re-runs reused the cached answers, so those calls' original cost is not in the total"
   ],
   "note": "Cached re-runs are counted once. The Anthropic and TypeSafe consoles are the source of truth."
  }

@@ -287,11 +287,27 @@ def build() -> tuple[str, str]:
             md.append(f"- Routing a check to the student only when it is confident (|p−0.5| ≥ 0.35): it handles "
                       f"{pct(rt['share_handled_locally'])} of checks, and accuracy is {pct(rt['acc_vs_gt'])}.")
         md.append(f"\nSource: {src(m, 'distillation')}.\n")
-    if DS and FO:
-        md.append(f"**One-line swap.** With the distilled student as the fast verifier (`verifier.primary: distilled`, "
-                  f"Opus still escalates), step accuracy is {pct(DS['step_acc'])} vs {pct(FO['step_acc'])}, at "
-                  f"${DS['cost_usd_per_video_min']:.4f} vs ${FO['cost_usd_per_video_min']:.4f} per video-minute. "
-                  f"Source: {src(m, 'run_fused_distilled')}.\n")
+    tiers = [("Jev fast tier + Opus escalation (ours)", "fused_oracle"),
+             ("Jev only, no escalation", "fused_no_escalation"),
+             ("Claude Haiku 5.5 fast tier + Opus escalation", "fused_claude_fast"),
+             ("Distilled student for completion checks + Jev for localization + Opus escalation", "fused_distilled"),
+             ("Distilled student as the only fast tier (no localization) + Opus escalation", "fused_distilled_alone")]
+    rows = []
+    for label, v in tiers:
+        a = m.get(f"run_{v}")
+        if not a:
+            continue
+        s_ = m.get(f"semantic_{v}")
+        rows.append([label, f"`{v}`", pct(a["step_acc"]), f"{s_['semantic_yes']} / {s_['n_alerts']}" if s_ else "not judged",
+                     num(s_["strict_false_alarms_per_min"], 3) if s_ else "n/a", str(a["verifier_calls"]),
+                     f"${a['cost_usd_per_video_min']:.4f}"])
+    if len(rows) > 1:
+        md.append("**Verifier tiers inside the full engine** (task given; same clips, tracker and policy):\n")
+        md.append(table(rows, ["Configuration", "Run", "Step acc.", "Judge-verified catches / alerts",
+                               "Strict false alarms/min", "Model calls", "Cost / video-min"]))
+        md.append("\nThe student has no localization head, so `fused_distilled_alone` loses the typed \"which step?\" "
+                  "question; `fused_distilled` keeps Jev for it. Swapping tiers is one line of config "
+                  "(`verifier.primary`). Sources: " + ", ".join(src(m, f"run_{v}") for _, v in tiers if m.get(f"run_{v}")) + ".\n")
     if F and F.get("per_category"):
         pass
     fd = _jload("dev/final_design.json")
@@ -334,8 +350,24 @@ def build() -> tuple[str, str]:
     sp = _jload("spend.json")
     if sp:
         md.append(f"## Spend\n\nTracked API spend for this build: **${sp['total_usd']:.2f}**, summed from recorded "
-                  f"costs (`results/spend.json`; untracked: {sp['untracked'][0]}). The brief's approval threshold "
-                  f"was $150.\n")
+                  f"costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:\n")
+        md += [f"- {u_}" for u_ in sp["untracked"]]
+        md.append("")
+    rd = m.get("renders")
+    if rd:
+        md.append("## Showcase renders (real model output)\n")
+        md.append("Every clip is drawn from a saved run log by `prototype/praxis/make_renders.py`, which also picks the "
+                  "clips by fixed rules (below). Development clips are excluded. These are chosen examples, so read them "
+                  "next to the aggregate numbers above; two are failure cases and are labeled as such on screen.\n")
+        rows = []
+        for x in rd:
+            what = x.get("text") or (f"announced task `{x['pred']}`" if x.get("pred") else "")
+            gt = "; ".join(x["gt"]) if isinstance(x.get("gt"), list) else (x.get("gt") or "")
+            rows.append([x["kind"].replace("_", " "), "<br>".join(f"`{f}`" for f in x["files"]),
+                         f"`{x['run']}` · `{x['clip']}` · {x['t']:.0f} s", what.replace("|", "/"), gt.replace("|", "/"),
+                         x["selection"]])
+        md.append(table(rows, ["Render", "Files", "Run · clip · time", "What Praxis said", "Annotated error", "Selection rule"]))
+        md.append(f"\nSource: {src(m, 'renders')}.\n")
     md.append("## Methods notes\n\n- **Mistake matching.** Time-window matching counts an alert that lands within "
               "[annotated error start − 5 s, end + 10 s] as a hit. Strict matching additionally has Claude Opus 5.5 judge each "
               "such pair with a fixed rubric (yes / partial / no: does the alert name the same problem?). Code: "
@@ -389,8 +421,12 @@ def claims(m: dict) -> str:
                 f"did {sb['semantic_yes']} out of {sb['n_alerts']}. So Praxis catches more real mistakes but is less "
                 f"precise. Most annotated cooking errors, like the wrong amount or water temperature, can't be seen "
                 f"from a few frames.", "semantic_fused_oracle")
-            say(f"The mistakes Praxis does catch tend to be ones that need state: doing steps in the wrong order, or "
-                f"using the wrong tool for the step it knows you're on.", "semantic_fused_oracle")
+            n_order = so.get("yes_by_annotated_tag", {}).get("Order Error", 0)
+            if so["semantic_yes"] and n_order * 2 > so["semantic_yes"]:
+                say(f"The mistakes Praxis does catch tend to need task state: {n_order} of the {so['semantic_yes']} "
+                    f"annotated errors its alerts correctly named are in steps the dataset marks as done out of order. "
+                    f"You can only see that kind of error if you know where the person is in the task.",
+                    "semantic_fused_oracle")
         if so:
             say(f"Counting every alert that didn't name an annotated error as a false alarm, which is strict because "
                 f"some may be real but unannotated, Praxis raised about one every "
@@ -423,6 +459,47 @@ def claims(m: dict) -> str:
             f"laptop CPU and costs nothing per check. Sending it only the checks it's confident about keeps "
             f"teacher-level accuracy while removing {ds['routed_conf0.7']['share_handled_locally'] * 100:.0f}% of "
             f"frontier calls.", "distillation")
+    u = m.get("uncertainty")
+    if u:
+        dm = {k: v for k, v in u["modes"].items() if k != "none"}
+        ask = [v["engine_view_request_rate"] for v in dm.values()]
+        ew = [v["threshold_sweep"]["0.5"]["engine_confident_wrong"] for v in dm.values()]
+        b5 = [v["threshold_sweep"]["0.5"]["baseline_confident_wrong_step"] for v in dm.values()]
+        b7 = [v["threshold_sweep"]["0.7"]["baseline_confident_wrong_step"] for v in dm.values()]
+        eng = ("was never confidently wrong" if max(ew) == 0 else
+               f"was confidently wrong on at most {max(ew) * 100:.0f}% of them")
+        say(f"When we degraded the view ({', '.join(dm).replace('_', ' ')}), Praxis asked for a better view on "
+            f"{min(ask) * 100:.0f}-{max(ask) * 100:.0f}% of checks and {eng}. The stateless baseline has to answer, and "
+            f"it named the wrong step with at least 50% confidence on {min(b5) * 100:.0f}-{max(b5) * 100:.0f}% of them "
+            f"({min(b7) * 100:.0f}-{max(b7) * 100:.0f}% at 70% confidence).", "uncertainty")
+    NE, CF, DS = m.get("run_fused_no_escalation"), m.get("run_fused_claude_fast"), m.get("run_fused_distilled")
+    if FO and CF:
+        say(f"Inside the full engine, Jev as the fast tier gave {FO['step_acc'] * 100:.0f}% step accuracy at "
+            f"${FO['cost_usd_per_video_min']:.3f} per video-minute; Claude Haiku in the same slot gave "
+            f"{CF['step_acc'] * 100:.0f}% at ${CF['cost_usd_per_video_min']:.3f}.", "run_fused_claude_fast")
+    sn, so_ = m.get("semantic_fused_no_escalation"), m.get("semantic_fused_oracle")
+    if FO and NE and sn and so_:
+        d_acc = FO["step_acc"] - NE["step_acc"]
+        acc_txt = (f"Step accuracy barely changes ({FO['step_acc'] * 100:.0f}% with it, {NE['step_acc'] * 100:.0f}% "
+                   f"without)" if abs(d_acc) < 0.03 else
+                   f"Step accuracy goes from {NE['step_acc'] * 100:.0f}% without it to {FO['step_acc'] * 100:.0f}% with it")
+        fa_o, fa_n = so_["strict_false_alarms_per_min"], sn["strict_false_alarms_per_min"]
+        lead = ("Escalating to the frontier model mostly cuts false alarms" if fa_o < fa_n
+                else "Escalating to the frontier model did not cut false alarms")
+        say(f"{lead}: with it, {so_['semantic_yes']} of {so_['n_alerts']} mistake alerts named a real annotated error; "
+            f"without it, {sn['semantic_yes']} of {sn['n_alerts']} ({fa_o:.3f} vs {fa_n:.3f} strict false alarms per "
+            f"minute). {acc_txt}. It costs ${FO['cost_usd_per_video_min']:.3f} vs ${NE['cost_usd_per_video_min']:.3f} "
+            f"per video-minute.", "run_fused_no_escalation")
+    if FO and DS:
+        say(f"Swapping the local student in for routine completion checks gives {DS['step_acc'] * 100:.0f}% step accuracy "
+            f"(vs {FO['step_acc'] * 100:.0f}%) at ${DS['cost_usd_per_video_min']:.3f} per video-minute "
+            f"(vs ${FO['cost_usd_per_video_min']:.3f}). It's a one-line config change.", "run_fused_distilled")
+    cr = m.get("crops")
+    if cr:
+        better = cr["with_crops"]["auroc"] > cr["full_frames"]["auroc"]
+        say(f"Adding tracked hand-object crops to the verifier's frames {'raised' if better else 'did not raise'} "
+            f"AUROC on fine-grained checks ({cr['full_frames']['auroc']:.2f} without, {cr['with_crops']['auroc']:.2f} "
+            f"with, {cr['n']} checks).", "crops")
     out.append("\n## Do NOT claim (not measured or not true yet)\n")
     for s in ["Praxis runs on smart glasses. It has not been tested on glasses; the glasses adapter is a documented stub "
               "(docs/GLASSES.md). Say instead: 'it runs live on a camera stream; glasses are an input adapter.'",
@@ -434,7 +511,8 @@ def claims(m: dict) -> str:
               "live use.",
               "That the concept video is model output. It stays labeled 'Concept Prototype'.",
               "The application's '48 videos / 8 categories / 192 labeled action states' as if they were this build's "
-              "set. This build's eval set is 48 clips / 8 procedure types / 302 annotated step segments / 170 timed "
+              f"set. This build's eval set is {n_clips} clips / {types} procedure types / "
+              f"{d.get('eval_gt_step_segments')} annotated step segments / {d.get('eval_gt_timed_mistakes')} timed "
               "errors (CaptainCook4D). Quote these instead.",
               "Mistake precision from time-window matching (it is optimistic). Use the strict, judge-verified numbers.",
               "That the distilled student replaces the frontier model. It handles routine completion checks; "

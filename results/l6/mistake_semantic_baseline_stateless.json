@@ -12,6 +12,11 @@
   "lenient_precision": 0.6666666666666666,
   "strict_recall": 0.011764705882352941,
   "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+    "Measurement Error": 1,
+    "Order Error": 1,
+    "Technique Error": 1
+  },
   "pairs": [
     {
       "clip": "1_143_0",
@@ -19,6 +24,9 @@
       "alert": "Split the English muffin horizontally into a top and bottom half only.",
       "annotated": [
         "Cut the muffin into multiple pieces instead of two halves"
+      ],
+      "annotated_tags": [
+        "Measurement Error"
       ],
       "label": "yes",
       "reason": "The alert says to cut the muffin into only two halves. That corrects the annotated error of cutting it into multiple pieces."
@@ -29,6 +37,10 @@
       "alert": "Stop slicing; cut the tomato only in half for frying cut-side down.",
       "annotated": [
         "Cut some small pieces, not two pieces; Step performed after heating the pan"
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Technique Error"
       ],
       "label": "yes",
       "reason": "The alert flags that the tomato is being sliced into more than two pieces. That is the annotated technique error (small pieces instead of halves). It does not mention the order error."

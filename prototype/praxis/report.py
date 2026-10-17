@@ -69,7 +69,7 @@ def collect() -> dict:
     put("l3_compile", _j("l3/compile_summary.json"), "results/l3/compile_summary.json")
     put("l4_tuning_best", (_j("l4/tracker_tuning.json") or {}).get("best"), "results/l4/tracker_tuning.json")
     for v in ("fused", "fused_oracle", "fused_heuristic_gate", "local_only", "verifier_only", "fused_distilled",
-              "fused_no_escalation", "fused_claude_fast", "baseline_stateless"):
+              "fused_distilled_alone", "fused_no_escalation", "fused_claude_fast", "baseline_stateless"):
         put(f"run_{v}", _agg(v), f"results/runs/{v}.json")
     for v, key in (("fused_oracle", "run_fused_oracle_excl"), ("baseline_stateless", "run_baseline_excl"), ("fused", "run_fused_excl")):
         r = _j(f"runs/{v}.json")
@@ -83,9 +83,12 @@ def collect() -> dict:
     put("uncertainty", _j("l5/visual_uncertainty.json"), "results/l5/visual_uncertainty.json")
     put("policy_thresholds", (_j("l6/policy_thresholds.json") or {}).get("chosen"), "results/l6/policy_thresholds.json")
     put("adaptive_detail", _j("l6/adaptive_detail.json"), "results/l6/adaptive_detail.json")
-    for v in ("fused_oracle", "fused", "baseline_stateless"):
-        r = _j(f"l6/mistake_semantic_{v}.json")
-        put(f"semantic_{v}", {k: r[k] for k in r if k != "pairs"} if r else None, f"results/l6/mistake_semantic_{v}.json")
+    for f in sorted((RESULTS / "l6").glob("mistake_semantic_*.json")):
+        r = json.loads(f.read_text())
+        put(f"semantic_{f.stem.replace('mistake_semantic_', '')}", {k: r[k] for k in r if k != "pairs"}, f"results/l6/{f.name}")
+    ri = _j("renders_index.json")
+    put("renders", [{k: x.get(k) for k in ("kind", "run", "clip", "t", "text", "pred", "gt", "label", "selection", "files")}
+                    for x in ri["rendered"]] if ri else None, "results/renders_index.json")
     put("distillation", _j("l7/distill.json"), "results/l7/distill.json")
     put("spend", _j("spend.json"), "results/spend.json")
     (RESULTS / "metrics.json").write_text(json.dumps(m, indent=1, default=float))

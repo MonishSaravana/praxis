@@ -1,0 +1,118 @@
+{
+  "run": "fused_distilled_alone",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 8,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.025544890207740388,
+  "time_window_hits": 7,
+  "semantic_yes": 2,
+  "semantic_partial": 3,
+  "strict_precision": 0.25,
+  "lenient_precision": 0.625,
+  "strict_recall": 0.011764705882352941,
+  "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+    "Technique Error": 1,
+    "Measurement Error": 1,
+    "Order Error": 1
+  },
+  "pairs": [
+    {
+      "clip": "12_48_0",
+      "t": 82.8746,
+      "alert": "Some slices are stacked. Spread them out so each one sits flat on the platter in a single layer.",
+      "annotated": [
+        "Instead of a single layer, pile up the cut tomatoes"
+      ],
+      "annotated_tags": [
+        "Technique Error"
+      ],
+      "label": "yes",
+      "reason": "The alert flags stacked slices instead of a single layer, which is the annotated piling error."
+    },
+    {
+      "clip": "8_50_0",
+      "t": 26.6096,
+      "alert": "That's corn starch, not sugar. Grab the white sugar instead.",
+      "annotated": [
+        "Step performed before adding milk and microwaving it"
+      ],
+      "annotated_tags": [
+        "Order Error"
+      ],
+      "label": "no",
+      "reason": "The alert flags a wrong ingredient (corn starch instead of sugar), but the annotated error is about order: sugar added before the milk was added and microwaved."
+    },
+    {
+      "clip": "1_37_0",
+      "t": 243.6265,
+      "alert": "Hold on: it looks like you skipped 'Microwave 15-30 seconds until almost set'. Microwave 15-30 s, almost set first.",
+      "annotated": [
+        "2 tablespoon instead of 1 tbsp salsa; Step performed before microwaving completely until egg is almost set"
+      ],
+      "annotated_tags": [
+        "Measurement Error",
+        "Order Error"
+      ],
+      "label": "yes",
+      "reason": "The alert flags that the salsa step was done before microwaving until the egg was almost set, which matches the annotated order error. It does not mention the measurement error, but it does identify one of the annotated errors."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 54.0895,
+      "alert": "Use the butter knife to spread the jelly evenly.",
+      "annotated": [
+        "use spoon instead of knife; Step performed before spreading nut butter"
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
+      "label": "partial",
+      "reason": "The alert does point at the jelly tool, which is related to the annotated spoon-instead-of-knife error. But it reads as a generic spreading instruction rather than flagging the misuse of the spoon. It also misses the order error of handling jelly before the nut butter."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 98.5785,
+      "alert": "It's the butter knife that needs cleaning; wipe that one.",
+      "annotated": [
+        "Step performed before spreading nut butter",
+        "Use spoon instead of butter knife; Step performed after spreading jelly"
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
+      "label": "partial",
+      "reason": "The alert concerns the same wipe step and touches on which tool is involved. It does not flag the annotated order error (wiping before the nut butter is spread) or the spoon-vs-knife substitution."
+    },
+    {
+      "clip": "10_50_0",
+      "t": 206.6053,
+      "alert": "You need five toothpicks in total, about an inch apart. Adjust the count.",
+      "annotated": [
+        "Trim too much"
+      ],
+      "annotated_tags": [
+        "Measurement Error"
+      ],
+      "label": "no",
+      "reason": "The alert is about the toothpick count, but the annotated error is trimming too much off the ends of the roll, which is a different step and a different problem."
+    },
+    {
+      "clip": "22_40_0",
+      "t": 226.9713,
+      "alert": "Finish beating the egg mixture now so it's ready as soon as the tomatoes are done.",
+      "annotated": [
+        "Step performed before making the egg mixture"
+      ],
+      "annotated_tags": [
+        "Order Error"
+      ],
+      "label": "partial",
+      "reason": "The alert touches on the egg mixture not being ready, which relates to sequencing. The annotated error, though, is specifically that the oil was heated before the egg mixture was made, and the alert doesn't identify that out-of-order step."
+    }
+  ],
+  "spend_usd": 0.020048000000000003
+}

@@ -79,7 +79,9 @@ def main() -> list[str]:
             vals[f"{m}\nbaseline wrong\n(conf ≥ 0.5)"] = x["threshold_sweep"]["0.5"]["baseline_confident_wrong_step"]
             vals[f"{m}\nbaseline wrong\n(conf ≥ 0.7)"] = x["threshold_sweep"]["0.7"]["baseline_confident_wrong_step"]
             cols += [F.C_OURS, F.C_BASE, "#c9ccd1"]
-        out.append(str(F.bars(vals, "Degraded views: Praxis asks for a better view (and is never confidently wrong)\n"
+        ew = max(u["modes"][m]["threshold_sweep"]["0.5"]["engine_confident_wrong"] for m in modes)
+        eng = "and is never confidently wrong" if ew == 0 else f"confidently wrong ≤ {ew:.0%}"
+        out.append(str(F.bars(vals, f"Degraded views: Praxis asks for a better view ({eng})\n"
                                     "vs. the stateless baseline answering confidently and wrongly",
                               "visual_uncertainty", "{:.0%}", colors=cols)))
     return out

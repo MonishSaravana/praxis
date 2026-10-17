@@ -12,6 +12,13 @@
   "lenient_precision": 0.4,
   "strict_recall": 0.029411764705882353,
   "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+    "Technique Error": 1,
+    "Temperature Error": 1,
+    "Preparation Error": 2,
+    "Measurement Error": 1,
+    "Order Error": 1
+  },
   "pairs": [
     {
       "clip": "12_48_0",
@@ -19,6 +26,9 @@
       "alert": "Rinse the tomato under running water first, then dry it.",
       "annotated": [
         "Cut instead of slice"
+      ],
+      "annotated_tags": [
+        "Technique Error"
       ],
       "label": "no",
       "reason": "The alert is about rinsing the tomato. The annotated error is cutting instead of slicing the tomato into 1/2 inch slices, which is a different step and problem."
@@ -30,6 +40,9 @@
       "annotated": [
         "Instead of a single layer, pile up the cut tomatoes"
       ],
+      "annotated_tags": [
+        "Technique Error"
+      ],
       "label": "yes",
       "reason": "The alert flags stacked slices instead of a single layer, which is the annotated piling error."
     },
@@ -39,6 +52,9 @@
       "alert": "The power is set too low. Change it to full power before you start.",
       "annotated": [
         "Used lower power than specified"
+      ],
+      "annotated_tags": [
+        "Temperature Error"
       ],
       "label": "yes",
       "reason": "The alert flags that the microwave power is set too low, which matches the annotated temperature error of using lower power than specified."
@@ -50,6 +66,9 @@
       "annotated": [
         "Step performed before whisking and microwaving"
       ],
+      "annotated_tags": [
+        "Order Error"
+      ],
       "label": "no",
       "reason": "The alert gives generic advice about spreading jelly with a knife. The annotated error is about adding sweet and sour sauce out of order, before whisking and microwaving, which the alert does not mention."
     },
@@ -60,6 +79,9 @@
       "annotated": [
         "Set microwave to medium temperature instead of high"
       ],
+      "annotated_tags": [
+        "Temperature Error"
+      ],
       "label": "no",
       "reason": "The alert is a generic reminder about spraying the ramekin. The annotated error is microwaving at medium power instead of high, which the alert never addresses."
     },
@@ -69,6 +91,9 @@
       "alert": "That mug looks dirty. Wash it or pick a clean one first.",
       "annotated": [
         "Step performed before correct order"
+      ],
+      "annotated_tags": [
+        "Order Error"
       ],
       "label": "no",
       "reason": "The alert complains about a dirty mug, while the annotated error is an ordering mistake (pouring the egg into the ramekin too early); the alert does not identify the sequencing problem."
@@ -81,6 +106,11 @@
         "60 instead of 30 seconds; medium instead of high; Step performed before coating with cooking spray",
         "Step performed before coating with cooking spray"
       ],
+      "annotated_tags": [
+        "Order Error",
+        "Temperature Error",
+        "Timing Error"
+      ],
       "label": "no",
       "reason": "The alert is about when the sauce and salsa get added. The annotated errors are the wrong microwave time and power, and microwaving or stirring before coating with cooking spray, which is a different problem."
     },
@@ -91,6 +121,9 @@
       "annotated": [
         "2 instead of 1 egg"
       ],
+      "annotated_tags": [
+        "Measurement Error"
+      ],
       "label": "no",
       "reason": "The alert is a generic reminder about spraying the ramekin. The annotated error is pouring 2 eggs instead of 1, which the alert does not address."
     },
@@ -100,6 +133,9 @@
       "alert": "Use the knife to cut the muffin so you get clean, even halves.",
       "annotated": [
         "Using hand instead of knife"
+      ],
+      "annotated_tags": [
+        "Preparation Error"
       ],
       "label": "yes",
       "reason": "The alert tells the person to use the knife to cut the muffin, which is the annotated error of using a hand instead of a knife."
@@ -112,6 +148,10 @@
         "Did not spread jelly completely over the nut butter; Step performed before spreading nut butter",
         "Step performed before spreading nut butter"
       ],
+      "annotated_tags": [
+        "Order Error",
+        "Technique Error"
+      ],
       "label": "partial",
       "reason": "The alert is about spreading the jelly evenly, which loosely relates to the incomplete-coverage technique error. It does not say the jelly isn't fully covering the nut butter, and it misses the order error of spreading jelly before the nut butter."
     },
@@ -122,6 +162,10 @@
       "annotated": [
         "Spread on the boundary; Step performed before applying nut butter"
       ],
+      "annotated_tags": [
+        "Order Error",
+        "Technique Error"
+      ],
       "label": "no",
       "reason": "The alert is about using a knife instead of a spoon to scoop jelly. The annotated errors are spreading jelly on the boundary and applying it before the nut butter, which the alert does not mention."
     },
@@ -131,6 +175,9 @@
       "alert": "That's the baking soda. For this step you want baking powder, an eighth of a teaspoon.",
       "annotated": [
         "add-Measure 1 teaspoon of baking soda and add it to the mug instead of 1/16 teaspoon"
+      ],
+      "annotated_tags": [
+        "Measurement Error"
       ],
       "label": "partial",
       "reason": "The annotated error is the wrong amount of baking soda (1 tsp instead of 1/16 tsp). The alert instead flags using baking soda in place of baking powder. Both concern the leavening, but the alert does not identify the measurement error."
@@ -143,6 +190,10 @@
         "Step performed before beating the egg mixture; Using a cherry tomato instead of a tomato.",
         "Step performed after cooking the tomatoes and before adding cilantro to the bowl"
       ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
       "label": "partial",
       "reason": "The alert addresses the egg mixture timing, which is related to the order issue. But it does not flag that the tomatoes were started before beating the eggs. Instead it treats that order as acceptable. It also misses the cherry tomato substitution."
     },
@@ -152,6 +203,9 @@
       "alert": "That looks like a zucchini, not a cucumber. Put it back and grab the cucumber instead.",
       "annotated": [
         "Use zucchini instead of cucumber"
+      ],
+      "annotated_tags": [
+        "Preparation Error"
       ],
       "label": "yes",
       "reason": "The alert flags that zucchini is being used instead of cucumber, which is exactly the annotated error."
@@ -163,6 +217,9 @@
       "annotated": [
         "Step performed before whisking curd in the bowl"
       ],
+      "annotated_tags": [
+        "Order Error"
+      ],
       "label": "no",
       "reason": "The alert is about how to prepare the cilantro (chopping vs tearing), but the annotated error is about order: cilantro was added before the curd was whisked."
     },
@@ -172,6 +229,10 @@
       "alert": "Whisk the curd smooth first, then add the cumin.",
       "annotated": [
         "add 2 teaspoons instead of 1 teaspoon; Step performed before whisking curd in the bowl"
+      ],
+      "annotated_tags": [
+        "Measurement Error",
+        "Order Error"
       ],
       "label": "yes",
       "reason": "The alert flags the annotated order error, adding the cumin before the curd was whisked. It misses the measurement error, but one matching error is enough."
