@@ -1,0 +1,71 @@
+{
+  "device": "mps",
+  "torch": "2.14.1",
+  "machine": "macOS-26.6.2-arm64-arm-64bit",
+  "rows": [
+    {
+      "backbone": "siglip2-base-224 (image)",
+      "batch": 1,
+      "sec_per_call": 0.02006566699128598,
+      "ms_per_item": 20.06566699128598,
+      "items_per_s": 49.836369777006425,
+      "unit": "frame"
+    },
+    {
+      "backbone": "siglip2-base-224 (image)",
+      "batch": 8,
+      "sec_per_call": 0.10949095897376537,
+      "ms_per_item": 13.686369871720672,
+      "items_per_s": 73.06539348072423,
+      "unit": "frame"
+    },
+    {
+      "backbone": "siglip2-base-224 (text x16)",
+      "batch": 16,
+      "sec_per_call": 0.06731429102364928,
+      "ms_per_item": 4.20714318897808,
+      "items_per_s": 237.6909829500957,
+      "unit": "text"
+    },
+    {
+      "backbone": "dinov2-small (image)",
+      "batch": 1,
+      "sec_per_call": 0.011526874965056777,
+      "ms_per_item": 11.526874965056777,
+      "items_per_s": 86.75378218567103,
+      "unit": "frame"
+    },
+    {
+      "backbone": "dinov2-small (image)",
+      "batch": 8,
+      "sec_per_call": 0.052131749922409654,
+      "ms_per_item": 6.516468740301207,
+      "items_per_s": 153.4573462795093,
+      "unit": "frame"
+    },
+    {
+      "backbone": "vjepa2-vitl (16f@256)",
+      "batch": 1,
+      "sec_per_call": 0.6524178329855204,
+      "ms_per_item": 652.4178329855204,
+      "items_per_s": 1.532760064855851,
+      "unit": "window"
+    },
+    {
+      "backbone": "vjepa2-vitl (8f@224)",
+      "batch": 1,
+      "sec_per_call": 0.2214703329373151,
+      "ms_per_item": 221.4703329373151,
+      "items_per_s": 4.515277449296288,
+      "unit": "window"
+    },
+    {
+      "backbone": "mediapipe-hands",
+      "batch": 8,
+      "sec_per_call": 0.045650958083570004,
+      "ms_per_item": 5.70636976044625,
+      "items_per_s": 175.24276238310185,
+      "unit": "frame"
+    }
+  ]
+}
