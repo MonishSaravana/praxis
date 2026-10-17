@@ -73,7 +73,9 @@ def eval_clips(limit: int = 0, only: list[str] | None = None, need_features: boo
     return clips[:limit] if limit else clips
 
 
-def run_variant(name: str, limit: int = 0, only: list[str] | None = None, workers: int = 3, budget_usd: float = 40.0) -> dict:
+def run_variant(name: str, limit: int = 0, only: list[str] | None = None, workers: int = 3, budget_usd: float = 40.0,
+                tag: str = "") -> dict:
+    """tag: suffix for output names (smoke tests use tag='_smoke' so final results are never overwritten)."""
     from ..experiments import _budget, make_verifier
     over, vk, ek, det, oracle = VARIANTS[name]
     stack = harness.load_stack(detector=det)
@@ -91,7 +93,7 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
         import copy
         st = dict(stack)
         st["recognizer"] = copy.deepcopy(stack["recognizer"])
-        p = harness.run_clip(c, st, name, ecfg, ver, esc, oracle_task=oracle, calibrators=cals)
+        p = harness.run_clip(c, st, name + tag, ecfg, ver, esc, oracle_task=oracle, calibrators=cals)
         return harness.score_clip(c, p)
 
     with ThreadPoolExecutor(workers) as ex:
@@ -104,7 +106,7 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
            "aggregate": harness.aggregate(rows), "per_category": harness.per_category(rows), "per_clip": rows,
            "wall_s": time.time() - t0, "spend_usd": budget.usd, "calls": budget.calls}
     (RESULTS / "runs").mkdir(parents=True, exist_ok=True)
-    (RESULTS / "runs" / f"{name}.json").write_text(json.dumps(res, indent=1, default=float))
+    (RESULTS / "runs" / f"{name}{tag}.json").write_text(json.dumps(res, indent=1, default=float))
     return res
 
 
