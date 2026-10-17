@@ -1,6 +1,8 @@
 """Experiment drivers. Each writes JSON under results/ and is reproducible from the README commands."""
 from __future__ import annotations
 
+import zlib
+
 import json
 import time
 
@@ -487,7 +489,7 @@ def visual_uncertainty(n: int = 60, modes=("blur", "occlude", "crop_away"), conf
         def base_one(ci):
             fr, ages = span_frames(ci.video, ci.t_abs)
             if mode:
-                fr = degrade(fr, mode, seed=hash(ci.check_id) % 1000)
+                fr = degrade(fr, mode, seed=zlib.crc32(ci.check_id.encode()) % 1000)
             g = lib[ci.task_id]
             r = bl.query(fr, g.title, [nd.name for nd in g.nodes], frame_ages=ages)
             return ci, r

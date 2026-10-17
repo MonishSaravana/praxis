@@ -10,6 +10,8 @@ Eval-clip checks compare verifiers (Jev vs Claude), crops vs full frames, studen
 """
 from __future__ import annotations
 
+import zlib
+
 import json
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -162,7 +164,7 @@ def run_verifier_on_checks(verifier, checks: list[CheckItem], library: dict, out
         else:   # "recent3": 3 sharpest frames of the last 4 s
             frames, ages = frames_at(ci.video, ci.t_abs, sharp_from=9, return_times=True)
         if degrade_mode:
-            frames = degrade(frames, degrade_mode, seed=hash(ci.check_id) % 1000)
+            frames = degrade(frames, degrade_mode, seed=zlib.crc32(ci.check_id.encode()) % 1000)
         crops = crops_fn(ci, frames) if crops_fn else []
         nxt = [n for n in node.successors]
         req = VerifyRequest(t=ci.t_rel, frames=frames, node=node, graph=g, checks=node.checks, crops=crops,
