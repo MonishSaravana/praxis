@@ -340,6 +340,30 @@ def build() -> tuple[str, str]:
                   "on head-mounted cooking video most points are lost within a few seconds. Crops were therefore "
                   "computed offline for the crop experiment only; the live plan is in docs/MODEL_ROADMAP.md. Source: "
                   "`results/l1/tapnext_speed.json`.\n")
+    os_ = _jload("open_set/open_set.json")
+    if os_ and os_.get("conditions"):
+        names = {"frames": "Video only, draft after 30 s", "frames_90s": "Video only, draft after 90 s",
+                 "hint": "Video + the person's description (\"making <recipe>\"), draft after 30 s"}
+        md.append("## Open-set drafting: recipes Praxis has never seen\n")
+        md.append(f"The {len(os_['recipes'])} CaptainCook4D recipe types outside the library ({', '.join(os_['recipes'])}; "
+                  f"2 recordings each, first {num(os_['max_s'], 0)} s) were never compiled or trained on. The engine runs "
+                  f"without the task. When the typed task check keeps answering \"none of these\", Praxis drafts a light "
+                  f"task graph from what it has seen (steps, spoken instructions, visual end states; no mistake library) and "
+                  f"tracks it with zero-shot local evidence, announced as a draft. A judge (Claude Opus 5.5) compares each "
+                  f"draft with the dataset's own task graph for that recipe. Step accuracy after the draft maps annotated "
+                  f"steps to draft steps through the judge's matching.\n")
+        rows = []
+        for k, v in os_["conditions"].items():
+            a = v["aggregate"]
+            rows.append([names.get(k, k), f"{a['n_drafted']} / {a['n_clips']}", str(a["announced_library_task_first"]),
+                         f"{a['title_yes']} yes, {a['title_partial']} partial", pct(a["step_recall_mean"]),
+                         pct(a["draft_precision_mean"]), pct(a["step_acc_after_draft_mean"]),
+                         f"{num(a['t_draft_median_s'], 0)} s / {num(a['draft_latency_median_s'], 0)} s"])
+        md.append(table(rows, ["Condition", "Drafted", "Announced a wrong library task", "Recipe named (of drafted)",
+                               "Reference steps covered", "Draft steps matching a reference step",
+                               "Step accuracy after the draft", "Median draft time / drafting latency"]))
+        md.append(f"\nTrigger: {os_['trigger']}. Drafts and judgments are in `results/open_set/` (each draft graph is "
+                  f"saved under `results/open_set/drafts/`). Source: `results/open_set/open_set.json`.\n")
     lv = _jload("live/live_replay_10_18_0.json")
     if lv and lv.get("summary"):
         sm = lv["summary"]
@@ -562,6 +586,19 @@ def claims(m: dict) -> str:
                    f"instructions as the person worked, "
                    f"with the local layers taking about {sm['l1_frame_ms']['p50']:.0f} ms per frame.\" "
                    f"(`results/live/live_replay_10_18_0.json`)")
+    os_ = _jload("open_set/open_set.json")
+    if os_ and os_.get("conditions"):
+        h, fr = os_["conditions"].get("hint", {}).get("aggregate"), os_["conditions"].get("frames", {}).get("aggregate")
+        if h and h["n_drafted"]:
+            out.append(f"- \"For recipes it had never seen, Praxis didn't stay silent. When the person said what they "
+                       f"were making, it drafted a step-by-step plan in about {h['draft_latency_median_s']:.0f} seconds "
+                       f"that covered {h['step_recall_mean'] * 100:.0f}% of the dataset's annotated steps on average, "
+                       f"and tracked the person's step with it {h['step_acc_after_draft_mean'] * 100:.0f}% of the time, "
+                       f"with no training video.\" (`results/open_set/open_set.json`)")
+        if fr and fr["n_drafted"]:
+            out.append(f"- \"From video alone after 30 seconds, it named the recipe on {fr['title_yes']} of "
+                       f"{fr['n_drafted']} recordings, so for unknown tasks the product should ask what you're making "
+                       f"rather than guess.\" (`results/open_set/open_set.json`)")
     out.append("\n## Do NOT claim (not measured or not true yet)\n")
     for s in ["Praxis runs on smart glasses. It has not been tested on glasses; the glasses adapter is a documented stub "
               "(docs/GLASSES.md). Say instead: 'it runs live on a video stream in real time; glasses are one more input "
@@ -572,6 +609,9 @@ def claims(m: dict) -> str:
               "public data, and on CaptainCook4D it was NOT associated with annotated errors (see RESULTS.md).",
               "Real-time point tracking. TAPNext++ ran offline for the crop experiment; it was too slow on this Mac for "
               "live use.",
+              "That Praxis can coach any task out of the box. Open-set drafts were tested on 4 unseen recipes "
+              "(8 recordings) in one domain; drafts have no mistake library, and the video-only draft often "
+              "misnamed the task (results/open_set/).",
               "That live mode was tested with a webcam. It was tested on a recorded clip replayed in real time (no camera "
               "was available to this build). Also don't say the slow path never stalls the loop: frontier-model "
               "escalations still block it for a few seconds (results/live/).",

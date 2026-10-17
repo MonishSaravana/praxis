@@ -61,6 +61,13 @@ def main() -> dict:
     judge = [json.loads(f.read_text()) for f in sorted((CACHE / "api").glob("judge_*/*.json"))]
     items["mistake judge (Opus 5.5)"] = sum(j.get("_cost_usd", 0.0) for j in judge)
     n_judge_unrecorded = sum("_cost_usd" not in j for j in judge)
+    # open-set drafting: engine runs (new calls only) + each draft and each draft-judge call once, from their caches
+    for f in sorted((RESULTS / "open_set").glob("*.json")):
+        items[f"open-set engine runs: {f.stem}"] = json.loads(f.read_text()).get("engine_spend_usd", 0.0)
+    items["open-set drafts (Opus 5.5)"] = sum(json.loads(f.read_text()).get("cost_usd", 0.0)
+                                              for f in (CACHE / "api").glob("draft_*/*.json"))
+    items["open-set draft judge (Opus 5.5)"] = sum(json.loads(f.read_text()).get("_cost_usd", 0.0)
+                                                   for f in (CACHE / "api").glob("draftjudge_*/*.json"))
     for f in ("industreal_demo.json", "policy_demo.json"):
         p = RESULTS / f
         if p.exists():

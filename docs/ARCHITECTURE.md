@@ -83,7 +83,7 @@ Legend:
 | L0 | `praxis/io/sources.py` | `FrameSource.__iter__() -> Frame(t, rgb)` |
 | L1 | `praxis/perception/backbones.py`, `tracks.py`, `extract.py` | `SigLIP.images/texts`, `VJEPA2.clips`, `Hands.frame`, `PointTracker.seed/update` |
 | L2 | `praxis/events/detector.py` | `score(ClipFeatures) -> {boundary, grasp}` |
-| L3 | `praxis/tasks/compiler.py`, `schema.py` | `compile_procedure(...) -> TaskGraph` |
+| L3 | `praxis/tasks/compiler.py`, `schema.py`, `drafter.py` | `compile_procedure(...) -> TaskGraph`; open set: `draft_task(frames, hint) -> TaskGraph(draft=True)` |
 | L3b | `praxis/tasks/recognizer.py` | `update(t, frame_emb, window_emb) -> Recognition` |
 | L4 | `praxis/state_tracker.py`, `praxis/evidence.py` | `predict / observe_local / observe_boundary / observe_verdict -> Belief` |
 | L5 | `praxis/verify/{schema,claude,jev,calibration}.py`, `flywheel/distill.py` | `verify(VerifyRequest) -> Verdict` |

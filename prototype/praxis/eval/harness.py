@@ -63,7 +63,7 @@ def decode_frames(clip: Clip, fps: float = 4.0, max_side: int = 640) -> list[np.
 def run_clip(clip: Clip, stack: dict, run_name: str, ecfg: EngineConfig, verifier=None, escalation=None,
              calibrator=None, dev_calibrator=None, oracle_task: bool = False, join_at: float | None = None,
              user=None, frames: list[np.ndarray] | None = None, point_tracker=None, calibrators: dict | None = None,
-             localizer=None) -> Path:
+             localizer=None, drafter=None) -> Path:
     feats, _ = load_features(clip.clip_id)
     if len(feats.t) and feats.t[-1] > clip.duration + 0.5:      # clip shorter than its feature file (e.g. truncated)
         m = feats.t <= clip.duration
@@ -93,7 +93,7 @@ def run_clip(clip: Clip, stack: dict, run_name: str, ecfg: EngineConfig, verifie
             rec.reset()
         eng = Engine(ecfg, stack["library"], stack["evidence"], None if oracle_task else rec, stack["detector"],
                      verifier, escalation, calibrator, dev_calibrator, log, task_id=clip.task_id if oracle_task else None,
-                     user=user, point_tracker=point_tracker, calibrators=calibrators, localizer=localizer)
+                     user=user, point_tracker=point_tracker, calibrators=calibrators, localizer=localizer, drafter=drafter)
         info = replay(eng, feats, scores, frames)
         log.write("summary", float(feats.t[-1]) if len(feats.t) else 0.0, **info)
     return out

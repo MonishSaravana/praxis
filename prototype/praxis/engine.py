@@ -41,6 +41,13 @@ class EngineConfig:
     frames_per_call: int = 3
     frame_spacing_s: float = 1.0
     roi_crops: bool = False
+    # open-set drafting (M5): if the typed task check keeps answering "none of these" after open_set_min_s, draft a
+    # light graph from the last open_set_window_s of frames (tasks/drafter.py) and start tracking it as a draft
+    open_set_draft: bool = False
+    open_set_min_s: float = 20.0
+    open_set_none_streak: int = 2
+    open_set_window_s: float = 90.0
+    open_set_max_wait_s: float = 60.0      # ...or nothing recognized by then
     join_mid_task: bool = False
     start_prior_mass: float = 0.7       # belief mass on graph start nodes at recognition (rest uniform)
     recognize: bool = True              # False = task given (oracle), skip L3b
@@ -64,8 +71,12 @@ class Engine:
     def __init__(self, cfg: EngineConfig, library: dict[str, TaskGraph], evidence: dict, recognizer: TaskRecognizer | None,
                  detector, verifier=None, escalation=None, calibrator: Calibrator | None = None,
                  dev_calibrator: Calibrator | None = None, log: RunLog | None = None, task_id: str | None = None,
-                 user: UserModel | None = None, point_tracker=None, calibrators: dict | None = None, localizer=None):
+                 user: UserModel | None = None, point_tracker=None, calibrators: dict | None = None, localizer=None,
+                 drafter=None):
         self.cfg, self.lib, self.evidence = cfg, library, evidence
+        self.drafter = drafter        # open-set: frames -> (draft TaskGraph, zero-shot evidence); see tasks/drafter.py
+        self._none_streak = 0
+        self._drafted = False
         self.loc = localizer          # which verifier answers "which step?" (defaults to the fast verifier)
         self.rec, self.det = recognizer, detector
         self.ver, self.esc = verifier, escalation
@@ -118,8 +129,11 @@ class Engine:
             raise ValueError(f"evidence node order != graph node order for {task_id}")
         self._w("task", t, task_id=task_id, title=self.graph.title, oracle=oracle, posterior=posterior,
                 n_steps=len(self.graph.nodes))
-        acts = [Action(t, "announce_task", f"Looks like you're {activity_phrase(self.graph)}. Want me to walk you through it?",
-                       None, {"oracle": oracle, "title": self.graph.title})]
+        text = (f"Looks like you're {activity_phrase(self.graph)}. I don't have a plan for that yet, so I drafted one "
+                f"from what I've seen. Tell me if a step looks off." if self.graph.draft else
+                f"Looks like you're {activity_phrase(self.graph)}. Want me to walk you through it?")
+        acts = [Action(t, "announce_task", text, None, {"oracle": oracle, "title": self.graph.title,
+                                                        "draft": self.graph.draft})]
         return acts
 
     def _emit(self, acts: list[Action]) -> None:
@@ -172,6 +186,7 @@ class Engine:
                         ch = ans["choice"]
                         self._choice_streak = self._choice_streak + 1 if ch == self._last_choice else 1
                         self._last_choice = ch
+                        self._none_streak = self._none_streak + 1 if ch not in self.lib else 0
                         if ch in self.lib and ch not in self.rec.task_ids:
                             # library task the local recognizer was never trained on (e.g. a newly compiled graph):
                             # recognized from two consecutive confident verifier answers
@@ -190,6 +205,24 @@ class Engine:
                     self._last_task_probs.get(r.task_id, 0.0) < 0.5:
                 r = replace(r, recognized=False)       # announce only what the latest verifier check also supports
             self._w("recognizer", t, top=r.task_id, posterior=r.posterior, recognized=r.recognized, open_set=r.open_set)
+            if (not r.recognized and self.cfg.open_set_draft and self.drafter is not None and not self._drafted
+                    and t >= self.cfg.open_set_min_s and (self._none_streak >= self.cfg.open_set_none_streak
+                                                          or t >= self.cfg.open_set_max_wait_s)):
+                self._drafted = True
+                from .tasks.drafter import keyframes_for_draft
+                try:
+                    g, ev = self.drafter(keyframes_for_draft(frame_at, max(0.0, t - self.cfg.open_set_window_s), t))
+                except Exception as e:  # noqa: BLE001
+                    self._w("task_draft", t, error=str(e)[:200])
+                    return
+                self.lib = {**self.lib, g.task_id: g}
+                self.evidence = {**self.evidence, g.task_id: ev}
+                self._w("task_draft", t, task_id=g.task_id, title=g.title, steps=[n.name for n in g.nodes],
+                        **{k: g.compiler.get(k) for k in ("model", "confidence", "cost_usd", "latency_s", "cached")})
+                acts = self._start_task(t, g.task_id)
+                acts += self.policy.start(t, self.tracker.belief().map_id)
+                self._emit(acts)
+                return
             if r.recognized:
                 acts = self._start_task(t, r.task_id, posterior=r.posterior)
                 start = self.tracker.belief().map_id

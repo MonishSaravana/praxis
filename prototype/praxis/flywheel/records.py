@@ -10,7 +10,7 @@ Schema praxis.record/1 (JSON):
   "session": {run_id, run, created, engine config, model ids, prompt versions},
   "source": {dataset, recording, video, clip_start, clip_end, license},
   "task": {task_id, graph_version, recognized_at, oracle},
-  "features": {"path": data/features/<clip>.npz, "keys": [...], "fps": 4, "window_stride_s": 2},
+  "features": {"path": data/features/<clip>.npz, "keys": [...], "fps": 4, "window_s": 2, "window_stride_s": 1},
   "timeline": [ {t, belief:{map, map_p, entropy, top3}, fast:{boundary, grasp}, gt_step} ... ]   # 1 Hz
   "events": [ {t, kind, score} ],
   "verifier_calls": [ {t, node, question_set, frames_t:[...], model, prompt_version, verdict:{...},
@@ -76,7 +76,7 @@ def export(log_path: Path, clip: Clip, out_dir: Path) -> Path:
         "task": {"task_id": tasks[0]["task_id"] if tasks else None, "recognized_at": tasks[0]["t"] if tasks else None,
                  "oracle": tasks[0].get("oracle") if tasks else None, "gt_task_id": clip.task_id},
         "features": {"path": str((FEATURES / f"{clip.clip_id}.npz").relative_to(FEATURES.parents[1])),
-                     "keys": ["t", "siglip", "dino", "window", "hands", "change"], "fps": 4, "window_stride_s": 2,
+                     "keys": ["t", "siglip", "dino", "window", "hands", "change"], "fps": 4, "window_s": 2, "window_stride_s": 1,
                      "time_offset_s": shift},
         "timeline": timeline,
         "events": [{"t": e["t"], "event": e["event"], "score": e["score"]} for e in by_kind(recs, "event")],
