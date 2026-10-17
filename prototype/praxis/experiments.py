@@ -65,10 +65,14 @@ def run_baseline_clip(clip: Clip, baseline, graph, run_name: str, every_s: float
         log.write("task", 0.0, task_id=clip.task_id, title=graph.title, oracle=True, posterior=None, n_steps=len(names))
         t = every_s
         n_frames = len(frames)
+        from .verify.common import span_keyframes
+
+        def frame_at(x):
+            i = int(round(x * 4))
+            return frames[i] if 0 <= i < n_frames else None
         while t <= clip.duration:
-            idx = [int(round((t - k) * 4)) for k in (2, 1, 0)]
-            fr = [frames[i] for i in idx if 0 <= i < n_frames]
-            r = baseline.query(fr, graph.title, names, frame_ages=[2.0, 1.0, 0.0][-len(fr):])
+            fr, ts = span_keyframes(frame_at, t)       # same evidence selection as the engine's verifier
+            r = baseline.query(fr, graph.title, names, frame_ages=[t - x for x in ts])
             if "error" in r:
                 log.write("verdict", t, node=None, reason="schedule", status="error", confidence=0.0, mistake=None,
                           visibility="ok", view_request=None, model=baseline.model, role="baseline", prompt_version="",
@@ -297,6 +301,69 @@ def framing_ablation(n: int = 100, kinds=("jev", "claude_fast", "claude_sonnet",
             print(row, flush=True)
     (RESULTS / "l5").mkdir(parents=True, exist_ok=True)
     (RESULTS / "l5" / "framing_ablation.json").write_text(json.dumps(res, indent=2))
+    return res
+
+
+
+def adaptive_detail(run_name: str = "fused") -> dict:
+    """L6: does the time-on-step signal fire where GT shows struggle? Reported as an association, not as
+    evidence that it helps users.
+    (a) GT-only: per annotated step on eval clips, ratio = time from previous step end to this step end over the
+        train-split duration prior; compare steps with GT errors vs without.
+    (b) Engine: steps that received a 'hint' (expanded detail) in the run logs vs GT error / ratio."""
+    from scipy.stats import mannwhitneyu
+    from .runlog import by_kind, read_log
+    from .tasks.compiler import load_library
+    lib = load_library()
+    man = load_manifest()
+    rows = []
+    for cj in man["eval"]:
+        c = Clip.from_json(cj)
+        g = lib[c.task_id]
+        prev_end = 0.0
+        for s in sorted(c.segments, key=lambda x: x.start):
+            node = g.node(s.step)
+            if not node.duration or s.start < 1.0:
+                prev_end = max(prev_end, s.end)
+                continue
+            dur = s.end - max(prev_end, s.start - 60.0)
+            prev_end = max(prev_end, s.end)
+            tags = [e["tag"] for e in s.errors if e["tag"] != "Missing Step"]
+            rows.append({"clip": c.clip_id, "step": s.step, "ratio": dur / node.duration.mean_s, "error": bool(s.has_error and tags),
+                         "tags": tags})
+    r_err = [r["ratio"] for r in rows if r["error"]]
+    r_ok = [r["ratio"] for r in rows if not r["error"]]
+    u = mannwhitneyu(r_err, r_ok, alternative="greater") if r_err and r_ok else None
+    thr = 1.6
+    slow = [r for r in rows if r["ratio"] > thr]
+    res = {"gt_only": {"n_steps": len(rows), "median_ratio_error_steps": float(np.median(r_err)) if r_err else None,
+                       "median_ratio_ok_steps": float(np.median(r_ok)) if r_ok else None,
+                       "mannwhitney_p_error_slower": float(u.pvalue) if u else None,
+                       "threshold": thr, "share_slow_steps_with_error": float(np.mean([r["error"] for r in slow])) if slow else None,
+                       "share_all_steps_with_error": float(np.mean([r["error"] for r in rows])) if rows else None,
+                       "median_ratio_by_error_type": {t: {"n": len(v), "median_ratio": float(np.median(v))} for t, v in
+                                                      {t: [r["ratio"] for r in rows if t in r["tags"]] for t in
+                                                       sorted({t for r in rows for t in r["tags"]})}.items() if v}}}
+    hinted, total = [], []
+    for cj in man["eval"]:
+        c = Clip.from_json(cj)
+        p = RESULTS.parent / "runs" / run_name / f"{c.clip_id}.jsonl"
+        if not p.exists():
+            continue
+        acts = by_kind(read_log(p), "action")
+        hints = {a["node"] for a in acts if a["action"] == "hint"}
+        for s in c.segments:
+            tags = [e["tag"] for e in s.errors if e["tag"] != "Missing Step"]
+            e = bool(s.has_error and tags)
+            total.append(e)
+            if s.step in hints:
+                hinted.append(e)
+    if total:
+        res["engine"] = {"run": run_name, "n_steps": len(total), "n_hinted_steps": len(hinted),
+                         "error_rate_hinted_steps": float(np.mean(hinted)) if hinted else None,
+                         "error_rate_all_steps": float(np.mean(total))}
+    (RESULTS / "l6").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l6" / "adaptive_detail.json").write_text(json.dumps(res, indent=2))
     return res
 
 

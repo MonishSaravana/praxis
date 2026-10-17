@@ -64,9 +64,9 @@ def calibrators(kind: str | None):
     return (Calibrator.load(p) if p.exists() else None, Calibrator.load(q) if q.exists() else None)
 
 
-def eval_clips(limit: int = 0, only: list[str] | None = None) -> list[Clip]:
+def eval_clips(limit: int = 0, only: list[str] | None = None, need_features: bool = True) -> list[Clip]:
     man = load_manifest()
-    clips = [Clip.from_json(c) for c in man["eval"] if (FEATURES / f"{c['clip_id']}.npz").exists()]
+    clips = [Clip.from_json(c) for c in man["eval"] if not need_features or (FEATURES / f"{c['clip_id']}.npz").exists()]
     if only:
         clips = [c for c in clips if c.clip_id in only]
     return clips[:limit] if limit else clips
@@ -104,24 +104,25 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
     return res
 
 
-def run_baseline(limit: int = 0, only: list[str] | None = None, every_s: float = 5.0, workers: int = 4) -> dict:
+def run_baseline(limit: int = 0, only: list[str] | None = None, every_s: float = 5.0, workers: int = 4,
+                 model: str = "claude-opus-5-5", effort: str = "medium", name: str = "baseline_stateless") -> dict:
     from ..experiments import _budget, run_baseline_clip
     from ..tasks.compiler import load_library
     from ..verify.claude import StatelessBaseline
     lib = load_library()
-    budget = _budget(max_calls=6000, max_usd=30.0)
-    bl = StatelessBaseline("claude-haiku-5-5", budget)
-    clips = eval_clips(limit, only)
+    budget = _budget(max_calls=6000, max_usd=45.0)
+    bl = StatelessBaseline(model, budget, effort=effort)
+    clips = eval_clips(limit, only, need_features=False)
 
     def one(c: Clip):
-        p = run_baseline_clip(c, bl, lib[c.task_id], "baseline_stateless", every_s=every_s)
+        p = run_baseline_clip(c, bl, lib[c.task_id], name, every_s=every_s)
         return harness.score_clip(c, p)
 
     with ThreadPoolExecutor(workers) as ex:
         rows = list(ex.map(one, clips))
-    res = {"variant": "baseline_stateless", "config": {"model": bl.model, "every_s": every_s, "mistake_conf": 0.7},
+    res = {"variant": name, "config": {"model": bl.model, "effort": effort, "every_s": every_s, "mistake_conf": 0.7},
            "aggregate": harness.aggregate(rows), "per_category": harness.per_category(rows), "per_clip": rows,
            "spend_usd": budget.usd, "calls": budget.calls}
     (RESULTS / "runs").mkdir(parents=True, exist_ok=True)
-    (RESULTS / "runs" / "baseline_stateless.json").write_text(json.dumps(res, indent=1, default=float))
+    (RESULTS / "runs" / f"{name}.json").write_text(json.dumps(res, indent=1, default=float))
     return res
