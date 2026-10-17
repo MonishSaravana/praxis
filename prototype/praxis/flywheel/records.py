@@ -79,7 +79,7 @@ def export(log_path: Path, clip: Clip, out_dir: Path) -> Path:
                      "keys": ["t", "siglip", "dino", "window", "hands", "change"], "fps": 4, "window_stride_s": 2,
                      "time_offset_s": shift},
         "timeline": timeline,
-        "events": [{"t": e["t"], "kind": e["kind"], "score": e["score"]} for e in by_kind(recs, "event")],
+        "events": [{"t": e["t"], "event": e["event"], "score": e["score"]} for e in by_kind(recs, "event")],
         "verifier_calls": calls,
         "actions": [{k: a.get(k) for k in ("t", "action", "text", "node", "detail")} for a in by_kind(recs, "action")],
         "tracks": [{k: r.get(k) for k in ("t", "xy", "visible", "roi")} for r in by_kind(recs, "tracks")],

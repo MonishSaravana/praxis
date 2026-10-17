@@ -166,9 +166,9 @@ class Engine:
         bpeak = self._causal_peak(self._bscores, self.cfg.boundary_thr, "_last_peak_t")
         gpeak = self._causal_peak(self._gscores, self.cfg.grasp_thr, "_last_grasp_t")
         if bpeak:
-            self._w("event", t, kind="boundary", score=bpeak)
+            self._w("event", t, event="boundary", score=bpeak)
         if gpeak:
-            self._w("event", t, kind="grasp", score=gpeak)
+            self._w("event", t, event="onset", score=gpeak)
 
         # L5 at events
         reason = None
@@ -184,7 +184,9 @@ class Engine:
 
         # L6 hesitation -> expanded detail
         self._emit(pol.hesitation(t, belief))
-        self._w("belief", t, **belief.as_dict(), user=self.user.state())
+        bd = belief.as_dict()
+        bd.pop("t", None)
+        self._w("belief", t, **bd, user=self.user.state())
 
     def _causal_peak(self, scores, thr, attr) -> float | None:
         if len(scores) < 3:

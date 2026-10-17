@@ -327,7 +327,7 @@ class EngineerView:
         if len(pts) > 1:
             d.line(pts, fill=BLUE, width=2)
         for e in st.events:
-            if tau - win <= e["t"] <= tau and e.get("kind") == "boundary":
+            if tau - win <= e["t"] <= tau and e.get("event") == "boundary":
                 d.ellipse((xs(e["t"]) - 4, ty0 + 4, xs(e["t"]) + 4, ty0 + 12), fill=BLUE)
         for v in st.verdicts:
             if tau - win <= v["t"] <= tau:
