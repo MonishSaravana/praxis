@@ -77,6 +77,11 @@ This opens <http://127.0.0.1:8800> (keys come from `../.env`; the first start lo
 - **Local viewer.** Run `cd prototype && uv run python -m praxis.viewer fused`, then
   `cd .. && python3 -m http.server 8765`, and open <http://localhost:8765/renders/viewer/>. The viewer shows the
   video, the synced belief over the task graph, the event log and per-clip metrics.
+- **Public site: <https://praxis.monishsaravana.com>.** A static build of the landing page (numbers read from
+  `results/metrics.json`), the showcase renders, the 48-clip viewer with its videos, and the saved Studio sessions
+  as replays (test-clip sessions only, unless one is named with `--session`). It calls no model. Rebuild and
+  publish with `cd prototype && uv run python -m praxis.site build && uv run python -m praxis.site deploy`
+  (S3 bucket `praxis-monishsaravana-site` behind CloudFront `E2WTNW9W6MV1LC`; needs the AWS CLI signed in).
 
 ## Status and honesty notes
 - Every number in the deck or the interview must come from `results/` (see `docs/CLAIMS.md`).

@@ -7,6 +7,10 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<
 const money = (x) => (x < 0.1 ? x.toFixed(4) : x.toFixed(2));
 const fmtT = (t) => `${Math.floor(t / 60)}:${(t % 60).toFixed(0).padStart(2, "0")}`;
 const params = new URLSearchParams(location.search);
+// Static export (praxis.site): saved sessions only, read from JSON files next to the page instead of the server.
+const STATIC = document.body.dataset.static === "1";
+const api = (p) => !STATIC ? p : p === "/api/status" ? "data/status.json" : p === "/api/sessions" ? "data/sessions.json"
+  : p.startsWith("/api/sessions/") ? `data/sessions/${p.slice(14)}.json` : p.slice(1);
 
 const S = {
   status: null, ws: null, running: false, input: "camera", stream: null, mediaStart: 0, mediaEnd: null,
@@ -16,7 +20,7 @@ const S = {
 
 // ------------------------------------------------------------------ boot
 async function boot() {
-  const r = await fetch("/api/status");
+  const r = await fetch(api("/api/status"));
   S.status = await r.json();
   const m = S.status.models;
   setPill("#p-jev", m.jev ? "Jev ready" : "Jev key missing", m.jev ? "ok" : "bad");
@@ -28,6 +32,7 @@ async function boot() {
   S.hud = new Hud($("#stage"), S.status.label + " · Praxis Studio");
   S.hud.onAsk = (text) => describe(text);
   S.eng = new EngineerPanel($("#engineer"));
+  if (STATIC) { window.addEventListener("hashchange", route); route(); return; }
   if (params.get("clip")) { $("#in-clip").checked = true; $("#clip").value = params.get("clip"); }
   if (params.get("fakecam")) $("#in-camera").checked = true;
   bindUI();
@@ -365,6 +370,7 @@ function showPanel(name) {
 // ------------------------------------------------------------------ sessions
 function route() {
   const h = location.hash;
+  if (STATIC && !h.startsWith("#/sessions")) { location.replace("#/sessions"); return; }
   $("#view-live").classList.toggle("hidden", h.startsWith("#/sessions"));
   $("#view-sessions").classList.toggle("hidden", !h.startsWith("#/sessions"));
   $$("nav a").forEach((a) => a.classList.toggle("on", (a.getAttribute("href") === "#/sessions") === h.startsWith("#/sessions")));
@@ -374,7 +380,7 @@ function route() {
 
 async function listSessions() {
   $("#replay").classList.add("hidden");
-  const list = await (await fetch("/api/sessions")).json();
+  const list = await (await fetch(api("/api/sessions"))).json();
   $("#sessions").classList.remove("hidden");
   $("#sessions").innerHTML = list.length ? `<table><tr><th>When</th><th>Task</th><th>Length</th><th>Praxis said</th><th>Flags</th><th>Cost</th><th>Replay video</th></tr>` +
     list.map((s) => {
@@ -388,7 +394,7 @@ async function listSessions() {
 
 async function openSession(sid) {
   $("#sessions").classList.add("hidden");
-  const d = await (await fetch(`/api/sessions/${encodeURIComponent(sid)}`)).json();
+  const d = await (await fetch(api(`/api/sessions/${encodeURIComponent(sid)}`))).json();
   const s = d.session;
   $("#replay").classList.remove("hidden");
   const st = new LogState();
@@ -401,12 +407,12 @@ async function openSession(sid) {
   const eng = new EngineerPanel($("#rengineer"));
   eng.setNodes(d.nodes);
   const v = $("#rvideo");
-  v.src = `/files/${encodeURIComponent(sid)}/camera.mp4`;
+  v.src = api(`/files/${encodeURIComponent(sid)}/camera.mp4`);
   const dur = Math.max(1, s.duration_s);
   $("#rmeta").innerHTML = `<b>${esc(s.task?.title || "No task")}</b> · ${esc(s.created)} · ${fmtT(s.duration_s)} · input ${esc(s.input)} (${esc(s.source || "")})
-    · <a href="/files/${encodeURIComponent(sid)}/SUMMARY.md" target="_blank">SUMMARY.md</a>
-    · <a href="/files/${encodeURIComponent(sid)}/live.jsonl" target="_blank">run log</a>
-    ${s.replay?.status === "ready" ? ` · <a href="/files/${encodeURIComponent(sid)}/hud_replay.mp4" target="_blank">HUD replay MP4</a>` : ` · HUD replay: ${esc(s.replay?.status || "-")}`}`;
+    · <a href="${api(`/files/${encodeURIComponent(sid)}/SUMMARY.md`)}" target="_blank">SUMMARY.md</a>
+    · <a href="${api(`/files/${encodeURIComponent(sid)}/live.jsonl`)}" target="_blank">run log</a>
+    ${s.replay?.status === "ready" ? ` · <a href="${api(`/files/${encodeURIComponent(sid)}/hud_replay.mp4`)}" target="_blank">HUD replay MP4</a>` : ` · HUD replay: ${esc(s.replay?.status || "-")}`}`;
   $("#rflags").innerHTML = d.flags.map((f) =>
     `<button class="fl ${f.kind}" style="left:${(100 * f.t) / dur}%" title="${esc(f.note || "")}" data-t="${f.t}">${f.kind === "wrong" ? "✕" : "?"}</button>`).join("");
   $$("#rflags .fl").forEach((b) => b.addEventListener("click", () => { v.currentTime = Math.max(0, +b.dataset.t - 4); v.play(); }));

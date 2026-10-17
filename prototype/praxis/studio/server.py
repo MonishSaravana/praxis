@@ -23,6 +23,7 @@ from .core import SESSIONS, StudioCore
 
 STATIC = Path(__file__).parent / "static"
 app = FastAPI(title="Praxis Studio")
+LABEL = "Praxis prototype v0 · real model output"
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 CORE: StudioCore | None = None
 JOBS: dict = {}
@@ -47,7 +48,7 @@ def status():
     c = core()
     return {"models": c.model_status(), "library": c.library(), "clips": c.dev_clips(),
             "defaults": {"cost_cap": 1.0, "escalation": True, "speech": True},
-            "label": "Praxis prototype v0 · real model output"}
+            "label": LABEL}
 
 
 @app.post("/api/compile")

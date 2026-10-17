@@ -28,3 +28,6 @@ renders/_work/
 
 # Praxis Studio sessions: personal video, run logs, flags (never committed)
 /sessions/
+
+# static public site build (python -m praxis.site build; videos are symlinks)
+/site/
