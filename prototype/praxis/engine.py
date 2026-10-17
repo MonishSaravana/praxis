@@ -26,6 +26,7 @@ from .state_tracker import DONE, StateTracker, TrackerConfig
 from .tasks.recognizer import TaskRecognizer
 from .tasks.schema import TaskGraph
 from .verify.calibration import Calibrator, raw_p_complete
+from .verify.common import pick_keyframes
 from .verify.schema import Verdict, VerifyRequest
 
 
@@ -201,10 +202,12 @@ class Engine:
     def _verify(self, t: float, belief, reason: str, frame_at) -> None:
         tr, pol, g = self.tracker, self.policy, self.graph
         node = g.node(belief.map_id)
-        times = [t - self.cfg.frame_spacing_s * i for i in reversed(range(self.cfg.frames_per_call))]
-        frames = [f for f in (frame_at(x) for x in times) if f is not None]
-        if not frames:
+        # keyframe selection: the sharpest frames of the last 4 s (head-mounted video is often motion-blurred)
+        cand_t = [t - 0.5 * i for i in reversed(range(9))]
+        cand = [(x, f) for x, f in ((x, frame_at(x)) for x in cand_t) if f is not None]
+        if not cand:
             return
+        frames, times = pick_keyframes([f for _, f in cand], [x for x, _ in cand], self.cfg.frames_per_call)
         crops = []
         if self.cfg.roi_crops and self.pt is not None:
             c = self.pt(t)
@@ -212,7 +215,7 @@ class Engine:
                 crops.append(c)
         nxt_ids = [n for n in node.successors if n not in tr.completed]
         req = VerifyRequest(t=t, frames=frames, node=node, graph=g, checks=node.checks, crops=crops,
-                            context={"frame_ages": [t - x for x in times[-len(frames):]], "time_on_step": belief.time_on_step,
+                            context={"frame_ages": [t - x for x in times], "time_on_step": belief.time_on_step,
                                      "next_step": g.node(nxt_ids[0]).name if nxt_ids else None})
         v = self.ver.verify(req)
         roles = [self._log_verdict(t, v, reason)]

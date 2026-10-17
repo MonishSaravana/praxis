@@ -60,12 +60,16 @@ def build_checks(clips: list[Clip], min_seg_s: float = 6.0, max_per_clip: int = 
     return out
 
 
-def frames_at(video: str, t_abs: float, n: int = 3, spacing: float = 1.0, max_side: int = 640) -> list[np.ndarray]:
+def frames_at(video: str, t_abs: float, n: int = 3, spacing: float = 1.0, max_side: int = 640,
+              sharp_from: int = 0, return_times: bool = False):
+    """n frames ending at t_abs. With sharp_from=k, take k candidates every 0.5 s over the last (k-1)/2 s and
+    keep the n sharpest (egocentric keyframe selection, same rule the engine uses)."""
     cap = cv2.VideoCapture(video)
     fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
-    out = []
-    for k in reversed(range(n)):
-        cap.set(cv2.CAP_PROP_POS_FRAMES, max(0, int((t_abs - k * spacing) * fps)))
+    out, ts = [], []
+    offs = [k * 0.5 for k in reversed(range(sharp_from))] if sharp_from else [k * spacing for k in reversed(range(n))]
+    for off in offs:
+        cap.set(cv2.CAP_PROP_POS_FRAMES, max(0, int((t_abs - off) * fps)))
         ok, bgr = cap.read()
         if not ok:
             continue
@@ -74,8 +78,12 @@ def frames_at(video: str, t_abs: float, n: int = 3, spacing: float = 1.0, max_si
         if s < 1:
             bgr = cv2.resize(bgr, (int(w * s), int(h * s)), interpolation=cv2.INTER_AREA)
         out.append(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
+        ts.append(t_abs - off)
     cap.release()
-    return out
+    if sharp_from:
+        from ..verify.common import pick_keyframes
+        out, ts = pick_keyframes(out, ts, n)
+    return (out, [t_abs - x for x in ts]) if return_times else out
 
 
 def degrade(frames: list[np.ndarray], mode: str, seed: int = 0) -> list[np.ndarray]:
@@ -111,13 +119,13 @@ def run_verifier_on_checks(verifier, checks: list[CheckItem], library: dict, out
             return done[ci.check_id]
         g = library[ci.task_id]
         node = g.node(ci.node)
-        frames = frames_at(ci.video, ci.t_abs)
+        frames, ages = frames_at(ci.video, ci.t_abs, sharp_from=9, return_times=True)
         if degrade_mode:
             frames = degrade(frames, degrade_mode, seed=hash(ci.check_id) % 1000)
         crops = crops_fn(ci, frames) if crops_fn else []
         nxt = [n for n in node.successors]
         req = VerifyRequest(t=ci.t_rel, frames=frames, node=node, graph=g, checks=node.checks, crops=crops,
-                            context={"frame_ages": [2.0, 1.0, 0.0][-len(frames):],
+                            context={"frame_ages": ages,
                                      "next_step": g.node(nxt[0]).name if nxt else None})
         v: Verdict = verifier.verify(req)
         return {**asdict(ci), "verdict": v.model_dump(), "n_crops": len(crops), "degrade": degrade_mode}

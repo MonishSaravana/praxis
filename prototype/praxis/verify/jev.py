@@ -21,7 +21,7 @@ from ..paths import load_env
 from .common import Budget, ResponseCache, b64, cost_usd, to_jpeg
 from .schema import MistakeReport, Verdict, VerifyRequest
 
-PROMPT_VERSION = "jev-v1"
+PROMPT_VERSION = "jev-v2"
 BASE = "https://api.typesafe.ai"
 
 
@@ -101,7 +101,7 @@ class JevVerifier:
         last = f"frames[{len(frames_state) - 1}].frame"
         q: dict = {
             "step_complete": {"type": "noul",
-                              "instructions": f"Is `step.expected_end_state` visibly reached in the latest frame `{last}`?",
+                              "instructions": "Has the person finished `step`? Finished means `step.expected_end_state` is visible in the recent `frames`, or they clearly completed it and moved on.",
                               "criteria": {"true": "The step is finished as described",
                                            "false": "Not finished yet, or not done as described"}},
             "view_ok": {"type": "noul",

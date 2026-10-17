@@ -105,3 +105,24 @@ def stack_frames(frames: list[np.ndarray], height: int = 360) -> np.ndarray:
 
 def read_json_file(p: str | Path) -> dict:
     return json.loads(Path(p).read_text())
+
+
+def sharpness(rgb: np.ndarray) -> float:
+    """Variance of the Laplacian on a small grayscale copy (motion blur -> low)."""
+    import cv2
+    g = cv2.cvtColor(cv2.resize(rgb, (320, int(320 * rgb.shape[0] / rgb.shape[1]))), cv2.COLOR_RGB2GRAY)
+    return float(cv2.Laplacian(g, cv2.CV_64F).var())
+
+
+def pick_keyframes(frames: list[np.ndarray], times: list[float], n: int = 3) -> tuple[list[np.ndarray], list[float]]:
+    """Keyframe selection for egocentric video: the n sharpest candidates, returned in time order.
+    The newest candidate is kept if it is not badly blurred, so 'now' stays current."""
+    if len(frames) <= n:
+        return frames, times
+    s = np.array([sharpness(f) for f in frames])
+    keep = set(np.argsort(-s)[:n].tolist())
+    if s[-1] >= 0.5 * np.median(s) and len(frames) - 1 not in keep:
+        keep.remove(min(keep, key=lambda i: s[i]))
+        keep.add(len(frames) - 1)
+    idx = sorted(keep)
+    return [frames[i] for i in idx], [times[i] for i in idx]

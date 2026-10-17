@@ -20,7 +20,7 @@ from ..paths import load_env
 from .common import Budget, ResponseCache, b64, cost_usd, to_jpeg
 from .schema import MistakeReport, Verdict, VerifyRequest
 
-PROMPT_VERSION = "verify-v1"
+PROMPT_VERSION = "verify-v2"
 BASELINE_PROMPT_VERSION = "stateless-v1"
 
 SYSTEM = """You are the verification module of Praxis, a first-person coaching system for physical tasks.
@@ -29,8 +29,9 @@ crops, plus ONE step of a known procedure with its expected end state, its check
 common mistakes. Judge only what is visible.
 
 step_status:
-- "complete": the step's expected end state is visibly reached in the latest frame(s).
-- "in_progress": the step is not finished yet (or the person is still working on it).
+- "complete": the step is finished: its expected end state is visible in the recent frames, or the person has
+  clearly finished it and moved on (e.g. started the next step, put the tool down).
+- "in_progress": the step is not finished yet (the person is still working on it, or has not started it).
 - "deviation": the person is visibly making one of the listed mistakes, or something clearly wrong for this step.
 confidence: your probability (0-1) that step_status is correct. Be calibrated: use mid values when unsure.
 mistake_id: the matching id from the mistake library, "other" for a clear mistake not in the library, else "none".
