@@ -669,8 +669,37 @@ def dev_eval(designs: dict | None = None, max_s: float = 300.0, max_per_task: in
     return res
 
 
+
+def l2_eval_existing() -> dict:
+    """Evaluate the SAVED L2 checkpoint (the one every engine run used) with its saved thresholds on held-out eval clips
+    and on procedure types never seen in training. No retraining."""
+    from .events.detector import HeuristicDetector, LearnedDetector
+    from .events.train import evaluate
+    from .paths import CKPT
+    p = RESULTS / "l2" / "l2_event_detector.json"
+    res = json.loads(p.read_text())
+    det = LearnedDetector.load(CKPT / "l2_event_detector.pt")
+    heur = HeuristicDetector()
+    thr, hthr = res["train"]["thr"], res["train"]["heuristic_thr"]
+    man = load_manifest()
+    sets = {"heldout_videos": _items([Clip.from_json(c) for c in man["eval"]]),
+            "heldout_procedure_types": _items([Clip.from_json(c) for c in man["heldout_type"]])}
+    res["test"] = {}
+    for name, items in sets.items():
+        res["test"][name] = {}
+        for tol in (2.0, 5.0):
+            res["test"][name][f"tol{int(tol)}s"] = {"learned": evaluate(det, items, thr, tol=tol),
+                                                    "heuristic": evaluate(heur, items, hthr, tol=tol)}
+    res["evaluated_checkpoint"] = "data/checkpoints/l2_event_detector.pt (same file all engine runs loaded)"
+    p.write_text(json.dumps(res, indent=2, default=float))
+    for k, v in res["test"].items():
+        for tol, vv in v.items():
+            print(k, tol, {m: (round(vv[m]["precision"], 3), round(vv[m]["recall"], 3), round(vv[m]["f1"], 3), vv[m]["n_clips"]) for m in vv})
+    return res
+
+
 if __name__ == "__main__":
     import sys
     t0 = time.time()
-    {"l2": l2, "probes": probes, "tune": tune_tracker}[sys.argv[1]]()
+    {"l2": l2, "l2_eval": l2_eval_existing, "probes": probes, "tune": tune_tracker}[sys.argv[1]]()
     print("done in", round(time.time() - t0), "s")
