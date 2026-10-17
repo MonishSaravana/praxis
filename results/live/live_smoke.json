@@ -1,0 +1,51 @@
+{
+  "name": "live_smoke",
+  "source": "replay:data/raw/cc4d/videos/10_18_360p.mp4@0.0",
+  "task_given": null,
+  "summary": {
+    "t": 40.2716,
+    "n_frames": 159,
+    "escalated_frames": 0,
+    "wall_s": 40.27164604200516,
+    "frames_processed": 159,
+    "dropped_frames": 2,
+    "l1_frame_ms": {
+      "p50": 48.81304199807346,
+      "p95": 67.55947502097113,
+      "max": 782.3805829975754
+    },
+    "tick_ms": {
+      "p50": 4.64372948044911,
+      "p95": 6.116299901623271,
+      "max": 9.0788749512285
+    },
+    "tick_lag_s": {
+      "p50": 0.07083149999380112,
+      "p95": 0.08263674135087058,
+      "max": 0.08464929205365479
+    },
+    "n_ticks": 40
+  },
+  "task_recognized": [
+    {
+      "t": 8.0,
+      "task_id": "cc4d_herbomeletwithfriedtomatoes",
+      "title": "Herb Omelet with Fried Tomatoes"
+    }
+  ],
+  "actions": [
+    {
+      "t": 8.0,
+      "action": "announce_task",
+      "text": "Looks like you're making herb omelet with fried tomatoes. Want me to walk you through it?"
+    },
+    {
+      "t": 8.0,
+      "action": "instruct",
+      "text": "Take the fresh cilantro and chop it finely with a knife on the cutting board. Measure out two tablespoons of the chopped leaves."
+    }
+  ],
+  "model_calls": 0,
+  "slowest_call_ms": null,
+  "spend_usd": 0
+}

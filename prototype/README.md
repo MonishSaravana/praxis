@@ -54,17 +54,39 @@ uv run python -c "from praxis.paths import load_env; load_env(); from praxis.exp
 uv run python -c "from praxis.paths import load_env; load_env(); from praxis.experiments import visual_uncertainty; visual_uncertainty()"
 uv run python -c "from praxis.experiments import distill; distill()"        # L7 -> results/l7/distill.json
 
+# Design selection (train split only; results/dev/design_selection_*.json, final_design.json)
+uv run python -c "from praxis.paths import load_env; load_env(); from praxis.experiments import dev_eval; dev_eval()"
+
 # Engine runs (each writes runs/<variant>/<clip>.jsonl and results/runs/<variant>.json)
 uv run python -c "from praxis.paths import load_env; load_env(); from praxis.eval.run_all import run_variant; run_variant('fused')"
 #   variants: fused, fused_oracle, fused_heuristic_gate, fused_claude_fast, local_only, verifier_only,
-#             fused_distilled, fused_no_escalation
+#             fused_distilled, fused_distilled_alone, fused_no_escalation
 uv run python -c "from praxis.paths import load_env; load_env(); from praxis.eval.run_all import run_baseline; run_baseline()"
+uv run python -m praxis.eval.semantic_match fused_oracle fused baseline_stateless fused_no_escalation fused_claude_fast fused_distilled
+#   strict mistake scoring: an Opus judge checks each time-matched alert -> results/l6/mistake_semantic_<run>.json
 uv run python -c "from praxis.experiments import adaptive_detail; adaptive_detail('fused')"
+uv run python -c "from praxis.experiments import recognition_summary; recognition_summary('fused')"
+uv run python -c "from praxis.paths import load_env; load_env(); from praxis.experiments import join_mid_task; join_mid_task()"
+uv run python -m praxis.failures fused_oracle                 # failure analysis -> results/failures.json + example frames
 
-# Report, figures, renders
+# Demos (qualitative; each writes results/<demo>.json and renders/*.mp4)
+uv run python -m praxis.industreal_demo                       # assembly, no ground truth
+uv run python -c "from praxis.paths import load_env; load_env(); from praxis.personalization_demo import main; main('10_18_0', t0=80, t1=135)"
+
+# Live mode: a camera, or a recording replayed at wall-clock speed (frames the loop can't keep up with are dropped)
+uv run python -m praxis.live --source webcam:0 --seconds 120
+uv run python -m praxis.live --source replay:../data/raw/cc4d/videos/10_18_360p.mp4@0 --seconds 150 --name live_replay_10_18_0 --no-speak
+uv run python -c "from praxis.live import render_replay; render_replay('live_replay_10_18_0', '10_18_0', 16, 112)"
+#   -> results/live/<name>.json (loop timing, dropped frames, what Praxis said) and renders/live_replay_user.mp4
+
+# Report, figures, renders, viewer
+uv run python -m praxis.spend                                 # results/spend.json (recorded costs only)
 uv run python -m praxis.report                                # results/metrics.json
 uv run python -m praxis.make_figures                          # results/figures/*.png
-uv run python -m praxis.make_renders                          # renders/*.mp4 (from run logs only)
+uv run python -m praxis.write_results                         # results/RESULTS.md and docs/CLAIMS.md
+uv run python -m praxis.make_renders                          # renders/*.mp4 (from run logs only) + results/renders_index.json
+uv run python -m praxis.viewer fused                          # renders/viewer/*.html
+cd .. && python3 -m http.server 8765                          # open http://localhost:8765/renders/viewer/ (needs the videos locally)
 ```
 
 ## Layout

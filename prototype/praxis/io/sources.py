@@ -103,6 +103,51 @@ class WebcamSource:
         self.cap.release()
 
 
+class ReplaySource:
+    """A recorded video played back at wall-clock speed, standing in for a live camera when none is available.
+    Like a camera, it only ever shows the present: if the consumer falls behind, the frames it missed are skipped
+    and counted in `dropped`."""
+
+    def __init__(self, path: str | Path, fps: float = 4.0, start: float = 0.0, max_side: int | None = 640):
+        self.path, self.fps, self.start, self.max_side = Path(path), fps, start, max_side
+        self.dropped = 0
+
+    def __iter__(self) -> Iterator[Frame]:
+        cap = cv2.VideoCapture(str(self.path))
+        if not cap.isOpened():
+            raise FileNotFoundError(self.path)
+        nfps = cap.get(cv2.CAP_PROP_FPS) or 30.0
+        src_i = int(round(self.start * nfps))
+        cap.set(cv2.CAP_PROP_POS_FRAMES, src_i)
+        period, i, t0 = 1.0 / self.fps, 0, time.perf_counter()     # i = index of the next frame slot
+        try:
+            while True:
+                now = time.perf_counter() - t0
+                if now < i * period:
+                    time.sleep(i * period - now)
+                    now = i * period
+                else:
+                    late = int((now - i * period) / period)     # slots that passed while the consumer was busy
+                    self.dropped += late
+                    i += late
+                target = int(round((self.start + now) * nfps))
+                while src_i < target:          # skip to the present
+                    if not cap.grab():
+                        return
+                    src_i += 1
+                ok, bgr = cap.read()
+                if not ok:
+                    return
+                src_i += 1
+                yield Frame(t=now, index=i, rgb=_prep(bgr, self.max_side), source_index=src_i - 1)
+                i += 1
+        finally:
+            cap.release()
+
+    def close(self) -> None:
+        pass
+
+
 class MetaGlassesSource:
     """Stub. Smart-glasses camera adapter (see docs/GLASSES.md).
 
@@ -135,7 +180,10 @@ def _prep(bgr: np.ndarray, max_side: int | None) -> np.ndarray:
 
 
 def make_source(spec: str, **kw) -> FrameSource:
-    """'webcam:0' | 'glasses:meta' | path/to/video.mp4"""
+    """'webcam:0' | 'glasses:meta' | 'replay:path/to/video.mp4[@start_s]' | path/to/video.mp4"""
+    if spec.startswith("replay:"):
+        path, _, st = spec[len("replay:"):].partition("@")
+        return ReplaySource(path, start=float(st or 0.0), **kw)
     if spec.startswith("webcam"):
         dev = int(spec.split(":")[1]) if ":" in spec else 0
         return WebcamSource(dev, **kw)

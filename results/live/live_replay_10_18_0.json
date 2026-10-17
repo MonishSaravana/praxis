@@ -1,0 +1,71 @@
+{
+  "name": "live_replay_10_18_0",
+  "source": "replay:data/raw/cc4d/videos/10_18_360p.mp4@0.0",
+  "task_given": null,
+  "summary": {
+    "t": 151.3988,
+    "n_frames": 575,
+    "escalated_frames": 60,
+    "wall_s": 151.3988488749601,
+    "frames_processed": 577,
+    "dropped_frames": 28,
+    "l1_frame_ms": {
+      "p50": 51.075999974273145,
+      "p95": 101.06800810899574,
+      "max": 261.0204169759527
+    },
+    "tick_ms": {
+      "p50": 7.595874951221049,
+      "p95": 170.7635624625256,
+      "max": 4352.235250058584
+    },
+    "tick_lag_s": {
+      "p50": 0.07507960393559188,
+      "p95": 0.3713590477942496,
+      "max": 4.415290624951012
+    },
+    "n_ticks": 148
+  },
+  "task_recognized": [
+    {
+      "t": 22.0,
+      "task_id": "cc4d_pinwheels",
+      "title": "Pinwheels (nut butter and jelly tortilla roll-ups)"
+    }
+  ],
+  "actions": [
+    {
+      "t": 22.0,
+      "action": "announce_task",
+      "text": "Looks like you're making pinwheels. Want me to walk you through it?"
+    },
+    {
+      "t": 22.0,
+      "action": "instruct",
+      "text": "Take one 8-inch flour tortilla and lay it flat on the cutting board. Don't heat it, just use it as it is."
+    },
+    {
+      "t": 77.0,
+      "action": "instruct",
+      "text": "Pick up a butter knife, open the nut butter jar, and scoop out a good spoonful of nut butter on the blade."
+    },
+    {
+      "t": 95.0,
+      "action": "instruct",
+      "text": "Spread the nut butter in an even layer over the tortilla, but stop about half an inch before the edge all the way around."
+    },
+    {
+      "t": 107.8501,
+      "action": "verified",
+      "text": "Spread nut butter on tortilla"
+    },
+    {
+      "t": 107.8501,
+      "action": "instruct",
+      "text": "Wipe the nut butter off the butter knife with a paper towel so it's clean for the jelly."
+    }
+  ],
+  "model_calls": 27,
+  "slowest_call_ms": 4116.234624991193,
+  "spend_usd": 0.020445054
+}

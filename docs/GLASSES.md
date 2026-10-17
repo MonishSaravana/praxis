@@ -1,7 +1,9 @@
 # Smart glasses: what the adapter needs, and what is unknown until there's hardware
 
-**Status: not tested on glasses.** Praxis v0 runs on recorded first-person video and on a live camera
-(`WebcamSource`; an iPhone via Continuity Camera stands in for a head-mounted view). Glasses are one more
+**Status: not tested on glasses.** Praxis v0 runs on recorded first-person video. Its live mode
+(`praxis.live`) was run in real time on a recorded clip replayed at wall-clock speed (`ReplaySource`); the webcam
+path (`WebcamSource`, e.g. an iPhone via Continuity Camera standing in for a head-mounted view) is the same loop
+but was not run in this build. Glasses are one more
 input adapter behind the camera-agnostic `FrameSource` interface (`prototype/praxis/io/sources.py`).
 `MetaGlassesSource` is a stub that raises `NotImplementedError` on purpose. It stays that way until
 a live stream has run end to end on real hardware.

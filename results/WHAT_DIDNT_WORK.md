@@ -100,3 +100,12 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
     - TAPNext++ took several seconds per crop on this Mac, and on head-mounted video the points drift off the
       hands quickly.
     - Crops stay off by default. A faster tracker, or crops from hand boxes alone, would be the next thing to try.
+
+16. **Live mode crashed on its first real-time run.**
+    - Symptom: a Metal assertion ("A command encoder is already encoding to this command buffer") a few seconds
+      in.
+    - Cause: the V-JEPA 2 thread and the main loop's SigLIP2 call used the GPU (MPS) at the same time.
+    - Fix: one lock around GPU calls. After that, a 151 s real-time replay ran end to end (`results/live/`).
+    - Still open: verifier calls run inside the loop, so a frontier-model escalation blocks the fast path for a
+      few seconds and frames are dropped meanwhile. The fix is to run the slow path on its own thread and fold
+      verdicts in when they arrive.
