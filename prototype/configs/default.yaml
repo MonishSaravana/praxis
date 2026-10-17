@@ -11,7 +11,7 @@ perception:
   vjepa_frames: 8
   vjepa_size: 224
   window_s: 2.0                # clip window length
-  window_stride_s: 1.0
+  window_stride_s: 2.0
 
 events:
   detector: learned            # learned | heuristic

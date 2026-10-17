@@ -2,8 +2,8 @@
 .env
 *.env
 # data & heavy artifacts
-data/
-cache/
+/data/
+/cache/
 prototype/.venv/
 **/__pycache__/
 *.pyc
@@ -21,3 +21,7 @@ renders/_work/
 # local env / tooling
 .venv/
 *.log
+
+# large/binary results kept out of git
+*.mp4.part
+*.pkl
