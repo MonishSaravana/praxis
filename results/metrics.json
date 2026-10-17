@@ -23,6 +23,7 @@
   "join_mid_task": "results/l3b/join_mid_task.json",
   "verifier_compare": "results/l5/compare_jev_vs_claude_fast.json",
   "calibration": "results/l5/calibration.json",
+  "crops": "results/l5/crops_vs_full.json",
   "uncertainty": "results/l5/visual_uncertainty.json",
   "policy_thresholds": "results/l6/policy_thresholds.json",
   "adaptive_detail": "results/l6/adaptive_detail.json",
@@ -5042,6 +5043,28 @@
    }
   }
  },
+ "crops": {
+  "verifier": "claude_strong",
+  "n": 120,
+  "subset": "eval checks whose node has orientation/alignment/quantity/part-identity checks",
+  "full_frames": {
+   "accuracy": 0.7916666666666666,
+   "auroc": 0.8489627735152032,
+   "deviation_precision": 0.8571428571428571,
+   "n_deviation": 7
+  },
+  "with_crops": {
+   "accuracy": 0.7916666666666666,
+   "auroc": 0.8601875532821824,
+   "deviation_precision": 1.0,
+   "n_deviation": 6
+  },
+  "crop_rate": 1.0,
+  "tokens_full": 2401.616666666667,
+  "tokens_with_crops": 2572.516666666667,
+  "tapnext_seconds_per_crop_p50": 8.97192931175232,
+  "crop_protocol": "seed a 6x6 grid on the hands' working area 1.6 s before the check, track at 10 fps with TAPNext++ (MPS), crop the tracked region (fallback: seeded hand area) from the full frame"
+ },
  "uncertainty": {
   "n": 60,
   "conf_thr": 0.7,
@@ -5365,6 +5388,21 @@
    ]
   },
   {
+   "kind": "step_tracking",
+   "run": "fused",
+   "clip": "10_18_0",
+   "t": 161.93200000000002,
+   "text": null,
+   "pred": null,
+   "gt": null,
+   "label": "real model output",
+   "selection": "45 s window with the most annotated step changes the engine followed within 10 s (task recognized by Praxis), ties broken by step accuracy in the window",
+   "files": [
+    "renders/showcase_step_tracking_user.mp4",
+    "renders/showcase_step_tracking_engineer.mp4"
+   ]
+  },
+  {
    "kind": "caught_mistake",
    "run": "fused",
    "clip": "1_43_0",
@@ -5480,13 +5518,13 @@
   }
  },
  "spend": {
-  "total_usd": 93.10468003599998,
+  "total_usd": 94.59248312199998,
   "items": {
    "L3 compile (8 recipes, Fable 5.1)": 4.16358,
    "L3 compile (IndustReal graph)": 0.43374,
    "GT check runs (Jev/Haiku/Opus, train+eval)": 12.815837750000009,
    "framing ablation": 2.884172446,
-   "crops experiment": 0,
+   "crops experiment": 1.4733527999999987,
    "visual-uncertainty first run (from data/uncert.log)": 3.283867599999996,
    "visual-uncertainty (last re-run, new calls only)": 0.2666216,
    "engine run: baseline_stateless": 18.352767600000085,
@@ -5504,6 +5542,7 @@
    "invalid engine run (quarantined): fused_claude_fast_localization_errors": 1.1792780700000007,
    "mistake judge (Opus 5.5)": 0.020048,
    "demo: industreal_demo.json": 0.02273438999999999,
+   "demo: policy_demo.json": 0.014450286,
    "M2 two-clip test": 0.00170982
   },
   "untracked": [

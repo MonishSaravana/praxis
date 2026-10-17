@@ -1,11 +1,11 @@
 {
-  "total_usd": 93.10468003599998,
+  "total_usd": 94.59248312199998,
   "items": {
     "L3 compile (8 recipes, Fable 5.1)": 4.16358,
     "L3 compile (IndustReal graph)": 0.43374,
     "GT check runs (Jev/Haiku/Opus, train+eval)": 12.815837750000009,
     "framing ablation": 2.884172446,
-    "crops experiment": 0,
+    "crops experiment": 1.4733527999999987,
     "visual-uncertainty first run (from data/uncert.log)": 3.283867599999996,
     "visual-uncertainty (last re-run, new calls only)": 0.2666216,
     "engine run: baseline_stateless": 18.352767600000085,
@@ -23,6 +23,7 @@
     "invalid engine run (quarantined): fused_claude_fast_localization_errors": 1.1792780700000007,
     "mistake judge (Opus 5.5)": 0.020048,
     "demo: industreal_demo.json": 0.02273438999999999,
+    "demo: policy_demo.json": 0.014450286,
     "M2 two-clip test": 0.00170982
   },
   "untracked": [

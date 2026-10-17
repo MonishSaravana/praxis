@@ -130,6 +130,16 @@ Sources: `results/runs/local_only.json`, `results/runs/verifier_only.json`, `res
 
 Calibration is isotonic, fit on train-split checks only. Sources: `results/l5/compare_jev_vs_claude_fast.json`, `results/l5/calibration.json`.
 
+**TAPNext++ ROI crops** (120 fine-grained eval checks, claude_strong):
+- Accuracy: 79% with full frames vs 79% with crops.
+- AUROC: 0.85 vs 0.86.
+- Input tokens per call: 2402 vs 2573.
+- TAPNext++ time per crop (p50): 9.0 s on this Mac.
+- Protocol: seed a 6x6 grid on the hands' working area 1.6 s before the check, track at 10 fps with TAPNext++ (MPS), crop the tracked region (fallback: seeded hand area) from the full frame.
+- Checks: eval checks whose node has orientation/alignment/quantity/part-identity checks.
+
+Source: `results/l5/crops_vs_full.json`.
+
 **Visual-uncertainty test.** On degraded views of mid-step eval checks, Praxis's typed verifier can say 'can't see'; the stateless baseline must answer.
 
 | Degradation | Praxis asks for a view | Praxis confident (≥0.5) & wrong | Baseline confident (≥0.5) & wrong step | Baseline confident (≥0.7) & wrong step | Baseline step accuracy |
@@ -206,6 +216,17 @@ Chosen: {"tracker": {"local_weight": 0.1, "boundary_weight": 0.0, "commit_on_swi
 
 Measured while other jobs were running on the machine. TAPNext++ is far from real time here, and on head-mounted cooking video most points are lost within a few seconds. Crops were therefore computed offline for the crop experiment only; the live plan is in docs/MODEL_ROADMAP.md. Source: `results/l1/tapnext_speed.json`.
 
+## Personalization demo (L6 user model, qualitative)
+
+The same clip (`10_18_0`) run twice with the profile fixed to novice and then to expert. Renders: `renders/policy_demo_novice_user.mp4`, `renders/policy_demo_expert_user.mp4` (80-135 s of the clip). Instructions given in that window:
+
+| Time (novice / expert run) | Novice profile | Expert profile |
+|---|---|---|
+| 86 s / 88 s | Spread the nut butter in an even layer over the tortilla, but stop about half an inch before the edge all the way around. | Spread nut butter, half-inch border |
+| 130 s / 130 s | Wipe the nut butter off the butter knife with a paper towel so it's clean for the jelly. | Wipe knife with paper towel |
+
+The verifier prompts don't depend on the profile, but these are two separate live runs. Verifier calls were not identical (3 calls only in the expert run, 2 only in the novice run). Spend $0.014. No user study: this shows the mechanism, not a benefit. Source: `results/policy_demo.json`.
+
 ## Assembly demo (IndustReal, qualitative only, no ground truth)
 
 - `ir_08_assy_2_4`: recognized as `industreal_assy` at 10 s from a library of 9 procedures. Renders: `renders/assembly_08_assy_2_4_user.mp4` and `_engineer.mp4`.
@@ -228,7 +249,7 @@ No metric is computed from these clips. The official step labels were unreachabl
 
 ## Spend
 
-Tracked API spend for this build: **$93.10**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
+Tracked API spend for this build: **$94.59**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
 
 - hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total
 - 72 mistake-judge calls (Opus 5.5, effort low, one short text prompt each) made before the judge stored per-call cost
@@ -241,6 +262,7 @@ Every clip is drawn from a saved run log by `prototype/praxis/make_renders.py`, 
 | Render | Files | Run · clip · time | What Praxis said | Annotated error | Selection rule |
 |---|---|---|---|---|---|
 | recognition and tracking | `renders/showcase_recognition_tracking_user.mp4`<br>`renders/showcase_recognition_tracking_engineer.mp4` | `fused` · `22_24_0` · 34 s |  |  | highest step accuracy after recognition among clips recognized within 40 s |
+| step tracking | `renders/showcase_step_tracking_user.mp4`<br>`renders/showcase_step_tracking_engineer.mp4` | `fused` · `10_18_0` · 162 s |  |  | 45 s window with the most annotated step changes the engine followed within 10 s (task recognized by Praxis), ties broken by step accuracy in the window |
 | caught mistake | `renders/showcase_caught_mistake_user.mp4`<br>`renders/showcase_caught_mistake_engineer.mp4` | `fused` · `1_43_0` · 155 s | Use the knife to cut the muffin so you get clean, even halves. | Using hand instead of knife | first mistake alert the strict judge rated 'yes' (matches an annotated error) |
 | caught mistake 2 | `renders/showcase_caught_mistake_2_user.mp4` | `fused` · `17_40_0` · 239 s | That looks like a zucchini, not a cucumber. Put it back and grab the cucumber instead. | Use zucchini instead of cucumber | second mistake alert the strict judge rated 'yes' |
 | view request | `renders/showcase_view_request_user.mp4` | `fused_oracle` · `17_43_0` · 31 s | Look back at the sink and show the cucumber in your hands |  | first view request |
@@ -408,6 +430,21 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
       made no progress for about 40 minutes.
     - Fix: compute crops sequentially with a single tracker and cache them, then run the verifier calls in parallel
       over the cached crops.
+
+14. **Two design-selection processes wrote the same run logs.**
+    - Symptom: train-split design-selection logs with interleaved records from two runs.
+    - Cause: a `pkill` pattern didn't match the first process, so a restarted run and the old one wrote to the same
+      files at once.
+    - Fix: the affected runs were deleted and re-run in one process, and run logs are now written atomically
+      (temporary file + rename). The re-runs reused cached model answers, so the deleted runs' original API cost is
+      listed as untracked in `results/spend.json` rather than estimated.
+
+15. **Point-tracked crops did not help the verifier enough to keep.**
+    - On 120 fine-grained eval checks (orientation, alignment, quantity, part identity), Opus with tracked crops
+      matched Opus with full frames on accuracy and gained only about 0.01 AUROC (`results/l5/crops_vs_full.json`).
+    - TAPNext++ took several seconds per crop on this Mac, and on head-mounted video the points drift off the
+      hands quickly.
+    - Crops stay off by default. A faster tracker, or crops from hand boxes alone, would be the next thing to try.
 
 ## Limitations
 

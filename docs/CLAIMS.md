@@ -18,6 +18,7 @@ Every sentence below comes from a file under `results/`, linked after it. This f
 - "We distilled the frontier verifier into a local model that agrees with it on 69% of held-out checks. It answers in 0.03 ms on a laptop CPU and costs nothing per check. Sending it only the checks it's confident about keeps teacher-level accuracy while removing 34% of frontier calls." (`results/l7/distill.json`)
 - "When we degraded the view (blur, occlude, crop away), Praxis asked for a better view on 77-98% of checks and was never confidently wrong. The stateless baseline has to answer, and it named the wrong step with at least 50% confidence on 12-73% of them (2-17% at 70% confidence)." (`results/l5/visual_uncertainty.json`)
 - "Escalating to the frontier model mostly cuts false alarms: with it, 4 of 17 mistake alerts named a real annotated error; without it, 3 of 24 (0.055 vs 0.089 strict false alarms per minute). Step accuracy barely changes (54% with it, 53% without). It costs $0.018 vs $0.001 per video-minute." (`results/runs/fused_no_escalation.json`)
+- "We tested zoomed-in crops from point tracking (TAPNext++) on 120 fine-grained checks. They barely changed the verifier: accuracy 79% without vs 79% with, AUROC 0.85 vs 0.86, and tracking took about 9 s per crop on a laptop. So crops are off by default." (`results/l5/crops_vs_full.json`)
 
 ## Do NOT claim (not measured or not true yet)
 

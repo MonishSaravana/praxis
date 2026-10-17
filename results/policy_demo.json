@@ -1,0 +1,86 @@
+{
+  "clip": "10_18_0",
+  "profiles": {
+    "novice": [
+      {
+        "t": 86.1189,
+        "action": "verified",
+        "text": "Scoop nut butter with butter knife"
+      },
+      {
+        "t": 86.1189,
+        "action": "instruct",
+        "text": "Spread the nut butter in an even layer over the tortilla, but stop about half an inch before the edge all the way around."
+      },
+      {
+        "t": 130.0,
+        "action": "instruct",
+        "text": "Wipe the nut butter off the butter knife with a paper towel so it's clean for the jelly."
+      }
+    ],
+    "expert": [
+      {
+        "t": 88.3976,
+        "action": "verified",
+        "text": "Scoop nut butter with butter knife"
+      },
+      {
+        "t": 88.3976,
+        "action": "instruct",
+        "text": "Spread nut butter, half-inch border"
+      },
+      {
+        "t": 130.0,
+        "action": "instruct",
+        "text": "Wipe knife with paper towel"
+      }
+    ]
+  },
+  "spend_usd": 0.014450286,
+  "window_s": [
+    80.0,
+    135.0
+  ],
+  "verifier_calls_identical": false,
+  "verifier_calls_only_in": {
+    "novice": [
+      [
+        4.0,
+        "grasp",
+        "jev-1.14.0",
+        "in_progress",
+        "insufficient"
+      ],
+      [
+        86.0,
+        "boundary",
+        "jev-1.14.0",
+        "complete",
+        "ok"
+      ]
+    ],
+    "expert": [
+      [
+        4.0,
+        "grasp",
+        "jev-1.14.0",
+        "deviation",
+        "insufficient"
+      ],
+      [
+        86.0,
+        "boundary",
+        "jev-1.14.0",
+        "complete",
+        "insufficient"
+      ],
+      [
+        86.0,
+        "escalation",
+        "claude-opus-5-5",
+        "complete",
+        "ok"
+      ]
+    ]
+  }
+}

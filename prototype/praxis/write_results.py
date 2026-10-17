@@ -241,6 +241,12 @@ def build() -> tuple[str, str]:
                   f"{pct(cr['with_crops']['accuracy'])} with crops.")
         md.append(f"- AUROC: {num(cr['full_frames']['auroc'])} vs {num(cr['with_crops']['auroc'])}.")
         md.append(f"- Input tokens per call: {num(cr['tokens_full'], 0)} vs {num(cr['tokens_with_crops'], 0)}.")
+        if cr.get("tapnext_seconds_per_crop_p50"):
+            md.append(f"- TAPNext++ time per crop (p50): {num(cr['tapnext_seconds_per_crop_p50'], 1)} s on this Mac.")
+        if cr.get("crop_protocol"):
+            md.append(f"- Protocol: {cr['crop_protocol']}.")
+        if cr.get("subset"):
+            md.append(f"- Checks: {cr['subset']}.")
         md.append(f"\nSource: {src(m, 'crops')}.\n")
     u = m.get("uncertainty")
     if u:
@@ -331,6 +337,26 @@ def build() -> tuple[str, str]:
                   "on head-mounted cooking video most points are lost within a few seconds. Crops were therefore "
                   "computed offline for the crop experiment only; the live plan is in docs/MODEL_ROADMAP.md. Source: "
                   "`results/l1/tapnext_speed.json`.\n")
+    pd = _jload("policy_demo.json")
+    if pd and pd.get("profiles"):
+        md.append("## Personalization demo (L6 user model, qualitative)\n")
+        w = pd.get("window_s")
+        md.append(f"The same clip (`{pd['clip']}`) run twice with the profile fixed to novice and then to expert. Renders: "
+                  f"`renders/policy_demo_novice_user.mp4`, `renders/policy_demo_expert_user.mp4`"
+                  + (f" ({num(w[0], 0)}-{num(w[1], 0)} s of the clip)" if w else "") + ". Instructions given in that window:\n")
+        rows = []
+        for (a, b) in zip(pd["profiles"]["novice"], pd["profiles"]["expert"]):
+            if a["action"] == b["action"] == "instruct":
+                rows.append([f"{num(a['t'], 0)} s / {num(b['t'], 0)} s", a["text"], b["text"]])
+        md.append(table(rows, ["Time (novice / expert run)", "Novice profile", "Expert profile"]))
+        if "verifier_calls_identical" in pd:
+            md.append(f"\nThe verifier prompts don't depend on the profile, but these are two separate live runs. "
+                      f"Verifier calls were {'identical' if pd['verifier_calls_identical'] else 'not identical'}"
+                      + ("" if pd["verifier_calls_identical"] else
+                         f" ({len(pd['verifier_calls_only_in']['expert'])} calls only in the expert run, "
+                         f"{len(pd['verifier_calls_only_in']['novice'])} only in the novice run)")
+                      + f". Spend ${pd.get('spend_usd', 0):.3f}. No user study: this shows the mechanism, not a benefit. "
+                        f"Source: `results/policy_demo.json`.\n")
     ird = _jload("industreal_demo.json")
     if ird:
         md.append("## Assembly demo (IndustReal, qualitative only, no ground truth)\n")
@@ -496,10 +522,15 @@ def claims(m: dict) -> str:
             f"(vs ${FO['cost_usd_per_video_min']:.3f}). It's a one-line config change.", "run_fused_distilled")
     cr = m.get("crops")
     if cr:
-        better = cr["with_crops"]["auroc"] > cr["full_frames"]["auroc"]
-        say(f"Adding tracked hand-object crops to the verifier's frames {'raised' if better else 'did not raise'} "
-            f"AUROC on fine-grained checks ({cr['full_frames']['auroc']:.2f} without, {cr['with_crops']['auroc']:.2f} "
-            f"with, {cr['n']} checks).", "crops")
+        d_auc = cr["with_crops"]["auroc"] - cr["full_frames"]["auroc"]
+        d_acc = cr["with_crops"]["accuracy"] - cr["full_frames"]["accuracy"]
+        eff = ("barely changed" if abs(d_auc) < 0.03 and abs(d_acc) < 0.03 else "improved" if d_auc > 0 else "hurt")
+        tn = cr.get("tapnext_seconds_per_crop_p50")
+        say(f"We tested zoomed-in crops from point tracking (TAPNext++) on {cr['n']} fine-grained checks. They {eff} "
+            f"the verifier: accuracy {cr['full_frames']['accuracy'] * 100:.0f}% without vs "
+            f"{cr['with_crops']['accuracy'] * 100:.0f}% with, AUROC {cr['full_frames']['auroc']:.2f} vs "
+            f"{cr['with_crops']['auroc']:.2f}" + (f", and tracking took about {tn:.0f} s per crop on a laptop" if tn else "")
+            + ". So crops are off by default.", "crops")
     out.append("\n## Do NOT claim (not measured or not true yet)\n")
     for s in ["Praxis runs on smart glasses. It has not been tested on glasses; the glasses adapter is a documented stub "
               "(docs/GLASSES.md). Say instead: 'it runs live on a camera stream; glasses are an input adapter.'",
