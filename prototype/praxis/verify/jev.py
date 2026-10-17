@@ -71,6 +71,12 @@ def _asset(rgb: np.ndarray, max_side: int = 768) -> tuple[str, dict, bytes]:
 class JevVerifier:
     name = "jev"
 
+    def choose_task(self, frames, options):
+        self.budget.check()
+        r = choose_task(self.client, frames, options)
+        self.budget.add(r["cost_usd"])
+        return r
+
     def __init__(self, budget: Budget, model: str = "jev-1.14.0", use_cache: bool = True, img_side: int = 768):
         self.client = JevClient(model)
         self.model = model
@@ -148,6 +154,27 @@ class JevVerifier:
                        cost_usd=0.0 if cached else usd,
                        raw={"p_complete": p_done, "p_view_ok": p_view, "mistake": ans.get("mistake"), "cached": bool(cached),
                             "orig_cost_usd": usd})
+
+
+def choose_task(client_or_verifier, frames: list[np.ndarray], options: dict[str, str]) -> dict:
+    """Typed choice over the task library: {'probs': {task_id: p}, 'latency_ms', 'cost_usd'}."""
+    v = client_or_verifier
+    client = v.client if hasattr(v, "client") else v
+    assets, refs = {}, []
+    for f in frames:
+        ref, a, _ = _asset(f, 768)
+        assets[ref] = a
+        refs.append(ref)
+    crit = {k: desc for k, desc in options.items()}
+    crit["none"] = "None of these tasks, or nothing task-related is happening"
+    q = {"task": {"type": "choice", "instructions": "Which task is the person in these first-person `frames` doing?",
+                  "criteria": crit}}
+    resp, lat = client.system_one({"frames": refs}, q, assets, images=True)
+    a = resp["answers"]["task"]
+    u = resp.get("usage", {})
+    return {"probs": {k: float(p) for k, p in a["probabilities"].items()}, "choice": a["choice"],
+            "confidence": a.get("confidence"), "latency_ms": lat, "model": resp.get("model"),
+            "cost_usd": cost_usd(client.model, u.get("input_tokens", 0), 0)}
 
 
 def probe_images(model: str = "jev-1.14.0") -> dict:

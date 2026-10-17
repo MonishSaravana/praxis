@@ -87,6 +87,18 @@ class TaskRecognizer:
         return Recognition(t=t, task_id=self.task_ids[k], posterior={i: float(p) for i, p in zip(self.task_ids, post)},
                            recognized=recognized, open_set=open_set)
 
+    def observe_verifier(self, probs: dict[str, float], weight: float = 3.0) -> None:
+        """A typed 'which task is this?' answer from the verifier, as high-weight evidence."""
+        if self._acc is None:
+            self.reset()
+        lp = np.array([np.log(max(probs.get(t, 0.0), 1e-3)) for t in self.task_ids])
+        self._acc = self._acc + weight * (lp - lp.max())
+
+    def posterior(self) -> dict[str, float]:
+        post = np.exp(self._acc - self._acc.max())
+        post /= post.sum()
+        return {i: float(p) for i, p in zip(self.task_ids, post)}
+
     def save(self, path: Path) -> None:
         with open(path, "wb") as f:
             pickle.dump(self, f)

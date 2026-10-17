@@ -1,0 +1,115 @@
+{
+ "clips": {
+  "12_48_0": {
+   "clip": "12_48_0",
+   "task_id": "cc4d_tomatomozzarellasalad",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_tomatomozzarellasalad",
+   "t_recognize": 10.0,
+   "task_correct": true,
+   "step_acc": 0.05846153846153846,
+   "step_acc_after_recognition": 0.05864197530864197,
+   "step_acc_incl_between": 0.05676126878130217,
+   "transition_err_s": [
+    28.001299999999997
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    28.001299999999997
+   ],
+   "verifier_calls": 6,
+   "verifier_latency_ms": [
+    129.04554198030382,
+    200.61591698322445,
+    162.2420420171693,
+    156.21641604229808,
+    169.90958398673683
+   ],
+   "verifier_latency_ms_all": [
+    129.04554198030382,
+    3953.2405000645667,
+    200.61591698322445,
+    162.2420420171693,
+    156.21641604229808,
+    169.90958398673683
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.010106944,
+   "frames": 1195,
+   "escalated_frames": 15,
+   "n_view_requests": 2,
+   "n_hints": 2,
+   "n_verified": 1
+  },
+  "8_45_0": {
+   "clip": "8_45_0",
+   "task_id": "cc4d_spicedhotchocolate",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_spicedhotchocolate",
+   "t_recognize": 10.0,
+   "task_correct": true,
+   "step_acc": 0.14840989399293286,
+   "step_acc_after_recognition": 0.15135135135135136,
+   "step_acc_incl_between": 0.14023372287145242,
+   "transition_err_s": [
+    4.102512015517313
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 6,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 6
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "verifier_calls": 7,
+   "verifier_latency_ms": [
+    158.2761249737814,
+    521.0877500940114,
+    151.1165410047397,
+    164.68241694383323,
+    188.30074998550117,
+    240.71166606154293,
+    168.4490409679711
+   ],
+   "verifier_latency_ms_all": [
+    158.2761249737814,
+    521.0877500940114,
+    151.1165410047397,
+    164.68241694383323,
+    188.30074998550117,
+    240.71166606154293,
+    168.4490409679711
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.0007687260000000001,
+   "frames": 1195,
+   "escalated_frames": 21,
+   "n_view_requests": 3,
+   "n_hints": 2,
+   "n_verified": 0
+  }
+ },
+ "spend": 0.00170982,
+ "calls": 16
+}

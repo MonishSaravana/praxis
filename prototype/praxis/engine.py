@@ -13,7 +13,7 @@ Two drivers use the same Engine.tick():
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Callable
 
 import numpy as np
@@ -76,6 +76,8 @@ class Engine:
         self._last_peak_t = -1e9
         self._last_grasp_t = -1e9
         self._last_sched = -1e9
+        self._next_task_check = 4.0
+        self._last_task_probs: dict[str, float] = {}
         if task_id is not None:
             self._start_task(0.0, task_id, oracle=True)
 
@@ -98,8 +100,9 @@ class Engine:
             raise ValueError(f"evidence node order != graph node order for {task_id}")
         self._w("task", t, task_id=task_id, title=self.graph.title, oracle=oracle, posterior=posterior,
                 n_steps=len(self.graph.nodes))
-        acts = [Action(t, "announce_task", f"Looks like you're {self.graph.title[0].lower() + self.graph.title[1:]}. "
-                                          "Want me to walk you through it?", None, {"oracle": oracle})]
+        verb = {"cooking": "making", "assembly": "assembling", "maintenance": "servicing"}.get(self.graph.domain, "working on")
+        acts = [Action(t, "announce_task", f"Looks like you're {verb} {self.graph.title.split(' (')[0].lower()}. "
+                                          "Want me to walk you through it?", None, {"oracle": oracle, "title": self.graph.title})]
         return acts
 
     def _emit(self, acts: list[Action]) -> None:
@@ -134,6 +137,29 @@ class Engine:
             r = None
             for i in range(n):
                 r = self.rec.update(float(rows["t"][i]), fe[i], we[i], dt=1.0 / n)
+            # slow path for L3b: a typed "which task is this?" verifier check at 4 s, then every 8 s until recognized
+            if self.ver is not None and hasattr(self.ver, "choose_task") and t >= self._next_task_check:
+                self._next_task_check = t + 6.0
+                frames, _ = span_keyframes(frame_at, t)
+                if frames:
+                    opts = {tid: f"{g.title}: {g.summary[:160]}" for tid, g in self.lib.items()}
+                    try:
+                        ans = self.ver.choose_task(frames, opts)
+                        self.rec.observe_verifier(ans["probs"])
+                        self._last_task_probs = ans["probs"]
+                        self._w("task_check", t, choice=ans["choice"], probs=ans["probs"], latency_ms=ans["latency_ms"],
+                                model=ans["model"], cost_usd=ans["cost_usd"])
+                        post = self.rec.posterior()
+                        top = max(post, key=post.get)
+                        if post[top] >= self.rec.threshold:
+                            r = replace(r, task_id=top, posterior=post, recognized=True)
+                        else:
+                            r = replace(r, posterior=post, recognized=False)
+                    except Exception as e:  # noqa: BLE001
+                        self._w("task_check", t, error=str(e)[:200])
+            if r.recognized and self.ver is not None and hasattr(self.ver, "choose_task") and \
+                    self._last_task_probs.get(r.task_id, 0.0) < 0.5:
+                r = replace(r, recognized=False)       # announce only what the latest verifier check also supports
             self._w("recognizer", t, top=r.task_id, posterior=r.posterior, recognized=r.recognized, open_set=r.open_set)
             if r.recognized:
                 acts = self._start_task(t, r.task_id, posterior=r.posterior)

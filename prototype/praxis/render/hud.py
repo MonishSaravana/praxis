@@ -192,7 +192,8 @@ class UserView:
                 r = int((10 + 26 * (1 - p)) * s)
                 cx, cy = x0 - int(76 * s), y0 + bh // 2
                 d.ellipse((cx - r, cy - r, cx + r, cy + r), outline=GREEN + (int(255 * p),), width=max(2, int(3 * s)))
-                d.text((cx - int(7 * s), cy - int(13 * s)), "✓", font=self.f_chip, fill=GREEN)
+                k = 7 * s
+                d.line([(cx - k, cy), (cx - k / 3, cy + k * 0.7), (cx + k, cy - k * 0.8)], fill=GREEN, width=max(2, int(3 * s)))
         card, a = st.card(tau)
         if card is not None and a > 0.02:
             img = self._card(img, card, a)
@@ -303,7 +304,9 @@ class EngineerView:
                 name = "done" if nid == "__done__" else self.names.get(nid, nid)
                 name = name if len(name) < 34 else name[:32] + "…"
                 col = GREEN if nid in done else (BLUE if nid == b["map"] else (150, 154, 160))
-                d.text((px, y), ("✓ " if nid in done else "  ") + name, font=self.fs, fill=INK if nid == b["map"] else SUB)
+                d.text((px + 14, y), name, font=self.fs, fill=INK if nid == b["map"] else SUB)
+                if nid in done:
+                    d.line([(px, y + rowh * 0.45), (px + 4, y + rowh * 0.65), (px + 10, y + rowh * 0.25)], fill=GREEN, width=2)
                 bx = px + 250
                 d.rounded_rectangle((bx, y + 3, bx + 170, y + rowh - 6), radius=3, fill=(228, 230, 234))
                 d.rounded_rectangle((bx, y + 3, bx + max(2, int(170 * p)), y + rowh - 6), radius=3, fill=col)
