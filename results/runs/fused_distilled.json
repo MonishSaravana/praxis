@@ -1,0 +1,4162 @@
+{
+ "variant": "fused_distilled",
+ "localizer": "jev",
+ "aggregate_excl_dev_clips": {
+  "n_clips": 45,
+  "minutes": 219.8806337081822,
+  "step_acc": 0.5075447613654301,
+  "step_acc_after_recognition": 0.5075447613654301,
+  "step_acc_incl_between": 0.4286445268440592,
+  "transition_err_s": {
+   "n": 118,
+   "p50": 20.461342362693976,
+   "p95": 169.58982499999996,
+   "mean": 50.295565697987804
+  },
+  "task_top1": 1.0,
+  "t_recognize_s": {
+   "n": 45,
+   "p50": 0.0,
+   "p95": 0.0,
+   "mean": 0.0
+  },
+  "mistakes": {
+   "tp": 4,
+   "fp": 0,
+   "fn": 156,
+   "precision": 1.0,
+   "recall": 0.025,
+   "f1": 0.04878048780487806,
+   "detect_minus_step_end_s": {
+    "n": 4,
+    "p50": -14.146393689097426,
+    "p95": -0.7996431067292342,
+    "mean": -12.83024684454872
+   },
+   "detect_minus_step_start_s": {
+    "n": 4,
+    "p50": 14.252399999999994,
+    "p95": 32.36008499999999,
+    "mean": 17.984622302967843
+   },
+   "share_caught_before_step_end": 0.75
+  },
+  "false_alarms_per_min": 0.0,
+  "alerts_per_min": 0.01819168852000244,
+  "feedback_latency_s": {
+   "n": 65,
+   "p50": 0.5242775090689449,
+   "p95": 118.62160486100386,
+   "mean": 5.194973990652957
+  },
+  "progress_latency_s": {
+   "n": 118,
+   "p50": 1.5698500000000024,
+   "p95": 124.77282322779588,
+   "mean": -0.6467175639650494
+  },
+  "verifier_latency_ms_live": {
+   "n": 412,
+   "p50": 0.34383294405415654,
+   "p95": 4286.0622481035525,
+   "mean": 449.2282460557265
+  },
+  "verifier_calls": 2748,
+  "verifier_errors": 0,
+  "escalated_frame_share": 0.14852728518152067,
+  "cost_usd": 1.71511957,
+  "cost_usd_per_video_min": 0.007800230248000131,
+  "view_requests": 1,
+  "hints": 73
+ },
+ "dev_clips": [
+  "12_119_0",
+  "12_48_0",
+  "8_45_0"
+ ],
+ "config": {
+  "engine_overrides": {},
+  "verifier": "distilled",
+  "escalation": "claude_strong",
+  "detector": "learned",
+  "oracle_task": true,
+  "tracker": {
+   "dt": 1.0,
+   "max_dwell_s": 400.0,
+   "local_weight": 0.1,
+   "boundary_weight": 0.0,
+   "verifier_weight": 4.0,
+   "skip_prob": 0.03,
+   "default_mean_s": 30.0,
+   "default_cv": 0.8
+  },
+  "policy": {
+   "verify_conf": 0.75,
+   "mistake_conf": 0.3,
+   "view_conf": 0.5,
+   "hesitation_ratio": 1.6,
+   "cooldown_s": 4.0,
+   "view_cooldown_s": 30.0,
+   "view_entropy": 0.5,
+   "entropy_verify": 0.15,
+   "verify_min_gap_s": 3.0,
+   "escalate_band": [
+    0.3,
+    0.7
+   ],
+   "by_role": {
+    "fast": [
+     0.6,
+     0.35
+    ],
+    "student": [
+     0.6,
+     0.35
+    ],
+    "strong": [
+     0.75,
+     0.3
+    ]
+   }
+  }
+ },
+ "aggregate": {
+  "n_clips": 48,
+  "minutes": 234.8806337081822,
+  "step_acc": 0.5192122861305718,
+  "step_acc_after_recognition": 0.5192122861305718,
+  "step_acc_incl_between": 0.4354866868767952,
+  "transition_err_s": {
+   "n": 131,
+   "p50": 21.103632230214203,
+   "p95": 179.4854141838803,
+   "mean": 52.52639171853551
+  },
+  "task_top1": 1.0,
+  "t_recognize_s": {
+   "n": 48,
+   "p50": 0.0,
+   "p95": 0.0,
+   "mean": 0.0
+  },
+  "mistakes": {
+   "tp": 7,
+   "fp": 1,
+   "fn": 163,
+   "precision": 0.875,
+   "recall": 0.041176470588235294,
+   "f1": 0.07865168539325842,
+   "detect_minus_step_end_s": {
+    "n": 7,
+    "p50": -18.115700000000004,
+    "p95": -0.4751500000000066,
+    "mean": -21.37201248259927
+   },
+   "detect_minus_step_start_s": {
+    "n": 7,
+    "p50": 17.5462,
+    "p95": 34.064650969407495,
+    "mean": 18.951839895773883
+   },
+   "share_caught_before_step_end": 0.8571428571428571
+  },
+  "false_alarms_per_min": 0.004257481701290065,
+  "alerts_per_min": 0.03405985361032052,
+  "feedback_latency_s": {
+   "n": 74,
+   "p50": 0.4962999999999944,
+   "p95": 118.17724079826256,
+   "mean": 4.155444205671567
+  },
+  "progress_latency_s": {
+   "n": 131,
+   "p50": 1.5142000000000166,
+   "p95": 146.16734270490682,
+   "mean": 2.2533533496380693
+  },
+  "verifier_latency_ms_live": {
+   "n": 442,
+   "p50": 0.3471249365247786,
+   "p95": 4528.188621409936,
+   "mean": 482.12934917152955
+  },
+  "verifier_calls": 2981,
+  "verifier_errors": 0,
+  "escalated_frame_share": 0.1509591920343421,
+  "cost_usd": 1.84951437,
+  "cost_usd_per_video_min": 0.007874273586548023,
+  "view_requests": 1,
+  "hints": 77
+ },
+ "per_category": {
+  "cc4d_breakfastburritos": {
+   "n_clips": 6,
+   "minutes": 30.0,
+   "step_acc": 0.5367998951022103,
+   "step_acc_after_recognition": 0.5367998951022103,
+   "step_acc_incl_between": 0.5008347245409015,
+   "transition_err_s": {
+    "n": 12,
+    "p50": 43.378132635460716,
+    "p95": 130.7364217804276,
+    "mean": 55.966089788475095
+   },
+   "task_top1": 1.0,
+   "t_recognize_s": {
+    "n": 6,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0
+   },
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 13,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": {
+     "n": 0,
+     "p50": null,
+     "p95": null,
+     "mean": null
+    },
+    "detect_minus_step_start_s": {
+     "n": 0,
+     "p50": null,
+     "p95": null,
+     "mean": null
+    },
+    "share_caught_before_step_end": null
+   },
+   "false_alarms_per_min": 0.0,
+   "alerts_per_min": 0.0,
+   "feedback_latency_s": {
+    "n": 8,
+    "p50": -5.972576914170162,
+    "p95": 59.71316623772952,
+    "mean": -16.148281078833556
+   },
+   "progress_latency_s": {
+    "n": 12,
+    "p50": -5.972576914170162,
+    "p95": 130.7364217804276,
+    "mean": 3.3813131412124116
+   },
+   "verifier_latency_ms_live": {
+    "n": 51,
+    "p50": 0.3867920022457838,
+    "p95": 2909.6440414432436,
+    "mean": 431.04206458391513
+   },
+   "verifier_calls": 390,
+   "verifier_errors": 0,
+   "escalated_frame_share": 0.15523012552301255,
+   "cost_usd": 0.199873662,
+   "cost_usd_per_video_min": 0.0066624554,
+   "view_requests": 0,
+   "hints": 8
+  },
+  "cc4d_cucumberraita": {
+   "n_clips": 6,
+   "minutes": 30.0,
+   "step_acc": 0.6062030954796332,
+   "step_acc_after_recognition": 0.6062030954796332,
+   "step_acc_incl_between": 0.5147468002225931,
+   "transition_err_s": {
+    "n": 8,
+    "p50": 12.093880117717429,
+    "p95": 138.43772623021235,
+    "mean": 41.6614431785565
+   },
+   "task_top1": 1.0,
+   "t_recognize_s": {
+    "n": 6,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0
+   },
+   "mistakes": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 18,
+    "precision": 1.0,
+    "recall": 0.05263157894736842,
+    "f1": 0.1,
+    "detect_minus_step_end_s": {
+     "n": 1,
+     "p50": -10.177087378194848,
+     "p95": -10.177087378194848,
+     "mean": -10.177087378194848
+    },
+    "detect_minus_step_start_s": {
+     "n": 1,
+     "p50": 8.459389211871375,
+     "p95": 8.459389211871375,
+     "mean": 8.459389211871375
+    },
+    "share_caught_before_step_end": 1.0
+   },
+   "false_alarms_per_min": 0.0,
+   "alerts_per_min": 0.03333333333333333,
+   "feedback_latency_s": {
+    "n": 6,
+    "p50": 4.295519486578229,
+    "p95": 69.70869124855213,
+    "mean": 15.98640311953912
+   },
+   "progress_latency_s": {
+    "n": 8,
+    "p50": 4.295519486578229,
+    "p95": 73.80479442340732,
+    "mean": -3.0368713947809924
+   },
+   "verifier_latency_ms_live": {
+    "n": 53,
+    "p50": 0.4706250037997961,
+    "p95": 5044.0974502125755,
+    "mean": 664.4495770308839
+   },
+   "verifier_calls": 356,
+   "verifier_errors": 0,
+   "escalated_frame_share": 0.1407252440725244,
+   "cost_usd": 0.238426824,
+   "cost_usd_per_video_min": 0.0079475608,
+   "view_requests": 0,
+   "hints": 3
+  },
+  "cc4d_herbomeletwithfriedtomatoes": {
+   "n_clips": 6,
+   "minutes": 30.0,
+   "step_acc": 0.559488860310759,
+   "step_acc_after_recognition": 0.559488860310759,
+   "step_acc_incl_between": 0.4315525876460768,
+   "transition_err_s": {
+    "n": 15,
+    "p50": 19.00123770812928,
+    "p95": 177.06312323212532,
+    "mean": 51.824608704038994
+   },
+   "task_top1": 1.0,
+   "t_recognize_s": {
+    "n": 6,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0
+   },
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 27,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": {
+     "n": 0,
+     "p50": null,
+     "p95": null,
+     "mean": null
+    },
+    "detect_minus_step_start_s": {
+     "n": 0,
+     "p50": null,
+     "p95": null,
+     "mean": null
+    },
+    "share_caught_before_step_end": null
+   },
+   "false_alarms_per_min": 0.0,
+   "alerts_per_min": 0.0,
+   "feedback_latency_s": {
+    "n": 12,
+    "p50": -4.016136777668976,
+    "p95": 125.41061644473932,
+    "mean": 1.6159639138476483
+   },
+   "progress_latency_s": {
+    "n": 15,
+    "p50": -5.15049965057915,
+    "p95": 113.4687391114864,
+    "mean": -15.143024272121359
+   },
+   "verifier_latency_ms_live": {
+    "n": 49,
+    "p50": 0.4432499408721924,
+    "p95": 4670.300758816301,
+    "mean": 693.0359923280776
+   },
+   "verifier_calls": 309,
+   "verifier_errors": 0,
+   "escalated_frame_share": 0.12119944211994421,
+   "cost_usd": 0.189741188,
+   "cost_usd_per_video_min": 0.006324706266666666,
+   "view_requests": 0,
+   "hints": 13
+  },
+  "cc4d_microwaveeggsandwich": {
+   "n_clips": 6,
+   "minutes": 30.0,
+   "step_acc": 0.40080864805504307,
+   "step_acc_after_recognition": 0.40080864805504307,
+   "step_acc_incl_between": 0.3806343906510852,
+   "transition_err_s": {
+    "n": 17,
+    "p50": 17.306787226493185,
+    "p95": 113.80720628027412,
+    "mean": 37.53252370712487
+   },
+   "task_top1": 1.0,
+   "t_recognize_s": {
+    "n": 6,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0
+   },
+   "mistakes": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 27,
+    "precision": 1.0,
+    "recall": 0.03571428571428571,
+    "f1": 0.0689655172413793,
+    "detect_minus_step_end_s": {
+     "n": 1,
+     "p50": -18.115700000000004,
+     "p95": -18.115700000000004,
+     "mean": -18.115700000000004
+    },
+    "detect_minus_step_start_s": {
+     "n": 1,
+     "p50": 34.9743,
+     "p95": 34.9743,
+     "mean": 34.9743
+    },
+    "share_caught_before_step_end": 1.0
+   },
+   "false_alarms_per_min": 0.0,
+   "alerts_per_min": 0.03333333333333333,
+   "feedback_latency_s": {
+    "n": 10,
+    "p50": -3.1790999999999947,
+    "p95": 12.204711074929099,
+    "mean": -21.88996999060557
+   },
+   "progress_latency_s": {
+    "n": 17,
+    "p50": 1.3303000000000225,
+    "p95": 27.89475999999997,
+    "mean": -21.2280125105625
+   },
+   "verifier_latency_ms_live": {
+    "n": 57,
+    "p50": 0.3964169882237911,
+    "p95": 716.1913583986309,
+    "mean": 317.42703215741926
+   },
+   "verifier_calls": 365,
+   "verifier_errors": 0,
+   "escalated_frame_share": 0.14490934449093446,
+   "cost_usd": 0.202445866,
+   "cost_usd_per_video_min": 0.0067481955333333335,
+   "view_requests": 1,
+   "hints": 13
+  },
+  "cc4d_microwavemugpizza": {
+   "n_clips": 6,
+   "minutes": 30.0,
+   "step_acc": 0.4520614152335674,
+   "step_acc_after_recognition": 0.4520614152335674,
+   "step_acc_incl_between": 0.37367835281023926,
+   "transition_err_s": {
+    "n": 14,
+    "p50": 24.719164669401543,
+    "p95": 155.52219398277026,
+    "mean": 55.48782674641478
+   },
+   "task_top1": 1.0,
+   "t_recognize_s": {
+    "n": 6,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0
+   },
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 23,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": {
+     "n": 0,
+     "p50": null,
+     "p95": null,
+     "mean": null
+    },
+    "detect_minus_step_start_s": {
+     "n": 0,
+     "p50": null,
+     "p95": null,
+     "mean": null
+    },
+    "share_caught_before_step_end": null
+   },
+   "false_alarms_per_min": 0.0,
+   "alerts_per_min": 0.0,
+   "feedback_latency_s": {
+    "n": 12,
+    "p50": 2.589845594111978,
+    "p95": 149.02841613325285,
+    "mean": 38.901463967744526
+   },
+   "progress_latency_s": {
+    "n": 14,
+    "p50": 2.589845594111978,
+    "p95": 142.09579572697874,
+    "mean": 23.81716973441809
+   },
+   "verifier_latency_ms_live": {
+    "n": 49,
+    "p50": 0.36029203329235315,
+    "p95": 3.5088581498712217,
+    "mean": 190.509299303367
+   },
+   "verifier_calls": 421,
+   "verifier_errors": 0,
+   "escalated_frame_share": 0.16778242677824268,
+   "cost_usd": 0.23293023599999998,
+   "cost_usd_per_video_min": 0.007764341199999999,
+   "view_requests": 0,
+   "hints": 11
+  },
+  "cc4d_pinwheels": {
+   "n_clips": 6,
+   "minutes": 29.215333333333334,
+   "step_acc": 0.460799689867391,
+   "step_acc_after_recognition": 0.460799689867391,
+   "step_acc_incl_between": 0.3960142591888571,
+   "transition_err_s": {
+    "n": 30,
+    "p50": 27.768500000000003,
+    "p95": 106.35194999999995,
+    "mean": 36.19958281465768
+   },
+   "task_top1": 1.0,
+   "t_recognize_s": {
+    "n": 6,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0
+   },
+   "mistakes": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 27,
+    "precision": 1.0,
+    "recall": 0.06896551724137931,
+    "f1": 0.12903225806451613,
+    "detect_minus_step_end_s": {
+     "n": 2,
+     "p50": -11.514100000000013,
+     "p95": -0.3817300000000057,
+     "mean": -11.514100000000013
+    },
+    "detect_minus_step_start_s": {
+     "n": 2,
+     "p50": 14.252399999999994,
+     "p95": 17.21682,
+     "mean": 14.252399999999994
+    },
+    "share_caught_before_step_end": 0.5
+   },
+   "false_alarms_per_min": 0.0,
+   "alerts_per_min": 0.06845720283869201,
+   "feedback_latency_s": {
+    "n": 12,
+    "p50": 1.736249999999984,
+    "p95": 70.70531999999994,
+    "mean": 5.891149999999993
+   },
+   "progress_latency_s": {
+    "n": 30,
+    "p50": 3.1086500000000044,
+    "p95": 106.35194999999995,
+    "mean": -0.4246105186756476
+   },
+   "verifier_latency_ms_live": {
+    "n": 112,
+    "p50": 0.275479513220489,
+    "p95": 4421.858260704898,
+    "mean": 474.48435194902623
+   },
+   "verifier_calls": 459,
+   "verifier_errors": 0,
+   "escalated_frame_share": 0.1833285591521054,
+   "cost_usd": 0.431792004,
+   "cost_usd_per_video_min": 0.014779636400976657,
+   "view_requests": 0,
+   "hints": 16
+  },
+  "cc4d_spicedhotchocolate": {
+   "n_clips": 6,
+   "minutes": 29.391,
+   "step_acc": 0.5135307786889277,
+   "step_acc_after_recognition": 0.5135307786889277,
+   "step_acc_incl_between": 0.4895283859241533,
+   "transition_err_s": {
+    "n": 12,
+    "p50": 29.26896051297188,
+    "p95": 185.30709094298047,
+    "mean": 69.665064325272
+   },
+   "task_top1": 1.0,
+   "t_recognize_s": {
+    "n": 6,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0
+   },
+   "mistakes": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 19,
+    "precision": 1.0,
+    "recall": 0.05,
+    "f1": 0.09523809523809523,
+    "detect_minus_step_end_s": {
+     "n": 1,
+     "p50": -19.123699999999985,
+     "p95": -19.123699999999985,
+     "mean": -19.123699999999985
+    },
+    "detect_minus_step_start_s": {
+     "n": 1,
+     "p50": 20.637704363261662,
+     "p95": 20.637704363261662,
+     "mean": 20.637704363261662
+    },
+    "share_caught_before_step_end": 1.0
+   },
+   "false_alarms_per_min": 0.0,
+   "alerts_per_min": 0.03402402095879691,
+   "feedback_latency_s": {
+    "n": 6,
+    "p50": -4.746073091517864,
+    "p95": 131.69575373340092,
+    "mean": 6.803631491835063
+   },
+   "progress_latency_s": {
+    "n": 12,
+    "p50": 6.945798754973367,
+    "p95": 157.93895426846169,
+    "mean": 9.632806966845013
+   },
+   "verifier_latency_ms_live": {
+    "n": 28,
+    "p50": 0.4058545455336571,
+    "p95": 3934.3449601961743,
+    "mean": 537.30197621709
+   },
+   "verifier_calls": 285,
+   "verifier_errors": 0,
+   "escalated_frame_share": 0.1184173071448904,
+   "cost_usd": 0.11936484000000001,
+   "cost_usd_per_video_min": 0.00406127181790344,
+   "view_requests": 0,
+   "hints": 7
+  },
+  "cc4d_tomatomozzarellasalad": {
+   "n_clips": 6,
+   "minutes": 26.27430037484885,
+   "step_acc": 0.6240059063070423,
+   "step_acc_after_recognition": 0.6240059063070423,
+   "step_acc_incl_between": 0.39690399403045484,
+   "transition_err_s": {
+    "n": 23,
+    "p50": 42.58402249093106,
+    "p95": 268.2973311540628,
+    "mean": 76.60229686362996
+   },
+   "task_top1": 1.0,
+   "t_recognize_s": {
+    "n": 6,
+    "p50": 0.0,
+    "p95": 0.0,
+    "mean": 0.0
+   },
+   "mistakes": {
+    "tp": 2,
+    "fp": 1,
+    "fn": 9,
+    "precision": 0.6666666666666666,
+    "recall": 0.18181818181818182,
+    "f1": 0.28571428571428575,
+    "detect_minus_step_end_s": {
+     "n": 2,
+     "p50": -39.57970000000001,
+     "p95": -7.179340000000007,
+     "mean": -39.57970000000001
+    },
+    "detect_minus_step_start_s": {
+     "n": 2,
+     "p50": 20.043342847642077,
+     "p95": 30.752257192986693,
+     "mean": 20.043342847642077
+    },
+    "share_caught_before_step_end": 1.0
+   },
+   "false_alarms_per_min": 0.038060004861528225,
+   "alerts_per_min": 0.11418001458458467,
+   "feedback_latency_s": {
+    "n": 8,
+    "p50": 0.5002887545344734,
+    "p95": 54.04462499999998,
+    "mean": -4.756790311366387
+   },
+   "progress_latency_s": {
+    "n": 23,
+    "p50": 4.884,
+    "p95": 266.51687394366195,
+    "mean": 18.723231943649782
+   },
+   "verifier_latency_ms_live": {
+    "n": 43,
+    "p50": 0.25558401830494404,
+    "p95": 4771.413454506545,
+    "mean": 612.2892228399165
+   },
+   "verifier_calls": 396,
+   "verifier_errors": 0,
+   "escalated_frame_share": 0.17985038994111094,
+   "cost_usd": 0.23493975,
+   "cost_usd_per_video_min": 0.008941808027166225,
+   "view_requests": 0,
+   "hints": 6
+  }
+ },
+ "per_clip": [
+  {
+   "clip": "12_119_0",
+   "task_id": "cc4d_tomatomozzarellasalad",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_tomatomozzarellasalad",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.6491935483870968,
+   "step_acc_after_recognition": 0.6491935483870968,
+   "step_acc_incl_between": 0.41402337228714525,
+   "transition_err_s": [
+    87.58257746478876,
+    240.91973943661972
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    -87.58257746478876,
+    240.91973943661972
+   ],
+   "typed_choice_calls": 81,
+   "verifier_calls": 86,
+   "verifier_latency_ms": [
+    0.2401249948889017,
+    0.22883398924022913,
+    0.6351670017465949,
+    0.18554204143583775
+   ],
+   "verifier_latency_ms_all": [
+    0.2401249948889017,
+    5851.338917040266,
+    0.22883398924022913,
+    0.6351670017465949,
+    0.18554204143583775
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.023236930000000003,
+   "frames": 1195,
+   "escalated_frames": 253,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 0
+  },
+  {
+   "clip": "12_15_0",
+   "task_id": "cc4d_tomatomozzarellasalad",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_tomatomozzarellasalad",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.6946107784431138,
+   "step_acc_after_recognition": 0.6946107784431138,
+   "step_acc_incl_between": 0.49081803005008345,
+   "transition_err_s": [
+    258.7243115406284,
+    7.930764338028169,
+    27.47133508342361
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    -258.7243115406284,
+    7.930764338028169,
+    -27.47133508342361
+   ],
+   "typed_choice_calls": 58,
+   "verifier_calls": 66,
+   "verifier_latency_ms": [
+    0.2075409283861518,
+    0.6564580835402012,
+    0.18008309416472912,
+    0.18666707910597324,
+    0.24616706650704145,
+    0.1755409175530076
+   ],
+   "verifier_latency_ms_all": [
+    0.2075409283861518,
+    0.6564580835402012,
+    0.18008309416472912,
+    3034.7892499994487,
+    0.18666707910597324,
+    0.24616706650704145,
+    3816.9124589767307,
+    0.1755409175530076
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.027367314,
+   "frames": 1195,
+   "escalated_frames": 190,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 0
+  },
+  {
+   "clip": "12_16_0",
+   "task_id": "cc4d_tomatomozzarellasalad",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_tomatomozzarellasalad",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.4746450304259635,
+   "step_acc_after_recognition": 0.4746450304259635,
+   "step_acc_incl_between": 0.42237061769616024,
+   "transition_err_s": [
+    14.420999999999992,
+    3.8710999999999984,
+    63.55599999999998,
+    9.415999999999997,
+    269.361
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    3.8710999999999984
+   ],
+   "progress_latency_s": [
+    14.420999999999992,
+    3.8710999999999984,
+    -63.55599999999998,
+    9.415999999999997,
+    269.361
+   ],
+   "typed_choice_calls": 54,
+   "verifier_calls": 57,
+   "verifier_latency_ms": [
+    7.93850002810359,
+    2481.154292006977,
+    0.6123339990153909
+   ],
+   "verifier_latency_ms_all": [
+    7.93850002810359,
+    2481.154292006977,
+    0.6123339990153909
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.017671068,
+   "frames": 1195,
+   "escalated_frames": 166,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 1
+  },
+  {
+   "clip": "12_43_0",
+   "task_id": "cc4d_tomatomozzarellasalad",
+   "minutes": 3.3395,
+   "recognized_task": "cc4d_tomatomozzarellasalad",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.5904761904761905,
+   "step_acc_after_recognition": 0.5904761904761905,
+   "step_acc_incl_between": 0.1975,
+   "transition_err_s": [
+    4.884,
+    77.57,
+    59.382000000000005
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 3,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 3
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    4.884,
+    77.57,
+    59.382000000000005
+   ],
+   "typed_choice_calls": 39,
+   "verifier_calls": 46,
+   "verifier_latency_ms": [
+    0.2912079216912389,
+    0.2138749696314335,
+    0.2025000285357237,
+    0.32679096329957247
+   ],
+   "verifier_latency_ms_all": [
+    0.2912079216912389,
+    6917.588750016876,
+    0.2138749696314335,
+    0.2025000285357237,
+    1507.5842080404982,
+    0.32679096329957247,
+    4398.979500052519
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.043274026,
+   "frames": 799,
+   "escalated_frames": 127,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 0
+  },
+  {
+   "clip": "12_48_0",
+   "task_id": "cc4d_tomatomozzarellasalad",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_tomatomozzarellasalad",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.7815384615384615,
+   "step_acc_after_recognition": 0.7815384615384615,
+   "step_acc_incl_between": 0.5726210350584308,
+   "transition_err_s": [
+    155.09300000000002,
+    0.47630000000000194,
+    30.598,
+    66.9192,
+    14.509,
+    0.15720000000000312,
+    45.71199999999999,
+    280.19
+   ],
+   "mistakes": {
+    "tp": 2,
+    "fp": 1,
+    "fn": 2,
+    "precision": 0.6666666666666666,
+    "recall": 0.5,
+    "f1": 0.5714285714285715,
+    "detect_minus_step_end_s": [
+     -3.5793000000000035,
+     -75.58010000000002
+    ],
+    "detect_minus_step_start_s": [
+     8.144549130592502,
+     31.94213656469165
+    ],
+    "n_alerts": 3,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.2,
+   "all_alerts_per_min": 0.6,
+   "feedback_latency_s": [
+    30.134699999999995,
+    0.47630000000000194,
+    66.9192,
+    0.15720000000000312,
+    -75.58010000000002,
+    -64.55700000000002
+   ],
+   "progress_latency_s": [
+    -155.09300000000002,
+    0.47630000000000194,
+    -30.598,
+    66.9192,
+    14.509,
+    0.15720000000000312,
+    45.71199999999999,
+    280.19
+   ],
+   "typed_choice_calls": 74,
+   "verifier_calls": 92,
+   "verifier_latency_ms": [
+    0.2520830603316426,
+    0.22291694767773151,
+    0.2581659937277436,
+    0.2413330366834998,
+    0.19162509124726057,
+    0.43058290611952543,
+    0.38004200905561447,
+    1.1565419845283031,
+    5840.777707984671,
+    0.23762497585266829,
+    0.17687503714114428,
+    3946.747166919522,
+    1.9291660282760859,
+    4863.043042016216,
+    0.7362080505117774,
+    0.24787499569356441,
+    5606.068416964263
+   ],
+   "verifier_latency_ms_all": [
+    0.2520830603316426,
+    0.22291694767773151,
+    6944.51099995058,
+    0.2581659937277436,
+    0.2413330366834998,
+    0.19162509124726057,
+    0.43058290611952543,
+    0.38004200905561447,
+    1.1565419845283031,
+    5840.777707984671,
+    0.23762497585266829,
+    0.17687503714114428,
+    3946.747166919522,
+    1.9291660282760859,
+    4863.043042016216,
+    0.7362080505117774,
+    0.24787499569356441,
+    5606.068416964263
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.076482342,
+   "frames": 1195,
+   "escalated_frames": 259,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 3
+  },
+  {
+   "clip": "12_51_63",
+   "task_id": "cc4d_tomatomozzarellasalad",
+   "minutes": 2.9348003748488507,
+   "recognized_task": "cc4d_tomatomozzarellasalad",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.5535714285714286,
+   "step_acc_after_recognition": 0.5535714285714286,
+   "step_acc_incl_between": 0.2840909090909091,
+   "transition_err_s": [
+    0.5242775090689449,
+    42.58402249093106
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    0.5242775090689449
+   ],
+   "progress_latency_s": [
+    0.5242775090689449,
+    -42.58402249093106
+   ],
+   "typed_choice_calls": 38,
+   "verifier_calls": 49,
+   "verifier_latency_ms": [
+    0.25558401830494404,
+    0.3125000512227416,
+    0.2215419663116336,
+    0.31229096930474043,
+    0.215791049413383,
+    0.3195420140400529,
+    3569.6309169288725,
+    0.20658306311815977,
+    0.18283294048160315
+   ],
+   "verifier_latency_ms_all": [
+    0.25558401830494404,
+    0.3125000512227416,
+    0.2215419663116336,
+    0.31229096930474043,
+    0.215791049413383,
+    3449.1618330357596,
+    0.3195420140400529,
+    3569.6309169288725,
+    0.20658306311815977,
+    6134.438291075639,
+    0.18283294048160315
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.046908069999999996,
+   "frames": 704,
+   "escalated_frames": 135,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 1
+  },
+  {
+   "clip": "8_19_0",
+   "task_id": "cc4d_spicedhotchocolate",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_spicedhotchocolate",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.8163265306122449,
+   "step_acc_after_recognition": 0.8163265306122449,
+   "step_acc_incl_between": 0.8046744574290484,
+   "transition_err_s": [
+    3.983774888539699,
+    6.596258198553045,
+    85.86336631272516
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -6.596258198553045
+   ],
+   "progress_latency_s": [
+    3.983774888539699,
+    -6.596258198553045,
+    85.86336631272516
+   ],
+   "typed_choice_calls": 30,
+   "verifier_calls": 37,
+   "verifier_latency_ms": [
+    2.8626660350710154,
+    0.2145000034943223,
+    0.21412502974271774,
+    4504.166207974777,
+    0.27533306274563074,
+    0.45825005508959293
+   ],
+   "verifier_latency_ms_all": [
+    2.8626660350710154,
+    3811.638041981496,
+    0.2145000034943223,
+    0.21412502974271774,
+    4504.166207974777,
+    0.27533306274563074,
+    0.45825005508959293
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.034085862,
+   "frames": 1195,
+   "escalated_frames": 105,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 1
+  },
+  {
+   "clip": "8_20_0",
+   "task_id": "cc4d_spicedhotchocolate",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_spicedhotchocolate",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.49800796812749004,
+   "step_acc_after_recognition": 0.49800796812749004,
+   "step_acc_incl_between": 0.44240400667779634,
+   "transition_err_s": [
+    207.89100474368536
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    -207.89100474368536
+   ],
+   "typed_choice_calls": 58,
+   "verifier_calls": 60,
+   "verifier_latency_ms": [
+    0.6267919670790434,
+    0.32358302269130945
+   ],
+   "verifier_latency_ms_all": [
+    0.6267919670790434,
+    0.32358302269130945
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.006057786000000001,
+   "frames": 1195,
+   "escalated_frames": 180,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 0
+  },
+  {
+   "clip": "8_40_0",
+   "task_id": "cc4d_spicedhotchocolate",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_spicedhotchocolate",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.268760907504363,
+   "step_acc_after_recognition": 0.268760907504363,
+   "step_acc_incl_between": 0.2604340567612688,
+   "transition_err_s": [
+    37.43428879572956,
+    131.69055796554863
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 5,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 5
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -131.69055796554863
+   ],
+   "progress_latency_s": [
+    37.43428879572956,
+    -131.69055796554863
+   ],
+   "typed_choice_calls": 36,
+   "verifier_calls": 43,
+   "verifier_latency_ms": [
+    0.5899170646443963,
+    0.2019170206040144,
+    0.24570804089307785,
+    0.3534590359777212,
+    2776.5961670083925
+   ],
+   "verifier_latency_ms_all": [
+    0.5899170646443963,
+    2020.8328330190852,
+    0.2019170206040144,
+    3931.6852500196546,
+    0.24570804089307785,
+    0.3534590359777212,
+    2776.5961670083925
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.035809034000000003,
+   "frames": 1195,
+   "escalated_frames": 120,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 1
+  },
+  {
+   "clip": "8_44_0",
+   "task_id": "cc4d_spicedhotchocolate",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_spicedhotchocolate",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.3811252268602541,
+   "step_acc_after_recognition": 0.3811252268602541,
+   "step_acc_incl_between": 0.3722871452420701,
+   "transition_err_s": [
+    21.103632230214203,
+    166.82934328785834
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 5,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 5
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    166.82934328785834
+   ],
+   "progress_latency_s": [
+    21.103632230214203,
+    166.82934328785834
+   ],
+   "typed_choice_calls": 29,
+   "verifier_calls": 34,
+   "verifier_latency_ms": [
+    1.356916967779398,
+    0.30583294574171305,
+    0.2337079495191574,
+    0.23987505119293928,
+    0.19933399744331837
+   ],
+   "verifier_latency_ms_all": [
+    1.356916967779398,
+    0.30583294574171305,
+    0.2337079495191574,
+    0.23987505119293928,
+    0.19933399744331837
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.002994978,
+   "frames": 1195,
+   "escalated_frames": 102,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 1
+  },
+  {
+   "clip": "8_45_0",
+   "task_id": "cc4d_spicedhotchocolate",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_spicedhotchocolate",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.6519434628975265,
+   "step_acc_after_recognition": 0.6519434628975265,
+   "step_acc_incl_between": 0.6277128547579299,
+   "transition_err_s": [
+    2.895887984482684,
+    11.119835258292213,
+    9.907822621407036
+   ],
+   "mistakes": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 5,
+    "precision": 1.0,
+    "recall": 0.16666666666666666,
+    "f1": 0.2857142857142857,
+    "detect_minus_step_end_s": [
+     -19.123699999999985
+    ],
+    "detect_minus_step_start_s": [
+     20.637704363261662
+    ],
+    "n_alerts": 1,
+    "n_gt": 6
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.2,
+   "feedback_latency_s": [
+    -2.895887984482684,
+    -11.119835258292213,
+    26.294985070028616
+   ],
+   "progress_latency_s": [
+    -2.895887984482684,
+    -11.119835258292213,
+    9.907822621407036
+   ],
+   "typed_choice_calls": 46,
+   "verifier_calls": 55,
+   "verifier_latency_ms": [
+    1.5504169277846813,
+    0.5274579161778092,
+    0.2821669913828373,
+    4872.075582970865,
+    0.589582952670753,
+    2.9331250116229057,
+    0.4605000140145421,
+    0.22358400747179985,
+    2876.1055000359192
+   ],
+   "verifier_latency_ms_all": [
+    1.5504169277846813,
+    0.5274579161778092,
+    0.2821669913828373,
+    4872.075582970865,
+    0.589582952670753,
+    2.9331250116229057,
+    0.4605000140145421,
+    0.22358400747179985,
+    2876.1055000359192
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.034675528000000004,
+   "frames": 1195,
+   "escalated_frames": 157,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 2
+  },
+  {
+   "clip": "8_50_0",
+   "task_id": "cc4d_spicedhotchocolate",
+   "minutes": 4.391,
+   "recognized_task": "cc4d_spicedhotchocolate",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.46502057613168724,
+   "step_acc_after_recognition": 0.46502057613168724,
+   "step_acc_incl_between": 0.4296577946768061,
+   "transition_err_s": [
+    150.6649996162281
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    150.6649996162281
+   ],
+   "typed_choice_calls": 55,
+   "verifier_calls": 56,
+   "verifier_latency_ms": [
+    0.24312501773238182
+   ],
+   "verifier_latency_ms_all": [
+    0.24312501773238182
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.005741652000000001,
+   "frames": 1051,
+   "escalated_frames": 168,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 0
+  },
+  {
+   "clip": "7_135_0",
+   "task_id": "cc4d_breakfastburritos",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_breakfastburritos",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.4513715710723192,
+   "step_acc_after_recognition": 0.4513715710723192,
+   "step_acc_incl_between": 0.3088480801335559,
+   "transition_err_s": [
+    15.411730187118167,
+    75.33851114325853,
+    6.160178121955255
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 3,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 3
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -15.411730187118167,
+    -6.160178121955255
+   ],
+   "progress_latency_s": [
+    -15.411730187118167,
+    -75.33851114325853,
+    -6.160178121955255
+   ],
+   "typed_choice_calls": 68,
+   "verifier_calls": 87,
+   "verifier_latency_ms": [
+    4.646750050596893,
+    0.24841597769409418,
+    0.25504198856651783,
+    0.25020900648087263,
+    1.6855830326676369,
+    1.2890830403193831,
+    2309.494625078514,
+    4.17483295314014,
+    1622.284666984342,
+    0.3446659538894892,
+    3066.3386249216273,
+    0.28499995823949575,
+    0.6418749690055847,
+    0.3867920022457838,
+    0.3871670924127102,
+    5234.99979195185,
+    0.36225002259016037,
+    0.23962499108165503
+   ],
+   "verifier_latency_ms_all": [
+    4.646750050596893,
+    0.24841597769409418,
+    0.25504198856651783,
+    0.25020900648087263,
+    2468.7534159747884,
+    1.6855830326676369,
+    1.2890830403193831,
+    2309.494625078514,
+    4.17483295314014,
+    1622.284666984342,
+    0.3446659538894892,
+    3066.3386249216273,
+    0.28499995823949575,
+    0.6418749690055847,
+    0.3867920022457838,
+    0.3871670924127102,
+    5234.99979195185,
+    0.36225002259016037,
+    0.23962499108165503
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.057497308,
+   "frames": 1195,
+   "escalated_frames": 244,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 3
+  },
+  {
+   "clip": "7_18_0",
+   "task_id": "cc4d_breakfastburritos",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_breakfastburritos",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.3701188455008489,
+   "step_acc_after_recognition": 0.3701188455008489,
+   "step_acc_incl_between": 0.3639398998330551,
+   "transition_err_s": [
+    92.6237078330592
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    92.6237078330592
+   ],
+   "progress_latency_s": [
+    92.6237078330592
+   ],
+   "typed_choice_calls": 49,
+   "verifier_calls": 61,
+   "verifier_latency_ms": [
+    0.6007499760016799,
+    0.2782080555334687,
+    0.15650002751499414,
+    0.11691695544868708,
+    0.20224996842443943,
+    0.1687089679762721,
+    0.21570897661149502,
+    0.29608397744596004
+   ],
+   "verifier_latency_ms_all": [
+    0.6007499760016799,
+    0.2782080555334687,
+    0.15650002751499414,
+    2610.6534169521183,
+    0.11691695544868708,
+    2266.046541975811,
+    0.20224996842443943,
+    0.1687089679762721,
+    7546.241541975178,
+    0.21570897661149502,
+    4726.282167015597,
+    0.29608397744596004
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.04485611,
+   "frames": 1195,
+   "escalated_frames": 169,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 1
+  },
+  {
+   "clip": "7_19_0",
+   "task_id": "cc4d_breakfastburritos",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_breakfastburritos",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.8960817717206133,
+   "step_acc_after_recognition": 0.8960817717206133,
+   "step_acc_incl_between": 0.8864774624373957,
+   "transition_err_s": [
+    5.186571928189636,
+    5.784975706385069
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -5.186571928189636,
+    -5.784975706385069
+   ],
+   "progress_latency_s": [
+    -5.186571928189636,
+    -5.784975706385069
+   ],
+   "typed_choice_calls": 30,
+   "verifier_calls": 32,
+   "verifier_latency_ms": [
+    0.6694169715046883,
+    0.38599991239607334
+   ],
+   "verifier_latency_ms_all": [
+    0.6694169715046883,
+    0.38599991239607334
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.003111864,
+   "frames": 1195,
+   "escalated_frames": 94,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 2
+  },
+  {
+   "clip": "7_44_0",
+   "task_id": "cc4d_breakfastburritos",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_breakfastburritos",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.5701754385964912,
+   "step_acc_after_recognition": 0.5701754385964912,
+   "step_acc_incl_between": 0.5425709515859767,
+   "transition_err_s": [
+    141.66968579358553,
+    121.79102395148026,
+    18.360192276589885
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 5,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 5
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    141.66968579358553,
+    121.79102395148026,
+    -18.360192276589885
+   ],
+   "typed_choice_calls": 56,
+   "verifier_calls": 64,
+   "verifier_latency_ms": [
+    1.7312499694526196,
+    0.3323749406263232,
+    0.45704201329499483,
+    0.3368749748915434,
+    0.4137499490752816,
+    0.32837502658367157
+   ],
+   "verifier_latency_ms_all": [
+    1.7312499694526196,
+    0.3323749406263232,
+    0.45704201329499483,
+    0.3368749748915434,
+    0.4137499490752816,
+    3475.4869589814916,
+    0.32837502658367157,
+    3536.8455830030143
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.030420268,
+   "frames": 1195,
+   "escalated_frames": 184,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 0
+  },
+  {
+   "clip": "7_48_0",
+   "task_id": "cc4d_breakfastburritos",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_breakfastburritos",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.3776978417266187,
+   "step_acc_after_recognition": 0.3776978417266187,
+   "step_acc_incl_between": 0.3639398998330551,
+   "transition_err_s": [
+    1.4064110107397418
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 2,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 2
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -1.4064110107397418
+   ],
+   "progress_latency_s": [
+    -1.4064110107397418
+   ],
+   "typed_choice_calls": 79,
+   "verifier_calls": 91,
+   "verifier_latency_ms": [
+    0.701499986462295,
+    0.23979099933058023,
+    0.2898330567404628,
+    0.6210419815033674,
+    1.3706660829484463,
+    2620.9346670657396,
+    0.21870795171707869,
+    0.3045840421691537,
+    0.3958749584853649,
+    0.4944169195368886,
+    4347.3985000746325
+   ],
+   "verifier_latency_ms_all": [
+    0.701499986462295,
+    0.23979099933058023,
+    5598.363957949914,
+    0.2898330567404628,
+    0.6210419815033674,
+    1.3706660829484463,
+    2620.9346670657396,
+    0.21870795171707869,
+    0.3045840421691537,
+    0.3958749584853649,
+    0.4944169195368886,
+    4347.3985000746325
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.047416952,
+   "frames": 1195,
+   "escalated_frames": 262,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 2
+  },
+  {
+   "clip": "7_50_0",
+   "task_id": "cc4d_breakfastburritos",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_breakfastburritos",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.5553539019963702,
+   "step_acc_after_recognition": 0.5553539019963702,
+   "step_acc_incl_between": 0.5392320534223706,
+   "transition_err_s": [
+    68.39607299433155,
+    119.46401651500824
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 3,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 3
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -68.39607299433155,
+    -119.46401651500824
+   ],
+   "progress_latency_s": [
+    -68.39607299433155,
+    -119.46401651500824
+   ],
+   "typed_choice_calls": 49,
+   "verifier_calls": 55,
+   "verifier_latency_ms": [
+    0.25983399245887995,
+    0.3290000604465604,
+    0.8153750095516443,
+    0.21716603077948093,
+    2752.94945796486,
+    0.5996669642627239
+   ],
+   "verifier_latency_ms_all": [
+    0.25983399245887995,
+    0.3290000604465604,
+    0.8153750095516443,
+    0.21716603077948093,
+    2752.94945796486,
+    0.5996669642627239
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.01657116,
+   "frames": 1195,
+   "escalated_frames": 160,
+   "n_view_requests": 0,
+   "n_hints": 3,
+   "n_verified": 2
+  },
+  {
+   "clip": "1_143_0",
+   "task_id": "cc4d_microwaveeggsandwich",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwaveeggsandwich",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.26129666011787817,
+   "step_acc_after_recognition": 0.26129666011787817,
+   "step_acc_incl_between": 0.22203672787979967,
+   "transition_err_s": [
+    17.756200000000007,
+    85.6368,
+    122.833,
+    23.369799999999998
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    17.756200000000007,
+    -85.6368,
+    -23.369799999999998
+   ],
+   "progress_latency_s": [
+    17.756200000000007,
+    -85.6368,
+    -122.833,
+    -23.369799999999998
+   ],
+   "typed_choice_calls": 42,
+   "verifier_calls": 62,
+   "verifier_latency_ms": [
+    3.8103749975562096,
+    0.18141698092222214,
+    0.23754104040563107,
+    0.10299996938556433,
+    0.18645799718797207,
+    0.2381670055910945,
+    0.25887496303766966,
+    0.4516670014709234,
+    0.28733303770422935,
+    3565.7152920030057,
+    0.23095798678696156,
+    0.39433303754776716,
+    0.44600002001971006,
+    0.26937504298985004,
+    0.2861670218408108,
+    0.4236670210957527,
+    0.5224159685894847,
+    0.5466250004246831,
+    0.4812090191990137
+   ],
+   "verifier_latency_ms_all": [
+    3.8103749975562096,
+    0.18141698092222214,
+    0.23754104040563107,
+    0.10299996938556433,
+    0.18645799718797207,
+    0.2381670055910945,
+    0.25887496303766966,
+    3602.9817080125213,
+    0.4516670014709234,
+    0.28733303770422935,
+    3565.7152920030057,
+    0.23095798678696156,
+    0.39433303754776716,
+    0.44600002001971006,
+    0.26937504298985004,
+    0.2861670218408108,
+    0.4236670210957527,
+    0.5224159685894847,
+    0.5466250004246831,
+    0.4812090191990137
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.030226896,
+   "frames": 1195,
+   "escalated_frames": 178,
+   "n_view_requests": 1,
+   "n_hints": 1,
+   "n_verified": 5
+  },
+  {
+   "clip": "1_25_0",
+   "task_id": "cc4d_microwaveeggsandwich",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwaveeggsandwich",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.5684007707129094,
+   "step_acc_after_recognition": 0.5684007707129094,
+   "step_acc_incl_between": 0.5091819699499165,
+   "transition_err_s": [
+    17.306787226493185,
+    68.44900000000001
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    17.306787226493185,
+    68.44900000000001
+   ],
+   "typed_choice_calls": 25,
+   "verifier_calls": 32,
+   "verifier_latency_ms": [
+    1.2633750448003411,
+    0.6092919502407312,
+    0.2122499281540513,
+    0.26270898524671793,
+    0.506708980537951
+   ],
+   "verifier_latency_ms_all": [
+    1.2633750448003411,
+    4108.573541045189,
+    0.6092919502407312,
+    4691.8917909497395,
+    0.2122499281540513,
+    0.26270898524671793,
+    0.506708980537951
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.029032245999999998,
+   "frames": 1195,
+   "escalated_frames": 88,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 0
+  },
+  {
+   "clip": "1_37_0",
+   "task_id": "cc4d_microwaveeggsandwich",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwaveeggsandwich",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.418018018018018,
+   "step_acc_after_recognition": 0.418018018018018,
+   "step_acc_incl_between": 0.4323873121869783,
+   "transition_err_s": [
+    5.2564999999999955,
+    11.076999999999998,
+    82.97399999999999,
+    1.101699999999994
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -5.2564999999999955,
+    -1.101699999999994
+   ],
+   "progress_latency_s": [
+    -5.2564999999999955,
+    11.076999999999998,
+    -82.97399999999999,
+    -1.101699999999994
+   ],
+   "typed_choice_calls": 40,
+   "verifier_calls": 49,
+   "verifier_latency_ms": [
+    0.2905420260503888,
+    0.4868749529123306,
+    0.40950009133666754,
+    0.32554101198911667,
+    0.9153749560937285,
+    0.5053339991718531,
+    0.6399579579010606
+   ],
+   "verifier_latency_ms_all": [
+    0.2905420260503888,
+    3924.246666021645,
+    0.4868749529123306,
+    0.40950009133666754,
+    4349.262583069503,
+    0.32554101198911667,
+    0.9153749560937285,
+    0.5053339991718531,
+    0.6399579579010606
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.032280868000000004,
+   "frames": 1195,
+   "escalated_frames": 139,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 3
+  },
+  {
+   "clip": "1_42_0",
+   "task_id": "cc4d_microwaveeggsandwich",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwaveeggsandwich",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.477891156462585,
+   "step_acc_after_recognition": 0.477891156462585,
+   "step_acc_incl_between": 0.4691151919866444,
+   "transition_err_s": [
+    8.129999999999999,
+    1.3303000000000225,
+    7.494
+   ],
+   "mistakes": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 7,
+    "precision": 1.0,
+    "recall": 0.125,
+    "f1": 0.2222222222222222,
+    "detect_minus_step_end_s": [
+     -18.115700000000004
+    ],
+    "detect_minus_step_start_s": [
+     34.9743
+    ],
+    "n_alerts": 1,
+    "n_gt": 8
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.2,
+   "feedback_latency_s": [
+    1.3303000000000225,
+    -18.115700000000004
+   ],
+   "progress_latency_s": [
+    8.129999999999999,
+    1.3303000000000225,
+    7.494
+   ],
+   "typed_choice_calls": 65,
+   "verifier_calls": 77,
+   "verifier_latency_ms": [
+    1.7658750293776393,
+    0.27762504760175943,
+    0.48824993427842855,
+    0.8652498945593834,
+    0.32283400651067495,
+    0.3162079956382513,
+    0.25341601576656103,
+    0.2692500129342079
+   ],
+   "verifier_latency_ms_all": [
+    1.7658750293776393,
+    2655.1614589989185,
+    0.27762504760175943,
+    0.48824993427842855,
+    0.8652498945593834,
+    0.32283400651067495,
+    4208.018082892522,
+    0.3162079956382513,
+    2684.205916011706,
+    0.25341601576656103,
+    3786.452249973081,
+    0.2692500129342079
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.040490628,
+   "frames": 1195,
+   "escalated_frames": 217,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 1
+  },
+  {
+   "clip": "1_43_0",
+   "task_id": "cc4d_microwaveeggsandwich",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwaveeggsandwich",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.4867924528301887,
+   "step_acc_after_recognition": 0.4867924528301887,
+   "step_acc_incl_between": 0.4323873121869783,
+   "transition_err_s": [
+    1.6254999999999882,
+    66.74199999999999
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    1.6254999999999882
+   ],
+   "progress_latency_s": [
+    1.6254999999999882,
+    -66.74199999999999
+   ],
+   "typed_choice_calls": 63,
+   "verifier_calls": 74,
+   "verifier_latency_ms": [
+    0.545124989002943,
+    0.2841659588739276,
+    0.2683340571820736,
+    0.28066697996109724,
+    0.39654201827943325,
+    0.45916601084172726,
+    1.4976250240579247,
+    0.2363750245422125
+   ],
+   "verifier_latency_ms_all": [
+    0.545124989002943,
+    0.2841659588739276,
+    3575.5419590277597,
+    0.2683340571820736,
+    0.28066697996109724,
+    0.39654201827943325,
+    2547.78162506409,
+    0.45916601084172726,
+    1.4976250240579247,
+    3995.9217089926824,
+    0.2363750245422125
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.035140996,
+   "frames": 1195,
+   "escalated_frames": 211,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 1
+  },
+  {
+   "clip": "1_49_0",
+   "task_id": "cc4d_microwaveeggsandwich",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwaveeggsandwich",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.19245283018867926,
+   "step_acc_after_recognition": 0.19245283018867926,
+   "step_acc_incl_between": 0.21869782971619364,
+   "transition_err_s": [
+    111.55075785034265,
+    5.4195579442869075
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 8,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 8
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -111.55075785034265,
+    5.4195579442869075
+   ],
+   "progress_latency_s": [
+    -111.55075785034265,
+    5.4195579442869075
+   ],
+   "typed_choice_calls": 61,
+   "verifier_calls": 71,
+   "verifier_latency_ms": [
+    1.4919579261913896,
+    0.41270803194493055,
+    4863.470708020031,
+    3.2734579872339964,
+    0.17691694665700197,
+    0.389833003282547,
+    0.3964169882237911,
+    0.33608300145715475,
+    0.2714170841500163,
+    9633.096290985122
+   ],
+   "verifier_latency_ms_all": [
+    1.4919579261913896,
+    0.41270803194493055,
+    4863.470708020031,
+    3.2734579872339964,
+    0.17691694665700197,
+    0.389833003282547,
+    0.3964169882237911,
+    0.33608300145715475,
+    0.2714170841500163,
+    9633.096290985122
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.035274231999999996,
+   "frames": 1195,
+   "escalated_frames": 206,
+   "n_view_requests": 0,
+   "n_hints": 6,
+   "n_verified": 3
+  },
+  {
+   "clip": "10_18_0",
+   "task_id": "cc4d_pinwheels",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_pinwheels",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.3087248322147651,
+   "step_acc_after_recognition": 0.3087248322147651,
+   "step_acc_incl_between": 0.24207011686143573,
+   "transition_err_s": [
+    35.4242,
+    79.22899999999998,
+    0.5162999999999869,
+    12.867999999999995,
+    2.7040000000000077,
+    38.28199999999998,
+    35.881
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -35.4242,
+    0.5162999999999869
+   ],
+   "progress_latency_s": [
+    -35.4242,
+    -79.22899999999998,
+    0.5162999999999869,
+    12.867999999999995,
+    2.7040000000000077,
+    -38.28199999999998,
+    35.881
+   ],
+   "typed_choice_calls": 63,
+   "verifier_calls": 79,
+   "verifier_latency_ms": [
+    3.8342499174177647,
+    2.0586670143529773,
+    4235.878041945398,
+    0.2812909660860896,
+    0.3007499035447836,
+    0.2054170472547412,
+    0.6580000044777989,
+    0.5650831153616309,
+    0.23333297576755285,
+    0.24316704366356134,
+    0.21320802625268698,
+    4649.16741696652,
+    0.5329580744728446,
+    0.2608749782666564,
+    0.279792002402246,
+    7731.084875063971
+   ],
+   "verifier_latency_ms_all": [
+    3.8342499174177647,
+    2.0586670143529773,
+    4235.878041945398,
+    0.2812909660860896,
+    0.3007499035447836,
+    0.2054170472547412,
+    0.6580000044777989,
+    0.5650831153616309,
+    0.23333297576755285,
+    0.24316704366356134,
+    0.21320802625268698,
+    4649.16741696652,
+    0.5329580744728446,
+    0.2608749782666564,
+    0.279792002402246,
+    7731.084875063971
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.05393707400000001,
+   "frames": 1195,
+   "escalated_frames": 227,
+   "n_view_requests": 0,
+   "n_hints": 4,
+   "n_verified": 2
+  },
+  {
+   "clip": "10_24_0",
+   "task_id": "cc4d_pinwheels",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_pinwheels",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.5354969574036511,
+   "step_acc_after_recognition": 0.5354969574036511,
+   "step_acc_incl_between": 0.44908180300500833,
+   "transition_err_s": [
+    10.963999999999999,
+    38.55569999999999,
+    70.243,
+    115.059,
+    25.697000000000003
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -38.55569999999999
+   ],
+   "progress_latency_s": [
+    10.963999999999999,
+    -38.55569999999999,
+    -70.243,
+    115.059,
+    -25.697000000000003
+   ],
+   "typed_choice_calls": 59,
+   "verifier_calls": 67,
+   "verifier_latency_ms": [
+    1.2290419545024633,
+    0.26133295614272356,
+    0.23179198615252972,
+    0.21233304869383574,
+    0.6093750707805157,
+    0.4505410324782133,
+    0.5470839096233249,
+    0.6718341028317809
+   ],
+   "verifier_latency_ms_all": [
+    1.2290419545024633,
+    0.26133295614272356,
+    0.23179198615252972,
+    0.21233304869383574,
+    0.6093750707805157,
+    0.4505410324782133,
+    0.5470839096233249,
+    0.6718341028317809
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.00609168,
+   "frames": 1195,
+   "escalated_frames": 201,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 1
+  },
+  {
+   "clip": "10_46_0",
+   "task_id": "cc4d_pinwheels",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_pinwheels",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.360377358490566,
+   "step_acc_after_recognition": 0.360377358490566,
+   "step_acc_incl_between": 0.33889816360601,
+   "transition_err_s": [
+    65.27600000000001,
+    74.56899999999999,
+    91.24600000000001,
+    118.8191,
+    95.71000000000001,
+    3.712599999999952
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 6,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 6
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    118.8191,
+    3.712599999999952
+   ],
+   "progress_latency_s": [
+    -65.27600000000001,
+    -74.56899999999999,
+    -91.24600000000001,
+    118.8191,
+    95.71000000000001,
+    3.712599999999952
+   ],
+   "typed_choice_calls": 59,
+   "verifier_calls": 87,
+   "verifier_latency_ms": [
+    0.23470795713365078,
+    0.20083296112716198,
+    0.1514580799266696,
+    0.1635829685255885,
+    0.09870808571577072,
+    0.38762507028877735,
+    0.24745799601078033,
+    0.13620802201330662,
+    1.8405410228297114,
+    0.13462500646710396,
+    0.22891699336469173,
+    0.3827910404652357,
+    6090.847042039968,
+    0.5512500647455454,
+    1660.2115420391783,
+    0.3073749830946326,
+    0.20775001030415297,
+    0.24999992456287146,
+    0.3214169992133975,
+    0.24745799601078033,
+    0.6845829775556922,
+    0.4466250538825989,
+    2985.1659160340205,
+    0.24729198776185513
+   ],
+   "verifier_latency_ms_all": [
+    0.23470795713365078,
+    0.20083296112716198,
+    4262.701999978162,
+    0.1514580799266696,
+    3740.073833032511,
+    0.1635829685255885,
+    0.09870808571577072,
+    0.38762507028877735,
+    2547.059250064194,
+    0.24745799601078033,
+    0.13620802201330662,
+    1.8405410228297114,
+    2857.608124963008,
+    0.13462500646710396,
+    0.22891699336469173,
+    0.3827910404652357,
+    6090.847042039968,
+    0.5512500647455454,
+    1660.2115420391783,
+    0.3073749830946326,
+    0.20775001030415297,
+    0.24999992456287146,
+    0.3214169992133975,
+    0.24745799601078033,
+    0.6845829775556922,
+    0.4466250538825989,
+    2985.1659160340205,
+    0.24729198776185513
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.083625682,
+   "frames": 1195,
+   "escalated_frames": 240,
+   "n_view_requests": 0,
+   "n_hints": 3,
+   "n_verified": 2
+  },
+  {
+   "clip": "10_47_0",
+   "task_id": "cc4d_pinwheels",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_pinwheels",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.4539170506912442,
+   "step_acc_after_recognition": 0.4539170506912442,
+   "step_acc_incl_between": 0.4090150250417362,
+   "transition_err_s": [
+    6.328599999999998,
+    29.840000000000003,
+    7.9909999999999854,
+    1.9582999999999515
+   ],
+   "mistakes": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 9,
+    "precision": 1.0,
+    "recall": 0.1,
+    "f1": 0.18181818181818182,
+    "detect_minus_step_end_s": [
+     -23.883400000000023
+    ],
+    "detect_minus_step_start_s": [
+     10.95859999999999
+    ],
+    "n_alerts": 1,
+    "n_gt": 10
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.2,
+   "feedback_latency_s": [
+    6.328599999999998,
+    -23.883400000000023,
+    1.9582999999999515
+   ],
+   "progress_latency_s": [
+    6.328599999999998,
+    29.840000000000003,
+    7.9909999999999854,
+    1.9582999999999515
+   ],
+   "typed_choice_calls": 43,
+   "verifier_calls": 81,
+   "verifier_latency_ms": [
+    0.6140419282019138,
+    0.2818749053403735,
+    0.2548330230638385,
+    0.24399999529123306,
+    0.21591701079159975,
+    0.29216695111244917,
+    0.21054199896752834,
+    0.21525006741285324,
+    0.21150009706616402,
+    0.26112492196261883,
+    0.2699169563129544,
+    0.27116702403873205,
+    0.24695892352610826,
+    0.22091693244874477,
+    0.35679200664162636,
+    0.37937494926154613,
+    0.20670797675848007,
+    0.2193329855799675,
+    0.19870803225785494,
+    0.3761249827221036,
+    0.23100001271814108,
+    0.2264999784529209,
+    0.3244589315727353,
+    2918.7885420396924,
+    0.37516700103878975,
+    0.3012910019606352,
+    0.6047090282663703,
+    0.5629590013995767,
+    5445.2484579524025
+   ],
+   "verifier_latency_ms_all": [
+    0.6140419282019138,
+    0.2818749053403735,
+    1788.8157500419766,
+    0.2548330230638385,
+    0.24399999529123306,
+    0.21591701079159975,
+    4185.590249951929,
+    0.29216695111244917,
+    4848.010124987923,
+    0.21054199896752834,
+    0.21525006741285324,
+    0.21150009706616402,
+    0.26112492196261883,
+    0.2699169563129544,
+    3285.6932919239625,
+    0.27116702403873205,
+    4356.3027089694515,
+    0.24695892352610826,
+    4715.103707974777,
+    0.22091693244874477,
+    5380.086499964818,
+    0.35679200664162636,
+    0.37937494926154613,
+    4361.776457983069,
+    0.20670797675848007,
+    0.2193329855799675,
+    0.19870803225785494,
+    5035.004792036489,
+    0.3761249827221036,
+    0.23100001271814108,
+    0.2264999784529209,
+    0.3244589315727353,
+    2918.7885420396924,
+    0.37516700103878975,
+    0.3012910019606352,
+    0.6047090282663703,
+    0.5629590013995767,
+    5445.2484579524025
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.13912813200000002,
+   "frames": 1195,
+   "escalated_frames": 210,
+   "n_view_requests": 0,
+   "n_hints": 3,
+   "n_verified": 3
+  },
+  {
+   "clip": "10_48_0",
+   "task_id": "cc4d_pinwheels",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_pinwheels",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.6024844720496895,
+   "step_acc_after_recognition": 0.6024844720496895,
+   "step_acc_incl_between": 0.5191986644407346,
+   "transition_err_s": [
+    1.5142000000000166,
+    14.478000000000009
+   ],
+   "mistakes": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 6,
+    "precision": 1.0,
+    "recall": 0.14285714285714285,
+    "f1": 0.25,
+    "detect_minus_step_end_s": [
+     0.8551999999999964
+    ],
+    "detect_minus_step_start_s": [
+     17.5462
+    ],
+    "n_alerts": 1,
+    "n_gt": 7
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.2,
+   "feedback_latency_s": [
+    1.5142000000000166,
+    0.8551999999999964
+   ],
+   "progress_latency_s": [
+    1.5142000000000166,
+    -14.478000000000009
+   ],
+   "typed_choice_calls": 63,
+   "verifier_calls": 82,
+   "verifier_latency_ms": [
+    0.1609170576557517,
+    0.1342919422313571,
+    0.1960420049726963,
+    0.12800004333257675,
+    0.20104204304516315,
+    0.19087502732872963,
+    0.3482919419184327,
+    0.25708298198878765,
+    0.6503750337287784,
+    7868.5213749995455,
+    1.7214580439031124,
+    7245.581916999072,
+    0.2876250073313713,
+    0.8058749372139573,
+    0.2844170667231083,
+    0.19345805048942566
+   ],
+   "verifier_latency_ms_all": [
+    0.1609170576557517,
+    5501.8165410729125,
+    0.1342919422313571,
+    3786.726790945977,
+    0.1960420049726963,
+    0.12800004333257675,
+    2956.9599999813363,
+    0.20104204304516315,
+    0.19087502732872963,
+    0.3482919419184327,
+    0.25708298198878765,
+    0.6503750337287784,
+    7868.5213749995455,
+    1.7214580439031124,
+    7245.581916999072,
+    0.2876250073313713,
+    0.8058749372139573,
+    0.2844170667231083,
+    0.19345805048942566
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.076411808,
+   "frames": 1195,
+   "escalated_frames": 231,
+   "n_view_requests": 0,
+   "n_hints": 3,
+   "n_verified": 1
+  },
+  {
+   "clip": "10_50_0",
+   "task_id": "cc4d_pinwheels",
+   "minutes": 4.215333333333333,
+   "recognized_task": "cc4d_pinwheels",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.5037974683544304,
+   "step_acc_after_recognition": 0.5037974683544304,
+   "step_acc_incl_between": 0.4178217821782178,
+   "transition_err_s": [
+    4.251999999999995,
+    5.3936844397306345,
+    3.513300000000001,
+    16.363,
+    48.25999999999999,
+    31.339500000000015
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 6,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 6
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    3.513300000000001,
+    31.339500000000015
+   ],
+   "progress_latency_s": [
+    4.251999999999995,
+    5.3936844397306345,
+    3.513300000000001,
+    -16.363,
+    48.25999999999999,
+    31.339500000000015
+   ],
+   "typed_choice_calls": 39,
+   "verifier_calls": 63,
+   "verifier_latency_ms": [
+    0.6961250910535455,
+    0.33295899629592896,
+    0.36641594488173723,
+    0.9739160304889083,
+    0.2372079761698842,
+    2270.9585839184,
+    0.3372079227119684,
+    0.29383297078311443,
+    0.2179170260205865,
+    0.2500000409781933,
+    0.15324994456022978,
+    0.4729580832645297,
+    0.22766704205423594,
+    0.15912496019154787,
+    0.1771660754457116,
+    0.17183308955281973,
+    0.19733398221433163,
+    0.23179198615252972,
+    0.21258299238979816
+   ],
+   "verifier_latency_ms_all": [
+    0.6961250910535455,
+    2475.3747079521418,
+    0.33295899629592896,
+    0.36641594488173723,
+    0.9739160304889083,
+    0.2372079761698842,
+    2270.9585839184,
+    0.3372079227119684,
+    0.29383297078311443,
+    4399.8218330089,
+    0.2179170260205865,
+    0.2500000409781933,
+    0.15324994456022978,
+    0.4729580832645297,
+    4388.8756250962615,
+    0.22766704205423594,
+    3607.3197920341045,
+    0.15912496019154787,
+    0.1771660754457116,
+    0.17183308955281973,
+    0.19733398221433163,
+    3374.271542066708,
+    0.23179198615252972,
+    0.21258299238979816
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.072597628,
+   "frames": 1007,
+   "escalated_frames": 171,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 2
+  },
+  {
+   "clip": "3_13_0",
+   "task_id": "cc4d_microwavemugpizza",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwavemugpizza",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.7173396674584323,
+   "step_acc_after_recognition": 0.7173396674584323,
+   "step_acc_incl_between": 0.5943238731218697,
+   "transition_err_s": [
+    0.9250935936293558
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    0.9250935936293558
+   ],
+   "progress_latency_s": [
+    0.9250935936293558
+   ],
+   "typed_choice_calls": 45,
+   "verifier_calls": 60,
+   "verifier_latency_ms": [
+    4.1142909321933985,
+    0.2164999023079872,
+    1.5348329907283187,
+    0.288125011138618,
+    0.25400007143616676,
+    0.18370803445577621,
+    0.1954999752342701,
+    0.19687495660036802,
+    0.16929092817008495,
+    0.18491700757294893,
+    0.1616249792277813,
+    0.2030420582741499
+   ],
+   "verifier_latency_ms_all": [
+    4.1142909321933985,
+    4178.490999969654,
+    0.2164999023079872,
+    1.5348329907283187,
+    3964.84824991785,
+    0.288125011138618,
+    0.25400007143616676,
+    0.18370803445577621,
+    0.1954999752342701,
+    0.19687495660036802,
+    0.16929092817008495,
+    0.18491700757294893,
+    0.1616249792277813,
+    4275.636916980147,
+    0.2030420582741499
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.043004469999999996,
+   "frames": 1195,
+   "escalated_frames": 169,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 1
+  },
+  {
+   "clip": "3_18_0",
+   "task_id": "cc4d_microwavemugpizza",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwavemugpizza",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.4170124481327801,
+   "step_acc_after_recognition": 0.4170124481327801,
+   "step_acc_incl_between": 0.37061769616026713,
+   "transition_err_s": [
+    4.197012237451759
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    4.197012237451759
+   ],
+   "progress_latency_s": [
+    4.197012237451759
+   ],
+   "typed_choice_calls": 62,
+   "verifier_calls": 75,
+   "verifier_latency_ms": [
+    1.9119589123874903,
+    0.21349999587982893,
+    0.4404169740155339,
+    0.4140000091865659,
+    0.4380419850349426,
+    0.2342079533264041,
+    0.34133298322558403,
+    0.34983293153345585,
+    0.3705420531332493
+   ],
+   "verifier_latency_ms_all": [
+    1.9119589123874903,
+    4518.432374927215,
+    0.21349999587982893,
+    0.4404169740155339,
+    0.4140000091865659,
+    0.4380419850349426,
+    0.2342079533264041,
+    0.34133298322558403,
+    3137.9052080446854,
+    0.34983293153345585,
+    5915.157375042327,
+    0.3705420531332493,
+    3838.1717500742525
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.054684704,
+   "frames": 1195,
+   "escalated_frames": 211,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 1
+  },
+  {
+   "clip": "3_36_0",
+   "task_id": "cc4d_microwavemugpizza",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwavemugpizza",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.43805309734513276,
+   "step_acc_after_recognition": 0.43805309734513276,
+   "step_acc_incl_between": 0.3639398998330551,
+   "transition_err_s": [
+    3.7122283783783985,
+    138.48762162162166
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -3.7122283783783985
+   ],
+   "progress_latency_s": [
+    -3.7122283783783985,
+    -138.48762162162166
+   ],
+   "typed_choice_calls": 45,
+   "verifier_calls": 48,
+   "verifier_latency_ms": [
+    2.6007089763879776,
+    0.565416063182056
+   ],
+   "verifier_latency_ms_all": [
+    2.6007089763879776,
+    0.565416063182056,
+    3815.822791075334
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.014441124,
+   "frames": 1195,
+   "escalated_frames": 139,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 1
+  },
+  {
+   "clip": "3_46_0",
+   "task_id": "cc4d_microwavemugpizza",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwavemugpizza",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.3972602739726027,
+   "step_acc_after_recognition": 0.3972602739726027,
+   "step_acc_incl_between": 0.3756260434056761,
+   "transition_err_s": [
+    43.00017253185328,
+    73.05659227702701,
+    0.06338476833977325,
+    5.110430290540506,
+    0.9826789507721969
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 6,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 6
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    43.00017253185328,
+    -73.05659227702701,
+    0.06338476833977325,
+    0.9826789507721969
+   ],
+   "progress_latency_s": [
+    43.00017253185328,
+    -73.05659227702701,
+    0.06338476833977325,
+    5.110430290540506,
+    0.9826789507721969
+   ],
+   "typed_choice_calls": 60,
+   "verifier_calls": 78,
+   "verifier_latency_ms": [
+    0.5187090719118714,
+    0.4587919684126973,
+    1.1032909387722611,
+    0.3891250817105174,
+    1.4959590043872595,
+    0.3583329962566495,
+    0.6046249764040112,
+    0.2886250149458647,
+    0.32400002237409353,
+    1.8678329652175307,
+    0.5894580390304327,
+    0.49166695680469275
+   ],
+   "verifier_latency_ms_all": [
+    0.5187090719118714,
+    5436.383208958432,
+    0.4587919684126973,
+    1.1032909387722611,
+    3490.93975010328,
+    0.3891250817105174,
+    3442.3774579772726,
+    1.4959590043872595,
+    0.3583329962566495,
+    4323.307709069923,
+    0.6046249764040112,
+    0.2886250149458647,
+    0.32400002237409353,
+    3892.8478750167415,
+    1.8678329652175307,
+    5086.931625031866,
+    0.5894580390304327,
+    0.49166695680469275
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.07380386,
+   "frames": 1195,
+   "escalated_frames": 214,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 5
+  },
+  {
+   "clip": "3_49_0",
+   "task_id": "cc4d_microwavemugpizza",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwavemugpizza",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.3170103092783505,
+   "step_acc_after_recognition": 0.3170103092783505,
+   "step_acc_incl_between": 0.23205342237061768,
+   "transition_err_s": [
+    6.438156806949806,
+    117.83162430501932,
+    187.1578283677606,
+    83.3943674980695,
+    112.47238282239383
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -6.438156806949806,
+    117.83162430501932,
+    187.1578283677606,
+    83.3943674980695,
+    112.47238282239383
+   ],
+   "progress_latency_s": [
+    -6.438156806949806,
+    117.83162430501932,
+    187.1578283677606,
+    83.3943674980695,
+    112.47238282239383
+   ],
+   "typed_choice_calls": 57,
+   "verifier_calls": 66,
+   "verifier_latency_ms": [
+    0.36029203329235315,
+    0.2637500874698162,
+    0.27950003277510405,
+    3545.294667012058,
+    0.5647080251947045,
+    1.5566250076517463,
+    0.8587919874116778,
+    0.46320795081555843,
+    5759.800208033994
+   ],
+   "verifier_latency_ms_all": [
+    0.36029203329235315,
+    0.2637500874698162,
+    0.27950003277510405,
+    3545.294667012058,
+    0.5647080251947045,
+    1.5566250076517463,
+    0.8587919874116778,
+    0.46320795081555843,
+    5759.800208033994
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.037894342,
+   "frames": 1195,
+   "escalated_frames": 190,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 5
+  },
+  {
+   "clip": "3_50_0",
+   "task_id": "cc4d_microwavemugpizza",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwavemugpizza",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.4256926952141058,
+   "step_acc_after_recognition": 0.4256926952141058,
+   "step_acc_incl_between": 0.3055091819699499,
+   "transition_err_s": [],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 9,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 9
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [],
+   "typed_choice_calls": 89,
+   "verifier_calls": 94,
+   "verifier_latency_ms": [
+    0.235249986872077,
+    0.3338749520480633,
+    0.22716703824698925,
+    0.31283299904316664,
+    0.3317079972475767
+   ],
+   "verifier_latency_ms_all": [
+    0.235249986872077,
+    0.3338749520480633,
+    0.22716703824698925,
+    0.31283299904316664,
+    0.3317079972475767
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.009101736000000001,
+   "frames": 1195,
+   "escalated_frames": 280,
+   "n_view_requests": 0,
+   "n_hints": 4,
+   "n_verified": 0
+  },
+  {
+   "clip": "22_137_198",
+   "task_id": "cc4d_herbomeletwithfriedtomatoes",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_herbomeletwithfriedtomatoes",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.5895953757225434,
+   "step_acc_after_recognition": 0.5895953757225434,
+   "step_acc_incl_between": 0.5108514190317195,
+   "transition_err_s": [
+    171.813,
+    169.1975
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    169.1975
+   ],
+   "progress_latency_s": [
+    -171.813,
+    169.1975
+   ],
+   "typed_choice_calls": 29,
+   "verifier_calls": 33,
+   "verifier_latency_ms": [
+    4.092791001312435,
+    0.4562920657917857,
+    1.4327910030260682,
+    0.2905420260503888
+   ],
+   "verifier_latency_ms_all": [
+    4.092791001312435,
+    0.4562920657917857,
+    1.4327910030260682,
+    0.2905420260503888
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.0030242520000000003,
+   "frames": 1195,
+   "escalated_frames": 98,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 1
+  },
+  {
+   "clip": "22_24_0",
+   "task_id": "cc4d_herbomeletwithfriedtomatoes",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_herbomeletwithfriedtomatoes",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.7737881508078994,
+   "step_acc_after_recognition": 0.7737881508078994,
+   "step_acc_incl_between": 0.7195325542570952,
+   "transition_err_s": [],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [],
+   "typed_choice_calls": 23,
+   "verifier_calls": 28,
+   "verifier_latency_ms": [
+    0.30691700521856546,
+    0.2897079102694988,
+    0.2571250079199672
+   ],
+   "verifier_latency_ms_all": [
+    0.30691700521856546,
+    0.2897079102694988,
+    2320.480083930306,
+    0.2571250079199672,
+    2314.3757090438157
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.019181396000000003,
+   "frames": 1195,
+   "escalated_frames": 76,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 0
+  },
+  {
+   "clip": "22_37_0",
+   "task_id": "cc4d_herbomeletwithfriedtomatoes",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_herbomeletwithfriedtomatoes",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.45585585585585586,
+   "step_acc_after_recognition": 0.45585585585585586,
+   "step_acc_incl_between": 0.44073455759599334,
+   "transition_err_s": [
+    1.9394999999999953,
+    31.117999999999995
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 6,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 6
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    1.9394999999999953
+   ],
+   "progress_latency_s": [
+    1.9394999999999953,
+    -31.117999999999995
+   ],
+   "typed_choice_calls": 47,
+   "verifier_calls": 56,
+   "verifier_latency_ms": [
+    0.2689170651137829,
+    2.351208939217031,
+    0.48087502364069223,
+    1.5141669427976012,
+    5583.2119170809165,
+    0.46475010458379984,
+    0.7776250131428242,
+    0.2838750369846821
+   ],
+   "verifier_latency_ms_all": [
+    0.2689170651137829,
+    2.351208939217031,
+    0.48087502364069223,
+    4269.757250091061,
+    1.5141669427976012,
+    5583.2119170809165,
+    0.46475010458379984,
+    0.7776250131428242,
+    0.2838750369846821
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.037656672,
+   "frames": 1195,
+   "escalated_frames": 158,
+   "n_view_requests": 0,
+   "n_hints": 3,
+   "n_verified": 2
+  },
+  {
+   "clip": "22_38_0",
+   "task_id": "cc4d_herbomeletwithfriedtomatoes",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_herbomeletwithfriedtomatoes",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.7725321888412017,
+   "step_acc_after_recognition": 0.7725321888412017,
+   "step_acc_incl_between": 0.335559265442404,
+   "transition_err_s": [
+    2.4403912577219984,
+    89.58498444498069,
+    5.15049965057915
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 3,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 3
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -2.4403912577219984,
+    89.58498444498069,
+    -5.15049965057915
+   ],
+   "progress_latency_s": [
+    -2.4403912577219984,
+    89.58498444498069,
+    -5.15049965057915
+   ],
+   "typed_choice_calls": 65,
+   "verifier_calls": 72,
+   "verifier_latency_ms": [
+    0.23537501692771912,
+    0.1812080154195428,
+    2622.207625070587,
+    0.25783292949199677,
+    0.20570808555930853,
+    0.5705830408260226
+   ],
+   "verifier_latency_ms_all": [
+    0.23537501692771912,
+    0.1812080154195428,
+    2622.207625070587,
+    0.25783292949199677,
+    4332.588999997824,
+    0.20570808555930853,
+    0.5705830408260226
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.030755338,
+   "frames": 1195,
+   "escalated_frames": 208,
+   "n_view_requests": 0,
+   "n_hints": 4,
+   "n_verified": 4
+  },
+  {
+   "clip": "22_40_0",
+   "task_id": "cc4d_herbomeletwithfriedtomatoes",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_herbomeletwithfriedtomatoes",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.3131067961165049,
+   "step_acc_after_recognition": 0.3131067961165049,
+   "step_acc_incl_between": 0.22203672787979967,
+   "transition_err_s": [
+    11.96345083251714,
+    189.3134107737512,
+    43.60593104799216,
+    3.7310458374142854,
+    19.00123770812928,
+    4.301227717923666
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 8,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 8
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -11.96345083251714,
+    -189.3134107737512,
+    -3.7310458374142854,
+    -19.00123770812928,
+    -4.301227717923666
+   ],
+   "progress_latency_s": [
+    -11.96345083251714,
+    -189.3134107737512,
+    -43.60593104799216,
+    -3.7310458374142854,
+    -19.00123770812928,
+    -4.301227717923666
+   ],
+   "typed_choice_calls": 44,
+   "verifier_calls": 62,
+   "verifier_latency_ms": [
+    0.9447919437661767,
+    0.1272499794140458,
+    0.3325419966131449,
+    0.3368749748915434,
+    0.3226660192012787,
+    4140.912667033263,
+    0.39900001138448715,
+    4529.452958959155,
+    9.709458914585412,
+    0.42104104068130255,
+    2952.760708052665,
+    7150.0429580919445,
+    2.2388340439647436,
+    4764.1992920544,
+    0.3922919277101755,
+    0.5706249503418803,
+    0.517957960255444,
+    0.4432499408721924
+   ],
+   "verifier_latency_ms_all": [
+    0.9447919437661767,
+    0.1272499794140458,
+    0.3325419966131449,
+    0.3368749748915434,
+    0.3226660192012787,
+    4140.912667033263,
+    0.39900001138448715,
+    4529.452958959155,
+    9.709458914585412,
+    0.42104104068130255,
+    2952.760708052665,
+    7150.0429580919445,
+    2.2388340439647436,
+    4764.1992920544,
+    0.3922919277101755,
+    0.5706249503418803,
+    0.517957960255444,
+    0.4432499408721924
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.05865381599999999,
+   "frames": 1195,
+   "escalated_frames": 169,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 6
+  },
+  {
+   "clip": "22_41_0",
+   "task_id": "cc4d_herbomeletwithfriedtomatoes",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_herbomeletwithfriedtomatoes",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.4520547945205479,
+   "step_acc_after_recognition": 0.4520547945205479,
+   "step_acc_incl_between": 0.3606010016694491,
+   "transition_err_s": [
+    19.81905249517375,
+    14.38989879440156
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 6,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 6
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -19.81905249517375,
+    14.38989879440156
+   ],
+   "progress_latency_s": [
+    -19.81905249517375,
+    14.38989879440156
+   ],
+   "typed_choice_calls": 45,
+   "verifier_calls": 58,
+   "verifier_latency_ms": [
+    1.3752499362453818,
+    2177.439707913436,
+    3.654915955848992,
+    0.3090830286964774,
+    0.40837505366653204,
+    0.2625419292598963,
+    0.27312501333653927,
+    0.24233304429799318,
+    0.18933298997581005,
+    0.3459579311311245
+   ],
+   "verifier_latency_ms_all": [
+    1.3752499362453818,
+    2177.439707913436,
+    3.654915955848992,
+    3675.7858749479055,
+    0.3090830286964774,
+    3634.5107910456136,
+    0.40837505366653204,
+    0.2625419292598963,
+    0.27312501333653927,
+    0.24233304429799318,
+    0.18933298997581005,
+    0.3459579311311245,
+    2677.6670410763472
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.040469714000000004,
+   "frames": 1195,
+   "escalated_frames": 160,
+   "n_view_requests": 0,
+   "n_hints": 3,
+   "n_verified": 2
+  },
+  {
+   "clip": "17_16_0",
+   "task_id": "cc4d_cucumberraita",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_cucumberraita",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.7322834645669292,
+   "step_acc_after_recognition": 0.7322834645669292,
+   "step_acc_incl_between": 0.6210350584307178,
+   "transition_err_s": [],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [],
+   "typed_choice_calls": 41,
+   "verifier_calls": 46,
+   "verifier_latency_ms": [
+    7.356291986070573,
+    0.38129196036607027,
+    0.3255830379202962,
+    0.3429999342188239
+   ],
+   "verifier_latency_ms_all": [
+    7.356291986070573,
+    0.38129196036607027,
+    0.3255830379202962,
+    1982.812499976717,
+    0.3429999342188239
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.011427778,
+   "frames": 1195,
+   "escalated_frames": 133,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 0
+  },
+  {
+   "clip": "17_23_0",
+   "task_id": "cc4d_cucumberraita",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_cucumberraita",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.852991452991453,
+   "step_acc_after_recognition": 0.852991452991453,
+   "step_acc_incl_between": 0.8330550918196995,
+   "transition_err_s": [],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [],
+   "typed_choice_calls": 29,
+   "verifier_calls": 29,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [],
+   "verifier_errors": 0,
+   "cost_usd": 0.003084522,
+   "frames": 1195,
+   "escalated_frames": 86,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 0
+  },
+  {
+   "clip": "17_40_0",
+   "task_id": "cc4d_cucumberraita",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_cucumberraita",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.29782082324455206,
+   "step_acc_after_recognition": 0.29782082324455206,
+   "step_acc_incl_between": 0.21869782971619364,
+   "transition_err_s": [
+    5.6167263513513035
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 5,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 5
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    5.6167263513513035
+   ],
+   "progress_latency_s": [
+    5.6167263513513035
+   ],
+   "typed_choice_calls": 53,
+   "verifier_calls": 67,
+   "verifier_latency_ms": [
+    3.586209029890597,
+    4.291541990824044,
+    2.027957933023572,
+    0.5535830277949572,
+    0.5154169630259275,
+    1.1324579827487469,
+    0.507791992276907,
+    0.4706250037997961,
+    0.46141701750457287,
+    0.47737499698996544
+   ],
+   "verifier_latency_ms_all": [
+    3.586209029890597,
+    4.291541990824044,
+    7241.803082986735,
+    2.027957933023572,
+    0.5535830277949572,
+    6138.208833988756,
+    0.5154169630259275,
+    1.1324579827487469,
+    0.507791992276907,
+    0.4706250037997961,
+    7944.322333089076,
+    0.46141701750457287,
+    0.47737499698996544,
+    4637.482666992582
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.060764736,
+   "frames": 1195,
+   "escalated_frames": 187,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 1
+  },
+  {
+   "clip": "17_43_0",
+   "task_id": "cc4d_cucumberraita",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_cucumberraita",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.524390243902439,
+   "step_acc_after_recognition": 0.524390243902439,
+   "step_acc_incl_between": 0.49248747913188645,
+   "transition_err_s": [
+    14.037579154353786,
+    2.9743126218051543,
+    1.6532498463084835
+   ],
+   "mistakes": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 4,
+    "precision": 1.0,
+    "recall": 0.2,
+    "f1": 0.33333333333333337,
+    "detect_minus_step_end_s": [
+     -10.177087378194848
+    ],
+    "detect_minus_step_start_s": [
+     8.459389211871375
+    ],
+    "n_alerts": 1,
+    "n_gt": 5
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.2,
+   "feedback_latency_s": [
+    -14.037579154353786,
+    2.9743126218051543,
+    1.6532498463084835
+   ],
+   "progress_latency_s": [
+    -14.037579154353786,
+    2.9743126218051543,
+    1.6532498463084835
+   ],
+   "typed_choice_calls": 62,
+   "verifier_calls": 76,
+   "verifier_latency_ms": [
+    0.3528330707922578,
+    0.5876660579815507,
+    4848.3721249504015,
+    0.3841670695692301,
+    0.4575420171022415,
+    3906.081666937098,
+    0.22187503054738045,
+    0.5360000068321824,
+    7666.580792050809,
+    1.994375023059547,
+    4947.554167010821,
+    0.5545420572161674,
+    3112.7689169952646,
+    1.1236249702051282
+   ],
+   "verifier_latency_ms_all": [
+    0.3528330707922578,
+    0.5876660579815507,
+    4848.3721249504015,
+    0.3841670695692301,
+    0.4575420171022415,
+    3906.081666937098,
+    0.22187503054738045,
+    0.5360000068321824,
+    7666.580792050809,
+    1.994375023059547,
+    4947.554167010821,
+    0.5545420572161674,
+    3112.7689169952646,
+    1.1236249702051282
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.061853856,
+   "frames": 1195,
+   "escalated_frames": 211,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 3
+  },
+  {
+   "clip": "17_45_0",
+   "task_id": "cc4d_cucumberraita",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_cucumberraita",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.7855361596009975,
+   "step_acc_after_recognition": 0.7855361596009975,
+   "step_acc_incl_between": 0.5809682804674458,
+   "transition_err_s": [
+    10.150181081081072
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 4,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 4
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    10.150181081081072
+   ],
+   "progress_latency_s": [
+    10.150181081081072
+   ],
+   "typed_choice_calls": 40,
+   "verifier_calls": 50,
+   "verifier_latency_ms": [
+    0.31354196835309267,
+    0.2879159292206168,
+    0.834957929328084,
+    0.4875409649685025,
+    0.3285419661551714,
+    5508.883000002243,
+    0.4902499495074153,
+    0.3983329515904188,
+    0.7308750646188855,
+    0.23466604761779308
+   ],
+   "verifier_latency_ms_all": [
+    0.31354196835309267,
+    0.2879159292206168,
+    0.834957929328084,
+    0.4875409649685025,
+    0.3285419661551714,
+    5508.883000002243,
+    0.4902499495074153,
+    0.3983329515904188,
+    0.7308750646188855,
+    0.23466604761779308
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.023870474,
+   "frames": 1195,
+   "escalated_frames": 145,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 1
+  },
+  {
+   "clip": "17_49_0",
+   "task_id": "cc4d_cucumberraita",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_cucumberraita",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.44419642857142855,
+   "step_acc_after_recognition": 0.44419642857142855,
+   "step_acc_incl_between": 0.34223706176961605,
+   "transition_err_s": [
+    164.7556791389962,
+    89.56152797104248,
+    44.54228926351351
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 5,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 5
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    89.56152797104248
+   ],
+   "progress_latency_s": [
+    -164.7556791389962,
+    89.56152797104248,
+    44.54228926351351
+   ],
+   "typed_choice_calls": 69,
+   "verifier_calls": 88,
+   "verifier_latency_ms": [
+    0.2875840291380882,
+    0.1502089435234666,
+    0.13591698370873928,
+    0.10962493252009153,
+    5188.912375015207,
+    0.21275004837661982,
+    0.23204099852591753,
+    0.25987508706748486,
+    0.22308295592665672,
+    0.2536668907850981,
+    0.21391594782471657,
+    0.19170797895640135,
+    0.9930829983204603,
+    0.30066596809774637,
+    0.3606249811127782
+   ],
+   "verifier_latency_ms_all": [
+    0.2875840291380882,
+    0.1502089435234666,
+    0.13591698370873928,
+    0.10962493252009153,
+    5188.912375015207,
+    0.21275004837661982,
+    5282.752541941591,
+    0.23204099852591753,
+    0.25987508706748486,
+    5534.609874943271,
+    0.22308295592665672,
+    0.2536668907850981,
+    0.21391594782471657,
+    0.19170797895640135,
+    0.9930829983204603,
+    0.30066596809774637,
+    6842.390666017309,
+    0.3606249811127782,
+    5741.700540995225
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.077425458,
+   "frames": 1195,
+   "escalated_frames": 247,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 1
+  }
+ ],
+ "wall_s": 191.80055379867554,
+ "spend_usd": 0.8710741700000003,
+ "calls": 2504
+}

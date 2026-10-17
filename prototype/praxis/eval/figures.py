@@ -142,6 +142,24 @@ def bars(values: dict[str, float], title: str, name: str, fmt: str = "{:.2f}", c
     return _save(fig, name)
 
 
+def panels(rows: dict[str, dict], metrics: list[tuple[str, str, str]], name: str, title: str = "",
+           highlight: str | None = None) -> Path:
+    """One bar panel per metric; rows: {label: {metric_key: value}}; metrics: [(panel title, key, fmt)]."""
+    labels = list(rows)
+    fig, axes = plt.subplots(1, len(metrics), figsize=(5.2 * len(metrics), 4.8))
+    axes = np.atleast_1d(axes)
+    for ax, (t, key, fmt) in zip(axes, metrics):
+        vals = [rows[k].get(key) or 0.0 for k in labels]
+        bars_ = ax.bar(range(len(labels)), vals, color=[C_OURS if k == highlight else C_BASE for k in labels], width=0.6)
+        _label(ax, bars_, fmt)
+        ax.set_xticks(range(len(labels)), labels, fontsize=11)
+        ax.set_title(t, fontsize=15)
+        ax.set_ylim(0, max(vals + [1e-3]) * 1.3)
+    if title:
+        fig.suptitle(title, fontsize=15, color=SUB, y=1.06)
+    return _save(fig, name)
+
+
 def load(rel: str) -> dict | None:
     p = RESULTS / rel
     return json.loads(p.read_text()) if p.exists() else None

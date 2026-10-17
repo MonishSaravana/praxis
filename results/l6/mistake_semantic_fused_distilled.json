@@ -1,0 +1,132 @@
+{
+  "run": "fused_distilled",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 8,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.025544890207740388,
+  "time_window_hits": 8,
+  "semantic_yes": 2,
+  "semantic_partial": 1,
+  "strict_precision": 0.25,
+  "lenient_precision": 0.375,
+  "strict_recall": 0.011764705882352941,
+  "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+    "Temperature Error": 1,
+    "Order Error": 1,
+    "Preparation Error": 1
+  },
+  "pairs": [
+    {
+      "clip": "12_48_0",
+      "t": 41.9447,
+      "alert": "Rinse the tomato under running water first, then dry it.",
+      "annotated": [
+        "Cut instead of slice"
+      ],
+      "annotated_tags": [
+        "Technique Error"
+      ],
+      "label": "no",
+      "reason": "The alert is about rinsing the tomato. The annotated error is cutting instead of slicing the tomato into 1/2 inch slices, which is a different step and problem."
+    },
+    {
+      "clip": "12_48_0",
+      "t": 219.8419,
+      "alert": "Drizzle about one tablespoon of extra-virgin olive oil evenly over the salad platter.",
+      "annotated": [
+        "Add one tablespoon of oil, then heat another tablespoon of oil in a pan and add it to the platter"
+      ],
+      "annotated_tags": [
+        "Preparation Error"
+      ],
+      "label": "no",
+      "reason": "The alert only restates the instruction and does not flag the actual error: heating an extra tablespoon of oil in a pan and adding it to the platter."
+    },
+    {
+      "clip": "12_48_0",
+      "t": 230.865,
+      "alert": "That's vegetable oil. Use the extra-virgin olive oil bottle instead.",
+      "annotated": [
+        "Add one tablespoon of oil, then heat another tablespoon of oil in a pan and add it to the platter"
+      ],
+      "annotated_tags": [
+        "Preparation Error"
+      ],
+      "label": "partial",
+      "reason": "Both concern the olive oil drizzling step, but the alert flags the wrong type of oil. The annotated error is about the preparation method: adding heated oil from a pan instead of simply drizzling."
+    },
+    {
+      "clip": "8_45_0",
+      "t": 280.8763,
+      "alert": "The power is set too low. Change it to full power before you start.",
+      "annotated": [
+        "Used lower power than specified"
+      ],
+      "annotated_tags": [
+        "Temperature Error"
+      ],
+      "label": "yes",
+      "reason": "The alert flags that the microwave power is set too low, which matches the annotated temperature error of using lower power than specified."
+    },
+    {
+      "clip": "1_42_0",
+      "t": 184.2083,
+      "alert": "Use the knife to cut the muffin so you get clean, even halves.",
+      "annotated": [
+        "hands instead of knife; Step performed after correct order"
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
+      "label": "yes",
+      "reason": "The alert tells the person to use a knife instead of their hands, which is the annotated preparation error. It does not address the order error, but it does identify one annotated problem."
+    },
+    {
+      "clip": "10_47_0",
+      "t": 129.3566,
+      "alert": "Use the butter knife to spread; the spoon leaves it lumpy.",
+      "annotated": [
+        "Spreading around the jelly; Step performed after spreading jelly"
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Technique Error"
+      ],
+      "label": "no",
+      "reason": "The alert is about which tool to spread with (knife vs. spoon). The annotated errors are spreading the nut butter around the jelly and doing it after the jelly, which is a technique and order problem the alert does not mention."
+    },
+    {
+      "clip": "10_48_0",
+      "t": 231.8692,
+      "alert": "Swap the spoon for a butter knife; the flat blade spreads much more evenly.",
+      "annotated": [
+        "Used normal butter instead of nut butter; Step performed after applying jelly",
+        "Did not spread the butter properly, instead leave drops of butter on the tortilla; Step performed after applying jelly"
+      ],
+      "annotated_tags": [
+        "Measurement Error",
+        "Order Error",
+        "Preparation Error"
+      ],
+      "label": "no",
+      "reason": "The alert is about using a spoon instead of a butter knife. The annotated errors are using regular butter instead of nut butter, doing the step after the jelly, and uneven spreading. A tool swap is not among them."
+    },
+    {
+      "clip": "17_43_0",
+      "t": 47.849,
+      "alert": "Swap that for the vegetable peeler. It takes the skin off cleanly without wasting the cucumber.",
+      "annotated": [
+        "slice the cucumber into discs"
+      ],
+      "annotated_tags": [
+        "Technique Error"
+      ],
+      "label": "no",
+      "reason": "The alert is about the peeling tool. The annotated error is slicing the cucumber into discs instead of chopping or grating it, which is a different step and problem."
+    }
+  ],
+  "spend_usd": 0.010984
+}

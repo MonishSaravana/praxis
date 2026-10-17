@@ -84,6 +84,37 @@ def main() -> list[str]:
         out.append(str(F.bars(vals, f"Degraded views: Praxis asks for a better view ({eng})\n"
                                     "vs. the stateless baseline answering confidently and wrongly",
                               "visual_uncertainty", "{:.0%}", colors=cols)))
+    # verifier tiers inside the full engine (task given)
+    tiers = [("Jev + Opus\nescalation (ours)", "fused_oracle"), ("Jev only", "fused_no_escalation"),
+             ("Haiku + Opus\nescalation", "fused_claude_fast"), ("Local student\n+ Jev + Opus", "fused_distilled")]
+    rows = {}
+    for lab, v in tiers:
+        r, sm = runs.get(v), F.load(f"l6/mistake_semantic_{v}.json")
+        if r and sm:
+            rows[lab] = {"step_acc": r["aggregate"]["step_acc"], "yes": sm["semantic_yes"],
+                         "cost": r["aggregate"]["cost_usd_per_video_min"]}
+    if len(rows) > 1:
+        out.append(str(F.panels(rows, [("Step accuracy (task given)", "step_acc", "{:.0%}"),
+                                       ("Judge-verified mistake catches", "yes", "{:.0f}"),
+                                       ("Cost per video-minute (USD)", "cost", "${:.4f}")],
+                                "verifier_tiers", "Which verifier answers the fast-tier questions "
+                                                  "(same engine, same 48 held-out clips)", highlight=tiers[0][0])))
+    os_ = F.load("open_set/open_set.json")
+    if os_ and os_.get("conditions"):
+        lab = {"frames": "Video only\n(draft at 30 s)", "frames_90s": "Video only\n(draft at 90 s)",
+               "hint": "Video + \"I'm making X\"\n(draft at 30 s)"}
+        rows = {lab.get(k, k): {"named": (v["aggregate"]["title_yes"] / v["aggregate"]["n_drafted"])
+                                if v["aggregate"]["n_drafted"] else 0.0,
+                                "recall": v["aggregate"]["step_recall_mean"],
+                                "acc": v["aggregate"]["step_acc_after_draft_mean"]}
+                for k, v in os_["conditions"].items()}
+        out.append(str(F.panels(rows, [("Recipe named correctly", "named", "{:.0%}"),
+                                       ("Annotated steps covered by the draft", "recall", "{:.0%}"),
+                                       ("Step accuracy after the draft", "acc", "{:.0%}")],
+                                "open_set_drafting", f"Recipes Praxis has never seen ({len(os_['recipes'])} recipes, "
+                                                     f"{os_['conditions'][next(iter(os_['conditions']))]['aggregate']['n_clips']} "
+                                                     "recordings): drafting a plan on the fly",
+                                highlight=lab["hint"])))
     return out
 
 
