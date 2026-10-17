@@ -41,7 +41,8 @@ class TaskRecognizer:
     scaler: StandardScaler | None = None
     text_emb: np.ndarray | None = None          # (T, D) SigLIP2 text embedding of each graph title
     zs_scale: float = 20.0
-    forget: float = 0.97                       # per-second decay of accumulated evidence
+    forget: float = 0.92                       # per-second decay of accumulated evidence
+    local_temp: float = 0.3                    # temperature on the local probe's per-second log-prob
     threshold: float = 0.9
     hold_s: float = 2.0
     open_set_floor: float = 0.5                # if best posterior stays below this for a long time -> open set
@@ -77,7 +78,9 @@ class TaskRecognizer:
             self.reset()
         if self._t0 is None:
             self._t0 = t
-        self._acc = self.forget * self._acc + self.frame_logprob(frame_emb, window_emb)
+        # per-second evidence: each frame contributes dt of a tempered log-prob; forgetting is per second, so the
+        # local probe (trained on few recordings) cannot drown out a typed verifier answer
+        self._acc = (self.forget ** dt) * self._acc + dt * self.local_temp * self.frame_logprob(frame_emb, window_emb)
         post = np.exp(self._acc - self._acc.max())
         post /= post.sum()
         k = int(post.argmax())
@@ -107,5 +110,7 @@ class TaskRecognizer:
     def load(path: Path) -> "TaskRecognizer":
         with open(path, "rb") as f:
             r = pickle.load(f)
+        for k, v in (("forget", 0.92), ("local_temp", 0.3)):   # current defaults for pickles from older code
+            setattr(r, k, v)
         r.reset()
         return r

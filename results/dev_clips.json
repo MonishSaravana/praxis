@@ -1,0 +1,4 @@
+{
+  "dev_clips": ["12_48_0", "8_45_0", "12_119_0"],
+  "why": "These eval clips were used during development (2026-10-17, ~03:50-04:50 EDT) to debug engine plumbing, task-recognition confirmation, recognizer evidence tempering and the HUD. Design choices may be mildly fit to them, so RESULTS.md reports headline metrics both on all 48 clips and on the 45 clips excluding these. All quantitative tuning (L2 thresholds, tracker temperatures, calibration, policy thresholds) uses the train split only."
+}

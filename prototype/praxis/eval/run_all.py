@@ -96,7 +96,10 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
 
     with ThreadPoolExecutor(workers) as ex:
         rows = list(ex.map(one, clips))
-    res = {"variant": name, "config": {"engine_overrides": over, "verifier": vk, "escalation": ek, "detector": det,
+    dev = set(json.loads((RESULTS / "dev_clips.json").read_text())["dev_clips"]) if (RESULTS / "dev_clips.json").exists() else set()
+    res = {"variant": name, "aggregate_excl_dev_clips": harness.aggregate([r for r in rows if r["clip"] not in dev]),
+           "dev_clips": sorted(dev),
+           "config": {"engine_overrides": over, "verifier": vk, "escalation": ek, "detector": det,
                                        "oracle_task": oracle, "tracker": vars(ecfg.tracker), "policy": vars(ecfg.policy)},
            "aggregate": harness.aggregate(rows), "per_category": harness.per_category(rows), "per_clip": rows,
            "wall_s": time.time() - t0, "spend_usd": budget.usd, "calls": budget.calls}
@@ -121,7 +124,9 @@ def run_baseline(limit: int = 0, only: list[str] | None = None, every_s: float =
 
     with ThreadPoolExecutor(workers) as ex:
         rows = list(ex.map(one, clips))
-    res = {"variant": name, "config": {"model": bl.model, "effort": effort, "every_s": every_s, "mistake_conf": 0.7},
+    dev = set(json.loads((RESULTS / "dev_clips.json").read_text())["dev_clips"]) if (RESULTS / "dev_clips.json").exists() else set()
+    res = {"variant": name, "aggregate_excl_dev_clips": harness.aggregate([r for r in rows if r["clip"] not in dev]),
+           "dev_clips": sorted(dev), "config": {"model": bl.model, "effort": effort, "every_s": every_s, "mistake_conf": 0.7},
            "aggregate": harness.aggregate(rows), "per_category": harness.per_category(rows), "per_clip": rows,
            "spend_usd": budget.usd, "calls": budget.calls}
     (RESULTS / "runs").mkdir(parents=True, exist_ok=True)
