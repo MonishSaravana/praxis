@@ -26,14 +26,13 @@ def main() -> dict:
     if ir.exists():
         items["L3 compile (IndustReal graph)"] = json.loads(ir.read_text())["compiler"]["cost_usd"]
     vd = DATA / "verdicts"
-    groups = {"GT check runs (Jev/Haiku/Opus, train+eval)": [], "framing ablation": [], "visual-uncertainty engine arm": [],
-              "crops experiment": []}
+    groups = {"GT check runs (Jev/Haiku/Opus, train+eval)": [], "framing ablation": [], "crops experiment": []}
     for p in sorted(vd.glob("*.jsonl")):
         n = p.stem
         if n.startswith("framing_"):
             groups["framing ablation"].append(p)
-        elif n.startswith("uncert_engine"):
-            groups["visual-uncertainty engine arm"].append(p)
+        elif n.startswith("uncert_"):
+            continue      # counted via the uncertainty runs' own budget totals below (avoids double counting)
         elif n.endswith("_crops"):
             groups["crops experiment"].append(p)
         elif n.startswith(("jev_", "claude_")):
