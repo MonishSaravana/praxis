@@ -1,0 +1,96 @@
+{
+  "run": "fused_claude_fast",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 5,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.012772445103870194,
+  "time_window_hits": 5,
+  "semantic_yes": 2,
+  "semantic_partial": 1,
+  "strict_precision": 0.4,
+  "lenient_precision": 0.6,
+  "strict_recall": 0.011764705882352941,
+  "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+    "Order Error": 2,
+    "Timing Error": 1,
+    "Preparation Error": 1
+  },
+  "pairs": [
+    {
+      "clip": "8_40_0",
+      "t": 96.9787,
+      "alert": "Hold on: it looks like you skipped 'Microwave milk for 1 minute'. Microwave 1 minute, full power first.",
+      "annotated": [
+        "Step performed before adding milk and microwaving",
+        "Microwave for 1.5 minutes rather than 1 minute. (Chocolate might burn); Step performed adding milk"
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Timing Error"
+      ],
+      "label": "yes",
+      "reason": "The annotated errors are order errors: steps were done before microwaving the milk. The alert flags that the microwave step was skipped or out of order, which is the same ordering problem."
+    },
+    {
+      "clip": "22_37_0",
+      "t": 175.7852,
+      "alert": "Hold on: it looks like you skipped 'Heat 1 tbsp oil in a non-stick frying pan'. Heat 1 tbsp oil, non-stick pan first.",
+      "annotated": [
+        "Step performed before beating the egg mixture; Using a cherry tomato instead of a tomato."
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
+      "label": "no",
+      "reason": "The alert says the oil-heating step was skipped. The annotated errors are cooking the tomatoes before beating the eggs and using cherry tomatoes instead of tomatoes, which the alert does not mention."
+    },
+    {
+      "clip": "22_37_0",
+      "t": 223.671,
+      "alert": "The egg mixture should be ready before the tomatoes cook; finish the bowl quickly and keep an eye on the pan.",
+      "annotated": [
+        "Step performed before beating the egg mixture; Using a cherry tomato instead of a tomato.",
+        "Step performed after cooking the tomatoes"
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
+      "label": "yes",
+      "reason": "The alert flags the ordering problem: the egg mixture should be ready before the tomatoes cook. This matches the annotated order error of cracking the egg after cooking the tomatoes."
+    },
+    {
+      "clip": "22_37_0",
+      "t": 258.3649,
+      "alert": "Finish beating the egg mixture now so it's ready as soon as the tomatoes are done.",
+      "annotated": [
+        "Step performed before beating the egg mixture; Using a cherry tomato instead of a tomato.",
+        "Step performed after cooking the tomatoes and before adding cilantro to the bowl"
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
+      "label": "partial",
+      "reason": "The alert addresses the egg mixture timing, which is related to the order issue. But it does not flag that the tomatoes were started before beating the eggs. Instead it treats that order as acceptable. It also misses the cherry tomato substitution."
+    },
+    {
+      "clip": "17_40_0",
+      "t": 154.8162,
+      "alert": "Hold on: it looks like you skipped 'Peel the cucumber'. Peel cucumber fully with peeler first.",
+      "annotated": [
+        "add scallions instead of cilantro; Step performed before whisking curd in the bowl"
+      ],
+      "annotated_tags": [
+        "Order Error",
+        "Preparation Error"
+      ],
+      "label": "no",
+      "reason": "The alert is about skipping the cucumber peeling. The annotated error is using scallions instead of cilantro and adding them before whisking the curd, which is a different step and a different problem."
+    }
+  ],
+  "spend_usd": 0.011964
+}
