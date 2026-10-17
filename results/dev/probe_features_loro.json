@@ -1,0 +1,21 @@
+{
+  "protocol": "train split, leave-one-recording-out, linear probe frame step accuracy",
+  "results": {
+    "siglip": {
+      "loro_train_step_acc": 0.4090428509557215,
+      "n_folds": 24
+    },
+    "siglip+window": {
+      "loro_train_step_acc": 0.4170889868446895,
+      "n_folds": 24
+    },
+    "dino": {
+      "loro_train_step_acc": 0.2981066217604817,
+      "n_folds": 24
+    },
+    "siglip+dino": {
+      "loro_train_step_acc": 0.38245183433373603,
+      "n_folds": 24
+    }
+  }
+}
