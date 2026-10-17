@@ -142,6 +142,8 @@ def score_clip(clip: Clip, log_path: Path, join_at: float = 0.0) -> dict:
         if a["action"] in ("verified", "mistake") and a.get("node") in gt_end:
             fb.append(a["t"] - gt_end[a["node"]])
     res["feedback_latency_s"] = fb
+    # progress latency: GT step end -> the engine marks that step done (verified OR belief moved on), signed
+    res["progress_latency_s"] = [c["t"] - gt_end[c["node"]] for c in by_kind(recs, "commit") if c["node"] in gt_end]
     ver = by_kind(recs, "verdict")
     live = [v for v in ver if not v.get("cached") and not v.get("error")]
     res["verifier_calls"] = len(ver)
@@ -184,6 +186,7 @@ def aggregate(rows: list[dict]) -> dict:
         "false_alarms_per_min": fp / max(1e-6, minutes),
         "alerts_per_min": sum(r["mistakes"]["n_alerts"] for r in rows) / max(1e-6, minutes),
         "feedback_latency_s": M.latency_summary(flat("feedback_latency_s")),
+        "progress_latency_s": M.latency_summary(flat("progress_latency_s")),
         "verifier_latency_ms_live": M.latency_summary(flat("verifier_latency_ms")),
         "verifier_calls": sum(r["verifier_calls"] for r in rows),
         "verifier_errors": sum(r["verifier_errors"] for r in rows),
