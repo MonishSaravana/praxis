@@ -54,12 +54,14 @@ class Engine:
     def __init__(self, cfg: EngineConfig, library: dict[str, TaskGraph], evidence: dict, recognizer: TaskRecognizer | None,
                  detector, verifier=None, escalation=None, calibrator: Calibrator | None = None,
                  dev_calibrator: Calibrator | None = None, log: RunLog | None = None, task_id: str | None = None,
-                 user: UserModel | None = None, point_tracker=None):
+                 user: UserModel | None = None, point_tracker=None, calibrators: dict | None = None):
         self.cfg, self.lib, self.evidence = cfg, library, evidence
         self.rec, self.det = recognizer, detector
         self.ver, self.esc = verifier, escalation
-        self.cal = calibrator or Calibrator(method="none")
-        self.dev_cal = dev_calibrator or Calibrator(method="none")
+        # calibrators per verifier tier: {"primary": (cal, devcal), "escalation": (cal, devcal)}
+        self.cals = dict(calibrators or {})
+        if calibrator is not None or dev_calibrator is not None:
+            self.cals.setdefault("primary", (calibrator, dev_calibrator))
         self.log = log
         self.user = user or UserModel()
         self.pt = point_tracker
@@ -77,6 +79,7 @@ class Engine:
         self._last_grasp_t = -1e9
         self._last_sched = -1e9
         self._next_task_check = 4.0
+        self._feat_now: dict = {}
         self._last_task_probs: dict[str, float] = {}
         if task_id is not None:
             self._start_task(0.0, task_id, oracle=True)
@@ -123,6 +126,7 @@ class Engine:
             return
         self.n_frames += n
         fe, we = rows["frame"], rows["window"]
+        self._feat_now = {"siglip": fe.mean(0), "window": we[-1]}     # local features at t (for the distilled student)
         for tt, b in zip(rows["t"], rows["boundary"]):
             self._bscores.append((float(tt), float(b)))
         for tt, g in zip(rows["t"], rows["grasp"]):
@@ -241,19 +245,22 @@ class Engine:
         nxt_ids = [n for n in node.successors if n not in tr.completed]
         req = VerifyRequest(t=t, frames=frames, node=node, graph=g, checks=node.checks, crops=crops,
                             context={"frame_ages": [t - x for x in times], "time_on_step": belief.time_on_step,
-                                     "next_step": g.node(nxt_ids[0]).name if nxt_ids else None})
+                                     "next_step": g.node(nxt_ids[0]).name if nxt_ids else None},
+                            features=dict(self._feat_now))
         v = self.ver.verify(req)
-        roles = [self._log_verdict(t, v, reason)]
-        if self.cfg.escalate and self.esc is not None and v.error is None and pol.needs_escalation(v):
+        pc, pdv = self._calibrated(v, "primary")
+        roles = [self._log_verdict(t, v, reason, pc)]
+        # two-tier verification: the fast verifier handles clear cases; ambiguity, possible mistakes and
+        # "can't see" go to the strong model before the wearer hears anything
+        if self.cfg.escalate and self.esc is not None and v.error is None and pol.needs_escalation(v, pc):
             v2 = self.esc.verify(req)
-            roles.append(self._log_verdict(t, v2, "escalation"))
+            pc2, pdv2 = self._calibrated(v2, "escalation")
+            roles.append(self._log_verdict(t, v2, "escalation", pc2))
             if v2.error is None:
-                v = v2
-        self.n_escalated_frames += self.cfg.frames_per_call
+                v, pc, pdv = v2, pc2, pdv2
+        self.n_escalated_frames += len(frames)
         if v.error:
             return
-        pc = float(self.cal(raw_p_complete(v.step_status, v.confidence))[0])
-        pdv = float(self.dev_cal(v.confidence if v.step_status == "deviation" else 0.0)[0])
         tr.observe_verdict(node.id, "complete" if pc >= 0.5 else ("deviation" if v.step_status == "deviation" else "in_progress"),
                            pc if pc >= 0.5 else 1 - pc)
         t_out = t + sum(r["latency_ms"] for r in roles) / 1000.0    # when the user would actually hear it
@@ -266,14 +273,22 @@ class Engine:
             self._last_switch_map = b.map_id
             self._emit(pol.after_commit(t_out, b.map_id))
 
-    def _log_verdict(self, t: float, v: Verdict, reason: str) -> dict:
+    def _calibrated(self, v: Verdict, which: str) -> tuple[float, float]:
+        cal, dcal = self.cals.get(which, (None, None))
+        cal = cal or Calibrator(method="none")
+        dcal = dcal or Calibrator(method="none")
+        pc = float(cal(raw_p_complete(v.step_status, v.confidence))[0])
+        pdv = float(dcal(v.confidence if v.step_status == "deviation" else 0.0)[0])
+        return pc, pdv
+
+    def _log_verdict(self, t: float, v: Verdict, reason: str, pc: float | None = None) -> dict:
         rec = {"node": v.node_id, "reason": reason, "status": v.step_status, "confidence": v.confidence,
                "mistake": v.mistake.model_dump() if v.mistake else None, "visibility": v.visibility,
                "view_request": v.view_request, "model": v.model, "role": v.role, "prompt_version": v.prompt_version,
                "latency_ms": v.latency_ms, "input_tokens": v.input_tokens, "output_tokens": v.output_tokens,
                "cost_usd": v.cost_usd, "orig_cost_usd": v.raw.get("orig_cost_usd", v.cost_usd),
                "cached": v.raw.get("cached", False), "error": v.error,
-               "p_complete_cal": float(self.cal(raw_p_complete(v.step_status, v.confidence))[0])}
+               "p_complete_cal": pc}
         self.calls.append({"t": t, **rec})
         self._w("verdict", t, **rec)
         return rec

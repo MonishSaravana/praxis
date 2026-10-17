@@ -33,7 +33,7 @@ class PolicyConfig:
     view_cooldown_s: float = 20.0
     entropy_verify: float = 0.85    # belief entropy above which we spend a verifier call
     verify_min_gap_s: float = 3.0
-    escalate_band: tuple[float, float] = (0.35, 0.65)
+    escalate_band: tuple[float, float] = (0.3, 0.7)
 
 
 @dataclass
@@ -95,9 +95,11 @@ class Policy:
         tos = (belief.t - started) if started is not None else belief.time_on_step
         return tos / max(prior, 1e-3)
 
-    def needs_escalation(self, v: Verdict) -> bool:
+    def needs_escalation(self, v: Verdict, p_complete: float) -> bool:
+        """Escalate to the strong verifier when the fast one is unsure (calibrated P(complete) in the band), reports a
+        possible mistake (high-stakes: needs confirmation and a specific correction), or can't see."""
         lo, hi = self.cfg.escalate_band
-        return (v.step_status == "deviation" and (v.mistake is None or v.mistake.mistake_id is None)) or lo <= v.confidence <= hi
+        return v.step_status == "deviation" or v.mistake is not None or v.visibility == "insufficient" or lo <= p_complete <= hi
 
     # ------------------------------------------------------------ react to a calibrated verdict
     def on_verdict(self, t: float, v: Verdict, p_complete: float, p_deviation: float, belief: Belief) -> tuple[list[Action], bool]:

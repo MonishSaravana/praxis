@@ -109,6 +109,18 @@ def span_frames(video: str, t_abs: float, max_side: int = 640):
     return frames, [t_abs - x for x in times]
 
 
+def cached_span_frames(ci: "CheckItem"):
+    """span_frames decoded once per check and reused by every verifier run (decode dominates CPU)."""
+    p = DATA / "checks" / "frames" / f"{ci.check_id.replace(':', '_')}.npz"
+    if p.exists():
+        z = np.load(p)
+        return [z[f"f{i}"] for i in range(int(z["n"]))], list(z["ages"])
+    frames, ages = span_frames(ci.video, ci.t_abs)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    np.savez(p, n=len(frames), ages=np.array(ages), **{f"f{i}": f for i, f in enumerate(frames)})
+    return frames, ages
+
+
 def degrade(frames: list[np.ndarray], mode: str, seed: int = 0) -> list[np.ndarray]:
     """Visual-uncertainty test: remove the evidence the check needs."""
     rng = np.random.default_rng(seed)
@@ -144,7 +156,7 @@ def run_verifier_on_checks(verifier, checks: list[CheckItem], library: dict, out
         g = library[ci.task_id]
         node = g.node(ci.node)
         if framing == "span":
-            frames, ages = span_frames(ci.video, ci.t_abs)
+            frames, ages = cached_span_frames(ci)
         else:   # "recent3": 3 sharpest frames of the last 4 s
             frames, ages = frames_at(ci.video, ci.t_abs, sharp_from=9, return_times=True)
         if degrade_mode:

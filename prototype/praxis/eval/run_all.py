@@ -18,13 +18,14 @@ from . import harness
 
 VARIANTS = {
     # name: (engine overrides, verifier, escalation, detector, oracle_task)
-    "fused": (dict(), "claude_fast", "claude_strong", "learned", False),
-    "fused_oracle": (dict(), "claude_fast", "claude_strong", "learned", True),
-    "fused_heuristic_gate": (dict(), "claude_fast", "claude_strong", "heuristic", True),
+    "fused": (dict(), "jev", "claude_strong", "learned", False),
+    "fused_oracle": (dict(), "jev", "claude_strong", "learned", True),
+    "fused_heuristic_gate": (dict(), "jev", "claude_strong", "heuristic", True),
+    "fused_claude_fast": (dict(), "claude_fast", "claude_strong", "learned", True),
     "local_only": (dict(use_verifier=False), None, None, "learned", True),
-    "verifier_only": (dict(tracker_mode="verifier", verify_every_s=5.0), "claude_fast", None, "learned", True),
-    "fused_distilled": (dict(), "distilled", "claude_fast", "learned", True),
-    "fused_jev": (dict(), "jev", "claude_strong", "learned", True),
+    "verifier_only": (dict(tracker_mode="verifier", verify_every_s=5.0), "jev", "claude_strong", "learned", True),
+    "fused_distilled": (dict(), "distilled", "claude_strong", "learned", True),
+    "fused_no_escalation": (dict(escalate=False), "jev", None, "learned", True),
 }
 
 
@@ -82,7 +83,7 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
     budget = _budget(max_calls=4000, max_usd=budget_usd)
     ver = make_verifier(vk, budget) if vk else None
     esc = make_verifier(ek, budget) if ek else None
-    cal, dcal = calibrators(vk if vk != "distilled" else None)
+    cals = {"primary": calibrators(vk if vk != "distilled" else None), "escalation": calibrators(ek)}
     clips = eval_clips(limit, only)
     t0 = time.time()
 
@@ -90,7 +91,7 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
         import copy
         st = dict(stack)
         st["recognizer"] = copy.deepcopy(stack["recognizer"])
-        p = harness.run_clip(c, st, name, ecfg, ver, esc, cal, dcal, oracle_task=oracle)
+        p = harness.run_clip(c, st, name, ecfg, ver, esc, oracle_task=oracle, calibrators=cals)
         return harness.score_clip(c, p)
 
     with ThreadPoolExecutor(workers) as ex:

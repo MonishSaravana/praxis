@@ -62,7 +62,7 @@ def decode_frames(clip: Clip, fps: float = 4.0, max_side: int = 640) -> list[np.
 # ------------------------------------------------------------------------------------------- run
 def run_clip(clip: Clip, stack: dict, run_name: str, ecfg: EngineConfig, verifier=None, escalation=None,
              calibrator=None, dev_calibrator=None, oracle_task: bool = False, join_at: float | None = None,
-             user=None, frames: list[np.ndarray] | None = None, point_tracker=None) -> Path:
+             user=None, frames: list[np.ndarray] | None = None, point_tracker=None, calibrators: dict | None = None) -> Path:
     feats, _ = load_features(clip.clip_id)
     scores = stack["detector"].score(feats)
     t_first = 0.0
@@ -88,7 +88,7 @@ def run_clip(clip: Clip, stack: dict, run_name: str, ecfg: EngineConfig, verifie
             rec.reset()
         eng = Engine(ecfg, stack["library"], stack["evidence"], None if oracle_task else rec, stack["detector"],
                      verifier, escalation, calibrator, dev_calibrator, log, task_id=clip.task_id if oracle_task else None,
-                     user=user, point_tracker=point_tracker)
+                     user=user, point_tracker=point_tracker, calibrators=calibrators)
         info = replay(eng, feats, scores, frames)
         log.write("summary", float(feats.t[-1]) if len(feats.t) else 0.0, **info)
     return out
