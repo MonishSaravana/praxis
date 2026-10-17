@@ -1,0 +1,46 @@
+{
+  "n_train_recordings": {
+    "cc4d_tomatomozzarellasalad": 3,
+    "cc4d_spicedhotchocolate": 3,
+    "cc4d_breakfastburritos": 3,
+    "cc4d_microwaveeggsandwich": 3,
+    "cc4d_pinwheels": 3,
+    "cc4d_microwavemugpizza": 3,
+    "cc4d_herbomeletwithfriedtomatoes": 3,
+    "cc4d_cucumberraita": 3
+  },
+  "probe_test_acc": {
+    "cc4d_tomatomozzarellasalad": 0.4996907854050711,
+    "cc4d_spicedhotchocolate": 0.47076828895010714,
+    "cc4d_breakfastburritos": 0.42593730792870316,
+    "cc4d_microwaveeggsandwich": 0.3564356435643564,
+    "cc4d_pinwheels": 0.3632770391663672,
+    "cc4d_microwavemugpizza": 0.30589123867069484,
+    "cc4d_herbomeletwithfriedtomatoes": 0.5228613569321534,
+    "cc4d_cucumberraita": 0.4261144261144261
+  },
+  "backbones": {
+    "siglip2": {
+      "mean_heldout_step_acc": 0.4414961677314786,
+      "n_tasks": 8
+    },
+    "dinov2": {
+      "mean_heldout_step_acc": 0.32372582888094315,
+      "n_tasks": 8
+    },
+    "vjepa2": {
+      "mean_heldout_step_acc": 0.24943653236065377,
+      "n_tasks": 8
+    },
+    "siglip2+vjepa2": {
+      "mean_heldout_step_acc": 0.4213720108414849,
+      "n_tasks": 8
+    },
+    "dinov2+vjepa2": {
+      "mean_heldout_step_acc": 0.31868892985561664,
+      "n_tasks": 8
+    }
+  },
+  "task_frame_acc_test": 0.24553872352502926,
+  "note": "linear probe on frozen features; train = official train-split recordings, test = the 48 eval clips"
+}

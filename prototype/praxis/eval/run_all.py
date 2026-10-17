@@ -24,7 +24,10 @@ VARIANTS = {
     "fused_claude_fast": (dict(), "claude_fast", "claude_strong", "learned", True),
     "local_only": (dict(use_verifier=False), None, None, "learned", True),
     "verifier_only": (dict(tracker_mode="verifier", verify_every_s=5.0), "jev", "claude_strong", "learned", True),
-    "fused_distilled": (dict(), "distilled", "claude_strong", "learned", True),
+    # the student answers routine "is this step complete?" checks; typed step localization + mistake screening stay
+    # with the fast Jev tier (the student has no localization head), Opus still escalates
+    "fused_distilled": (dict(), "distilled", "claude_strong", "learned", True, "jev"),
+    "fused_distilled_alone": (dict(), "distilled", "claude_strong", "learned", True),
     "fused_no_escalation": (dict(escalate=False), "jev", None, "learned", True),
 }
 
@@ -92,7 +95,8 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
                 tag: str = "") -> dict:
     """tag: suffix for output names (smoke tests use tag='_smoke' so final results are never overwritten)."""
     from ..experiments import _budget, make_verifier
-    over, vk, ek, det, oracle = VARIANTS[name]
+    over, vk, ek, det, oracle, *rest = VARIANTS[name]
+    lk = rest[0] if rest else None
     stack = harness.load_stack(detector=det)
     ecfg = engine_config(over)
     if det == "heuristic":
@@ -100,6 +104,7 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
     budget = _budget(max_calls=4000, max_usd=budget_usd)
     ver = make_verifier(vk, budget) if vk else None
     esc = make_verifier(ek, budget) if ek else None
+    loc = make_verifier(lk, budget) if lk else None
     cals = {"primary": calibrators(vk if vk != "distilled" else None), "escalation": calibrators(ek)}
     clips = eval_clips(limit, only)
     t0 = time.time()
@@ -108,13 +113,13 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
         import copy
         st = dict(stack)
         st["recognizer"] = copy.deepcopy(stack["recognizer"])
-        p = harness.run_clip(c, st, name + tag, ecfg, ver, esc, oracle_task=oracle, calibrators=cals)
+        p = harness.run_clip(c, st, name + tag, ecfg, ver, esc, oracle_task=oracle, calibrators=cals, localizer=loc)
         return harness.score_clip(c, p)
 
     with ThreadPoolExecutor(workers) as ex:
         rows = list(ex.map(one, clips))
     dev = set(json.loads((RESULTS / "dev_clips.json").read_text())["dev_clips"]) if (RESULTS / "dev_clips.json").exists() else set()
-    res = {"variant": name, "aggregate_excl_dev_clips": harness.aggregate([r for r in rows if r["clip"] not in dev]),
+    res = {"variant": name, "localizer": lk, "aggregate_excl_dev_clips": harness.aggregate([r for r in rows if r["clip"] not in dev]),
            "dev_clips": sorted(dev),
            "config": {"engine_overrides": over, "verifier": vk, "escalation": ek, "detector": det,
                                        "oracle_task": oracle, "tracker": vars(ecfg.tracker), "policy": vars(ecfg.policy)},

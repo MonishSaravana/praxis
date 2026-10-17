@@ -1,0 +1,39 @@
+{
+  "teacher": "claude_strong",
+  "teacher_model": "claude-opus-5-5",
+  "n_train": 497,
+  "n_test": 469,
+  "alpha_gt": 0.5,
+  "features": "SigLIP2 frame (mean of last 1 s) + V-JEPA 2 window + SigLIP2 end-state text emb + product",
+  "agreement": 0.6865671641791045,
+  "student_acc_vs_gt": 0.7185501066098081,
+  "teacher_acc_vs_gt": 0.7974413646055437,
+  "student_auroc": 0.7829152169932247,
+  "teacher_auroc": 0.8377952755905511,
+  "student_latency_ms_p50": 0.027938340790569782,
+  "student_latency_ms_batched": 0.0024121344041849757,
+  "teacher_latency_ms_p50": 3789.522666949779,
+  "student_cost_per_1k_checks_usd": 0.0,
+  "teacher_cost_per_1k_checks_usd": 10.765628144989341,
+  "student_device": "cpu",
+  "train_info": {
+    "train_s": 6.951840877532959,
+    "n": 497,
+    "alpha_gt": 0.5
+  },
+  "routed_conf0.5": {
+    "share_handled_locally": 0.5927505330490405,
+    "acc_vs_gt": 0.7889125799573561,
+    "cost_per_1k_usd": 4.384296323439155
+  },
+  "routed_conf0.7": {
+    "share_handled_locally": 0.34328358208955223,
+    "acc_vs_gt": 0.8059701492537313,
+    "cost_per_1k_usd": 7.069964751933298
+  },
+  "routed_conf0.9": {
+    "share_handled_locally": 0.1300639658848614,
+    "acc_vs_gt": 0.8059701492537313,
+    "cost_per_1k_usd": 9.365407853210344
+  }
+}

@@ -323,7 +323,9 @@ class Engine:
         screen = {m.id: f"{m.description} Looks like: {m.visual_cue}" for m in top.mistakes} if self.cfg.mistake_screen else None
         try:
             loc = self.loc or self.ver
-            ans = loc.choose_step(frames, opts, self.graph.title, mistakes=screen) if screen and loc is self.ver \
+            import inspect
+            can_screen = "mistakes" in inspect.signature(loc.choose_step).parameters
+            ans = loc.choose_step(frames, opts, self.graph.title, mistakes=screen) if screen and can_screen \
                 else loc.choose_step(frames, opts, self.graph.title)
         except Exception as e:  # noqa: BLE001
             self._w("step_choice", t, error=str(e)[:200])

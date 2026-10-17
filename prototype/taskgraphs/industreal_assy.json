@@ -1,0 +1,693 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "industreal_assy",
+  "title": "IndustReal construction-toy car assembly",
+  "domain": "assembly",
+  "summary": "Build a construction-toy car on a work table from loose parts: seat the front chassis on the base frame and pin it, add the rear chassis and its two pins, fit the front bracket and tighten its screw, then push on the front and rear wheel assemblies. Steps are done in a fixed order.",
+  "source": "IndustReal procedure_info.json (assembly install states)",
+  "draft": false,
+  "compiler": {
+    "model": "claude-fable-5-1",
+    "prompt_version": "compile-v1",
+    "cost_usd": 0.43374,
+    "latency_s": 91.23464087501634,
+    "input_tokens": 2434,
+    "output_tokens": 8188
+  },
+  "nodes": [
+    {
+      "id": "ir3",
+      "name": "Install front chassis",
+      "instruction_novice": "Pick up the front chassis piece and set it onto the front end of the base frame, lining its holes up with the holes in the frame.",
+      "instruction_expert": "Seat front chassis on base front",
+      "substeps": [
+        "Lay the base frame flat on the table with its front end facing away from you.",
+        "Pick up the front chassis (the shorter chassis block with bracket mounting holes).",
+        "Lower it onto the front end of the base frame so the pin holes line up.",
+        "Press down until it sits flat with no gap."
+      ],
+      "parts": [
+        "base frame",
+        "front chassis"
+      ],
+      "end_state": "The front chassis sits flush on the front end of the base frame with its pin holes aligned with the frame holes and no gap underneath.",
+      "view_hint": "top-down over the front end of the base frame, slightly angled to see the side gap",
+      "checks": [
+        {
+          "id": "ir3_c1",
+          "question": "Is the front chassis resting on the front end of the base frame?",
+          "kind": "presence",
+          "roi": "front end of base frame"
+        },
+        {
+          "id": "ir3_c2",
+          "question": "Do the pin holes in the front chassis line up with the holes in the base frame?",
+          "kind": "alignment",
+          "roi": "pin holes at the front chassis / base joint"
+        },
+        {
+          "id": "ir3_c3",
+          "question": "Is the front chassis sitting flat with no visible gap between it and the frame?",
+          "kind": "completion",
+          "roi": "side seam between front chassis and base frame"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "ir3_m1",
+          "type": "wrong_orientation",
+          "description": "Front chassis placed rotated 180 degrees so its bracket mounting side faces the rear.",
+          "visual_cue": "The bracket mounting holes or notch on the front chassis face toward the rear of the base instead of the front edge.",
+          "correction": "The front chassis is turned around. Lift it, spin it 180 degrees so the bracket holes face the front, and set it back down.",
+          "early_cue": "Front chassis is held with its mounting face pointing toward the person before placing."
+        },
+        {
+          "id": "ir3_m2",
+          "type": "wrong_part",
+          "description": "Rear chassis (or short rear chassis) used instead of the front chassis.",
+          "visual_cue": "A longer chassis block with two pin holes is being placed at the front end of the frame.",
+          "correction": "That is the rear chassis. Put it down and use the shorter front chassis piece instead.",
+          "early_cue": "Hand reaches for the longer chassis block on the table."
+        },
+        {
+          "id": "ir3_m3",
+          "type": "wrong_orientation",
+          "description": "Front chassis placed on the rear end of the base frame.",
+          "visual_cue": "The front chassis sits at the far end of the base, leaving the front end empty.",
+          "correction": "The front chassis belongs on the other end of the base. Slide it to the front end.",
+          "early_cue": "Hand carries the front chassis toward the rear end of the base."
+        },
+        {
+          "id": "ir3_m4",
+          "type": "incomplete",
+          "description": "Front chassis not fully seated, holes misaligned.",
+          "visual_cue": "A visible gap under the chassis or the holes are offset so the frame hole shows through only partly.",
+          "correction": "Press the front chassis down until it sits flat and the holes line up.",
+          "early_cue": "Chassis rocks or tilts when released."
+        }
+      ],
+      "successors": [
+        "ir6"
+      ],
+      "duration": {
+        "mean_s": 25.0,
+        "std_s": 15.0,
+        "n": 0,
+        "source": "compiler"
+      },
+      "dataset_labels": [
+        "ir3"
+      ]
+    },
+    {
+      "id": "ir6",
+      "name": "Install front chassis pin",
+      "instruction_novice": "Take a chassis pin and push it through the aligned holes of the front chassis and base frame until it is fully in.",
+      "instruction_expert": "Push pin through front chassis holes",
+      "substeps": [
+        "Pick up the correct chassis pin for the front chassis.",
+        "Line the pin up with the aligned hole in the front chassis and base frame.",
+        "Push it straight in until the head sits against the chassis.",
+        "Check the pin tip comes out the far side."
+      ],
+      "parts": [
+        "front chassis pin",
+        "front chassis",
+        "base frame"
+      ],
+      "end_state": "A pin passes fully through the front chassis and base frame with its head flush against the chassis and the tip visible on the far side.",
+      "view_hint": "side view of the front chassis at the pin hole, then the opposite side to see the pin tip",
+      "checks": [
+        {
+          "id": "ir6_c1",
+          "question": "Is a pin inserted in the front chassis hole?",
+          "kind": "presence",
+          "roi": "front chassis pin hole"
+        },
+        {
+          "id": "ir6_c2",
+          "question": "Is the pin head flush against the chassis with the tip showing on the far side?",
+          "kind": "completion",
+          "roi": "both ends of the front chassis pin"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "ir6_m1",
+          "type": "wrong_part",
+          "description": "Wrong pin length used (short pin instead of the correct one, or vice versa).",
+          "visual_cue": "The pin does not reach through to the far side, or it protrudes far past the chassis.",
+          "correction": "That pin is the wrong length. Pull it out and use the other pin for the front chassis.",
+          "early_cue": "Hand picks a pin that is visibly shorter or longer than the others of its type."
+        },
+        {
+          "id": "ir6_m2",
+          "type": "incomplete",
+          "description": "Pin pushed in only partway.",
+          "visual_cue": "A gap between the pin head and the chassis surface; no tip visible on the far side.",
+          "correction": "The pin is not all the way in. Push it until the head touches the chassis.",
+          "early_cue": "Hand releases the pin while its head is still standing off the chassis."
+        },
+        {
+          "id": "ir6_m3",
+          "type": "other",
+          "description": "Pin inserted into the wrong hole, missing the base frame.",
+          "visual_cue": "Pin sits in a hole that does not pass through both chassis and frame; chassis still lifts freely.",
+          "correction": "That pin is in the wrong hole. Move it to the hole that goes through both the chassis and the frame.",
+          "early_cue": "Pin aimed at a hole away from the chassis/frame overlap."
+        }
+      ],
+      "successors": [
+        "ir9"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "compiler"
+      },
+      "dataset_labels": [
+        "ir6"
+      ]
+    },
+    {
+      "id": "ir9",
+      "name": "Install rear chassis",
+      "instruction_novice": "Pick up the long rear chassis and set it on the rear end of the base frame so both of its pin holes line up with the frame holes.",
+      "instruction_expert": "Seat long rear chassis on base rear",
+      "substeps": [
+        "Pick up the long rear chassis, not the short one.",
+        "Lower it onto the rear end of the base frame.",
+        "Line up both pin holes with the frame holes.",
+        "Press it down flat."
+      ],
+      "parts": [
+        "rear chassis",
+        "base frame"
+      ],
+      "end_state": "The long rear chassis sits flush on the rear end of the base frame with two pin holes aligned to the frame.",
+      "view_hint": "top-down over the rear end of the base frame",
+      "checks": [
+        {
+          "id": "ir9_c1",
+          "question": "Is a chassis block seated on the rear end of the base frame?",
+          "kind": "presence",
+          "roi": "rear end of base frame"
+        },
+        {
+          "id": "ir9_c2",
+          "question": "Is it the long rear chassis, reaching the full length of the rear mounting area?",
+          "kind": "part_identity",
+          "roi": "rear chassis along its length"
+        },
+        {
+          "id": "ir9_c3",
+          "question": "Do both rear pin holes line up with the base frame holes?",
+          "kind": "alignment",
+          "roi": "the two pin holes on the rear chassis"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "ir9_m1",
+          "type": "wrong_part",
+          "description": "Short rear chassis used instead of the long rear chassis.",
+          "visual_cue": "The chassis block on the rear is noticeably shorter and leaves part of the rear mounting area uncovered or only one hole aligned.",
+          "correction": "That is the short rear chassis. Swap it for the longer rear chassis piece.",
+          "early_cue": "Hand picks up the shorter of the two rear chassis blocks."
+        },
+        {
+          "id": "ir9_m2",
+          "type": "wrong_orientation",
+          "description": "Rear chassis placed rotated 180 degrees.",
+          "visual_cue": "The chassis feature that should face the rear edge faces toward the front chassis; holes do not line up.",
+          "correction": "The rear chassis is backwards. Lift it, turn it around, and set it down again.",
+          "early_cue": "Chassis is held with its end feature pointing toward the front of the car."
+        },
+        {
+          "id": "ir9_m3",
+          "type": "incomplete",
+          "description": "Rear chassis not pressed down fully.",
+          "visual_cue": "Gap visible between the rear chassis and the base frame.",
+          "correction": "Press the rear chassis down until it sits flat on the frame.",
+          "early_cue": "Chassis sits tilted after release."
+        }
+      ],
+      "successors": [
+        "ir15"
+      ],
+      "duration": {
+        "mean_s": 25.0,
+        "std_s": 15.0,
+        "n": 0,
+        "source": "compiler"
+      },
+      "dataset_labels": [
+        "ir9"
+      ]
+    },
+    {
+      "id": "ir15",
+      "name": "Install front rear chassis pin",
+      "instruction_novice": "Take a chassis pin and push it through the front hole of the rear chassis, the one closest to the front chassis, until it is fully in.",
+      "instruction_expert": "Pin rear chassis front hole",
+      "substeps": [
+        "Pick the correct pin for the rear chassis.",
+        "Find the rear chassis hole nearest the middle of the car.",
+        "Push the pin straight through until the head is flush.",
+        "Confirm the tip shows on the far side."
+      ],
+      "parts": [
+        "front rear chassis pin",
+        "rear chassis",
+        "base frame"
+      ],
+      "end_state": "A pin fills the forward hole of the rear chassis with its head flush and tip visible on the far side; the rearmost hole is still empty.",
+      "view_hint": "side view of the rear chassis, forward hole",
+      "checks": [
+        {
+          "id": "ir15_c1",
+          "question": "Is a pin inserted in the forward hole of the rear chassis?",
+          "kind": "presence",
+          "roi": "rear chassis forward pin hole"
+        },
+        {
+          "id": "ir15_c2",
+          "question": "Is the pin fully pushed in with the head flush against the chassis?",
+          "kind": "completion",
+          "roi": "pin head at the rear chassis forward hole"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "ir15_m1",
+          "type": "wrong_part",
+          "description": "Wrong pin length used.",
+          "visual_cue": "Pin tip does not appear on the far side, or pin sticks out much farther than the front chassis pin.",
+          "correction": "Wrong pin length. Pull it out and use the matching pin for the rear chassis.",
+          "early_cue": "Hand picks a pin of a different length than the one specified."
+        },
+        {
+          "id": "ir15_m2",
+          "type": "wrong_order",
+          "description": "Pin inserted into the rearmost hole instead of the forward one.",
+          "visual_cue": "The rear hole is filled while the forward hole of the rear chassis stays empty.",
+          "correction": "That pin went into the back hole. Move it to the hole closer to the front chassis.",
+          "early_cue": "Pin aimed at the hole nearest the rear edge of the car."
+        },
+        {
+          "id": "ir15_m3",
+          "type": "incomplete",
+          "description": "Pin not fully inserted.",
+          "visual_cue": "Pin head standing off the chassis surface.",
+          "correction": "Push that pin the rest of the way in until the head touches the chassis.",
+          "early_cue": "Hand lets go of the pin early."
+        }
+      ],
+      "successors": [
+        "ir18"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "compiler"
+      },
+      "dataset_labels": [
+        "ir15"
+      ]
+    },
+    {
+      "id": "ir18",
+      "name": "Install rear rear chassis pin",
+      "instruction_novice": "Take the second chassis pin and push it through the rearmost hole of the rear chassis until the head sits flush.",
+      "instruction_expert": "Pin rear chassis back hole",
+      "substeps": [
+        "Pick the correct pin.",
+        "Find the rear chassis hole nearest the back edge of the car.",
+        "Push the pin straight through until flush.",
+        "Check the tip shows on the far side."
+      ],
+      "parts": [
+        "rear rear chassis pin",
+        "rear chassis",
+        "base frame"
+      ],
+      "end_state": "Both holes of the rear chassis are filled with pins, heads flush and tips visible on the far side.",
+      "view_hint": "side view of the rear chassis showing both pin holes",
+      "checks": [
+        {
+          "id": "ir18_c1",
+          "question": "Is a pin inserted in the rearmost hole of the rear chassis?",
+          "kind": "presence",
+          "roi": "rear chassis back pin hole"
+        },
+        {
+          "id": "ir18_c2",
+          "question": "Are both rear chassis pins fully in with heads flush?",
+          "kind": "quantity",
+          "roi": "both pin heads on the rear chassis"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "ir18_m1",
+          "type": "wrong_part",
+          "description": "Wrong pin length used.",
+          "visual_cue": "Pin visibly shorter or longer than the neighboring rear chassis pin.",
+          "correction": "That pin does not match. Swap it for the correct length pin.",
+          "early_cue": "Hand picks up the leftover pin of the wrong length."
+        },
+        {
+          "id": "ir18_m2",
+          "type": "incomplete",
+          "description": "Pin not fully inserted.",
+          "visual_cue": "Gap between the pin head and the chassis; no tip on the far side.",
+          "correction": "Push the back pin in until the head is flush with the chassis.",
+          "early_cue": "Hand releases pin while head is raised."
+        },
+        {
+          "id": "ir18_m3",
+          "type": "missing_step",
+          "description": "Step skipped, only one rear pin installed.",
+          "visual_cue": "Rearmost hole of the rear chassis is empty while the person moves on to the bracket.",
+          "correction": "The back hole of the rear chassis still needs a pin. Add it before the bracket.",
+          "early_cue": "Hand reaches for the front bracket while a rear hole is still empty."
+        }
+      ],
+      "successors": [
+        "ir21"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "compiler"
+      },
+      "dataset_labels": [
+        "ir18"
+      ]
+    },
+    {
+      "id": "ir21",
+      "name": "Install front bracket",
+      "instruction_novice": "Pick up the front bracket and set it onto the front chassis so its screw hole lines up with the hole in the chassis.",
+      "instruction_expert": "Seat bracket on front chassis",
+      "substeps": [
+        "Pick up the front bracket.",
+        "Place it on the mounting face of the front chassis.",
+        "Rotate it until the screw hole lines up with the chassis hole.",
+        "Hold it flat against the chassis."
+      ],
+      "parts": [
+        "front bracket",
+        "front chassis"
+      ],
+      "end_state": "The front bracket sits flat on the front chassis with its screw hole lined up over the chassis screw hole, screw not yet installed.",
+      "view_hint": "front of the car, looking at the bracket on the front chassis",
+      "checks": [
+        {
+          "id": "ir21_c1",
+          "question": "Is the front bracket resting on the front chassis?",
+          "kind": "presence",
+          "roi": "front chassis mounting face"
+        },
+        {
+          "id": "ir21_c2",
+          "question": "Is the bracket screw hole lined up with the hole in the front chassis?",
+          "kind": "alignment",
+          "roi": "bracket screw hole"
+        },
+        {
+          "id": "ir21_c3",
+          "question": "Is the bracket facing the right way, with its open side matching the chassis shape?",
+          "kind": "orientation",
+          "roi": "front bracket outline"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "ir21_m1",
+          "type": "wrong_orientation",
+          "description": "Bracket installed rotated 180 degrees.",
+          "visual_cue": "The bracket's wider or open side faces the wrong direction and the screw hole is offset from the chassis hole.",
+          "correction": "The bracket is turned around. Lift it and rotate it 180 degrees so the screw hole lines up.",
+          "early_cue": "Bracket approaches the chassis with its open side facing backward."
+        },
+        {
+          "id": "ir21_m2",
+          "type": "other",
+          "description": "Bracket placed on the rear chassis instead of the front.",
+          "visual_cue": "The bracket sits on the rear chassis; the front chassis mounting face is bare.",
+          "correction": "The bracket belongs on the front chassis. Move it to the front of the car.",
+          "early_cue": "Hand carries the bracket toward the rear end."
+        },
+        {
+          "id": "ir21_m3",
+          "type": "incomplete",
+          "description": "Bracket not seated flat.",
+          "visual_cue": "Bracket tilted with a gap under one edge.",
+          "correction": "Press the bracket flat against the front chassis before adding the screw.",
+          "early_cue": "Bracket rocks when touched."
+        }
+      ],
+      "successors": [
+        "ir24"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "compiler"
+      },
+      "dataset_labels": [
+        "ir21"
+      ]
+    },
+    {
+      "id": "ir24",
+      "name": "Install front bracket screw",
+      "instruction_novice": "Put the screw through the bracket hole into the front chassis and turn it clockwise until it is snug and the bracket cannot move.",
+      "instruction_expert": "Screw bracket down, tighten snug",
+      "substeps": [
+        "Pick up the bracket screw.",
+        "Place its tip in the bracket hole over the chassis hole.",
+        "Turn clockwise by hand or with the tool until it bites.",
+        "Keep turning until the head is flush and the bracket is firm."
+      ],
+      "parts": [
+        "front bracket screw",
+        "front bracket",
+        "front chassis",
+        "screwdriver"
+      ],
+      "end_state": "The screw head sits flush on the bracket with no gap, and the bracket is held firmly on the front chassis.",
+      "view_hint": "close on the bracket screw head from the front of the car",
+      "checks": [
+        {
+          "id": "ir24_c1",
+          "question": "Is a screw present in the bracket hole?",
+          "kind": "presence",
+          "roi": "front bracket screw hole"
+        },
+        {
+          "id": "ir24_c2",
+          "question": "Is the screw head flush with the bracket, with no gap under it?",
+          "kind": "completion",
+          "roi": "screw head and bracket surface"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "ir24_m1",
+          "type": "technique",
+          "description": "Screw not tightened, left loose.",
+          "visual_cue": "Screw head stands proud of the bracket; bracket shifts or wobbles when the car is moved.",
+          "correction": "That screw is still loose. Turn it clockwise until the head is flush and the bracket stays put.",
+          "early_cue": "Hand leaves the screw after only a turn or two."
+        },
+        {
+          "id": "ir24_m2",
+          "type": "other",
+          "description": "Screw installed before bracket is aligned, going into the wrong hole or missing the chassis.",
+          "visual_cue": "Screw passes through the bracket but its tip is visible beside the chassis rather than into it.",
+          "correction": "The screw missed the chassis hole. Back it out, line up the bracket, and screw in again.",
+          "early_cue": "Screw tip placed while bracket hole is visibly offset from chassis hole."
+        },
+        {
+          "id": "ir24_m3",
+          "type": "wrong_part",
+          "description": "Chassis pin used instead of the screw.",
+          "visual_cue": "A smooth pin rather than a threaded screw sits in the bracket hole.",
+          "correction": "That is a pin, not the screw. Pull it out and use the threaded screw for the bracket.",
+          "early_cue": "Hand picks up a pin from the parts pile."
+        }
+      ],
+      "successors": [
+        "ir27"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "compiler"
+      },
+      "dataset_labels": [
+        "ir24"
+      ]
+    },
+    {
+      "id": "ir27",
+      "name": "Install front wheel assy",
+      "instruction_novice": "Pick up the front wheel assembly and push its axle into the front chassis mount until the wheels sit level and turn freely.",
+      "instruction_expert": "Push front wheel assy into front",
+      "substeps": [
+        "Pick up the front wheel assembly.",
+        "Line its axle up with the front chassis mount.",
+        "Push it straight in until it stops.",
+        "Check both wheels sit level and spin."
+      ],
+      "parts": [
+        "front wheel assembly",
+        "front chassis"
+      ],
+      "end_state": "The front wheel assembly is attached to the front chassis with both wheels level, fully pushed in, and no axle gap.",
+      "view_hint": "front of the car at wheel height, then from above to check both sides",
+      "checks": [
+        {
+          "id": "ir27_c1",
+          "question": "Is a wheel assembly attached to the front of the car?",
+          "kind": "presence",
+          "roi": "front chassis wheel mount"
+        },
+        {
+          "id": "ir27_c2",
+          "question": "Is the axle fully pushed in with no gap between the wheel assembly and the chassis?",
+          "kind": "completion",
+          "roi": "axle at the front chassis mount"
+        },
+        {
+          "id": "ir27_c3",
+          "question": "Are both front wheels level and pointing the same way?",
+          "kind": "alignment",
+          "roi": "both front wheels from above"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "ir27_m1",
+          "type": "wrong_part",
+          "description": "Rear wheel assembly installed at the front.",
+          "visual_cue": "The wheel assembly at the front has the size or hub style of the rear set, and the remaining assembly on the table matches the front.",
+          "correction": "That is the rear wheel set. Pull it off and use the front wheel assembly here.",
+          "early_cue": "Hand picks up the wheel assembly meant for the rear."
+        },
+        {
+          "id": "ir27_m2",
+          "type": "wrong_orientation",
+          "description": "Wheel assembly installed rotated 180 degrees or upside down.",
+          "visual_cue": "Axle mount features face the wrong way; wheels sit at a different height than the rear or tilt.",
+          "correction": "The front wheels are on backwards. Pull them off, flip the assembly, and push it back in.",
+          "early_cue": "Assembly approaches the mount with its keyed side reversed."
+        },
+        {
+          "id": "ir27_m3",
+          "type": "incomplete",
+          "description": "Wheel assembly not pushed in fully.",
+          "visual_cue": "Gap visible between the wheel assembly and the chassis mount; wheels sit crooked.",
+          "correction": "Push the front wheels in further until they seat against the chassis.",
+          "early_cue": "Hand releases the assembly with a gap still showing."
+        }
+      ],
+      "successors": [
+        "ir30"
+      ],
+      "duration": {
+        "mean_s": 25.0,
+        "std_s": 15.0,
+        "n": 0,
+        "source": "compiler"
+      },
+      "dataset_labels": [
+        "ir27"
+      ]
+    },
+    {
+      "id": "ir30",
+      "name": "Install rear wheel assy",
+      "instruction_novice": "Pick up the rear wheel assembly and push its axle into the rear chassis mount until it stops and both wheels sit level.",
+      "instruction_expert": "Push rear wheel assy into rear",
+      "substeps": [
+        "Pick up the remaining rear wheel assembly.",
+        "Line its axle up with the rear chassis mount.",
+        "Push it straight in until it stops.",
+        "Check all four wheels sit level on the table."
+      ],
+      "parts": [
+        "rear wheel assembly",
+        "rear chassis"
+      ],
+      "end_state": "The rear wheel assembly is attached to the rear chassis and the car stands level on all four wheels with no loose parts left on the table.",
+      "view_hint": "rear of the car at wheel height, then a full side view of the car",
+      "checks": [
+        {
+          "id": "ir30_c1",
+          "question": "Is a wheel assembly attached to the rear chassis?",
+          "kind": "presence",
+          "roi": "rear chassis wheel mount"
+        },
+        {
+          "id": "ir30_c2",
+          "question": "Is the rear axle fully seated with no gap at the mount?",
+          "kind": "completion",
+          "roi": "axle at the rear chassis mount"
+        },
+        {
+          "id": "ir30_c3",
+          "question": "Does the car stand level on all four wheels?",
+          "kind": "alignment",
+          "roi": "full side view of the car"
+        }
+      ],
+      "mistakes": [
+        {
+          "id": "ir30_m1",
+          "type": "wrong_orientation",
+          "description": "Rear wheel assembly installed rotated 180 degrees.",
+          "visual_cue": "Rear wheels sit at a different height than the front or the assembly's keyed feature faces forward.",
+          "correction": "The rear wheels are turned around. Pull them off, flip the assembly, and push it in again.",
+          "early_cue": "Assembly approaches the mount with its keyed side reversed."
+        },
+        {
+          "id": "ir30_m2",
+          "type": "incomplete",
+          "description": "Rear wheel assembly not fully pushed in.",
+          "visual_cue": "Gap between the rear wheel assembly and the chassis; car rocks or tilts.",
+          "correction": "Push the rear wheels in until they seat firmly against the rear chassis.",
+          "early_cue": "Hand lets go while the assembly is only partly in."
+        },
+        {
+          "id": "ir30_m3",
+          "type": "wrong_part",
+          "description": "Wrong wheel assembly used at the rear (front set, if one remains).",
+          "visual_cue": "The wheel assembly at the rear does not match the rear mount and a differing set is left on the table.",
+          "correction": "That wheel set belongs at the front. Swap it for the rear wheel assembly.",
+          "early_cue": "Hand picks up a wheel assembly that matches the front set."
+        }
+      ],
+      "successors": [],
+      "duration": {
+        "mean_s": 25.0,
+        "std_s": 15.0,
+        "n": 0,
+        "source": "compiler"
+      },
+      "dataset_labels": [
+        "ir30"
+      ]
+    }
+  ],
+  "start": [
+    "ir3"
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "run": "fused",
+  "n_clips": 48,
+  "top1": 0.7291666666666666,
+  "recognized_any": 0.9791666666666666,
+  "t_recognize_s": {
+    "p50": 40.0,
+    "p95": 151.59999999999997,
+    "n": 35
+  },
+  "confusions": [
+    {
+      "clip": "8_50_0",
+      "gt": "cc4d_spicedhotchocolate",
+      "pred": "cc4d_microwavemugpizza"
+    },
+    {
+      "clip": "7_19_0",
+      "gt": "cc4d_breakfastburritos",
+      "pred": null
+    },
+    {
+      "clip": "7_44_0",
+      "gt": "cc4d_breakfastburritos",
+      "pred": "cc4d_pinwheels"
+    },
+    {
+      "clip": "7_48_0",
+      "gt": "cc4d_breakfastburritos",
+      "pred": "cc4d_pinwheels"
+    },
+    {
+      "clip": "7_50_0",
+      "gt": "cc4d_breakfastburritos",
+      "pred": "cc4d_herbomeletwithfriedtomatoes"
+    },
+    {
+      "clip": "1_37_0",
+      "gt": "cc4d_microwaveeggsandwich",
+      "pred": "cc4d_spicedhotchocolate"
+    },
+    {
+      "clip": "1_42_0",
+      "gt": "cc4d_microwaveeggsandwich",
+      "pred": "cc4d_breakfastburritos"
+    },
+    {
+      "clip": "1_49_0",
+      "gt": "cc4d_microwaveeggsandwich",
+      "pred": "cc4d_breakfastburritos"
+    },
+    {
+      "clip": "3_13_0",
+      "gt": "cc4d_microwavemugpizza",
+      "pred": "cc4d_spicedhotchocolate"
+    },
+    {
+      "clip": "3_18_0",
+      "gt": "cc4d_microwavemugpizza",
+      "pred": "cc4d_spicedhotchocolate"
+    },
+    {
+      "clip": "22_38_0",
+      "gt": "cc4d_herbomeletwithfriedtomatoes",
+      "pred": "cc4d_tomatomozzarellasalad"
+    },
+    {
+      "clip": "22_40_0",
+      "gt": "cc4d_herbomeletwithfriedtomatoes",
+      "pred": "cc4d_tomatomozzarellasalad"
+    },
+    {
+      "clip": "17_49_0",
+      "gt": "cc4d_cucumberraita",
+      "pred": "cc4d_herbomeletwithfriedtomatoes"
+    }
+  ],
+  "library_size": 9
+}

@@ -70,3 +70,12 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
       temperature and timing errors do show longer ratios.
     - The adaptive-detail logic is kept, because it addresses hesitation, not errors. We do not claim it
       detects mistakes.
+
+12. **An invalid engine run, caught and re-run.**
+    - In the first `fused_claude_fast` run (Claude Haiku as the fast tier), every typed "which step?" call raised a
+      TypeError, because the Claude localizer didn't accept the mistake-screening argument. That run measured Haiku
+      *without* localization.
+    - It is kept in `results/invalid_runs/` and labeled. The fixed run replaces it.
+    - Similarly, using the distilled student as the *only* fast tier removed localization entirely (the student has no
+      localization head). It is reported as `fused_distilled_alone`, next to the intended configuration: the student
+      on completion checks plus Jev localization.

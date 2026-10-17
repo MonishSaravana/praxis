@@ -15,7 +15,7 @@ prototype/.venv/
 *.safetensors
 .claude/
 # large intermediate logs/renders (showcase renders are committed via LFS-free small mp4s)
-runs/
+/runs/
 renders/_work/
 
 # local env / tooling

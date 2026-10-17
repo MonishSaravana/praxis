@@ -33,5 +33,12 @@
         "median_ratio": 0.9330344404654658
       }
     }
+  },
+  "engine": {
+    "run": "fused",
+    "n_steps": 302,
+    "n_hinted_steps": 30,
+    "error_rate_hinted_steps": 0.5333333333333333,
+    "error_rate_all_steps": 0.5629139072847682
   }
 }
