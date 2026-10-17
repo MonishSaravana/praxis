@@ -61,8 +61,9 @@ class Engine:
     def __init__(self, cfg: EngineConfig, library: dict[str, TaskGraph], evidence: dict, recognizer: TaskRecognizer | None,
                  detector, verifier=None, escalation=None, calibrator: Calibrator | None = None,
                  dev_calibrator: Calibrator | None = None, log: RunLog | None = None, task_id: str | None = None,
-                 user: UserModel | None = None, point_tracker=None, calibrators: dict | None = None):
+                 user: UserModel | None = None, point_tracker=None, calibrators: dict | None = None, localizer=None):
         self.cfg, self.lib, self.evidence = cfg, library, evidence
+        self.loc = localizer          # which verifier answers "which step?" (defaults to the fast verifier)
         self.rec, self.det = recognizer, detector
         self.ver, self.esc = verifier, escalation
         # calibrators per verifier tier: {"primary": (cal, devcal), "escalation": (cal, devcal)}
@@ -236,7 +237,7 @@ class Engine:
                     reason, self._last_sched = "schedule", t
             else:
                 reason = pol.should_verify(t, belief, bool(bpeak), bool(gpeak))
-        if reason == "uncertain" and self.cfg.step_choice and hasattr(self.ver, "choose_step"):
+        if reason == "uncertain" and self.cfg.step_choice and hasattr(self.loc or self.ver, "choose_step"):
             self._localize(t, belief, frame_at)        # cheap typed "which step?" question first
             belief = tr.belief()
         elif reason:
@@ -313,7 +314,7 @@ class Engine:
             return
         opts = {k: f"{self.graph.node(k).name}: {self.graph.node(k).end_state}" for k in cands}
         try:
-            ans = self.ver.choose_step(frames, opts, self.graph.title)
+            ans = (self.loc or self.ver).choose_step(frames, opts, self.graph.title)
         except Exception as e:  # noqa: BLE001
             self._w("step_choice", t, error=str(e)[:200])
             return

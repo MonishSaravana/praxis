@@ -211,3 +211,29 @@ class StatelessBaseline(_ClaudeBase):
         except Exception as e:
             return {"error": f"{type(e).__name__}: {e}"[:300]}
         return {**out, **meta, "model": self.model, "prompt_version": BASELINE_PROMPT_VERSION}
+
+
+STEP_SYSTEM = """You localize a person within a known procedure from first-person video frames (oldest first; the last
+frame is "now"). Choose which of the candidate steps the person is doing in the most recent frames, or "none" if
+none of them fits (e.g. between steps). Give your probability for that choice. Judge only what is visible."""
+
+
+def _choose_step(self: "ClaudeVerifier", frames, options: dict[str, str], task: str) -> dict:
+    from .schema import VerifyRequest as _VR
+    req = _VR(t=0.0, frames=frames, node=None, graph=None, checks=[], context={})  # type: ignore[arg-type]
+    img_blocks, raw = self._images(req)
+    ids = list(options)
+    text = f"Task: {task}.\nCandidate steps:\n" + "\n".join(f"- {k}: {v}" for k, v in options.items())
+    schema = {"type": "object", "additionalProperties": False, "required": ["step", "probability"],
+              "properties": {"step": {"type": "string", "enum": [*ids, "none"]}, "probability": {"type": "number"}}}
+    key = ResponseCache.key("choose_step-v1", self.model, self.effort, text, *raw)
+    out, meta = self._call(STEP_SYSTEM, img_blocks + [{"type": "text", "text": text}], schema, key)
+    p = float(min(1.0, max(0.0, out["probability"])))
+    rest = [k for k in [*ids, "none"] if k != out["step"]]
+    probs = {k: (1 - p) / max(1, len(rest)) for k in rest}
+    probs[out["step"]] = p
+    return {"probs": probs, "choice": out["step"], "latency_ms": meta["latency_ms"], "model": self.model,
+            "cost_usd": 0.0 if meta.get("cached") else meta["cost_usd"]}
+
+
+ClaudeVerifier.choose_step = _choose_step

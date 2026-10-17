@@ -595,6 +595,78 @@ def recognition_summary(run: str = "fused") -> dict:
     return res
 
 
+
+def dev_eval(designs: dict | None = None, max_s: float = 300.0, max_per_task: int = 3, workers: int = 3) -> dict:
+    """Design selection on the TRAIN split (never the eval clips): leave-one-recording-out step probes, engine with
+    the task given, first `max_s` seconds of each train recording. Compares engine designs by step accuracy, cost,
+    and calls."""
+    import copy
+    from concurrent.futures import ThreadPoolExecutor
+    from dataclasses import replace as dc_replace
+    from .data.cc4d import RECIPES, recipe_steps, slug
+    from .eval import harness
+    from .eval.run_all import calibrators, engine_config
+    from .evidence import ProbeEvidence
+    from .tasks.compiler import load_library
+    from .tasks.train_probes import _labels
+    lib = load_library()
+    man = load_manifest()
+    clips = [Clip.from_json(c) for c in man["train"] if (FEATURES / f"{c['clip_id']}.npz").exists()]
+    by_task: dict = {}
+    for c in clips:
+        by_task.setdefault(c.task_id, []).append(c)
+    designs = designs or {
+        "jev_localize": {"verifier": "jev", "esc": "claude_strong", "over": {}},
+        "opus_localize": {"verifier": "jev", "esc": "claude_strong", "over": {}, "localizer": "claude_strong"},
+        "no_localize": {"verifier": "jev", "esc": "claude_strong", "over": {"step_choice": False}},
+    }
+    jobs = []
+    for r in RECIPES:
+        tid = slug(r)
+        rec = by_task.get(tid, [])[:max_per_task]
+        if len(rec) < 2:
+            continue
+        ids = [s["id"] for s in recipe_steps(r)[0]]
+        for held in rec:
+            X, y = [], []
+            for c in rec:
+                if c.clip_id == held.clip_id:
+                    continue
+                z = np.load(FEATURES / f"{c.clip_id}.npz")
+                X.append(np.concatenate([z["siglip"], z["window"]], 1).astype(np.float32)[::2])
+                y.append(_labels(c, z["t"], ids)[::2])
+            pe = ProbeEvidence.fit(ids, np.concatenate(X), np.concatenate(y))
+            jobs.append((tid, dc_replace(held, end=min(held.end, max_s)), pe))
+    base_stack = harness.load_stack()
+    res = {"protocol": f"train-split recordings, leave-one-recording-out probes, first {max_s:.0f}s, task given",
+           "n_recordings": len(jobs), "designs": {}}
+    for name, d in designs.items():
+        budget = _budget(3000, 15.0)
+        ver = make_verifier(d["verifier"], budget)
+        esc = make_verifier(d["esc"], budget) if d.get("esc") else None
+        loc = make_verifier(d["localizer"], budget) if d.get("localizer") else None
+        cals = {"primary": calibrators(d["verifier"]), "escalation": calibrators(d.get("esc"))}
+        ecfg = engine_config(d["over"])
+
+        def one(job):
+            tid, c, pe = job
+            st = dict(base_stack)
+            st["evidence"] = {**base_stack["evidence"], tid: pe}
+            st["recognizer"] = copy.deepcopy(base_stack["recognizer"])
+            p = harness.run_clip(c, st, f"dev_{name}", ecfg, ver, esc, oracle_task=True, calibrators=cals, localizer=loc)
+            return harness.score_clip(c, p)
+        with ThreadPoolExecutor(workers) as ex:
+            rows = list(ex.map(one, jobs))
+        agg = harness.aggregate(rows)
+        res["designs"][name] = {"step_acc": agg["step_acc"], "verifier_calls": agg["verifier_calls"], "cost_usd": agg["cost_usd"],
+                                "false_alarms_per_min": agg["false_alarms_per_min"], "mistakes": agg["mistakes"],
+                                "spend_usd": budget.usd}
+        print(name, res["designs"][name], flush=True)
+    (RESULTS / "dev").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "dev" / "design_selection.json").write_text(json.dumps(res, indent=2, default=float))
+    return res
+
+
 if __name__ == "__main__":
     import sys
     t0 = time.time()
