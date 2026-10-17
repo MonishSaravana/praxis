@@ -1,0 +1,157 @@
+{
+  "run": "fused",
+  "fallback": "fused_oracle",
+  "note": "Every render is drawn from the saved run log named here (results/runs/<run>.json, runs/<run>/<clip>.jsonl). Development clips (results/dev_clips.json) are excluded from selection.",
+  "rendered": [
+    {
+      "kind": "recognition_and_tracking",
+      "name": "showcase_recognition_tracking",
+      "views": [
+        "user",
+        "engineer"
+      ],
+      "before": 4,
+      "after": 34,
+      "label": "real model output",
+      "selection": "highest step accuracy after recognition among clips recognized within 40 s",
+      "run": "fused",
+      "clip": "22_24_0",
+      "t": 34.0,
+      "n": 1,
+      "step_acc_after_recognition": 0.7830374753451677,
+      "window_s": [
+        30.0,
+        68.0
+      ],
+      "task_id": "cc4d_herbomeletwithfriedtomatoes",
+      "files": [
+        "renders/showcase_recognition_tracking_user.mp4",
+        "renders/showcase_recognition_tracking_engineer.mp4"
+      ]
+    },
+    {
+      "kind": "caught_mistake",
+      "name": "showcase_caught_mistake",
+      "views": [
+        "user",
+        "engineer"
+      ],
+      "before": 14,
+      "after": 14,
+      "label": "real model output",
+      "selection": "first mistake alert the strict judge rated 'yes' (matches an annotated error)",
+      "run": "fused",
+      "clip": "1_43_0",
+      "t": 155.1071,
+      "text": "Use the knife to cut the muffin so you get clean, even halves.",
+      "gt": [
+        "Using hand instead of knife"
+      ],
+      "window_s": [
+        141.1071,
+        169.1071
+      ],
+      "task_id": "cc4d_microwaveeggsandwich",
+      "files": [
+        "renders/showcase_caught_mistake_user.mp4",
+        "renders/showcase_caught_mistake_engineer.mp4"
+      ]
+    },
+    {
+      "kind": "caught_mistake_2",
+      "name": "showcase_caught_mistake_2",
+      "views": [
+        "user"
+      ],
+      "before": 14,
+      "after": 14,
+      "label": "real model output",
+      "selection": "second mistake alert the strict judge rated 'yes'",
+      "run": "fused",
+      "clip": "17_40_0",
+      "t": 239.1602,
+      "text": "That looks like a zucchini, not a cucumber. Put it back and grab the cucumber instead.",
+      "gt": [
+        "Use zucchini instead of cucumber"
+      ],
+      "window_s": [
+        225.1602,
+        253.1602
+      ],
+      "task_id": "cc4d_cucumberraita",
+      "files": [
+        "renders/showcase_caught_mistake_2_user.mp4"
+      ]
+    },
+    {
+      "kind": "view_request",
+      "name": "showcase_view_request",
+      "views": [
+        "user"
+      ],
+      "before": 10,
+      "after": 12,
+      "label": "real model output",
+      "selection": "first view request",
+      "run": "fused_oracle",
+      "clip": "17_43_0",
+      "t": 30.5615,
+      "text": "Look back at the sink and show the cucumber in your hands",
+      "window_s": [
+        20.5615,
+        42.561499999999995
+      ],
+      "task_id": "cc4d_cucumberraita",
+      "files": [
+        "renders/showcase_view_request_user.mp4"
+      ]
+    },
+    {
+      "kind": "failure_false_alarm",
+      "name": "failure_false_alarm",
+      "views": [
+        "user"
+      ],
+      "before": 12,
+      "after": 12,
+      "label": "real model output \u00b7 FAILURE CASE: false alarm",
+      "selection": "first mistake alert with no annotated error within the matching window",
+      "run": "fused",
+      "clip": "1_25_0",
+      "t": 73.7966,
+      "text": "Give the ramekin a quick coat of cooking spray first so the egg won't stick.",
+      "gt": null,
+      "window_s": [
+        61.7966,
+        85.7966
+      ],
+      "task_id": "cc4d_microwaveeggsandwich",
+      "files": [
+        "renders/failure_false_alarm_user.mp4"
+      ]
+    },
+    {
+      "kind": "failure_wrong_task",
+      "name": "failure_wrong_task",
+      "views": [
+        "user"
+      ],
+      "before": 4,
+      "after": 20,
+      "label": "real model output \u00b7 FAILURE CASE: wrong task",
+      "selection": "first clip whose first announced task was wrong",
+      "run": "fused",
+      "clip": "8_50_0",
+      "t": 52.0,
+      "pred": "cc4d_microwavemugpizza",
+      "window_s": [
+        48.0,
+        72.0
+      ],
+      "task_id": "cc4d_spicedhotchocolate",
+      "files": [
+        "renders/failure_wrong_task_user.mp4"
+      ]
+    }
+  ]
+}

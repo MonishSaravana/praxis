@@ -71,50 +71,82 @@ def render_pick(run: str, clip_id: str, t: float, name: str, view: str = "user",
     return out
 
 
-def main(run: str = "fused", fallback: str = "fused_oracle") -> dict:
-    RENDERS.mkdir(parents=True, exist_ok=True)
+def select(run: str = "fused", fallback: str = "fused_oracle") -> list[dict]:
+    """The render jobs, chosen automatically from the saved logs and results (development clips excluded)."""
     p = pick(run)
     pf = pick(fallback)
-    made = {}
-    if p["tracking"]:
-        x = p["tracking"][0]     # starts just before "Task recognized"
-        made["recognition_and_tracking"] = [
-            str(render_pick(x["run"], x["clip"], x["t"], "showcase_recognition_tracking", "user", before=4, after=34)),
-            str(render_pick(x["run"], x["clip"], x["t"], "showcase_recognition_tracking", "engineer", before=4, after=34))]
-    tp = p["tp_mistake"] or pf["tp_mistake"]
+    dev = set(json.loads((RESULTS / "dev_clips.json").read_text())["dev_clips"]) if (RESULTS / "dev_clips.json").exists() else set()
+    for d in (p, pf):
+        for k in d:
+            d[k] = [x for x in d[k] if x["clip"] not in dev]
+    # caught-mistake showcases: only alerts the strict judge confirmed (results/l6/mistake_semantic_<run>.json)
+    tp = []
+    for r_ in (run, fallback):
+        sp = RESULTS / "l6" / f"mistake_semantic_{r_}.json"
+        if sp.exists():
+            for pr in json.loads(sp.read_text())["pairs"]:
+                if pr["label"] == "yes" and pr["clip"] not in dev:
+                    tp.append({"run": r_, "clip": pr["clip"], "t": pr["t"], "text": pr["alert"], "gt": pr["annotated"]})
+    # rank tracking showcases by the clip's measured step accuracy after recognition (recognized within 40 s)
+    rr = RESULTS / "runs" / f"{run}.json"
+    if rr.exists():
+        acc = {r_["clip"]: (r_.get("step_acc_after_recognition") or 0.0) for r_ in json.loads(rr.read_text())["per_clip"]}
+        p["tracking"] = sorted([dict(x, step_acc_after_recognition=acc.get(x["clip"], 0.0)) for x in p["tracking"] if x["t"] <= 40],
+                               key=lambda x: -x["step_acc_after_recognition"])
+    jobs = []
+
+    def job(kind, x, name, views, before, after, label="real model output", selection=""):
+        jobs.append({"kind": kind, "name": name, "views": views, "before": before, "after": after, "label": label,
+                     "selection": selection, **x})
+
+    if p["tracking"]:     # starts just before "Task recognized"
+        job("recognition_and_tracking", p["tracking"][0], "showcase_recognition_tracking", ["user", "engineer"], 4, 34,
+            selection="highest step accuracy after recognition among clips recognized within 40 s")
     if tp:
-        x = tp[0]
-        made["caught_mistake"] = [str(render_pick(x["run"], x["clip"], x["t"], "showcase_caught_mistake", "user", before=14, after=14)),
-                                  str(render_pick(x["run"], x["clip"], x["t"], "showcase_caught_mistake", "engineer", before=14, after=14))]
+        job("caught_mistake", tp[0], "showcase_caught_mistake", ["user", "engineer"], 14, 14,
+            selection="first mistake alert the strict judge rated 'yes' (matches an annotated error)")
         if len(tp) > 1:
-            y = tp[1]
-            made["caught_mistake_2"] = [str(render_pick(y["run"], y["clip"], y["t"], "showcase_caught_mistake_2", "user",
-                                                        before=14, after=14))]
+            job("caught_mistake_2", tp[1], "showcase_caught_mistake_2", ["user"], 14, 14,
+                selection="second mistake alert the strict judge rated 'yes'")
     vr = p["view_request"] or pf["view_request"]
     if vr:
-        x = vr[0]
-        made["view_request"] = [str(render_pick(x["run"], x["clip"], x["t"], "showcase_view_request", "user", before=10, after=12))]
+        job("view_request", vr[0], "showcase_view_request", ["user"], 10, 12, selection="first view request")
     fa = p["false_alarm"] or pf["false_alarm"]
     if fa:
-        x = fa[0]
-        made["failure_false_alarm"] = [str(render_pick(x["run"], x["clip"], x["t"], "failure_false_alarm", "user",
-                                                       label="real model output · FAILURE CASE: false alarm", before=12, after=12))]
+        job("failure_false_alarm", fa[0], "failure_false_alarm", ["user"], 12, 12,
+            label="real model output · FAILURE CASE: false alarm",
+            selection="first mistake alert with no annotated error within the matching window")
     if p["wrong_task"]:
-        x = p["wrong_task"][0]
-        made["failure_wrong_task"] = [str(render_pick(x["run"], x["clip"], x["t"], "failure_wrong_task", "user",
-                                                      label="real model output · FAILURE CASE: wrong task", before=4, after=20))]
-    (RESULTS / "renders_index.json").write_text(json.dumps({"run": run, "fallback": fallback,
-                                                            "picks": {k: v[:5] for k, v in p.items()},
-                                                            "fallback_picks": {k: v[:3] for k, v in pf.items()},
-                                                            "rendered": made}, indent=2))
-    for files in made.values():
-        for f in files:
-            sz = Path(f).stat().st_size / 1e6
-            if sz > 24:
-                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", f, "-c:v", "libx264", "-crf", "31",
-                                "-preset", "slow", "-pix_fmt", "yuv420p", f + ".tmp.mp4"], check=True)
-                Path(f + ".tmp.mp4").replace(f)
-    return made
+        job("failure_wrong_task", p["wrong_task"][0], "failure_wrong_task", ["user"], 4, 20,
+            label="real model output · FAILURE CASE: wrong task", selection="first clip whose first announced task was wrong")
+    return jobs
+
+
+def main(run: str = "fused", fallback: str = "fused_oracle", render_videos: bool = True) -> dict:
+    """render_videos=False only rewrites the index (the selection is deterministic given the same logs)."""
+    RENDERS.mkdir(parents=True, exist_ok=True)
+    jobs = select(run, fallback)
+    root = RESULTS.parent
+    for j in jobs:
+        c = _clips()[j["clip"]]
+        j["window_s"] = list(_window(j["t"], c.duration, j["before"], j["after"]))
+        j["task_id"] = c.task_id
+        j["files"] = []
+        for v in j["views"]:
+            out = RENDERS / f"{j['name']}_{v}.mp4"
+            if render_videos:
+                render_pick(j["run"], j["clip"], j["t"], j["name"], v, label=j["label"], before=j["before"], after=j["after"])
+                if out.stat().st_size / 1e6 > 24:
+                    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(out), "-c:v", "libx264", "-crf", "31",
+                                    "-preset", "slow", "-pix_fmt", "yuv420p", str(out) + ".tmp.mp4"], check=True)
+                    Path(str(out) + ".tmp.mp4").replace(out)
+            j["files"].append(str(out.relative_to(root)))
+    (RESULTS / "renders_index.json").write_text(json.dumps({
+        "run": run, "fallback": fallback,
+        "note": "Every render is drawn from the saved run log named here (results/runs/<run>.json, runs/<run>/<clip>.jsonl). "
+                "Development clips (results/dev_clips.json) are excluded from selection.",
+        "rendered": jobs}, indent=2))
+    return {j["kind"]: j["files"] for j in jobs}
 
 
 if __name__ == "__main__":
