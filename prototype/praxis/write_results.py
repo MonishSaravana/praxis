@@ -73,34 +73,45 @@ def build() -> tuple[str, str]:
               "It gets no task graph, no state and no history: only the task name and the list of step names.\n")
 
     md.append("## Headline: stateful engine vs. stateless baseline\n")
-    if F and B:
+    md.append("Both systems are told the task here. The stateless baseline is always given the task name and the step "
+              "list, so the like-for-like comparison is with Praxis's task-given run (`fused_oracle`). Praxis recognizing "
+              "the task by itself is reported in the next section.\n")
+    if FO and B:
         rows = []
-        for name, a in (("Stateless baseline (Opus 5.5 every 5 s)", B), ("Praxis (stateful, task recognized)", F),
-                        ("Praxis (stateful, task given)", FO)):
-            if not a:
-                continue
+        for name, a in (("Stateless baseline (Opus 5.5 every 5 s, task given)", B), ("Praxis (stateful, task given)", FO)):
             mk = a["mistakes"]
-            rows.append([name, pct(a["step_acc"]), pct(mk["precision"]), pct(mk["recall"]), num(a["false_alarms_per_min"]),
-                         num(a["alerts_per_min"]), str(a["verifier_calls"]), f"${a['cost_usd_per_video_min']:.3f}"])
-        md.append(table(rows, ["System", "Step acc.", "Mistake precision", "Mistake recall", "False alarms/min",
-                               "Alerts/min", "Model calls", "Cost / video-min"]))
-        better_steps = F["step_acc"] > B["step_acc"]
-        fewer_fa = F["false_alarms_per_min"] < B["false_alarms_per_min"]
+            rows.append([name, pct(a["step_acc"]), pct(mk["precision"]), pct(mk["recall"]), f"{mk['tp']} / {mk['fp']}",
+                         num(a["false_alarms_per_min"], 3), str(a["verifier_calls"]), f"${a['cost_usd_per_video_min']:.3f}"])
+        md.append(table(rows, ["System", "Step acc.", "Mistake precision", "Mistake recall", "Caught / false alarms",
+                               "False alarms/min", "Model calls", "Cost / video-min"]))
         md.append("")
-        md.append(f"- Step tracking: Praxis is **{pct(F['step_acc'])}** vs **{pct(B['step_acc'])}** for the stateless "
-                  f"baseline, so Praxis is {'better' if better_steps else 'worse'}. Accuracy is measured on frames inside "
-                  f"annotated steps; before recognition, Praxis has no step prediction. With the task given, Praxis "
-                  f"reaches {pct(FO.get('step_acc'))}.")
-        md.append(f"- False alarms: Praxis has **{num(F['false_alarms_per_min'])}/min** vs "
-                  f"**{num(B['false_alarms_per_min'])}/min** for the baseline, so Praxis is "
-                  f"{'lower' if fewer_fa else 'not lower'}.")
-        md.append(f"- Model calls: Praxis made {F['verifier_calls']} calls vs {B['verifier_calls']} for the baseline "
-                  f"({num(F['verifier_calls'] / max(1, B['verifier_calls']), 2)}×).")
-        md.append(f"- Cost: ${F['cost_usd_per_video_min']:.3f} vs ${B['cost_usd_per_video_min']:.3f} per minute of video.")
-        md.append(f"\nSources: {src(m, 'run_fused')}, {src(m, 'run_baseline_stateless')}, {src(m, 'run_fused_oracle')}.\n")
-    else:
-        md.append("_Not run._\n")
-
+        md.append(f"- **Step tracking:** Praxis {pct(FO['step_acc'])} vs baseline {pct(B['step_acc'])}, so Praxis is "
+                  f"{'higher' if FO['step_acc'] > B['step_acc'] else 'lower'}. This counts frames inside annotated steps. "
+                  f"Excluding the 3 dev clips: {pct(m['run_fused_oracle_excl'].get('step_acc'))} vs "
+                  f"{pct(m['run_baseline_excl'].get('step_acc'))}.")
+        md.append(f"- **Mistakes:** Praxis caught {FO['mistakes']['tp']} of {FO['mistakes']['tp'] + FO['mistakes']['fn']} "
+                  f"annotated errors with {FO['mistakes']['fp']} false alarms. The baseline caught {B['mistakes']['tp']} "
+                  f"with {B['mistakes']['fp']} false alarms. "
+                  f"{pct(FO['mistakes'].get('share_caught_before_step_end'))} of Praxis's catches came before the erroneous "
+                  f"step ended.")
+        md.append(f"- **Cost:** ${FO['cost_usd_per_video_min']:.3f} vs ${B['cost_usd_per_video_min']:.3f} per video-minute "
+                  f"({num(B['cost_usd_per_video_min'] / max(FO['cost_usd_per_video_min'], 1e-9), 1)}× cheaper). Most "
+                  f"Praxis calls are ~0.2 s typed Jev questions; Opus is used only for escalations.")
+        md.append(f"\nSources: {src(m, 'run_fused_oracle')}, {src(m, 'run_baseline_stateless')}.\n")
+    if F:
+        md.append("## Fully automatic: Praxis recognizes the task itself\n")
+        md.append(f"- Task recognized correctly on **{pct(F['task_top1'])}** of clips. Median time to recognize: "
+                  f"{num(F['t_recognize_s'].get('p50'), 0)} s (p95 {num(F['t_recognize_s'].get('p95'), 0)} s), out of a "
+                  f"library of {(m.get('recognition') or {}).get('library_size', '?')} procedures.")
+        md.append(f"- Step accuracy is {pct(F['step_acc'])} over the whole clip, and {pct(F['step_acc_after_recognition'])} "
+                  f"after recognition. Frames before recognition, and clips where the wrong recipe was recognized, count "
+                  f"as wrong.")
+        md.append(f"- Mistakes: {F['mistakes']['tp']} caught, {F['mistakes']['fp']} false alarms (precision "
+                  f"{pct(F['mistakes']['precision'])}, recall {pct(F['mistakes']['recall'])}). That is "
+                  f"{num(F['false_alarms_per_min'], 3)} false alarms per minute.")
+        md.append("- Recognition mistakes are between visually similar recipes (see `results/l3b/recognition.json`). "
+                  "One wrong recognition costs that clip's whole step track.")
+        md.append(f"\nSource: {src(m, 'run_fused')}.\n")
     md.append("## Latency\n")
     if F:
         md.append(f"- **Feedback latency** (GT end of an action → Praxis says 'verified' or flags a mistake about that "
@@ -284,26 +295,33 @@ def claims(m: dict) -> str:
             f"CaptainCook4D dataset. They cover {types} procedures, with {d.get('eval_gt_step_segments')} annotated "
             f"steps and {d.get('eval_gt_timed_mistakes')} annotated mistakes. All labels are the dataset's; none are ours.",
             "data")
-    if F and B:
-        if F["step_acc"] > B["step_acc"]:
-            say(f"On {F['n_clips']} held-out clips, our stateful engine tracked the current step correctly "
-                f"{F['step_acc'] * 100:.0f}% of the time. Calling the same frontier model every 5 seconds without "
-                f"state got {B['step_acc'] * 100:.0f}%.", "run_fused")
+    if FO and B:
+        if FO["step_acc"] > B["step_acc"]:
+            say(f"On {FO['n_clips']} held-out clips, with the task known, our stateful engine tracked the current step "
+                f"correctly {FO['step_acc'] * 100:.0f}% of the time. Calling the same frontier model every 5 seconds "
+                f"without state got {B['step_acc'] * 100:.0f}%.", "run_fused_oracle")
         else:
-            say(f"On {F['n_clips']} held-out clips, the stateless frontier-model baseline tracked steps better than "
-                f"our engine ({B['step_acc'] * 100:.0f}% vs {F['step_acc'] * 100:.0f}%). We report it as measured.",
-                "run_fused")
-        say(f"Our engine made {F['verifier_calls']} model calls on those clips; the stateless baseline made "
-            f"{B['verifier_calls']}. That is ${F['cost_usd_per_video_min']:.3f} vs ${B['cost_usd_per_video_min']:.3f} "
-            f"per minute of video.", "run_fused")
-        say(f"False alarms: {F['false_alarms_per_min']:.2f} per minute for Praxis vs {B['false_alarms_per_min']:.2f} "
-            f"for the stateless baseline.", "run_fused")
-        if F["mistakes"]["tp"]:
-            say(f"Praxis caught {F['mistakes']['tp']} of {F['mistakes']['tp'] + F['mistakes']['fn']} annotated "
-                f"mistakes (recall {F['mistakes']['recall'] * 100:.0f}%), and {F['mistakes']['precision'] * 100:.0f}% "
-                f"of its mistake alerts were real.", "run_fused")
-        say(f"Only {F['escalated_frame_share'] * 100:.1f}% of frames ever reach a frontier model; the rest is "
-            f"handled by local layers.", "run_fused")
+            say(f"On {FO['n_clips']} held-out clips, the stateless frontier-model baseline tracked steps better than our "
+                f"engine ({B['step_acc'] * 100:.0f}% vs {FO['step_acc'] * 100:.0f}%). We report it as measured.",
+                "run_fused_oracle")
+        say(f"It costs about {B['cost_usd_per_video_min'] / max(FO['cost_usd_per_video_min'], 1e-9):.0f}x less to run: "
+            f"${FO['cost_usd_per_video_min']:.3f} vs ${B['cost_usd_per_video_min']:.3f} per minute of video, because "
+            f"most checks are fast typed questions and the frontier model is only called to escalate.", "run_fused_oracle")
+        if FO["mistakes"]["tp"]:
+            say(f"Praxis flagged {FO['mistakes']['tp'] + FO['mistakes']['fp']} mistakes; {FO['mistakes']['tp']} of "
+                f"them were real (precision {FO['mistakes']['precision'] * 100:.0f}%), and "
+                f"{(FO['mistakes'].get('share_caught_before_step_end') or 0) * 100:.0f}% were caught before the "
+                f"step was finished. The stateless baseline caught {B['mistakes']['tp']}.", "run_fused_oracle")
+            say(f"Mistake recall is low ({FO['mistakes']['recall'] * 100:.0f}%). Most annotated cooking errors, like "
+                f"the wrong amount or water temperature, can't be seen from a few frames. We tuned for precision "
+                f"because false alarms are what make people stop using a coach.", "run_fused_oracle")
+        say(f"False alarms: {FO['false_alarms_per_min']:.3f} per minute, i.e. about one every "
+            f"{1 / max(FO['false_alarms_per_min'], 1e-9):.0f} minutes.", "run_fused_oracle")
+        say(f"Only {FO['escalated_frame_share'] * 100:.0f}% of frames leave the local layers, and most of those go to a "
+            f"~0.2-second typed check rather than a frontier model.", "run_fused_oracle")
+    if F:
+        say(f"With no setup at all, it recognized which recipe was being made on {F['task_top1'] * 100:.0f}% of held-out "
+            f"clips, with a median of {F['t_recognize_s']['p50']:.0f} seconds.", "run_fused")
     if FO and L:
         say(f"With the task given, fusing local evidence with the verifier gives {FO['step_acc'] * 100:.0f}% step "
             f"accuracy, vs {L['step_acc'] * 100:.0f}% from local evidence alone.", "run_fused_oracle")

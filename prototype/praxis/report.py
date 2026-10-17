@@ -53,6 +53,9 @@ def collect() -> dict:
     for v in ("fused", "fused_oracle", "fused_heuristic_gate", "local_only", "verifier_only", "fused_distilled",
               "fused_no_escalation", "fused_claude_fast", "baseline_stateless"):
         put(f"run_{v}", _agg(v), f"results/runs/{v}.json")
+    for v, key in (("fused_oracle", "run_fused_oracle_excl"), ("baseline_stateless", "run_baseline_excl"), ("fused", "run_fused_excl")):
+        r = _j(f"runs/{v}.json")
+        put(key, r.get("aggregate_excl_dev_clips") if r else None, f"results/runs/{v}.json (aggregate_excl_dev_clips)")
     put("recognition", _j("l3b/recognition.json"), "results/l3b/recognition.json")
     put("join_mid_task", _j("l3b/join_mid_task.json"), "results/l3b/join_mid_task.json")
     put("verifier_compare", _j("l5/compare_jev_vs_claude_fast.json"), "results/l5/compare_jev_vs_claude_fast.json")
