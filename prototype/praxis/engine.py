@@ -166,6 +166,9 @@ class Engine:
 
     def _start_task(self, t: float, task_id: str, oracle: bool = False, posterior: dict | None = None) -> list[Action]:
         self.task_id, self.graph = task_id, self.lib[task_id]
+        # per-task state keyed by step ids (a Studio session can switch tasks; at the first start these are empty)
+        self._last_switch_map = None
+        self._max_mass, self._order_flagged = {}, set()
         self.tracker = StateTracker(self.graph, self.cfg.tracker, join_mid_task=self.cfg.join_mid_task)
         self._journal = []
         if not self.cfg.join_mid_task and self.cfg.start_prior_mass < 1.0:

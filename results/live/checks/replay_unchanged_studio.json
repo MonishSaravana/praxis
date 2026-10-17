@@ -1,0 +1,709 @@
+{
+ "what": "offline replay (engine.replay, used by every evaluation) re-run on the model answers recorded in the saved run logs; every logged record compared field by field, ignoring only the write time ('wall'), the run name/id and engine-config keys in the meta record",
+ "why_recorded_answers": "the Jev completion-check cache key includes random per-request asset ids (verify/jev.py), so a cached re-run still asks Jev again and gets different answers",
+ "clips": {
+  "fused_oracle": [
+   "17_43_0",
+   "10_47_0",
+   "22_40_0",
+   "1_143_0",
+   "10_18_0",
+   "17_49_0"
+  ],
+  "fused": [
+   "22_41_0",
+   "7_19_0",
+   "17_40_0"
+  ],
+  "open_set_hint": [
+   "18_101_full"
+  ]
+ },
+ "runs": {
+  "_recorded_studio": {
+   "mismatched_questions": 0,
+   "recorded_answers_unused": 0,
+   "new_cache_files": {
+    "jev-1.14.0": 2
+   },
+   "wall_s": 29.734111070632935,
+   "spend_usd": 0.00021113400000000003
+  },
+  "_recorded_post": {
+   "mismatched_questions": 0,
+   "recorded_answers_unused": 0,
+   "new_cache_files": {},
+   "wall_s": 24.01373291015625,
+   "spend_usd": 0
+  }
+ },
+ "vs_saved_runs": {
+  "candidate": "_recorded_studio",
+  "reference": "saved runs (runs/<variant>/)",
+  "clips": 10,
+  "records": 6717,
+  "identical_records": 6680,
+  "same_record_count": true,
+  "field_differences": {
+   "action/detail.chip": 34,
+   "action/detail.draft": 2,
+   "task_draft/cached": 1
+  },
+  "unexplained_differences": [],
+  "known_differences": {
+   "action/detail.chip": "instruct actions carry the step's short name for the HUD chip since b0e9f8b (2026-10-17 08:24); the saved fused_oracle (07:17) and fused (07:35) logs predate it",
+   "action/detail.draft": "announce_task actions carry a draft flag since b780b5b (open-set drafting, 09:43); the saved fused logs (07:35) predate it",
+   "task_draft/cached": "the replay's open-set draft comes from the drafting response cache (the saved run made the call)"
+  },
+  "eval_scores_identical": true,
+  "meta_and_summary_identical": true,
+  "per_clip": [
+   {
+    "variant": "fused_oracle",
+    "clip": "17_43_0",
+    "records": 706,
+    "records_reference": 706,
+    "identical_records": 701,
+    "field_differences": {
+     "action/detail.chip": 5
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "10_47_0",
+    "records": 710,
+    "records_reference": 710,
+    "identical_records": 706,
+    "field_differences": {
+     "action/detail.chip": 4
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "22_40_0",
+    "records": 702,
+    "records_reference": 702,
+    "identical_records": 698,
+    "field_differences": {
+     "action/detail.chip": 4
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "1_143_0",
+    "records": 683,
+    "records_reference": 683,
+    "identical_records": 679,
+    "field_differences": {
+     "action/detail.chip": 4
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "10_18_0",
+    "records": 655,
+    "records_reference": 655,
+    "identical_records": 649,
+    "field_differences": {
+     "action/detail.chip": 6
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "17_49_0",
+    "records": 712,
+    "records_reference": 712,
+    "identical_records": 708,
+    "field_differences": {
+     "action/detail.chip": 4
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused",
+    "clip": "22_41_0",
+    "records": 701,
+    "records_reference": 701,
+    "identical_records": 695,
+    "field_differences": {
+     "action/detail.draft": 1,
+     "action/detail.chip": 5
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused",
+    "clip": "7_19_0",
+    "records": 648,
+    "records_reference": 648,
+    "identical_records": 648,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused",
+    "clip": "17_40_0",
+    "records": 662,
+    "records_reference": 662,
+    "identical_records": 659,
+    "field_differences": {
+     "action/detail.draft": 1,
+     "action/detail.chip": 2
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "open_set_hint",
+    "clip": "18_101_full",
+    "records": 538,
+    "records_reference": 538,
+    "identical_records": 537,
+    "field_differences": {
+     "task_draft/cached": 1
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers"
+    ],
+    "engine_config_differences": []
+   }
+  ]
+ },
+ "vs_reference_tag": {
+  "candidate": "_recorded_studio",
+  "reference": "_recorded_post",
+  "clips": 10,
+  "records": 6717,
+  "identical_records": 6717,
+  "same_record_count": true,
+  "field_differences": {},
+  "unexplained_differences": [],
+  "known_differences": {},
+  "eval_scores_identical": true,
+  "meta_and_summary_identical": true,
+  "per_clip": [
+   {
+    "variant": "fused_oracle",
+    "clip": "17_43_0",
+    "records": 706,
+    "records_reference": 706,
+    "identical_records": 706,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "10_47_0",
+    "records": 710,
+    "records_reference": 710,
+    "identical_records": 710,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "22_40_0",
+    "records": 702,
+    "records_reference": 702,
+    "identical_records": 702,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "1_143_0",
+    "records": 683,
+    "records_reference": 683,
+    "identical_records": 683,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "10_18_0",
+    "records": 655,
+    "records_reference": 655,
+    "identical_records": 655,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "17_49_0",
+    "records": 712,
+    "records_reference": 712,
+    "identical_records": 712,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused",
+    "clip": "22_41_0",
+    "records": 701,
+    "records_reference": 701,
+    "identical_records": 701,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused",
+    "clip": "7_19_0",
+    "records": 648,
+    "records_reference": 648,
+    "identical_records": 648,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused",
+    "clip": "17_40_0",
+    "records": 662,
+    "records_reference": 662,
+    "identical_records": 662,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "open_set_hint",
+    "clip": "18_101_full",
+    "records": 538,
+    "records_reference": 538,
+    "identical_records": 538,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [],
+    "engine_config_differences": []
+   }
+  ]
+ },
+ "reference_tag_vs_saved_runs": {
+  "candidate": "_recorded_post",
+  "reference": "saved runs (runs/<variant>/)",
+  "clips": 10,
+  "records": 6717,
+  "identical_records": 6680,
+  "same_record_count": true,
+  "field_differences": {
+   "action/detail.chip": 34,
+   "action/detail.draft": 2,
+   "task_draft/cached": 1
+  },
+  "unexplained_differences": [],
+  "known_differences": {
+   "action/detail.chip": "instruct actions carry the step's short name for the HUD chip since b0e9f8b (2026-10-17 08:24); the saved fused_oracle (07:17) and fused (07:35) logs predate it",
+   "action/detail.draft": "announce_task actions carry a draft flag since b780b5b (open-set drafting, 09:43); the saved fused logs (07:35) predate it",
+   "task_draft/cached": "the replay's open-set draft comes from the drafting response cache (the saved run made the call)"
+  },
+  "eval_scores_identical": true,
+  "meta_and_summary_identical": true,
+  "per_clip": [
+   {
+    "variant": "fused_oracle",
+    "clip": "17_43_0",
+    "records": 706,
+    "records_reference": 706,
+    "identical_records": 701,
+    "field_differences": {
+     "action/detail.chip": 5
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "10_47_0",
+    "records": 710,
+    "records_reference": 710,
+    "identical_records": 706,
+    "field_differences": {
+     "action/detail.chip": 4
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "22_40_0",
+    "records": 702,
+    "records_reference": 702,
+    "identical_records": 698,
+    "field_differences": {
+     "action/detail.chip": 4
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "1_143_0",
+    "records": 683,
+    "records_reference": 683,
+    "identical_records": 679,
+    "field_differences": {
+     "action/detail.chip": 4
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "10_18_0",
+    "records": 655,
+    "records_reference": 655,
+    "identical_records": 649,
+    "field_differences": {
+     "action/detail.chip": 6
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused_oracle",
+    "clip": "17_49_0",
+    "records": 712,
+    "records_reference": 712,
+    "identical_records": 708,
+    "field_differences": {
+     "action/detail.chip": 4
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused",
+    "clip": "22_41_0",
+    "records": 701,
+    "records_reference": 701,
+    "identical_records": 695,
+    "field_differences": {
+     "action/detail.draft": 1,
+     "action/detail.chip": 5
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused",
+    "clip": "7_19_0",
+    "records": 648,
+    "records_reference": 648,
+    "identical_records": 648,
+    "field_differences": {},
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "fused",
+    "clip": "17_40_0",
+    "records": 662,
+    "records_reference": 662,
+    "identical_records": 659,
+    "field_differences": {
+     "action/detail.draft": 1,
+     "action/detail.chip": 2
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers",
+     "open_set_draft",
+     "open_set_max_wait_s",
+     "open_set_min_s",
+     "open_set_none_streak",
+     "open_set_window_s"
+    ],
+    "engine_config_differences": [],
+    "score_differences": []
+   },
+   {
+    "variant": "open_set_hint",
+    "clip": "18_101_full",
+    "records": 538,
+    "records_reference": 538,
+    "identical_records": 537,
+    "field_differences": {
+     "task_draft/cached": 1
+    },
+    "examples": [],
+    "meta_differences": [],
+    "summary_differences": [],
+    "engine_config_keys_added": [
+     "async_slow_path",
+     "async_workers"
+    ],
+    "engine_config_differences": []
+   }
+  ]
+ },
+ "spend_usd": 0.00021113400000000003
+}

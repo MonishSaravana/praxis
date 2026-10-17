@@ -11,6 +11,49 @@ procedural video. Most layers are ours (event detector, task-graph compiler and 
 calibrated policy, training-ready logs, and a distilled local verifier). The frontier model is one swappable part
 of the verifier, and it is called only when something happens.
 
+## Try it: Praxis Studio
+
+```bash
+cd prototype
+uv run praxis studio
+```
+
+This opens <http://127.0.0.1:8800> (keys come from `../.env`; the first start loads the models, about 20 s).
+
+1. **Input.** Choose one:
+   - Camera: the Mac webcam, or an iPhone through Continuity Camera, which shows up as a camera. Allow camera access when the browser asks.
+   - Upload a video: it plays at real-time speed through the same live loop.
+   - A test clip from this Mac.
+2. **Task.** Choose one:
+   - Auto-recognize: if it can't tell after about 30 s, it asks you what you're doing.
+   - What are you doing?: type a short description.
+   - Paste instructions: Claude Opus compiles them into a task graph, which takes about a minute and is cached.
+   - Pick from the library.
+3. **Run.** The video shows the user view (progress, instruction chip, check pulse, mistake and view-request cards), drawn live from the engine's own records.
+   - Toggle the engineer panel to see step beliefs, the event detector, verifier calls and policy decisions.
+   - Turn spoken coaching on or off.
+   - Type in **Change task** if it recognized the wrong task.
+4. **Flag** moments with <kbd>W</kbd> ("that's wrong") or <kbd>M</kbd> ("it missed something"), with an optional note.
+5. **Stop, then Save or Discard.**
+   - Save writes `sessions/<id>/`:
+     - `camera.mp4`
+     - the run log
+     - flags
+     - `SUMMARY.md`, with each flag in context, for review
+     - a HUD replay MP4 rendered from the log
+   - The **Sessions** page replays saved sessions. `sessions/` is gitignored; nothing is kept unless you press Save.
+
+**What works best live**, based on the measured results (`results/RESULTS.md`):
+- **One of the 8 library recipes, with a clear view of your hands.** Pinwheels is the easiest at a desk: tortilla, nut butter, jelly, a butter knife and dental floss. Picking the task from the library skips recognition; auto-recognition was right on 73% of held-out clips, with a median time of 40 s.
+- **Expected accuracy.** On dataset video, Praxis is on the right step about half the time (54%). It lags a few seconds after you finish a step and sometimes sticks on a step. It catches only a few mistakes, mostly a wrong tool or wrong order for the step it thinks you're on. It asks for a better view when it can't see.
+- **Tasks that aren't in the library.**
+  - Say or paste what you're doing. From video alone, the draft named 0 of 7 unseen recipes; with a short description it named 5 of 7 (`results/open_set/`).
+  - Pasted instructions give the most complete plan.
+  - Tracking on these tasks is zero-shot, so expect it to be rougher.
+- **Cost.**
+  - About $0.12–0.27 per 15 minutes with Opus escalations, measured on the live replay and the evaluation runs. Unchecking Opus (Jev only) cuts it to about $0.02.
+  - Each session has a cost cap (default $1). Past it, Studio stops calling models and keeps tracking locally.
+
 ## Where things are
 | Path | What |
 |---|---|

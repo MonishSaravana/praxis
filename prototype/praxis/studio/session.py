@@ -234,12 +234,15 @@ class StudioSession:
                 self.err_streak[role] = 0
                 if role in self.model_state:
                     self.model_state[role] = "ok"
-                if k == "task_draft" and not r.get("cached"):
-                    self.draft_cost += r.get("cost_usd") or 0.0
+                if k == "task_draft" and not r.get("cached") and r.get("cost_usd"):
+                    self.draft_cost += r["cost_usd"]
+                    self.budget.add(r["cost_usd"])          # the session cap covers drafts too
             if k == "task_check" and not r.get("error"):
                 self.none_streak = self.none_streak + 1 if r.get("choice") not in self.eng.lib else 0
         if k == "task":
             g = self.eng.lib.get(r["task_id"])
+            # a drafted plan's step order is a guess (one straight line), so don't warn about skipped steps
+            self.eng.cfg.order_check = not bool(getattr(g, "draft", False))
             self.task_info = {"task_id": r["task_id"], "title": r.get("title"), "t": r["t"],
                               "draft": bool(getattr(g, "draft", False)), "oracle": r.get("oracle")}
             if g is not None:
@@ -251,7 +254,7 @@ class StudioSession:
 
     def status(self) -> dict:
         return {"type": "status", "session": self.id, "t": round(self.t_last, 2),
-                "cost_usd": round(self.budget.usd + self.draft_cost, 4), "cost_cap_usd": self.cap,
+                "cost_usd": round(self.budget.usd, 4), "cost_cap_usd": self.cap,
                 "cap_hit": self.cap_hit, "models": self.model_state, "last_error": self.last_error,
                 "calls": self.budget.calls, "task": self.task_info,
                 "frames_in": self.stats["frames_in"], "frames_engine": self.stats["frames_engine"],
@@ -271,7 +274,7 @@ class StudioSession:
                        frames_in=self.stats["frames_in"], frames_engine=self.stats["frames_engine"],
                        replaced_before_processing=self.stats["replaced_before_processing"],
                        l1_frame_ms=_pq(self.runner.frame_ms), tick_ms=_pq(self.runner.tick_ms),
-                       proc_lag_s=_pq(self.proc_lag), verifier_spend_usd=round(self.budget.usd, 5),
+                       proc_lag_s=_pq(self.proc_lag), verifier_spend_usd=round(self.budget.usd - self.draft_cost, 5),
                        draft_spend_usd=round(self.draft_cost, 5), cost_cap_usd=self.cap, cap_hit=self.cap_hit,
                        async_stats=dict(self.eng.async_stats), flags=len(self.flags))
         self.log.close()
@@ -284,7 +287,7 @@ class StudioSession:
                 acts[r["action"]] += 1
         self.end_summary = {"type": "stopped", "session": self.id, "duration_s": round(self.t_last, 1),
                             "task": self.task_info, "actions": dict(acts), "flags": len(self.flags),
-                            "cost_usd": round(self.budget.usd + self.draft_cost, 4)}
+                            "cost_usd": round(self.budget.usd, 4)}
         return self.end_summary
 
     def save(self) -> str:
@@ -302,7 +305,8 @@ class StudioSession:
         write_json(dest / "config.json", {**{k: v for k, v in self.cfg.items() if k != "description_raw"},
                                           "models": self.models, "engine": "async live loop (praxis.live.LiveRunner)",
                                           "engine_fps": 1 / ENGINE_DT, "record_fps": self.rec.fps})
-        write_json(dest / "cost.json", {"verifier_usd": round(self.budget.usd, 5), "draft_usd": round(self.draft_cost, 5),
+        write_json(dest / "cost.json", {"verifier_usd": round(self.budget.usd - self.draft_cost, 5),
+                                        "draft_usd": round(self.draft_cost, 5),
                                         "compile_usd": self.cfg.get("compile_cost_usd", 0.0),
                                         "calls": self.budget.calls, "cap_usd": self.cap, "cap_hit": self.cap_hit})
         write_summary(dest, self.cfg, self.task_info, g)

@@ -4,6 +4,7 @@ import { LogState, Hud, EngineerPanel, speakable } from "./hud.js";
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const money = (x) => (x < 0.1 ? x.toFixed(4) : x.toFixed(2));
 const fmtT = (t) => `${Math.floor(t / 60)}:${(t % 60).toFixed(0).padStart(2, "0")}`;
 const params = new URLSearchParams(location.search);
 
@@ -203,7 +204,7 @@ function beginRun() {
     v.onended = () => { if (S.running) stop(); };
   }
   S.lastSentT = -1;
-  S.timer = setInterval(pumpFrame, 125);       // ~8 fps; the server runs the engine at its 4 fps cadence
+  S.timer = setInterval(pumpFrame, 100);       // up to 10 fps; the server runs the engine at its 4 fps cadence
   const loop = () => { if (!S.running) return; drawNow(); S.raf = requestAnimationFrame(loop); };
   S.raf = requestAnimationFrame(loop);
 }
@@ -245,7 +246,7 @@ function drawNow() {
 
 function onMessage(m) {
   if (m.type === "started") {
-    setPill("#p-cost", `$0.000 / $${m.cost_cap_usd.toFixed(2)}`, "ok");
+    setPill("#p-cost", `$0.000 / $${money(m.cost_cap_usd)}`, "ok");
     setPill("#p-opus", m.models.escalation ? "Opus on" : "Opus off", m.models.escalation ? "ok" : "off");
     beginRun();
   } else if (m.type === "rec") {
@@ -261,10 +262,13 @@ function onMessage(m) {
   } else if (m.type === "status") {
     S.lastStatus = m;
     const cls = m.cap_hit ? "bad" : m.cost_usd > 0.8 * m.cost_cap_usd ? "warn" : "ok";
-    setPill("#p-cost", `$${m.cost_usd.toFixed(3)} / $${m.cost_cap_usd.toFixed(2)}${m.cap_hit ? " · cap reached" : ""}`, cls);
+    setPill("#p-cost", `$${m.cost_usd.toFixed(3)} / $${money(m.cost_cap_usd)}${m.cap_hit ? " · cap reached" : ""}`, cls);
     const f = m.models.fast, o = m.models.strong;
-    setPill("#p-jev", f === "ok" ? "Jev ok" : m.cap_hit ? "Jev paused (cap)" : "Jev offline · tracking locally", f === "ok" && !m.cap_hit ? "ok" : "bad");
-    setPill("#p-opus", o === "off" ? "Opus off" : o === "ok" ? "Opus ok" : "Opus offline", o === "ok" ? "ok" : o === "off" ? "off" : "bad");
+    setPill("#p-jev", m.cap_hit ? "Jev paused (cost cap) · tracking locally" : f === "ok" ? "Jev ok" : "Jev offline · tracking locally",
+      f === "ok" && !m.cap_hit ? "ok" : "bad");
+    setPill("#p-opus", o === "off" ? "Opus off" : m.cap_hit ? "Opus paused (cost cap)" : o === "ok" ? "Opus ok" : "Opus offline",
+      o === "ok" && !m.cap_hit ? "ok" : o === "off" ? "off" : "bad");
+    if (m.last_error && f !== "ok") $("#errors").textContent = `Verifier error: ${m.last_error}`;
     $("#engstats").textContent = `engine ${m.frames_engine} frames · ${m.calls} model calls · ${m.pending_calls} out${m.lag_s != null ? ` · lag ${m.lag_s.toFixed(2)}s` : ""}`;
     if (!m.task) $("#task-now").textContent = "Recognizing the task…";
   } else if (m.type === "ask_task") {
