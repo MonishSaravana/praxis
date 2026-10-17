@@ -28,8 +28,12 @@ def train_stats(recipe: str) -> tuple[dict[str, list[float]], list[str]]:
         if d["activity_name"] != recipe or sp.get(rid) != "train":
             continue
         segs, _ = cc4d.recording_segments(rid, cs, err)
-        for s in segs:
-            durs[s.step].append(s.end - s.start)
+        prev_end = 0.0
+        for s in segs:   # segs are time-ordered
+            # "on step k" starts when the previous step ends (idle/prep time belongs to the upcoming step),
+            # which is how the tracker's dwell clock runs; gaps are capped at 60 s
+            durs[s.step].append(s.end - max(prev_end, s.start - 60.0))
+            prev_end = max(prev_end, s.end)
             for e in s.errors:
                 desc = (e.get("description") or "").strip()
                 if e["tag"] != "Missing Step" and desc and desc.lower() != "none":
