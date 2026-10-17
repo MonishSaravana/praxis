@@ -493,6 +493,18 @@ def visual_uncertainty(n: int = 60, modes=("blur", "occlude", "crop_away"), conf
             return ci, r
         with ThreadPoolExecutor(4) as ex:
             br = list(ex.map(base_one, sub))
+        rows_out = RESULTS.parent / "data" / "verdicts" / f"uncert_baseline_{tag}.jsonl"
+        with rows_out.open("w") as fo:
+            for ci, r in br:
+                fo.write(json.dumps({"check_id": ci.check_id, "node_name": lib[ci.task_id].node(ci.node).name,
+                                     "y_error": ci.y_error, "baseline": r}, default=str) + "\n")
+        sweep = {}
+        for thr in (0.5, 0.7, 0.9):
+            sweep[str(thr)] = {
+                "engine_confident_wrong": float(np.mean([r["verdict"]["visibility"] == "ok" and r["verdict"]["confidence"] >= thr
+                                                         and r["verdict"]["step_status"] == "complete" for r in er])),
+                "baseline_confident_wrong_step": float(np.mean([r.get("current_step") != lib[ci.task_id].node(ci.node).name
+                                                                and r.get("step_confidence", 0) >= thr for ci, r in br if "error" not in r]))}
         e_view = np.mean([r["verdict"]["visibility"] == "insufficient" for r in er])
         e_wrong = np.mean([r["verdict"]["visibility"] == "ok" and r["verdict"]["confidence"] >= conf_thr and
                            r["verdict"]["step_status"] == "complete" for r in er])
@@ -505,7 +517,10 @@ def visual_uncertainty(n: int = 60, modes=("blur", "occlude", "crop_away"), conf
         res["modes"][tag] = {"engine_view_request_rate": float(e_view), "engine_confident_wrong_rate": float(e_wrong),
                              "engine_confident_false_mistake_rate": float(e_false_mistake),
                              "baseline_confident_wrong_step_rate": float(b_wrong),
-                             "baseline_confident_false_mistake_rate": float(b_false_mistake), "baseline_n": len(b_ok)}
+                             "baseline_confident_false_mistake_rate": float(b_false_mistake), "baseline_n": len(b_ok),
+                             "threshold_sweep": sweep,
+                             "baseline_mean_step_confidence": float(np.mean([r["step_confidence"] for _, r in b_ok])) if b_ok else None,
+                             "baseline_step_accuracy": float(np.mean([r["current_step"] == name_of(ci) for ci, r in b_ok])) if b_ok else None}
         print(tag, res["modes"][tag], flush=True)
     res["spend_usd"] = budget.usd
     (RESULTS / "l5").mkdir(parents=True, exist_ok=True)
