@@ -167,8 +167,8 @@ def run_checks(kind: str, split: str, limit: int = 0, workers: int = 4, crops: b
 
 
 def _crops_fn():
-    """ROI crops from TAPNext++ tracks: seed a grid on the hands' working area 2 s before the check,
-    track at 15 fps up to the check time, crop the tracked region from the full-resolution frame."""
+    """ROI crops from TAPNext++ tracks: seed a grid on the hands' working area 1.6 s before the check,
+    track at 10 fps up to the check time, crop the tracked region from the full-resolution frame."""
     import cv2
     from .perception.backbones import Hands
     from .perception.tracks import PointTracker, crop, hand_box
@@ -177,11 +177,11 @@ def _crops_fn():
     def fn(ci, frames):
         cap = cv2.VideoCapture(ci.video)
         fps = cap.get(cv2.CAP_PROP_FPS) or 30.0
-        t0 = ci.t_abs - 2.0
+        t0 = ci.t_abs - 1.6
         cap.set(cv2.CAP_PROP_POS_FRAMES, int(max(0, t0) * fps))
         seq = []
-        step = max(1, int(round(fps / 15)))
-        for k in range(int(2.0 * fps) + 1):
+        step = max(1, int(round(fps / 10)))
+        for k in range(int(1.6 * fps) + 1):
             ok, bgr = cap.read()
             if not ok:
                 break
@@ -195,7 +195,7 @@ def _crops_fn():
         hands.close()
         st = pt.seed(seq[0], hand_box(hf, seq[0].shape[:2]), 0.0)
         for i, f in enumerate(seq[1:]):
-            st = pt.update(f, (i + 1) / 15)
+            st = pt.update(f, (i + 1) / 10)
         c = crop(seq[-1], st.roi if st else None)
         if c is None:   # tracking lost: fall back to the seeded working area
             x0, y0, x1, y1 = [int(v) for v in hand_box(hf, seq[0].shape[:2])]
