@@ -116,18 +116,20 @@ def main(run: str = "fused") -> Path:
     p = RESULTS / "runs" / f"{run}.json"
     if p.exists():
         rows = {r["clip"]: r for r in json.loads(p.read_text())["per_clip"]}
+    dev = set(json.loads((RESULTS / "dev_clips.json").read_text())["dev_clips"]) if (RESULTS / "dev_clips.json").exists() else set()
     links = []
     for cj in load_manifest()["eval"]:
         c = Clip.from_json(cj)
         if (RUNS / run / f"{c.clip_id}.jsonl").exists():
             f = page(run, c, rows.get(c.clip_id), out_dir)
             r = rows.get(c.clip_id, {})
-            links.append(f"<tr><td><a href='{f.name}'>{c.clip_id}</a></td><td>{c.task_id.replace('cc4d_', '')}</td>"
+            links.append(f"<tr><td><a href='{f.name}'>{c.clip_id}</a>{' (dev clip)' if c.clip_id in dev else ''}</td>"
+                         f"<td>{c.task_id.replace('cc4d_', '')}</td>"
                          f"<td>{100 * r.get('step_acc', 0):.0f}%</td><td>{r.get('mistakes', {}).get('tp', '')}</td></tr>")
     idx = out_dir / "index.html"
     idx.write_text("<!doctype html><meta charset='utf-8'><title>Praxis viewer</title><body style='font:14px -apple-system,sans-serif;"
                    "margin:24px'><h2>Praxis viewer · run " + html.escape(run) + "</h2><p>AI guidance for the physical world · "
-                   "real model output</p><table cellpadding=4><tr><th>clip</th><th>procedure</th><th>step acc.</th><th>caught mistakes</th></tr>"
+                   "real model output</p><table cellpadding=4><tr><th>clip</th><th>procedure</th><th>step acc.</th><th>mistake alerts near an annotated error (time-window)</th></tr>"
                    + "".join(links) + "</table></body>")
     return idx
 

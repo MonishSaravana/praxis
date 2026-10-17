@@ -71,6 +71,33 @@ def render_pick(run: str, clip_id: str, t: float, name: str, view: str = "user",
     return out
 
 
+def step_changes(run: str, c: Clip, window_s: float = 45.0, max_lag_s: float = 10.0) -> dict | None:
+    """The window with the most annotated step changes the engine followed (its current step switched to the annotated
+    next step within max_lag_s), ties broken by step accuracy inside the window. None if the task was misrecognized."""
+    recs = read_log(RUNS / run / f"{c.clip_id}.jsonl")
+    tasks = by_kind(recs, "task")
+    if not tasks or tasks[0]["task_id"] != c.task_id:
+        return None
+    bel = [r for r in recs if r["kind"] == "belief"]
+    segs = sorted(c.segments, key=lambda s: s.start)
+    followed = [b.start for a, b in zip(segs, segs[1:])
+                if any(b.start - 3 <= x["t"] <= b.start + max_lag_s and x["map"] == b.step for x in bel)]
+
+    def gt_at(t):
+        return next((s.step for s in segs if s.start <= t < s.end), None)
+
+    best = None
+    for T in followed:
+        t0 = max(0.0, T - 8.0)
+        n = sum(1 for u in followed if t0 + 2 <= u <= t0 + window_s - 6)
+        bs = [x for x in bel if t0 <= x["t"] <= t0 + window_s and gt_at(x["t"]) is not None]
+        acc = sum(x["map"] == gt_at(x["t"]) for x in bs) / len(bs) if bs else 0.0
+        if best is None or (n, acc) > (best["n_changes_in_window"], best["window_step_acc"]):
+            best = {"run": run, "clip": c.clip_id, "t": t0 + 8.0, "n_changes_in_window": n, "window_step_acc": acc,
+                    "changes_followed": len(followed), "changes_annotated": len(segs) - 1}
+    return best
+
+
 def select(run: str = "fused", fallback: str = "fused_oracle") -> list[dict]:
     """The render jobs, chosen automatically from the saved logs and results (development clips excluded)."""
     p = pick(run)
@@ -102,6 +129,13 @@ def select(run: str = "fused", fallback: str = "fused_oracle") -> list[dict]:
     if p["tracking"]:     # starts just before "Task recognized"
         job("recognition_and_tracking", p["tracking"][0], "showcase_recognition_tracking", ["user", "engineer"], 4, 34,
             selection="highest step accuracy after recognition among clips recognized within 40 s")
+    sc = [x for x in (step_changes(run, c) for cid, c in _clips().items()
+                      if cid not in dev and (RUNS / run / f"{cid}.jsonl").exists()) if x]
+    sc.sort(key=lambda x: (-x["n_changes_in_window"], -x["window_step_acc"]))
+    if sc:
+        job("step_tracking", sc[0], "showcase_step_tracking", ["user", "engineer"], 8, 37,
+            selection="45 s window with the most annotated step changes the engine followed within 10 s (task "
+                      "recognized by Praxis), ties broken by step accuracy in the window")
     if tp:
         job("caught_mistake", tp[0], "showcase_caught_mistake", ["user", "engineer"], 14, 14,
             selection="first mistake alert the strict judge rated 'yes' (matches an annotated error)")
@@ -122,8 +156,9 @@ def select(run: str = "fused", fallback: str = "fused_oracle") -> list[dict]:
     return jobs
 
 
-def main(run: str = "fused", fallback: str = "fused_oracle", render_videos: bool = True) -> dict:
-    """render_videos=False only rewrites the index (the selection is deterministic given the same logs)."""
+def main(run: str = "fused", fallback: str = "fused_oracle", render_videos: bool = True, only: tuple = ()) -> dict:
+    """render_videos=False only rewrites the index (the selection is deterministic given the same logs); `only`
+    limits rendering to those kinds."""
     RENDERS.mkdir(parents=True, exist_ok=True)
     jobs = select(run, fallback)
     root = RESULTS.parent
@@ -134,7 +169,7 @@ def main(run: str = "fused", fallback: str = "fused_oracle", render_videos: bool
         j["files"] = []
         for v in j["views"]:
             out = RENDERS / f"{j['name']}_{v}.mp4"
-            if render_videos:
+            if render_videos and (not only or j["kind"] in only):
                 render_pick(j["run"], j["clip"], j["t"], j["name"], v, label=j["label"], before=j["before"], after=j["after"])
                 if out.stat().st_size / 1e6 > 24:
                     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(out), "-c:v", "libx264", "-crf", "31",

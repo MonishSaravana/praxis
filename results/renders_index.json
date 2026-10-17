@@ -30,6 +30,34 @@
       ]
     },
     {
+      "kind": "step_tracking",
+      "name": "showcase_step_tracking",
+      "views": [
+        "user",
+        "engineer"
+      ],
+      "before": 8,
+      "after": 37,
+      "label": "real model output",
+      "selection": "45 s window with the most annotated step changes the engine followed within 10 s (task recognized by Praxis), ties broken by step accuracy in the window",
+      "run": "fused",
+      "clip": "10_18_0",
+      "t": 161.93200000000002,
+      "n_changes_in_window": 2,
+      "window_step_acc": 0.9487179487179487,
+      "changes_followed": 7,
+      "changes_annotated": 9,
+      "window_s": [
+        153.93200000000002,
+        198.93200000000002
+      ],
+      "task_id": "cc4d_pinwheels",
+      "files": [
+        "renders/showcase_step_tracking_user.mp4",
+        "renders/showcase_step_tracking_engineer.mp4"
+      ]
+    },
+    {
       "kind": "caught_mistake",
       "name": "showcase_caught_mistake",
       "views": [
