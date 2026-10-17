@@ -62,7 +62,7 @@ def compile_recipe(recipe: str, model: str) -> TaskGraph:
     return g
 
 
-def build(model: str = "claude-fable-5-1", recipes: list[str] | None = None, overwrite: bool = False) -> dict:
+def build(model: str = "claude-opus-5-5", recipes: list[str] | None = None, overwrite: bool = False) -> dict:
     from ..perception.backbones import SigLIP
     sig = None
     out = {}
@@ -104,7 +104,7 @@ def dataset_graph(recipe: str) -> TaskGraph:
                      compiler={"model": None, "note": "uncompiled dataset graph; replaced by L3 output once compiled"})
 
 
-def build_industreal(model: str = "claude-fable-5-1") -> TaskGraph:
+def build_industreal(model: str = "claude-opus-5-5") -> TaskGraph:
     """Toy-car assembly graph for IndustReal demo clips (no GT on these clips; qualitative showcase only).
     Steps = the 'Install ...' states expected in the assembly procedure (IndustReal PSR/procedure_info.json)."""
     from ..data import industreal

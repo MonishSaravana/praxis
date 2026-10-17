@@ -1,4 +1,5 @@
-"""L3 · Procedure compiler (ours; uses the strongest Claude model offline, results cached + committed).
+"""L3 · Procedure compiler (ours; uses Claude Opus offline by default, results cached + committed. The committed
+library was compiled with Claude Fable 5.1, recorded in each graph's `compiler` field).
 
 Instruction text (a manual, recipe, tutorial transcript, or a dataset's step list) -> typed TaskGraph.
 
@@ -74,7 +75,7 @@ def _schema() -> dict:
 
 def compile_procedure(task_id: str, domain: str, source_text: str, steps: list[dict],
                       ordering: list[tuple[str, str]] | None = None, mistake_hints: list[str] | None = None,
-                      model: str = "claude-fable-5-1", draft: bool = False, source: str = "") -> TaskGraph:
+                      model: str = "claude-opus-5-5", draft: bool = False, source: str = "") -> TaskGraph:
     """steps: [{"id": ..., "name": ...}] in nominal order. ordering: (before, after) edges if known."""
     load_env()
     client = anthropic.Anthropic(timeout=900, max_retries=2)
