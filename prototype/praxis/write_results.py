@@ -260,10 +260,6 @@ def build() -> tuple[str, str]:
     return "\n".join(md), m
 
 
-if __name__ == "__main__":
-    text, _ = build()
-    (RESULTS / "RESULTS_numbers.md").write_text(text)
-    print(text[:2000])
 
 
 def claims(m: dict) -> str:
@@ -345,3 +341,75 @@ def claims(m: dict) -> str:
               "in this file: this build used 48 clips / 8 procedure types from CaptainCook4D."]:
         out.append(f"- {s}")
     return "\n".join(out) + "\n"
+
+
+LIMITATIONS = """## Limitations
+
+- **One labeled domain.** All metrics are on CaptainCook4D (cooking). Assembly appears only in qualitative demos,
+  because the IndustReal labels were unreachable this weekend.
+- **Video.** Head-mounted GoPro footage at 360p. Smart-glasses framing, resolution and compression will differ
+  (docs/GLASSES.md).
+- **Clips.** Each clip is at most 5 minutes. Most start at the beginning of the recording, so recognition is mostly
+  measured from the start; joining mid-task is measured separately.
+- **Step accuracy** counts frames inside annotated steps only. Between-step frames are reported separately.
+- **Mistake matching.**
+  - Matching is by time window: an alert counts if it lands up to 5 s before the erroneous step starts and up to
+    10 s after it ends. It is not matched by mistake type.
+  - "Missing Step" errors have no timestamp, so they are excluded.
+  - Many CaptainCook4D errors are invisible from a few frames (e.g. 1 tbsp vs ½ tbsp).
+- **Verifier checks** are asked at fixed moments relative to the annotations (mid-step, and 1.5 s after the step
+  ends). They stand in for the moments the engine chooses itself.
+- **Small training sets.** 3–5 train recordings per procedure for the step probes, and one run per variant (no
+  seeds or confidence intervals). Per-procedure numbers rest on only 6 clips each.
+- **Development clips.** Three eval clips were used while debugging (results/dev_clips.json). Headline aggregates
+  are also reported without them.
+- **Cost** uses list prices. Cached responses are priced at their original cost.
+- **Latency.**
+  - API latencies are live wall-clock times from this network after the IPv4 fix.
+  - L1 speeds were measured with nothing else running. The machine was swap-bound during the eval runs, so those
+    runs were slower than these speeds suggest.
+- **No users.** Nothing here measures whether coaching helps people. The adaptive-detail result is an association
+  on public data.
+"""
+
+
+def failures_section() -> str:
+    p = RESULTS / "failures.json"
+    if not p.exists():
+        return "## Failure analysis\n\n_Not run._\n"
+    f = json.loads(p.read_text())
+    out = [f"## Failure analysis (run `{f['run']}`)\n",
+           "Counts: " + ", ".join(f"{k.replace('_', ' ')} {v}" for k, v in f["counts"].items()) + ".\n"]
+    if f.get("missed_by_error_type"):
+        rows = []
+        for tag in sorted(set(f["missed_by_error_type"]) | set(f.get("caught_by_error_type", {}))):
+            c, mi = f.get("caught_by_error_type", {}).get(tag, 0), f["missed_by_error_type"].get(tag, 0)
+            rows.append([tag, str(c), str(mi), pct(c / (c + mi)) if c + mi else "n/a"])
+        out.append("Mistakes caught vs. missed, by annotated error type:\n")
+        out.append(table(rows, ["Error type", "Caught", "Missed", "Recall"]))
+        out.append("")
+    for k, ex in f["examples"].items():
+        out.append(f"**{k.replace('_', ' ')}** examples:")
+        for e in ex:
+            desc = {kk: vv for kk, vv in e.items() if kk not in ("frames",)}
+            out.append(f"- `{e['clip']}` at {e['t']:.0f} s: " + "; ".join(f"{kk}={vv}" for kk, vv in desc.items()
+                                                                          if kk not in ('clip', 't')))
+            if e.get("frames"):
+                out.append(f"  ![]({e['frames'].replace('results/', '')})")
+        out.append("")
+    return "\n".join(out)
+
+
+def write_all() -> None:
+    text, m = build()
+    wd = (RESULTS / "WHAT_DIDNT_WORK.md").read_text() if (RESULTS / "WHAT_DIDNT_WORK.md").exists() else ""
+    wd = wd.replace("# What didn't work (engineering log, Oct 17–18)", "## What didn't work (engineering log)")
+    full = text.replace("## Failure analysis and limitations\n\nSee `results/FAILURES.md` (qualitative, with example frames) and the "
+                        "limitations below.\n", "") + "\n" + failures_section() + "\n" + wd + "\n" + LIMITATIONS
+    (RESULTS / "RESULTS.md").write_text(full)
+    (ROOT / "docs" / "CLAIMS.md").write_text(claims(m))
+
+
+if __name__ == "__main__":
+    write_all()
+    print("wrote results/RESULTS.md and docs/CLAIMS.md")
