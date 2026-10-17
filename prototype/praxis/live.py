@@ -32,9 +32,95 @@ def say(text: str) -> None:
     subprocess.Popen(["say", "-r", "190", text], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
+class Encoders:
+    """L1 encoders, loaded once and shared by live sessions. SigLIP2 and V-JEPA 2 share one GPU lock."""
+
+    def __init__(self):
+        self.sig, self.vj = SigLIP(), VJEPA2(n_frames=8, size=224)
+        self.gpu = threading.Lock()     # MPS is not safe to encode from two threads at once (Metal assertion otherwise)
+
+
+class LiveRunner:
+    """The live loop's per-frame work at the engine's 4 fps cadence, wherever the frames come from (a FrameSource in
+    run_live, the browser in Praxis Studio): L1 on each frame (SigLIP2 + hands; V-JEPA 2 at 1 Hz over the trailing 2 s
+    on a second thread), async answers folded in after every frame, and a 1 s engine tick with L2 on a rolling buffer."""
+
+    def __init__(self, stack: dict, eng: Engine, enc: Encoders | None = None):
+        self.stack, self.eng = stack, eng
+        self.enc = enc or Encoders()
+        self.hands = Hands()
+        self.buf_t, self.buf_rgb, self.buf_sig, self.buf_hand, self.buf_change, self.buf_win = [], [], [], [], [], []
+        self.win = np.zeros(self.enc.vj.dim, np.float32)
+        self.lock = threading.Lock()
+        self.t_next_tick, self.t_next_win, self.job = 1.0, 2.0, None
+        self.frame_ms: list[float] = []
+        self.tick_ms: list[float] = []
+        self.fold_ms: list[float] = []
+
+    def _vjepa_job(self, frames):
+        with self.enc.gpu:
+            e = self.enc.vj.clips([frames], batch=1)[0]
+        with self.lock:
+            self.win = e
+
+    def push(self, t: float, rgb: np.ndarray, f0: float | None = None) -> tuple[bool, float | None]:
+        """One frame at media time t. f0: perf_counter when the frame arrived (frame time is measured from there).
+        Returns (whether answers were folded in, the time of the tick that ran or None)."""
+        f0 = time.perf_counter() if f0 is None else f0
+        enc = self.enc
+        self.buf_t.append(t)
+        self.buf_rgb.append(rgb)
+        with enc.gpu:
+            self.buf_sig.append(enc.sig.images([rgb])[0])
+        self.buf_hand.append(self.hands.frame(rgb, t)[0])
+        self.buf_change.append(0.0 if len(self.buf_rgb) < 2 else 1 - ssim_small(self.buf_rgb[-2], self.buf_rgb[-1]))
+        with self.lock:
+            self.buf_win.append(self.win.copy())
+        if t >= self.t_next_win and len(self.buf_rgb) >= 8 and (self.job is None or not self.job.is_alive()):
+            self.job = threading.Thread(target=self._vjepa_job, args=(self.buf_rgb[-8:],), daemon=True)
+            self.job.start()
+            self.t_next_win += 1.0          # 1 Hz over the trailing 2 s, as in offline extraction
+        self.frame_ms.append(1000 * (time.perf_counter() - f0))
+        p0 = time.perf_counter()
+        folded = bool(self.eng.poll(t))     # async slow path: answers that came back since the last frame
+        if folded:
+            self.fold_ms.append(1000 * (time.perf_counter() - p0))
+        tick_t = None
+        if t >= self.t_next_tick:
+            k0 = time.perf_counter()
+            f = ClipFeatures("live", np.array(self.buf_t), np.stack(self.buf_sig), np.stack(self.buf_hand),
+                             np.stack(self.buf_win), np.array(self.buf_change))
+            sc = self.stack["detector"].score(f)
+            m = (f.t > self.t_next_tick - 1.0) & (f.t <= self.t_next_tick)
+            rows = {"t": f.t[m], "frame": f.frame[m], "window": f.window[m], "hands": f.hands[m],
+                    "boundary": sc["boundary"][m], "grasp": sc["grasp"][m]}
+            frames_t, buf_rgb = np.array(self.buf_t), self.buf_rgb
+
+            def frame_at(x):
+                return buf_rgb[int(np.argmin(np.abs(frames_t - x)))]
+            self.eng.tick(self.t_next_tick, rows, frame_at)
+            self.tick_ms.append(1000 * (time.perf_counter() - k0))
+            tick_t = self.t_next_tick
+            self.t_next_tick += 1.0
+            if len(self.buf_rgb) > 400:   # keep memory bounded (~100 s at 4 fps)
+                for b in (self.buf_t, self.buf_rgb, self.buf_sig, self.buf_hand, self.buf_change, self.buf_win):
+                    del b[:100]
+        return folded, tick_t
+
+    def finish(self, t: float, timeout_s: float = 20.0) -> None:
+        """Fold in calls still out (bounded wait), stop the engine's workers, release the hand tracker."""
+        self.eng.close(t, timeout_s=timeout_s)
+        self.hands.close()
+
+
+def _pq(x):
+    return {"p50": float(np.percentile(x, 50)), "p95": float(np.percentile(x, 95)), "max": float(np.max(x))} if x else None
+
+
 def run_live(stack: dict, verifier=None, escalation=None, calibrator=None, dev_calibrator=None, task_id: str | None = None,
              source: str = "webcam:0", seconds: float = 120.0, name: str = "live", speak: bool = True,
-             ecfg: EngineConfig | None = None, calibrators: dict | None = None, localizer=None) -> Path:
+             ecfg: EngineConfig | None = None, calibrators: dict | None = None, localizer=None,
+             enc: Encoders | None = None) -> Path:
     out_dir = RUNS / name
     out_dir.mkdir(parents=True, exist_ok=True)
     from .paths import ROOT
@@ -42,13 +128,14 @@ def run_live(stack: dict, verifier=None, escalation=None, calibrator=None, dev_c
                                           "verifier": getattr(verifier, "model", None),
                                           "escalation": getattr(escalation, "model", None)})
     src = make_source(source, fps=4.0)
-    sig, vj, hands = SigLIP(), VJEPA2(n_frames=8, size=224), Hands()
+    enc = enc or Encoders()
     if stack.get("recognizer") is not None:
         stack["recognizer"].reset()
     eng = Engine(ecfg or EngineConfig(async_slow_path=True), stack["library"], stack["evidence"],
                  None if task_id else stack["recognizer"], stack["detector"], verifier, escalation, calibrator,
                  dev_calibrator, log, task_id=task_id, calibrators=calibrators, localizer=localizer)
-    frame_ms, tick_ms, lags, fold_ms = [], [], [], []
+    runner = LiveRunner(stack, eng, enc)
+    lags = []
     last_index = -1
     spoken = 0
     writer = None
@@ -63,20 +150,6 @@ def run_live(stack: dict, verifier=None, escalation=None, calibrator=None, dev_c
                     say(a["text"])
             spoken += len(acts)
 
-    buf_t, buf_rgb, buf_sig, buf_hand, buf_change, buf_win = [], [], [], [], [], []
-    win = np.zeros(vj.dim, np.float32)
-    lock = threading.Lock()
-
-    gpu = threading.Lock()     # MPS is not safe to encode from two threads at once (Metal assertion otherwise)
-
-    def vjepa_job(frames):
-        nonlocal win
-        with gpu:
-            e = vj.clips([frames], batch=1)[0]
-        with lock:
-            win = e
-
-    t_next_tick, t_next_win, job = 1.0, 2.0, None
     t_start = time.perf_counter()
     for fr in src:
         if fr.t > seconds:
@@ -89,51 +162,18 @@ def run_live(stack: dict, verifier=None, escalation=None, calibrator=None, dev_c
         for _ in range(max(1, fr.index - last_index)):    # repeat the frame over dropped slots: keeps a 4 fps timeline
             writer.write(bgr)
         last_index = fr.index
-        buf_t.append(fr.t)
-        buf_rgb.append(fr.rgb)
-        with gpu:
-            buf_sig.append(sig.images([fr.rgb])[0])
-        buf_hand.append(hands.frame(fr.rgb, fr.t)[0])
-        buf_change.append(0.0 if len(buf_rgb) < 2 else 1 - ssim_small(buf_rgb[-2], buf_rgb[-1]))
-        with lock:
-            buf_win.append(win.copy())
-        if fr.t >= t_next_win and len(buf_rgb) >= 8 and (job is None or not job.is_alive()):
-            job = threading.Thread(target=vjepa_job, args=(buf_rgb[-8:],), daemon=True)
-            job.start()
-            t_next_win += 1.0          # 1 Hz over the trailing 2 s, as in offline extraction
-        frame_ms.append(1000 * (time.perf_counter() - f0))
-        p0 = time.perf_counter()
-        if eng.poll(fr.t):           # async slow path: answers that came back since the last frame
-            fold_ms.append(1000 * (time.perf_counter() - p0))
+        folded, tick_t = runner.push(fr.t, fr.rgb, f0=f0)
+        if folded:
             speak_new()
-        if fr.t >= t_next_tick:
-            k0 = time.perf_counter()
-            f = ClipFeatures("live", np.array(buf_t), np.stack(buf_sig), np.stack(buf_hand), np.stack(buf_win), np.array(buf_change))
-            sc = stack["detector"].score(f)
-            m = (f.t > t_next_tick - 1.0) & (f.t <= t_next_tick)
-            rows = {"t": f.t[m], "frame": f.frame[m], "window": f.window[m], "hands": f.hands[m],
-                    "boundary": sc["boundary"][m], "grasp": sc["grasp"][m]}
-            frames_t = np.array(buf_t)
-
-            def frame_at(x):
-                return buf_rgb[int(np.argmin(np.abs(frames_t - x)))]
-            eng.tick(t_next_tick, rows, frame_at)
-            tick_ms.append(1000 * (time.perf_counter() - k0))
-            lags.append((time.perf_counter() - t_start) - t_next_tick)    # how far behind the camera the tick finished
+        if tick_t is not None:
+            lags.append((time.perf_counter() - t_start) - tick_t)    # how far behind the camera the tick finished
             speak_new()
-            t_next_tick += 1.0
-            if len(buf_rgb) > 400:   # keep memory bounded (~100 s at 4 fps)
-                for b in (buf_t, buf_rgb, buf_sig, buf_hand, buf_change, buf_win):
-                    del b[:100]
-    eng.close(time.perf_counter() - t_start)      # async: fold in calls still out (bounded wait), stop the workers
-
-    def pq(x):
-        return {"p50": float(np.percentile(x, 50)), "p95": float(np.percentile(x, 95)), "max": float(np.max(x))} if x else None
+    runner.finish(time.perf_counter() - t_start)      # async: fold in calls still out (bounded wait), stop the workers
     log.write("summary", time.perf_counter() - t_start, n_frames=eng.n_frames, escalated_frames=eng.n_escalated_frames,
-              wall_s=time.perf_counter() - t_start, frames_processed=len(frame_ms),
-              dropped_frames=getattr(src, "dropped", None), l1_frame_ms=pq(frame_ms), tick_ms=pq(tick_ms),
-              tick_lag_s=pq(lags), n_ticks=len(tick_ms),
-              slow_path="async" if eng.cfg.async_slow_path else "inline", fold_ms=pq(fold_ms),
+              wall_s=time.perf_counter() - t_start, frames_processed=len(runner.frame_ms),
+              dropped_frames=getattr(src, "dropped", None), l1_frame_ms=_pq(runner.frame_ms), tick_ms=_pq(runner.tick_ms),
+              tick_lag_s=_pq(lags), n_ticks=len(runner.tick_ms),
+              slow_path="async" if eng.cfg.async_slow_path else "inline", fold_ms=_pq(runner.fold_ms),
               async_stats=dict(eng.async_stats))
     log.close()
     src.close()

@@ -367,6 +367,37 @@ class Engine:
             r = replace(r, recognized=False)
         return r
 
+    # ------------------------------------------------------------------ tasks chosen outside the engine (Studio)
+    def start_task(self, t: float, task_id: str, graph=None, evidence=None, how: str = "picked") -> None:
+        """Start (or switch to) a task the person chose: picked from the library, pasted instructions compiled to a
+        graph, or matched from what they typed. Announces it and gives the first instruction right away. Answers still
+        out for a previous task are dropped (they refer to its steps)."""
+        if graph is not None:
+            self.lib = {**self.lib, task_id: graph}
+        if evidence is not None:
+            self.evidence = {**self.evidence, task_id: evidence}
+        stale = [j for j in self._jobs if j.kind in ("verify", "localize", "order")]
+        self._jobs = [j for j in self._jobs if j not in stale]
+        self.async_stats["dropped_on_task_switch"] += len(stale)
+        self._drafted = True                     # a chosen task replaces open-set drafting
+        acts = self._start_task(t, task_id, oracle=True)
+        acts[0].text = f"Got it: {activity_phrase(self.graph)}. I'll walk you through it."
+        acts[0].detail["how"] = how
+        acts += self.policy.start(t, self.tracker.belief().map_id)
+        self._emit(acts)
+
+    def request_draft(self, drafter) -> None:
+        """The person said what they are doing and it isn't in the library: draft a graph from the frames so far plus
+        their description on the next tick (open-set path, `tasks/drafter.py`). Clears a task already running."""
+        if self.rec is None:
+            raise ValueError("drafting needs the recognizer path (engine started without a task)")
+        self.drafter = drafter
+        self.cfg.open_set_draft, self.cfg.open_set_min_s, self.cfg.open_set_max_wait_s = True, 0.0, 0.0
+        self._drafted = False
+        if self.graph is not None:
+            self._jobs = [j for j in self._jobs if j.kind not in ("verify", "localize", "order")]
+            self.task_id = self.graph = self.tracker = self.policy = None
+
     def _start_recognized(self, t: float, r) -> None:
         acts = self._start_task(t, r.task_id, posterior=r.posterior)
         start = self.tracker.belief().map_id

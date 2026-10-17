@@ -31,7 +31,8 @@ def _default(o: Any) -> Any:
 class RunLog:
     """One file per run. Each line: {"kind": ..., "t": media_time_s, "wall": unix_s, ...}."""
 
-    def __init__(self, path: str | Path, meta: dict | None = None):
+    def __init__(self, path: str | Path, meta: dict | None = None, listener=None):
+        self.listener = listener          # optional callback(record), e.g. Praxis Studio streaming records to the browser
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.run_id = uuid.uuid4().hex[:12]
@@ -43,7 +44,10 @@ class RunLog:
 
     def write(self, kind: str, t: float, **fields: Any) -> None:
         rec = {"kind": kind, "t": round(float(t), 4), "wall": round(time.time(), 4), **fields}
-        self._f.write(json.dumps(rec, default=_default) + "\n")
+        line = json.dumps(rec, default=_default)
+        self._f.write(line + "\n")
+        if self.listener is not None:
+            self.listener(line)
 
     def flush(self) -> None:
         self._f.flush()
