@@ -364,26 +364,7 @@ def build() -> tuple[str, str]:
                                "Step accuracy after the draft", "Median draft time / drafting latency"]))
         md.append(f"\nTrigger: {os_['trigger']}. Drafts and judgments are in `results/open_set/` (each draft graph is "
                   f"saved under `results/open_set/drafts/`). Source: `results/open_set/open_set.json`.\n")
-    lv = _jload("live/live_replay_10_18_0.json")
-    if lv and lv.get("summary"):
-        sm = lv["summary"]
-        slots = sm["frames_processed"] + (sm.get("dropped_frames") or 0)
-        rec = lv["task_recognized"][0] if lv.get("task_recognized") else None
-        md.append("## Live mode (real-time loop, replayed recording)\n")
-        md.append(f"`praxis.live` runs the whole engine in real time: L1 encoders on each incoming frame, L2, the tracker "
-                  f"and the verifiers. No webcam was available to this build, so the test fed a recorded eval clip "
-                  f"through the live loop at wall-clock speed. Frames the loop was too slow for were dropped, as a camera "
-                  f"would drop them. Source: `{lv['source']}`, {num(sm['wall_s'], 0)} s, task not given.\n")
-        md.append(f"- Task recognized: " + (f"`{rec['task_id']}` at {num(rec['t'], 0)} s." if rec else "no."))
-        md.append(f"- Frames processed: {sm['frames_processed']} of {slots} at 4 fps ({sm.get('dropped_frames')} dropped).")
-        md.append(f"- L1 per frame (SigLIP2 + hands, V-JEPA 2 at 1 Hz on a second thread), p50 / p95: "
-                  f"{num(sm['l1_frame_ms']['p50'], 0)} / {num(sm['l1_frame_ms']['p95'], 0)} ms.")
-        md.append(f"- How far each 1 s tick finished behind the camera, p50 / p95 / max: "
-                  f"{num(sm['tick_lag_s']['p50'], 2)} / {num(sm['tick_lag_s']['p95'], 2)} / {num(sm['tick_lag_s']['max'], 1)} s. "
-                  f"The worst stalls are frontier-model escalations (slowest call {num(lv['slowest_call_ms'] / 1000, 1)} s): "
-                  f"the slow path still runs inside the loop, so it blocks the fast path while it waits.")
-        md.append(f"- {lv['model_calls']} model calls, ${lv['spend_usd']:.3f}. Render: `renders/live_replay_user.mp4`.")
-        md.append(f"\nSource: `results/live/live_replay_10_18_0.json`.\n")
+    md += live_section()
     pd = _jload("policy_demo.json")
     if pd and pd.get("profiles"):
         md.append("## Personalization demo (L6 user model, qualitative)\n")
@@ -451,6 +432,148 @@ def build() -> tuple[str, str]:
     return "\n".join(md), m
 
 
+
+
+LIVE_RUNS = (("inline", "live_replay_10_18_0"), ("async", "live_replay_async"))
+
+
+def _live_runs() -> list[tuple[str, str, dict]]:
+    """(mode, results file stem, results) for the live runs that exist: model calls inline, then async."""
+    return [(k, f, r) for k, f in LIVE_RUNS if (r := _jload(f"live/{f}.json")) and r.get("summary")]
+
+
+def _request(q: dict) -> str:
+    """'a Jev check escalated to Opus', 'a "which step?" question to Jev' (from answer_timing's request records)."""
+    short = lambda mdl: {"jev": "Jev", "claude-opus": "Opus", "claude-haiku": "Haiku"}.get(  # noqa: E731
+        next((p for p in ("jev", "claude-opus", "claude-haiku") if (mdl or "").startswith(p)), ""), mdl)
+    ms = [short(x) for x in q["models"]]
+    if q["kind"] == "verdict":
+        return f"a {ms[0]} completion check escalated to {ms[1]}" if len(ms) > 1 else f"a {ms[0]} completion check"
+    return {"step_choice": f'a "which step?" question to {ms[0]}', "task_check": f'a "which task?" question to {ms[0]}',
+            "task_draft": f"an open-set draft by {ms[0]}"}.get(q["kind"], q["kind"])
+
+
+def live_section() -> list[str]:
+    runs = _live_runs()
+    if not runs:
+        return []
+    md = ["## Live mode (real-time loop, replayed recording)\n",
+          f"`praxis.live` runs the whole engine in real time: L1 encoders on each incoming frame, L2, the tracker "
+          f"and the verifiers. No webcam was available to this build, so the test fed a recorded eval clip through "
+          f"the live loop at wall-clock speed. Frames the loop was too slow for were dropped, as a camera would drop "
+          f"them. Source: `{runs[0][2]['source']}`, task not given.\n"]
+    if len(runs) > 1:
+        md.append("The same recording ran twice: first with model calls inline (a tick waits for its calls), then with "
+                  "the async slow path, which live mode now uses (`EngineConfig.async_slow_path`). Calls run on worker "
+                  "threads, the loop keeps ticking, and each answer is folded in when it arrives. The tracker applies a "
+                  "late answer at the tick its frames were taken and re-runs the filter forward from there; the policy "
+                  "acts on it when it arrives. Each run makes its own model calls, so which checks escalate differs "
+                  "between them. \"Took effect\" is measured from the log: when the answer's record was written, "
+                  "relative to the tick its frames came from.\n")
+
+    def col(f):
+        return [f(r) for _, _, r in runs]
+
+    def at(r, kind):
+        d = (r.get("answer_timing") or {}).get("landed_s", {}).get(kind)
+        return f"{num(d['p50'], 2)} / {num(d['max'], 1)} s (n = {d['n']})" if d else "n/a"
+
+    def slowest(r):
+        q = ((r.get("answer_timing") or {}).get("slowest") or [None])[0]
+        return (f"{_request(q)}: {num(q['model_latency_s'], 1)} s / {num(q['landed_s'], 1)} s / {q['ticks_during']}"
+                if q else "n/a")
+
+    def pqs(d, dd=2, unit="s"):
+        return f"{num(d['p50'], dd)} / {num(d['p95'], dd)} / {num(d['max'], dd)} {unit}" if d else "n/a"
+    names = {"inline": "Model calls inline (the loop waits)", "async": "Async slow path (the loop never waits)"}
+    rows = [["Task recognized"] + col(lambda r: (f"`{r['task_recognized'][0]['task_id']}` at "
+                                                 f"{num(r['task_recognized'][0]['t'], 1)} s") if r.get("task_recognized") else "no"),
+            ["Frames processed at 4 fps"] + col(lambda r: f"{r['summary']['frames_processed']} of "
+                                                         f"{r['summary']['frames_processed'] + (r['summary'].get('dropped_frames') or 0)} "
+                                                         f"({r['summary'].get('dropped_frames')} dropped)"),
+            ["How far each 1 s tick finished behind the camera, p50 / p95 / max"] + col(lambda r: pqs(r["summary"]["tick_lag_s"])),
+            ["Ticks skipped because all their frames were dropped (no tracker update)"] +
+            col(lambda r: str(r["ticks_without_frames"]) if r.get("ticks_without_frames") is not None else "n/a"),
+            ["Tick compute, p50 / p95 / max"] + col(lambda r: pqs(r["summary"]["tick_ms"], 0, "ms")),
+            ["L1 per frame (SigLIP2 + hands; V-JEPA 2 at 1 Hz on a second thread), p50 / p95"] +
+            col(lambda r: f"{num(r['summary']['l1_frame_ms']['p50'], 0)} / {num(r['summary']['l1_frame_ms']['p95'], 0)} ms"),
+            ["Completion checks (incl. Opus escalations): took effect after their frames, p50 / max"] +
+            col(lambda r: at(r, "verdict")),
+            ["\"Which step?\" answers: took effect after their frames, p50 / max"] + col(lambda r: at(r, "step_choice")),
+            ["Slowest request: model time / took effect after its frames / ticks the loop ran meanwhile"] + col(slowest),
+            ["Requests that took over 1 s / ticks the loop ran while they were out"] +
+            col(lambda r: f"{r['answer_timing']['over_1s']['n']} / {r['answer_timing']['over_1s']['ticks_during']}"
+                if r.get("answer_timing") else "n/a"),
+            ["Model calls / spend"] + col(lambda r: f"{r['model_calls']} / ${r['spend_usd']:.3f}")]
+    md.append(table(rows, [""] + [names[k] for k, _, _ in runs]))
+    md.append("")
+    d = {k: r for k, _, r in runs}
+    if "inline" in d and "async" in d:
+        s, a = d["inline"], d["async"]
+        ss, sa = s["summary"], a["summary"]
+        qs, qa = s["answer_timing"]["slowest"][0], a["answer_timing"]["slowest"][0]
+        md.append(f"- Inline, the slowest request ({_request(qs)}, {num(qs['model_latency_s'], 1)} s of model time) held "
+                  f"up the whole loop: the worst tick finished {num(ss['tick_lag_s']['max'], 1)} s behind the camera, "
+                  f"{ss['dropped_frames']} frames were dropped, and {s.get('ticks_without_frames')} ticks had no frames "
+                  f"left, so the tracker skipped them. With the async slow path the worst tick finished "
+                  f"{num(sa['tick_lag_s']['max'], 2)} s behind, {sa['dropped_frames']} frames were dropped and "
+                  f"{a.get('ticks_without_frames')} ticks were skipped; while its slowest request ({_request(qa)}, "
+                  f"{num(qa['model_latency_s'], 1)} s) was out, the loop ran {qa['ticks_during']} ticks.")
+        wt = a["answer_timing"].get("worst_tick")
+        if wt and wt["requests_out"] == 0:
+            md.append(f"- The async run's latest tick (at {num(wt['t'], 0)} s) started late with no model call out: "
+                      f"local work before the tick (the encoders, the L2 detector re-scoring its buffer) ran long. "
+                      f"Moving the slow path off the loop does not address that.")
+        ts, ta = s["answer_timing"], a["answer_timing"]
+        vs, va = ts["landed_s"].get("verdict"), ta["landed_s"].get("verdict")
+        if vs and va:
+            md.append(f"- Answers do not arrive sooner: they take effect once the models have answered. Completion checks "
+                      f"took effect a median {num(va['p50'], 1)} s (max {num(va['max'], 1)} s) after their frames in the "
+                      f"async run, vs {num(vs['p50'], 1)} s (max {num(vs['max'], 1)} s) inline. What changed is that the "
+                      f"camera, encoders, tracker and policy keep running meanwhile.")
+        if ta.get("after_call_s"):
+            md.append(f"- The async loop folds answers in between frames, so an answer took effect a median "
+                      f"{num(ta['after_call_s']['p50'], 2)} s (max {num(ta['after_call_s']['max'], 2)} s) after its call "
+                      f"returned. In both runs some answers came from the response cache, because the replayed frames "
+                      f"match earlier runs of this clip ({ts['served_from_cache']} of {ts['n_requests']} requests inline, "
+                      f"{ta['served_from_cache']} of {ta['n_requests']} async); those come back in milliseconds, so the "
+                      f"\"took effect\" rows mix live calls and cache hits.")
+        if sa.get("fold_ms"):
+            k = a.get("checks_skipped_while_same_check_out", 0)
+            md.append(f"- Folding an answer in (logging it, re-running the filter from its tick, the policy) took "
+                      f"{num(sa['fold_ms']['p50'], 1)} ms median and {num(sa['fold_ms']['max'], 1)} ms at most on the "
+                      f"main thread. "
+                      + (f"{k} checks were skipped because the same check was still out." if k else
+                         "No check had to be skipped as a duplicate of one still out."))
+    rc = _jload("live/checks/replay_unchanged.json")
+    if rc:
+        v, sv = rc["vs_reference_tag"], rc["vs_saved_runs"]
+        kd = sv["known_differences"]
+        added = [k for k in kd if k.startswith("action/detail.")]         # fields added to action records later
+        known = "; ".join(([f"fields the log format gained after those runs ({', '.join(f'`{k}`' for k in added)})"]
+                           if added else []) + [f"`{k}`: {kd[k]}" for k in kd if k not in added]) or "nothing"
+        md.append(f"- Offline replay is unchanged. `replay()` (every evaluation) keeps model calls inline. Re-running "
+                  f"{v['clips']} eval clips on the model answers recorded in their saved logs, the engine asked the "
+                  f"recorded questions in order ({sum(x['mismatched_questions'] for x in rc['runs'].values())} "
+                  f"mismatches) and wrote {v['identical_records']} of {v['records']} records exactly as the engine "
+                  f"before this change did. Against the saved logs, {sv['identical_records']} of {sv['records']} records "
+                  f"are identical; the rest differ only in {known}. "
+                  f"Eval scores recomputed from the logs are "
+                  f"{'identical' if sv['eval_scores_identical'] and v['eval_scores_identical'] else 'NOT identical'}.")
+        ca = rc.get("cached_rerun_attempt")
+        if ca:
+            md.append(f"- Recorded answers were needed because cached re-runs are not reproducible: the Jev completion-"
+                      f"check cache key includes random per-request ids, so a re-run asks Jev again. Re-running the same "
+                      f"clips on the caches (no code change) reproduced {ca['vs_saved_runs']['identical_records']} of "
+                      f"{ca['vs_saved_runs']['records']} records and the eval scores of "
+                      f"{ca['clips_with_identical_eval_scores']} of {ca['scored_clips']} clips; its cache misses cost "
+                      f"${ca['spend_usd']:.3f}.")
+    rr = _jload("live/render/live_replay_user.json")
+    md.append(f"\nRender: `renders/live_replay_user.mp4`"
+              + (f" (drawn from `{rr['log']}`, {num(rr['t0'], 0)}-{num(rr['t1'], 0)} s)" if rr else "") + ". Sources: "
+              + ", ".join(f"`results/live/{f}.json`" for _, f, _ in runs)
+              + (", `results/live/checks/replay_unchanged.json`" if rc else "") + ".\n")
+    return md
 
 
 def claims(m: dict) -> str:
@@ -582,14 +705,25 @@ def claims(m: dict) -> str:
             f"{cr['with_crops']['accuracy'] * 100:.0f}% with, AUROC {cr['full_frames']['auroc']:.2f} vs "
             f"{cr['with_crops']['auroc']:.2f}" + (f", and tracking took about {tn:.0f} s per crop on a laptop" if tn else "")
             + ". So crops are off by default.", "crops")
-    lv = _jload("live/live_replay_10_18_0.json")
-    if lv and lv.get("summary") and lv.get("task_recognized"):
+    live = {k: (f, r) for k, f, r in _live_runs()}
+    lf, lv = live.get("async") or live.get("inline") or (None, None)
+    if lv and lv.get("task_recognized"):
         sm, rec = lv["summary"], lv["task_recognized"][0]
         out.append(f"- \"The whole engine runs live in real time on a laptop. We fed a recorded clip through the live "
                    f"loop at real-time speed: it recognized the recipe in {rec['t']:.0f} seconds and gave step-by-step "
                    f"instructions as the person worked, "
                    f"with the local layers taking about {sm['l1_frame_ms']['p50']:.0f} ms per frame.\" "
-                   f"(`results/live/live_replay_10_18_0.json`)")
+                   f"(`results/live/{lf}.json`)")
+    if "async" in live and "inline" in live and live["async"][1].get("answer_timing"):
+        ss, sa = live["inline"][1]["summary"], live["async"][1]["summary"]
+        qa = live["async"][1]["answer_timing"]["slowest"][0]
+        if sa["tick_lag_s"]["max"] < ss["tick_lag_s"]["max"]:
+            out.append(f"- \"Model calls run in the background, so the live loop never waits for the network. On the same "
+                       f"recording, the worst tick lag went from {ss['tick_lag_s']['max']:.1f} s with calls inline to "
+                       f"{sa['tick_lag_s']['max']:.1f} s, and dropped frames from {ss['dropped_frames']} to "
+                       f"{sa['dropped_frames']}. While the slowest request ({_request(qa)}, "
+                       f"{qa['model_latency_s']:.1f} s) was out, the loop ran {qa['ticks_during']} more ticks.\" "
+                       f"(`results/live/live_replay_async.json`, `results/live/live_replay_10_18_0.json`)")
     os_ = _jload("open_set/open_set.json")
     if os_ and os_.get("conditions"):
         h, fr = os_["conditions"].get("hint", {}).get("aggregate"), os_["conditions"].get("frames", {}).get("aggregate")
@@ -605,6 +739,14 @@ def claims(m: dict) -> str:
                        f"{fr['n_drafted']} recordings ({fr['title_partial']} more partly), so for unknown tasks the product "
                        f"should ask what you're making rather than guess.\" (`results/open_set/open_set.json`)")
     out.append("\n## Do NOT claim (not measured or not true yet)\n")
+    va = (live["async"][1].get("answer_timing") or {}).get("landed_s", {}).get("verdict") if "async" in live else None
+    live_dont = ("That live mode was tested with a webcam. It was tested on a recorded clip replayed in real time (no "
+                 "camera was available to this build). "
+                 + (f"Also don't say feedback is instant: the loop no longer waits for model calls, but an answer still "
+                    f"takes as long as the model. Completion checks took effect up to {va['max']:.1f} s after their "
+                    f"frames in the async run (results/live/live_replay_async.json)." if va else
+                    "Also don't say the slow path never stalls the loop: frontier-model escalations still block it for a "
+                    "few seconds (results/live/)."))
     for s in ["Praxis runs on smart glasses. It has not been tested on glasses; the glasses adapter is a documented stub "
               "(docs/GLASSES.md). Say instead: 'it runs live on a video stream in real time; glasses are one more input "
               "adapter.'",
@@ -618,9 +760,7 @@ def claims(m: dict) -> str:
               "(8 recordings) in one domain; drafts have no mistake library, and the video-only draft often "
               "misnamed the task (results/open_set/). It also sometimes mistakes an unseen task for a known one "
               "(a mug cake was announced as the library's mug pizza).",
-              "That live mode was tested with a webcam. It was tested on a recorded clip replayed in real time (no camera "
-              "was available to this build). Also don't say the slow path never stalls the loop: frontier-model "
-              "escalations still block it for a few seconds (results/live/).",
+              live_dont,
               "That the concept video is model output. It stays labeled 'Concept Prototype'.",
               "The application's '48 videos / 8 categories / 192 labeled action states' as if they were this build's "
               f"set. This build's eval set is {n_clips} clips / {types} procedure types / "

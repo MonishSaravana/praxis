@@ -232,15 +232,33 @@ Trigger: after the condition's earliest draft time, the typed task check answere
 
 ## Live mode (real-time loop, replayed recording)
 
-`praxis.live` runs the whole engine in real time: L1 encoders on each incoming frame, L2, the tracker and the verifiers. No webcam was available to this build, so the test fed a recorded eval clip through the live loop at wall-clock speed. Frames the loop was too slow for were dropped, as a camera would drop them. Source: `replay:data/raw/cc4d/videos/10_18_360p.mp4@0.0`, 151 s, task not given.
+`praxis.live` runs the whole engine in real time: L1 encoders on each incoming frame, L2, the tracker and the verifiers. No webcam was available to this build, so the test fed a recorded eval clip through the live loop at wall-clock speed. Frames the loop was too slow for were dropped, as a camera would drop them. Source: `replay:data/raw/cc4d/videos/10_18_360p.mp4@0.0`, task not given.
 
-- Task recognized: `cc4d_pinwheels` at 22 s.
-- Frames processed: 577 of 605 at 4 fps (28 dropped).
-- L1 per frame (SigLIP2 + hands, V-JEPA 2 at 1 Hz on a second thread), p50 / p95: 51 / 101 ms.
-- How far each 1 s tick finished behind the camera, p50 / p95 / max: 0.08 / 0.37 / 4.4 s. The worst stalls are frontier-model escalations (slowest call 4.1 s): the slow path still runs inside the loop, so it blocks the fast path while it waits.
-- 27 model calls, $0.020. Render: `renders/live_replay_user.mp4`.
+The same recording ran twice: first with model calls inline (a tick waits for its calls), then with the async slow path, which live mode now uses (`EngineConfig.async_slow_path`). Calls run on worker threads, the loop keeps ticking, and each answer is folded in when it arrives. The tracker applies a late answer at the tick its frames were taken and re-runs the filter forward from there; the policy acts on it when it arrives. Each run makes its own model calls, so which checks escalate differs between them. "Took effect" is measured from the log: when the answer's record was written, relative to the tick its frames came from.
 
-Source: `results/live/live_replay_10_18_0.json`.
+|  | Model calls inline (the loop waits) | Async slow path (the loop never waits) |
+|---|---|---|
+| Task recognized | `cc4d_pinwheels` at 22.0 s | `cc4d_pinwheels` at 22.2 s |
+| Frames processed at 4 fps | 577 of 605 (28 dropped) | 598 of 601 (3 dropped) |
+| How far each 1 s tick finished behind the camera, p50 / p95 / max | 0.08 / 0.37 / 4.42 s | 0.10 / 0.15 / 0.77 s |
+| Ticks skipped because all their frames were dropped (no tracker update) | 4 | 0 |
+| Tick compute, p50 / p95 / max | 8 / 171 / 4352 ms | 8 / 25 / 490 ms |
+| L1 per frame (SigLIP2 + hands; V-JEPA 2 at 1 Hz on a second thread), p50 / p95 | 51 / 101 ms | 50 / 83 ms |
+| Completion checks (incl. Opus escalations): took effect after their frames, p50 / max | 3.32 / 4.4 s (n = 3) | 2.64 / 4.8 s (n = 2) |
+| "Which step?" answers: took effect after their frames, p50 / max | 0.13 / 0.9 s (n = 17) | 0.26 / 0.5 s (n = 17) |
+| Slowest request: model time / took effect after its frames / ticks the loop ran meanwhile | a Jev completion check escalated to Opus: 4.3 s / 4.4 s / 0 | a Jev completion check escalated to Opus: 4.4 s / 4.8 s / 4 |
+| Requests that took over 1 s / ticks the loop ran while they were out | 2 / 0 | 1 / 4 |
+| Model calls / spend | 27 / $0.020 | 25 / $0.014 |
+
+- Inline, the slowest request (a Jev completion check escalated to Opus, 4.3 s of model time) held up the whole loop: the worst tick finished 4.4 s behind the camera, 28 frames were dropped, and 4 ticks had no frames left, so the tracker skipped them. With the async slow path the worst tick finished 0.77 s behind, 3 frames were dropped and 0 ticks were skipped; while its slowest request (a Jev completion check escalated to Opus, 4.4 s) was out, the loop ran 4 ticks.
+- The async run's latest tick (at 126 s) started late with no model call out: local work before the tick (the encoders, the L2 detector re-scoring its buffer) ran long. Moving the slow path off the loop does not address that.
+- Answers do not arrive sooner: they take effect once the models have answered. Completion checks took effect a median 2.6 s (max 4.8 s) after their frames in the async run, vs 3.3 s (max 4.4 s) inline. What changed is that the camera, encoders, tracker and policy keep running meanwhile.
+- The async loop folds answers in between frames, so an answer took effect a median 0.25 s (max 0.49 s) after its call returned. In both runs some answers came from the response cache, because the replayed frames match earlier runs of this clip (13 of 24 requests inline, 16 of 23 async); those come back in milliseconds, so the "took effect" rows mix live calls and cache hits.
+- Folding an answer in (logging it, re-running the filter from its tick, the policy) took 0.2 ms median and 8.7 ms at most on the main thread. No check had to be skipped as a duplicate of one still out.
+- Offline replay is unchanged. `replay()` (every evaluation) keeps model calls inline. Re-running 10 eval clips on the model answers recorded in their saved logs, the engine asked the recorded questions in order (0 mismatches) and wrote 6717 of 6717 records exactly as the engine before this change did. Against the saved logs, 6680 of 6717 records are identical; the rest differ only in fields the log format gained after those runs (`action/detail.chip`, `action/detail.draft`); `task_draft/cached`: the replay's open-set draft comes from the drafting response cache (the saved run made the call). Eval scores recomputed from the logs are identical.
+- Recorded answers were needed because cached re-runs are not reproducible: the Jev completion-check cache key includes random per-request ids, so a re-run asks Jev again. Re-running the same clips on the caches (no code change) reproduced 4230 of 6720 records and the eval scores of 1 of 9 clips; its cache misses cost $0.054.
+
+Render: `renders/live_replay_user.mp4` (drawn from `runs/live_replay_async/live.jsonl`, 16-112 s). Sources: `results/live/live_replay_10_18_0.json`, `results/live/live_replay_async.json`, `results/live/checks/replay_unchanged.json`.
 
 ## Personalization demo (L6 user model, qualitative)
 
@@ -275,7 +293,7 @@ No metric is computed from these clips. The official step labels were unreachabl
 
 ## Spend
 
-Tracked API spend for this build: **$98.35**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
+Tracked API spend for this build: **$98.41**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
 
 - hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total
 - 72 mistake-judge calls (Opus 5.5, effort low, one short text prompt each) made before the judge stored per-call cost
@@ -477,9 +495,29 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
       in.
     - Cause: the V-JEPA 2 thread and the main loop's SigLIP2 call used the GPU (MPS) at the same time.
     - Fix: one lock around GPU calls. After that, a 151 s real-time replay ran end to end (`results/live/`).
-    - Still open: verifier calls run inside the loop, so a frontier-model escalation blocks the fast path for a
-      few seconds and frames are dropped meanwhile. The fix is to run the slow path on its own thread and fold
-      verdicts in when they arrive.
+    - Then: verifier calls ran inside the loop, so a frontier-model escalation blocked the fast path for a few
+      seconds; frames were dropped and whole ticks skipped meanwhile.
+    - Fixed: in live mode the slow path runs on worker threads (`EngineConfig.async_slow_path`). Each answer is
+      folded in when it arrives and applied to the tracker at the tick its frames were taken. Before and after on
+      the same recording: `results/live/live_replay_10_18_0.json` and `results/live/live_replay_async.json`
+      (RESULTS.md, "Live mode").
+
+17. **The first async version announced the task a tick late.**
+    - Symptom: in a short smoke run, the recipe was announced one tick later than with model calls inline, although
+      the "which task?" answer had come back within milliseconds.
+    - Cause: that version applied "which task?" answers at the next tick rather than when they arrived.
+    - Fix: every answer, including task checks and open-set drafts, is folded in on the first frame after it
+      arrives (`Engine.poll`).
+
+18. **A cached re-run could not show that the evaluation was unchanged.**
+    - Symptom: re-running eval clips on the response caches, with no code change, gave different logs and
+      different eval scores, and made new paid calls (`results/live/checks/replay_unchanged.json`,
+      `cached_rerun_attempt`).
+    - Cause: the Jev completion-check cache key includes the random per-request ids of the image assets
+      (`verify/jev.py`), so those checks never hit the cache, and Jev's answers vary from call to call.
+    - What changed: the check (`praxis/eval/replay_check.py`) feeds the engine the answers recorded in the saved
+      logs and verifies that it asks the same questions in the same order. The cache key itself is unchanged here
+      (fixing it changes no result); it is a follow-up.
 
 ## Limitations
 

@@ -1,0 +1,171 @@
+{
+  "name": "live_replay_async",
+  "source": "replay:data/raw/cc4d/videos/10_18_360p.mp4@0.0",
+  "task_given": null,
+  "summary": {
+    "t": 150.2836,
+    "n_frames": 598,
+    "escalated_frames": 57,
+    "wall_s": 150.2836091669742,
+    "frames_processed": 598,
+    "dropped_frames": 3,
+    "l1_frame_ms": {
+      "p50": 50.37647899007425,
+      "p95": 83.21482675964941,
+      "max": 406.2842919956893
+    },
+    "tick_ms": {
+      "p50": 7.522666535805911,
+      "p95": 25.13483913498928,
+      "max": 489.7367089288309
+    },
+    "tick_lag_s": {
+      "p50": 0.09563468745909631,
+      "p95": 0.15062669179751534,
+      "max": 0.7704782920191064
+    },
+    "n_ticks": 150,
+    "slow_path": "async",
+    "fold_ms": {
+      "p50": 0.1547079300507903,
+      "p95": 1.8452535616233923,
+      "max": 8.713874965906143
+    },
+    "async_stats": {
+      "submitted_task": 4,
+      "folded_task": 4,
+      "submitted_localize": 17,
+      "folded_localize": 17,
+      "submitted_verify": 2,
+      "folded_verify": 2,
+      "unfinished_at_close": 0
+    }
+  },
+  "task_recognized": [
+    {
+      "t": 22.25,
+      "task_id": "cc4d_pinwheels",
+      "title": "Pinwheels (nut butter and jelly tortilla roll-ups)"
+    }
+  ],
+  "actions": [
+    {
+      "t": 22.25,
+      "action": "announce_task",
+      "text": "Looks like you're making pinwheels. Want me to walk you through it?"
+    },
+    {
+      "t": 22.25,
+      "action": "instruct",
+      "text": "Take one 8-inch flour tortilla and lay it flat on the cutting board. Don't heat it, just use it as it is."
+    },
+    {
+      "t": 77.0,
+      "action": "instruct",
+      "text": "Pick up a butter knife, open the nut butter jar, and scoop out a good spoonful of nut butter on the blade."
+    },
+    {
+      "t": 95.0,
+      "action": "instruct",
+      "text": "Spread the nut butter in an even layer over the tortilla, but stop about half an inch before the edge all the way around."
+    },
+    {
+      "t": 104.5,
+      "action": "verified",
+      "text": "Spread nut butter on tortilla"
+    },
+    {
+      "t": 104.5,
+      "action": "instruct",
+      "text": "Wipe the nut butter off the butter knife with a paper towel so it's clean for the jelly."
+    },
+    {
+      "t": 145.0,
+      "action": "instruct",
+      "text": "With the clean butter knife, scoop a dollop of jelly out of the jelly jar."
+    }
+  ],
+  "model_calls": 25,
+  "slowest_call_ms": 4223.490709089674,
+  "spend_usd": 0.013979314000000001,
+  "slow_path": "async",
+  "ticks_without_frames": 0,
+  "answer_timing": {
+    "n_requests": 23,
+    "worst_tick": {
+      "t": 126.0,
+      "start_lag_s": 0.693,
+      "requests_out": 0
+    },
+    "served_from_cache": 16,
+    "after_call_s": {
+      "n": 23,
+      "p50": 0.251,
+      "p95": 0.3263000000000006,
+      "max": 0.494
+    },
+    "landed_s": {
+      "verdict": {
+        "n": 2,
+        "p50": 2.636,
+        "p95": 4.5467,
+        "max": 4.759
+      },
+      "step_choice": {
+        "n": 17,
+        "p50": 0.26,
+        "p95": 0.34719999999999984,
+        "max": 0.516
+      },
+      "task_check": {
+        "n": 4,
+        "p50": 0.2585,
+        "p95": 0.26825,
+        "max": 0.269
+      },
+      "task_draft": null
+    },
+    "slowest": [
+      {
+        "t": 134.0,
+        "kind": "verdict",
+        "reason": "mistake_screen",
+        "models": [
+          "jev-1.14.0",
+          "claude-opus-5-5"
+        ],
+        "model_latency_s": 4.415565751143731,
+        "landed_s": 4.759,
+        "ticks_during": 4
+      },
+      {
+        "t": 26.0,
+        "kind": "step_choice",
+        "reason": null,
+        "models": [
+          "jev-1.14.0"
+        ],
+        "model_latency_s": 0.20267945795785636,
+        "landed_s": 0.516,
+        "ticks_during": 0
+      },
+      {
+        "t": 104.0,
+        "kind": "verdict",
+        "reason": "boundary",
+        "models": [
+          "jev-1.14.0",
+          "claude-opus-5-5"
+        ],
+        "model_latency_s": 3.8382729578297585,
+        "landed_s": 0.513,
+        "ticks_during": 0
+      }
+    ],
+    "over_1s": {
+      "n": 1,
+      "ticks_during": 4
+    }
+  },
+  "checks_skipped_while_same_check_out": 0
+}

@@ -176,10 +176,13 @@ def answer_timing(recs: list[dict]) -> dict | None:
             q["wall"], q["model_latency_s"] = max(q["wall"], r["wall"]), q["model_latency_s"] + lat
             continue
         reqs.append({"t": r["t"], "kind": r["kind"], "node": r.get("node"), "reason": r.get("reason"),
-                     "models": [r.get("model")], "wall": r["wall"], "model_latency_s": lat})
+                     "models": [r.get("model")], "wall": r["wall"], "model_latency_s": lat,
+                     "call_s": r.get("call_s")})         # async: how long the worker spent on the call(s)
     for q in reqs:
         q["landed_s"] = round(q["wall"] - wall0 - q["t"], 3)
         q["ticks_during"] = int(((fw > tick_wall.get(q["t"], wall0 + q["t"])) & (fw < q["wall"])).sum())
+        # back sooner than the models' logged latency => answered (at least in part) from the response cache
+        q["cached"] = (q["call_s"] if q["call_s"] is not None else q["landed_s"]) + 0.05 < q["model_latency_s"]
 
     def pq(x):
         return {"n": len(x), "p50": float(np.percentile(x, 50)), "p95": float(np.percentile(x, 95)),
@@ -192,6 +195,9 @@ def answer_timing(recs: list[dict]) -> dict | None:
     worst = {"t": tw, "start_lag_s": round(tick_wall[tw] - wall0 - tw, 3),
              "requests_out": sum(1 for q in reqs if tick_wall.get(q["t"], 0.0) < tick_wall[tw] < q["wall"])}
     return {"n_requests": len(reqs), "worst_tick": worst,
+            "served_from_cache": sum(q["cached"] for q in reqs),
+            # async: from the call returning to the answer taking effect (answers are folded in between frames)
+            "after_call_s": pq([q["landed_s"] - q["call_s"] for q in reqs if q["call_s"] is not None]),
             "landed_s": {k: pq([q["landed_s"] for q in reqs if q["kind"] == k])
                          for k in ("verdict", "step_choice", "task_check", "task_draft")},
             "slowest": [{k: q[k] for k in keep} for q in slow[:3]],

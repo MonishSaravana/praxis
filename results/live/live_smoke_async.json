@@ -1,0 +1,137 @@
+{
+  "name": "live_smoke_async",
+  "source": "replay:data/raw/cc4d/videos/10_18_360p.mp4@0.0",
+  "task_given": null,
+  "summary": {
+    "t": 25.2701,
+    "n_frames": 101,
+    "escalated_frames": 3,
+    "wall_s": 25.27008487493731,
+    "frames_processed": 101,
+    "dropped_frames": 0,
+    "l1_frame_ms": {
+      "p50": 50.51370896399021,
+      "p95": 69.08045895397663,
+      "max": 167.11120901163667
+    },
+    "tick_ms": {
+      "p50": 4.212666070088744,
+      "p95": 9.298616368323563,
+      "max": 10.329124983400106
+    },
+    "tick_lag_s": {
+      "p50": 0.07678712496999651,
+      "p95": 0.08691133342217654,
+      "max": 0.08904033398721367
+    },
+    "n_ticks": 25,
+    "slow_path": "async",
+    "fold_ms": {
+      "p50": 0.14725001528859138,
+      "p95": 4.40037497319281,
+      "max": 5.435624974779785
+    },
+    "async_stats": {
+      "submitted_task": 4,
+      "folded_task": 4,
+      "submitted_localize": 1,
+      "folded_localize": 1,
+      "unfinished_at_close": 0
+    }
+  },
+  "task_recognized": [
+    {
+      "t": 22.25,
+      "task_id": "cc4d_pinwheels",
+      "title": "Pinwheels (nut butter and jelly tortilla roll-ups)"
+    }
+  ],
+  "actions": [
+    {
+      "t": 22.25,
+      "action": "announce_task",
+      "text": "Looks like you're making pinwheels. Want me to walk you through it?"
+    },
+    {
+      "t": 22.25,
+      "action": "instruct",
+      "text": "Take one 8-inch flour tortilla and lay it flat on the cutting board. Don't heat it, just use it as it is."
+    }
+  ],
+  "model_calls": 5,
+  "slowest_call_ms": 3382.6926249312237,
+  "spend_usd": 0.000569016,
+  "slow_path": "async",
+  "ticks_without_frames": 0,
+  "answer_timing": {
+    "n_requests": 5,
+    "worst_tick": {
+      "t": 19.0,
+      "start_lag_s": 0.026,
+      "requests_out": 0
+    },
+    "served_from_cache": 5,
+    "after_call_s": {
+      "n": 5,
+      "p50": 0.248,
+      "p95": 0.2624,
+      "max": 0.264
+    },
+    "landed_s": {
+      "verdict": null,
+      "step_choice": {
+        "n": 1,
+        "p50": 0.268,
+        "p95": 0.268,
+        "max": 0.268
+      },
+      "task_check": {
+        "n": 4,
+        "p50": 0.251,
+        "p95": 0.25780000000000003,
+        "max": 0.259
+      },
+      "task_draft": null
+    },
+    "slowest": [
+      {
+        "t": 23.0,
+        "kind": "step_choice",
+        "reason": null,
+        "models": [
+          "jev-1.14.0"
+        ],
+        "model_latency_s": 0.16041408304590732,
+        "landed_s": 0.268,
+        "ticks_during": 0
+      },
+      {
+        "t": 16.0,
+        "kind": "task_check",
+        "reason": null,
+        "models": [
+          "jev-1.14.0"
+        ],
+        "model_latency_s": 0.14188645803369582,
+        "landed_s": 0.259,
+        "ticks_during": 0
+      },
+      {
+        "t": 10.0,
+        "kind": "task_check",
+        "reason": null,
+        "models": [
+          "jev-1.14.0"
+        ],
+        "model_latency_s": 0.14349154196679592,
+        "landed_s": 0.251,
+        "ticks_during": 0
+      }
+    ],
+    "over_1s": {
+      "n": 0,
+      "ticks_during": 0
+    }
+  },
+  "checks_skipped_while_same_check_out": 0
+}

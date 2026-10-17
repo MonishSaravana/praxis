@@ -75,11 +75,17 @@ uv run python -m praxis.failures fused_oracle                 # failure analysis
 uv run python -m praxis.industreal_demo                       # assembly, no ground truth
 uv run python -c "from praxis.paths import load_env; load_env(); from praxis.personalization_demo import main; main('10_18_0', t0=80, t1=135)"
 
-# Live mode: a camera, or a recording replayed at wall-clock speed (frames the loop can't keep up with are dropped)
+# Live mode: a camera, or a recording replayed at wall-clock speed (frames the loop can't keep up with are dropped).
+# Model calls run on worker threads, so the loop never waits on them; --sync runs them inline (as live_replay_10_18_0 did)
 uv run python -m praxis.live --source webcam:0 --seconds 120
-uv run python -m praxis.live --source replay:../data/raw/cc4d/videos/10_18_360p.mp4@0 --seconds 150 --name live_replay_10_18_0 --no-speak
-uv run python -c "from praxis.live import render_replay; render_replay('live_replay_10_18_0', '10_18_0', 16, 112)"
-#   -> results/live/<name>.json (loop timing, dropped frames, what Praxis said) and renders/live_replay_user.mp4
+uv run python -m praxis.live --source replay:../data/raw/cc4d/videos/10_18_360p.mp4@0 --seconds 150 --name live_replay_async --no-speak
+uv run python -m praxis.live --source replay:../data/raw/cc4d/videos/10_18_360p.mp4@0 --seconds 150 --name live_replay_10_18_0 --no-speak --sync
+uv run python -c "from praxis.live import render_replay; render_replay('live_replay_async', '10_18_0', 16, 112)"
+#   -> results/live/<name>.json (loop timing, dropped frames, how late answers took effect) and renders/live_replay_user.mp4
+# Is the offline replay (every evaluation) unchanged by a code change? Replays 10 eval clips on the model answers recorded
+# in their saved logs and diffs every record (-> results/live/checks/replay_unchanged.json):
+uv run python -m praxis.eval.replay_check run --tag _recorded_pre        # before the change; _recorded_post after it
+uv run python -m praxis.eval.replay_check diff --tag _recorded_post --against _recorded_pre
 
 # Report, figures, renders, viewer
 uv run python -m praxis.spend                                 # results/spend.json (recorded costs only)

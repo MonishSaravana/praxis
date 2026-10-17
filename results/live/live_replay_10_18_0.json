@@ -67,5 +67,80 @@
   ],
   "model_calls": 27,
   "slowest_call_ms": 4116.234624991193,
-  "spend_usd": 0.020445054
+  "spend_usd": 0.020445054,
+  "slow_path": "inline",
+  "ticks_without_frames": 4,
+  "answer_timing": {
+    "n_requests": 24,
+    "worst_tick": {
+      "t": 148.0,
+      "start_lag_s": 0.664,
+      "requests_out": 0
+    },
+    "served_from_cache": 13,
+    "after_call_s": null,
+    "landed_s": {
+      "verdict": {
+        "n": 3,
+        "p50": 3.323,
+        "p95": 4.2581,
+        "max": 4.362
+      },
+      "step_choice": {
+        "n": 17,
+        "p50": 0.126,
+        "p95": 0.5681999999999996,
+        "max": 0.941
+      },
+      "task_check": {
+        "n": 4,
+        "p50": 0.035500000000000004,
+        "p95": 0.036,
+        "max": 0.036
+      },
+      "task_draft": null
+    },
+    "slowest": [
+      {
+        "t": 143.0,
+        "kind": "verdict",
+        "reason": "mistake_screen",
+        "models": [
+          "jev-1.14.0",
+          "claude-opus-5-5"
+        ],
+        "model_latency_s": 4.3279775000410154,
+        "landed_s": 4.362,
+        "ticks_during": 0
+      },
+      {
+        "t": 148.0,
+        "kind": "verdict",
+        "reason": "mistake_screen",
+        "models": [
+          "jev-1.14.0",
+          "claude-opus-5-5"
+        ],
+        "model_latency_s": 2.3702530009904876,
+        "landed_s": 3.323,
+        "ticks_during": 0
+      },
+      {
+        "t": 148.0,
+        "kind": "step_choice",
+        "reason": null,
+        "models": [
+          "jev-1.14.0"
+        ],
+        "model_latency_s": 0.27046570798847824,
+        "landed_s": 0.941,
+        "ticks_during": 0
+      }
+    ],
+    "over_1s": {
+      "n": 2,
+      "ticks_during": 0
+    }
+  },
+  "checks_skipped_while_same_check_out": 0
 }

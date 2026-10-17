@@ -32,9 +32,21 @@ files under `results/`. Anything not measured is labeled as a plan.
    camera has seen, tracked zero-shot until the full compiler or real executions refine it.
 
 ## Live loop: next systems step
-The live loop runs the slow path (verifier calls) inline, so a frontier-model escalation stalls the fast path for a
-few seconds (`results/live/`). Next: run verification on its own thread and fold each verdict into the tracker at
-the time its frames were taken, so local layers never wait on the network.
+Done: the live loop no longer waits on the network. In `praxis.live` the slow path runs on worker threads
+(`EngineConfig.async_slow_path`): camera, encoders, tracker and policy keep running, at most one check per step is in
+flight, and each answer is folded in when it arrives. The tracker applies a late answer at the tick its frames were
+taken and re-runs the filter forward from there; the policy acts when the answer arrives. Offline replay keeps calls
+inline, so every evaluation is unchanged (`results/live/checks/replay_unchanged.json`). Before and after on the same
+recording: `results/live/` and RESULTS.md, "Live mode".
+
+Next:
+- Answers still take as long as the model, so a possible mistake that needs an Opus escalation reaches the wearer
+  seconds later. Options: a soft cue on the fast tier's verdict that the strong tier confirms or withdraws; starting
+  the escalation alongside the fast check when the belief makes a mistake likely; routing more checks to the
+  distilled student (`results/l7/`).
+- The remaining late ticks are local work (the encoders, or the L2 detector re-scoring its whole buffer every tick):
+  profile them, and score only the new frames.
+- A real webcam session, then the glasses adapter (L0).
 
 ## Why the data is training-ready
 `praxis.record/1` (see `prototype/praxis/flywheel/records.py`) stores, per session:

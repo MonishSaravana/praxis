@@ -1,0 +1,10 @@
+{
+ "render": "renders/live_replay_user.mp4",
+ "run": "live_replay_async",
+ "log": "runs/live_replay_async/live.jsonl",
+ "clip": "10_18_0",
+ "t0": 16,
+ "t1": 112,
+ "view": "user",
+ "size_mb": 13.8
+}

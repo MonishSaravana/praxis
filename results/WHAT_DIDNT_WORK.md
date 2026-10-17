@@ -106,6 +106,26 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
       in.
     - Cause: the V-JEPA 2 thread and the main loop's SigLIP2 call used the GPU (MPS) at the same time.
     - Fix: one lock around GPU calls. After that, a 151 s real-time replay ran end to end (`results/live/`).
-    - Still open: verifier calls run inside the loop, so a frontier-model escalation blocks the fast path for a
-      few seconds and frames are dropped meanwhile. The fix is to run the slow path on its own thread and fold
-      verdicts in when they arrive.
+    - Then: verifier calls ran inside the loop, so a frontier-model escalation blocked the fast path for a few
+      seconds; frames were dropped and whole ticks skipped meanwhile.
+    - Fixed: in live mode the slow path runs on worker threads (`EngineConfig.async_slow_path`). Each answer is
+      folded in when it arrives and applied to the tracker at the tick its frames were taken. Before and after on
+      the same recording: `results/live/live_replay_10_18_0.json` and `results/live/live_replay_async.json`
+      (RESULTS.md, "Live mode").
+
+17. **The first async version announced the task a tick late.**
+    - Symptom: in a short smoke run, the recipe was announced one tick later than with model calls inline, although
+      the "which task?" answer had come back within milliseconds.
+    - Cause: that version applied "which task?" answers at the next tick rather than when they arrived.
+    - Fix: every answer, including task checks and open-set drafts, is folded in on the first frame after it
+      arrives (`Engine.poll`).
+
+18. **A cached re-run could not show that the evaluation was unchanged.**
+    - Symptom: re-running eval clips on the response caches, with no code change, gave different logs and
+      different eval scores, and made new paid calls (`results/live/checks/replay_unchanged.json`,
+      `cached_rerun_attempt`).
+    - Cause: the Jev completion-check cache key includes the random per-request ids of the image assets
+      (`verify/jev.py`), so those checks never hit the cache, and Jev's answers vary from call to call.
+    - What changed: the check (`praxis/eval/replay_check.py`) feeds the engine the answers recorded in the saved
+      logs and verifies that it asks the same questions in the same order. The cache key itself is unchanged here
+      (fixing it changes no result); it is a follow-up.
