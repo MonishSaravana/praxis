@@ -129,3 +129,36 @@ def crop(frame_rgb: np.ndarray, roi: tuple[int, int, int, int] | None, scale_fro
         sy, sx = frame_rgb.shape[0] / scale_from[0], frame_rgb.shape[1] / scale_from[1]
         x0, x1, y0, y1 = int(x0 * sx), int(x1 * sx), int(y0 * sy), int(y1 * sy)
     return frame_rgb[y0:y1, x0:x1].copy()
+
+
+def bench(seconds: float = 3.0, fps: float = 10.0, n_sides=(4, 6, 8), devs=("mps", "cpu"), video: str | None = None) -> dict:
+    """TAPNext++ online tracking speed on this machine (ms per frame) for a few query-grid sizes."""
+    import json
+    import platform
+    from ..io.sources import FileSource
+    from ..paths import RESULTS
+    if video is None:
+        from ..data.cc4d import load_manifest
+        video = load_manifest()["eval"][0]["video"]
+    frames = [f.rgb for f in FileSource(video, fps=fps, start=60, end=60 + seconds, max_side=640)]
+    out = {"machine": platform.platform(), "fps_input": fps, "n_frames": len(frames), "rows": []}
+    for dev in devs:
+        for n in n_sides:
+            try:
+                pt = PointTracker(n_side=n, dev=dev)
+                h, w = frames[0].shape[:2]
+                pt.seed(frames[0], (w * 0.3, h * 0.35, w * 0.7, h * 0.85), 0.0)
+                ms, vis = [], []
+                for i, f in enumerate(frames[1:]):
+                    st = pt.update(f, (i + 1) / fps)
+                    ms.append(pt.last_ms)
+                    vis.append(float(st.visible.mean()))
+                out["rows"].append({"device": dev, "points": n * n, "ms_per_frame_p50": float(np.median(ms[1:] or ms)),
+                                    "max_fps": 1000.0 / float(np.median(ms[1:] or ms)), "visible_share_end": vis[-1] if vis else None})
+                print(out["rows"][-1], flush=True)
+                del pt
+            except Exception as e:  # noqa: BLE001
+                out["rows"].append({"device": dev, "points": n * n, "error": str(e)[:200]})
+    (RESULTS / "l1").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l1" / "tapnext_speed.json").write_text(json.dumps(out, indent=2))
+    return out
