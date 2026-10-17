@@ -1,0 +1,49 @@
+{
+  "machine": "macOS-26.6.2-arm64-arm-64bit",
+  "fps_input": 10.0,
+  "n_frames": 31,
+  "rows": [
+    {
+      "device": "mps",
+      "points": 16,
+      "ms_per_frame_p50": 593.5225419234484,
+      "max_fps": 1.6848559732192587,
+      "visible_share_end": 0.0
+    },
+    {
+      "device": "mps",
+      "points": 36,
+      "ms_per_frame_p50": 644.5549170020968,
+      "max_fps": 1.5514581824169793,
+      "visible_share_end": 0.05555555555555555
+    },
+    {
+      "device": "mps",
+      "points": 64,
+      "ms_per_frame_p50": 655.9494578978047,
+      "max_fps": 1.5245077009512484,
+      "visible_share_end": 0.0625
+    },
+    {
+      "device": "cpu",
+      "points": 16,
+      "ms_per_frame_p50": 1819.4772080751136,
+      "max_fps": 0.5496084235415808,
+      "visible_share_end": 0.0
+    },
+    {
+      "device": "cpu",
+      "points": 36,
+      "ms_per_frame_p50": 1041.8318749871105,
+      "max_fps": 0.9598477681558476,
+      "visible_share_end": 0.05555555555555555
+    },
+    {
+      "device": "cpu",
+      "points": 64,
+      "ms_per_frame_p50": 1015.0437919655815,
+      "max_fps": 0.985179169524844,
+      "visible_share_end": 0.0625
+    }
+  ]
+}
