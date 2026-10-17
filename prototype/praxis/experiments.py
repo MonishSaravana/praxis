@@ -443,7 +443,41 @@ def crops_vs_full(n: int = 120, kind: str = "claude_strong") -> dict:
     random.seed(1)
     sub = random.sample(fine, min(n, len(fine)))
     ids = [c.check_id for c in sub]
-    with_c = run_checks(kind, "eval", subset=ids, crops=True, workers=2)
+    # phase 1: TAPNext++ crops computed sequentially (one tracker, one GPU stream) and cached as images
+    import cv2 as _cv2
+    crop_dir = RESULTS.parent / "data" / "checks" / "crops"
+    crop_dir.mkdir(parents=True, exist_ok=True)
+    fn = _crops_fn()
+    from .eval.checks import cached_span_frames
+    import time as _time
+    t0 = _time.time()
+    track_s = []
+    for i, ci in enumerate(sub):
+        f = crop_dir / f"{ci.check_id.replace(':', '_')}.png"
+        if f.exists():
+            continue
+        fr, _ = cached_span_frames(ci)
+        ts = _time.time()
+        cs = fn(ci, fr)
+        track_s.append(_time.time() - ts)
+        if cs:
+            _cv2.imwrite(str(f), _cv2.cvtColor(cs[0], _cv2.COLOR_RGB2BGR))
+        else:
+            f.write_bytes(b"")
+        if (i + 1) % 10 == 0:
+            print(f"  crops {i + 1}/{len(sub)} ({_time.time() - t0:.0f}s)", flush=True)
+
+    def saved_crops(ci, frames):
+        f = crop_dir / f"{ci.check_id.replace(':', '_')}.png"
+        if not f.exists() or f.stat().st_size == 0:
+            return []
+        return [_cv2.cvtColor(_cv2.imread(str(f)), _cv2.COLOR_BGR2RGB)]
+    # phase 2: verifier calls with the cached crops, in parallel
+    from .eval.checks import run_verifier_on_checks
+    from .tasks.compiler import load_library as _ll
+    out = RESULTS.parent / "data" / "verdicts" / f"{kind}_eval_crops.jsonl"
+    with_c = run_verifier_on_checks(make_verifier(kind), [c for c in ev if c.check_id in set(ids)], _ll(), out, workers=4,
+                                    crops_fn=saved_crops)
     base = {r["check_id"]: r for r in load(f"{kind}_eval")}
     rows = [(r, base[r["check_id"]]) for r in with_c if r["check_id"] in base and not r["verdict"].get("error")]
     y = np.array([b["y_complete"] for _, b in rows])
@@ -459,7 +493,10 @@ def crops_vs_full(n: int = 120, kind: str = "claude_strong") -> dict:
                           "deviation_precision": float(ye[dc].mean()) if dc.any() else None, "n_deviation": int(dc.sum())},
            "crop_rate": float(np.mean([r["n_crops"] > 0 for r, _ in rows])),
            "tokens_full": float(np.mean([b["verdict"]["input_tokens"] for _, b in rows])),
-           "tokens_with_crops": float(np.mean([r["verdict"]["input_tokens"] for r, _ in rows]))}
+           "tokens_with_crops": float(np.mean([r["verdict"]["input_tokens"] for r, _ in rows])),
+           "tapnext_seconds_per_crop_p50": float(np.median(track_s)) if track_s else None,
+           "crop_protocol": "seed a 6x6 grid on the hands' working area 1.6 s before the check, track at 10 fps with "
+                            "TAPNext++ (MPS), crop the tracked region (fallback: seeded hand area) from the full frame"}
     (RESULTS / "l5").mkdir(parents=True, exist_ok=True)
     (RESULTS / "l5" / "crops_vs_full.json").write_text(json.dumps(res, indent=2))
     return res

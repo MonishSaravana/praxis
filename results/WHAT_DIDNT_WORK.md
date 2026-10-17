@@ -79,3 +79,9 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
     - Similarly, using the distilled student as the *only* fast tier removed localization entirely (the student has no
       localization head). It is reported as `fused_distilled_alone`, next to the intended configuration: the student
       on completion checks plus Jev localization.
+
+13. **The crop experiment deadlocked on the first try.**
+    - Two verifier threads shared one TAPNext++ tracker, so each overwrote the other's online tracking state. They
+      made no progress for about 40 minutes.
+    - Fix: compute crops sequentially with a single tracker and cache them, then run the verifier calls in parallel
+      over the cached crops.
