@@ -176,9 +176,11 @@ Source: `results/l7/distill.json`.
 |---|---|---|---|---|---|---|
 | Jev fast tier + Opus escalation (ours) | `fused_oracle` | 54% | 4 / 17 | 0.055 | 3030 | $0.0183 |
 | Jev only, no escalation | `fused_no_escalation` | 53% | 3 / 24 | 0.089 | 2726 | $0.0012 |
+| Claude Haiku 5.5 fast tier + Opus escalation | `fused_claude_fast` | 47% | 2 / 5 | 0.013 | 2565 | $0.0073 |
+| Distilled student for completion checks + Jev for localization + Opus escalation | `fused_distilled` | 52% | 2 / 8 | 0.026 | 2981 | $0.0079 |
 | Distilled student as the only fast tier (no localization) + Opus escalation | `fused_distilled_alone` | 20% | 2 / 8 | 0.026 | 2183 | $0.0227 |
 
-The student has no localization head, so `fused_distilled_alone` loses the typed "which step?" question; `fused_distilled` keeps Jev for it. Swapping tiers is one line of config (`verifier.primary`). Sources: `results/runs/fused_oracle.json`, `results/runs/fused_no_escalation.json`, `results/runs/fused_distilled_alone.json`.
+The student has no localization head, so `fused_distilled_alone` loses the typed "which step?" question; `fused_distilled` keeps Jev for it. Swapping tiers is one line of config (`verifier.primary`). Sources: `results/runs/fused_oracle.json`, `results/runs/fused_no_escalation.json`, `results/runs/fused_claude_fast.json`, `results/runs/fused_distilled.json`, `results/runs/fused_distilled_alone.json`.
 
 ## Design selection (train split only)
 
@@ -215,6 +217,18 @@ Chosen: {"tracker": {"local_weight": 0.1, "boundary_weight": 0.0, "commit_on_swi
 | cpu | 64 | 1015 | 1.0 | 6% |
 
 Measured while other jobs were running on the machine. TAPNext++ is far from real time here, and on head-mounted cooking video most points are lost within a few seconds. Crops were therefore computed offline for the crop experiment only; the live plan is in docs/MODEL_ROADMAP.md. Source: `results/l1/tapnext_speed.json`.
+
+## Open-set drafting: recipes Praxis has never seen
+
+The 4 CaptainCook4D recipe types outside the library (Coffee, Mug Cake, Ramen, Zoodles; 2 recordings each, first 240 s) were never compiled or trained on. The engine runs without the task. When the typed task check keeps answering "none of these", Praxis drafts a light task graph from what it has seen (steps, spoken instructions, visual end states; no mistake library) and tracks it with zero-shot local evidence, announced as a draft. A judge (Claude Opus 5.5) compares each draft with the dataset's own task graph for that recipe. Step accuracy after the draft maps annotated steps to draft steps through the judge's matching.
+
+| Condition | Drafted | Announced a wrong library task | Recipe named (of drafted) | Reference steps covered | Draft steps matching a reference step | Step accuracy after the draft | Median draft time / drafting latency |
+|---|---|---|---|---|---|---|---|
+| Video only, draft after 30 s | 7 / 8 | 1 | 0 yes, 2 partial | 18% | 21% | 4% | 30 s / 13 s |
+| Video only, draft after 90 s | 6 / 8 | 2 | 1 yes, 3 partial | 49% | 51% | 10% | 90 s / 16 s |
+| Video + the person's description ("making <recipe>"), draft after 30 s | 7 / 8 | 1 | 5 yes, 2 partial | 64% | 58% | 36% | 30 s / 16 s |
+
+Trigger: after the condition's earliest draft time, the typed task check answered 'none of these' twice in a row, or nothing was recognized by max(60 s, earliest draft time). Drafts and judgments are in `results/open_set/` (each draft graph is saved under `results/open_set/drafts/`). Source: `results/open_set/open_set.json`.
 
 ## Live mode (real-time loop, replayed recording)
 
@@ -261,7 +275,7 @@ No metric is computed from these clips. The official step labels were unreachabl
 
 ## Spend
 
-Tracked API spend for this build: **$94.61**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
+Tracked API spend for this build: **$98.35**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
 
 - hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total
 - 72 mistake-judge calls (Opus 5.5, effort low, one short text prompt each) made before the judge stored per-call cost
@@ -480,7 +494,7 @@ Each item lists the symptom, the cause, and what changed. Numbers cite the files
   - Matching is by time window: an alert counts if it lands up to 5 s before the erroneous step starts and up to
     10 s after it ends. It is not matched by mistake type.
   - "Missing Step" errors have no timestamp, so they are excluded.
-  - Many CaptainCook4D errors are invisible from a few frames (e.g. 1 tbsp vs ½ tbsp).
+  - Some CaptainCook4D errors, such as measurement errors (1 tbsp vs ½ tbsp), are hard to see from a few frames.
 - **Verifier checks** are asked at fixed moments relative to the annotations (mid-step, and 1.5 s after the step
   ends). They stand in for the moments the engine chooses itself.
 - **Small training sets.** 3–5 train recordings per procedure for the step probes, and one run per variant (no

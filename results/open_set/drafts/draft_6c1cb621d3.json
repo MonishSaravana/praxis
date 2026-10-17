@@ -1,0 +1,313 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_6c1cb621d3",
+  "title": "Peel, Mince, and Sauté Garlic",
+  "domain": "cooking",
+  "summary": "The person is breaking apart a garlic bulb and peeling cloves by hand next to a frying pan and cooking oil, likely preparing garlic to sauté in the pan.",
+  "source": "open-set draft from 8 frames",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.041976,
+    "latency_s": 14.664115749998018,
+    "cached": false,
+    "input_tokens": 3249,
+    "output_tokens": 1449,
+    "confidence": 0.55
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Break cloves off the bulb",
+      "instruction_novice": "Hold the garlic bulb and press or twist it so the individual cloves come apart. Pull off as many cloves as the recipe needs.",
+      "instruction_expert": "Separate needed cloves.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Several loose garlic cloves sit on the counter beside the remaining bulb.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Break cloves off the bulb?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Peel the garlic cloves",
+      "instruction_novice": "Pinch the papery skin at the tip of a clove and peel it away with your fingernails. Pressing the clove gently with a knife flat first makes this easier.",
+      "instruction_expert": "Peel all cloves.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Clean white cloves are on the counter with the papery skins in a separate pile.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Peel the garlic cloves?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 120.0,
+        "std_s": 72.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Trim the root ends",
+      "instruction_novice": "On a cutting board, slice off the hard brown root end of each clove. Throw away the trimmed ends.",
+      "instruction_expert": "Trim root ends.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Peeled cloves with no brown tips sit on a cutting board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Trim the root ends?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Mince the garlic",
+      "instruction_novice": "Slice each clove thinly, then rock your knife back and forth over the slices until they are tiny, even pieces. Keep your fingertips curled away from the blade.",
+      "instruction_expert": "Mince finely.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A small pile of finely minced garlic sits on the cutting board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Mince the garlic?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 120.0,
+        "std_s": 72.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Clear away the garlic skins",
+      "instruction_novice": "Gather the papery skins and trimmed ends and throw them in the trash. This keeps your work area clean.",
+      "instruction_expert": "Discard skins.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The counter is free of garlic skins.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Clear away the garlic skins?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Heat the frying pan",
+      "instruction_novice": "Set the pan on a burner and turn it to medium-low. Let it warm for about a minute.",
+      "instruction_expert": "Preheat pan medium-low.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The pan sits on an active burner and is warm.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Heat the frying pan?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Add oil to the pan",
+      "instruction_novice": "Pour about a tablespoon of oil into the pan and tilt it to coat the bottom. Wait until the oil looks shimmery.",
+      "instruction_expert": "Add oil, shimmer.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A thin, shimmering layer of oil coats the pan bottom.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Add oil to the pan?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Add the garlic",
+      "instruction_novice": "Scrape the minced garlic into the oil and spread it out. It should sizzle gently, not violently.",
+      "instruction_expert": "Add garlic.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Minced garlic is spread in the oil and gently sizzling.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Add the garlic?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Sauté until fragrant",
+      "instruction_novice": "Stir constantly for about 30 to 60 seconds until it smells strong and turns pale golden. Don't let it brown, or it will taste bitter.",
+      "instruction_expert": "Stir till pale golden.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The garlic in the pan is fragrant and light golden.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Sauté until fragrant?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Remove from heat or continue recipe",
+      "instruction_novice": "Turn off the burner, or add your next ingredients right away so the garlic doesn't burn.",
+      "instruction_expert": "Kill heat or add next.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The burner is off or the next ingredients are in the pan with the garlic.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Remove from heat or continue recipe?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

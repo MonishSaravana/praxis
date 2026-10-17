@@ -1,5 +1,5 @@
 {
-  "total_usd": 94.61292817599998,
+  "total_usd": 98.34579049799999,
   "items": {
     "L3 compile (8 recipes, Fable 5.1)": 4.16358,
     "L3 compile (IndustReal graph)": 0.43374,
@@ -10,6 +10,8 @@
     "visual-uncertainty (last re-run, new calls only)": 0.2666216,
     "engine run: baseline_stateless": 18.352767600000085,
     "engine run: fused": 3.5941585419999997,
+    "engine run: fused_claude_fast": 1.4069881099999986,
+    "engine run: fused_distilled": 0.8710741700000003,
     "engine run: fused_distilled_alone": 5.276787,
     "engine run: fused_heuristic_gate": 3.831941284000001,
     "engine run: fused_no_escalation": 0.2835729960000002,
@@ -21,7 +23,11 @@
     "design selection (train split): design_selection_v4": 2.0962831100000003,
     "design selection (train split): design_selection_v5": 1.5288205539999997,
     "invalid engine run (quarantined): fused_claude_fast_localization_errors": 1.1792780700000007,
-    "mistake judge (Opus 5.5)": 0.020048,
+    "mistake judge (Opus 5.5)": 0.042996,
+    "open-set engine runs: open_set": 0.4181226259999997,
+    "open-set engine runs: open_set_smoke": 0.0027614160000000013,
+    "open-set drafts (Opus 5.5)": 0.806888,
+    "open-set draft judge (Opus 5.5)": 0.20408,
     "demo: industreal_demo.json": 0.02273438999999999,
     "demo: policy_demo.json": 0.014450286,
     "live mode: live_replay_10_18_0": 0.020445054,

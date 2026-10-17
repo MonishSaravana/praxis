@@ -1,0 +1,371 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_297dba9b4f",
+  "title": "Make Pancakes from Scratch",
+  "domain": "cooking",
+  "summary": "Assemble dry ingredients (flour, baking powder, salt, sugar) in a bowl, add wet ingredients to form batter, then cook pancakes on the stovetop.",
+  "source": "open-set draft from 8 frames",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.047996,
+    "latency_s": 17.466700959019363,
+    "cached": false,
+    "input_tokens": 3249,
+    "output_tokens": 1750,
+    "confidence": 0.45
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Gather bowl and measuring tools",
+      "instruction_novice": "Grab a clean mixing bowl and your measuring cups and spoons. Set them near the stove.",
+      "instruction_expert": "Bowl and measures out.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A clean bowl and a set of measuring spoons sit on the counter or stovetop.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Gather bowl and measuring tools?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Gather dry ingredients",
+      "instruction_novice": "Get out the flour, sugar, baking powder and salt. Line them up so you can reach them.",
+      "instruction_expert": "Stage flour, sugar, leavening, salt.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Flour, sugar, baking powder and salt containers are open next to the bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Gather dry ingredients?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Measure flour into bowl",
+      "instruction_novice": "Spoon flour into the measuring cup and level it off with a flat edge. Pour it into the bowl.",
+      "instruction_expert": "Spoon, level, add flour.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The bowl holds a level mound of flour.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Measure flour into bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Add baking powder, sugar, salt",
+      "instruction_novice": "Measure the baking powder, sugar and salt with the right spoons, leveling each one. Add them to the flour.",
+      "instruction_expert": "Measure and add leavening, sugar, salt.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Small piles of baking powder, sugar and salt sit on top of the flour in the bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Add baking powder, sugar, salt?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Whisk dry ingredients together",
+      "instruction_novice": "Stir the dry ingredients with a whisk or fork until evenly mixed. No streaks should remain.",
+      "instruction_expert": "Whisk dry evenly.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The dry mix in the bowl looks uniform with no visible clumps.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Whisk dry ingredients together?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Mix wet ingredients",
+      "instruction_novice": "In a separate cup, whisk the milk, egg and melted butter or oil together.",
+      "instruction_expert": "Whisk milk, egg, fat.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A cup holds a smooth, pale yellow liquid mixture.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Mix wet ingredients?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 120.0,
+        "std_s": 72.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Combine wet and dry",
+      "instruction_novice": "Make a well in the dry mix and pour in the wet mixture. Stir gently until just combined; small lumps are fine.",
+      "instruction_expert": "Fold wet into dry, don't overmix.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A thick, slightly lumpy batter fills the bowl with no dry flour visible.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Combine wet and dry?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Preheat and grease pan",
+      "instruction_novice": "Put a skillet on medium heat and add a little butter or oil. Wait until it shimmers.",
+      "instruction_expert": "Medium heat, grease pan.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A skillet on the burner has a thin sheen of melted butter or oil.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Preheat and grease pan?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Pour batter into pan",
+      "instruction_novice": "Pour about a quarter cup of batter into the pan for each pancake. Leave space between them.",
+      "instruction_expert": "Ladle quarter-cup rounds.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Round puddles of batter sit in the hot pan.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Pour batter into pan?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Flip when bubbles form",
+      "instruction_novice": "When bubbles pop on top and the edges look dry, slide a spatula under and flip.",
+      "instruction_expert": "Flip at bubbles, set edges.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Pancakes show golden-brown tops in the pan.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Flip when bubbles form?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d11"
+      ],
+      "duration": {
+        "mean_s": 150.0,
+        "std_s": 90.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d11",
+      "name": "Finish cooking and plate",
+      "instruction_novice": "Cook the second side about a minute until golden, then move to a plate. Repeat with remaining batter.",
+      "instruction_expert": "Brown side two, plate, repeat.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A stack of golden pancakes sits on a plate and the bowl is empty.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d11c1",
+          "question": "Is this step done: Finish cooking and plate?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d12"
+      ],
+      "duration": {
+        "mean_s": 600.0,
+        "std_s": 360.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d12",
+      "name": "Turn off stove and clean up",
+      "instruction_novice": "Switch off the burner and put the ingredients away. Rinse the bowl and tools.",
+      "instruction_expert": "Burner off, clean up.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The burner is off and the stovetop is clear of ingredients and tools.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d12c1",
+          "question": "Is this step done: Turn off stove and clean up?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 300.0,
+        "std_s": 180.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

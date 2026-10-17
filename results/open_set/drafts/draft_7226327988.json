@@ -1,0 +1,284 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_7226327988",
+  "title": "Peel Hard-Boiled Eggs Over the Trash",
+  "domain": "cooking",
+  "summary": "Peeling cooked eggs by hand over an open kitchen trash can, then rinsing and setting them aside.",
+  "source": "open-set draft from 8 frames",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.033296,
+    "latency_s": 11.135886208037846,
+    "cached": false,
+    "input_tokens": 3249,
+    "output_tokens": 1015,
+    "confidence": 0.72
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Take cooled eggs from container",
+      "instruction_novice": "Grab the cooled hard-boiled eggs from the fridge or bowl. Cold eggs peel more easily.",
+      "instruction_expert": "Grab cooled eggs.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Hands hold the eggs or a bag of eggs.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Take cooled eggs from container?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Open the trash can lid",
+      "instruction_novice": "Step on the pedal or lift the lid so the trash can is open beneath you.",
+      "instruction_expert": "Open trash lid.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Trash can is open with its liner visible below the hands.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Open the trash can lid?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 5.0,
+        "std_s": 3.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Crack the egg shell",
+      "instruction_novice": "Tap the egg gently on a hard surface or squeeze it so the shell cracks all over.",
+      "instruction_expert": "Crack shell all around.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Egg shell shows a web of cracks.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Crack the egg shell?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 10.0,
+        "std_s": 6.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Start peel at the wide end",
+      "instruction_novice": "Find the air pocket at the wider end and lift off the first piece of shell with your thumb.",
+      "instruction_expert": "Start at air pocket.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A patch of white egg is exposed at the wide end.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Start peel at the wide end?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Peel off remaining shell",
+      "instruction_novice": "Work your thumb under the membrane and pull the shell away in large pieces, letting them drop into the trash.",
+      "instruction_expert": "Peel under membrane, drop shells.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Egg is fully white and smooth with shell pieces in the trash.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Peel off remaining shell?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Repeat for remaining eggs",
+      "instruction_novice": "Do the same crack and peel for each of the other eggs.",
+      "instruction_expert": "Repeat for all eggs.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "All eggs are peeled and held or set aside.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Repeat for remaining eggs?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 120.0,
+        "std_s": 72.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Rinse peeled eggs",
+      "instruction_novice": "Run the peeled eggs under cool water to wash off any small shell bits.",
+      "instruction_expert": "Rinse off shell bits.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Clean, shell-free eggs sit wet under the faucet.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Rinse peeled eggs?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Close trash and store eggs",
+      "instruction_novice": "Close the trash lid and put the eggs in a bowl or container for eating or storage.",
+      "instruction_expert": "Close lid, store eggs.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Trash lid is closed and peeled eggs rest in a container.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Close trash and store eggs?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Wash your hands",
+      "instruction_novice": "Wash your hands with soap and water to finish up.",
+      "instruction_expert": "Wash hands.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Hands are being rinsed at the sink.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Wash your hands?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

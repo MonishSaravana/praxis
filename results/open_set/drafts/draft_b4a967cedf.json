@@ -1,0 +1,371 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_b4a967cedf",
+  "title": "Microwave Mug Cake",
+  "domain": "cooking",
+  "summary": "Gather a microwave-safe mug or bowl, measuring tools and ingredients, mix flour, sugar, cocoa, leavening, milk and oil directly in the mug, microwave about 70-90 seconds, rest briefly, then top and eat.",
+  "source": "open-set draft from 8 frames + the person's description 'making Mug Cake'",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.04362,
+    "latency_s": 14.343500834074803,
+    "cached": false,
+    "input_tokens": 3265,
+    "output_tokens": 1528,
+    "confidence": 0.85
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Get a microwave-safe mug or bowl",
+      "instruction_novice": "Grab a clean, microwave-safe mug or small bowl that holds at least 12 ounces. Set it on your work surface.",
+      "instruction_expert": "Microwave-safe mug on counter.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "An empty mug or bowl sits on the counter or stovetop.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Get a microwave-safe mug or bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Gather measuring spoons and utensils",
+      "instruction_novice": "Pull out measuring spoons and a fork or small spoon for mixing.",
+      "instruction_expert": "Measuring spoons, fork ready.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Measuring spoons and a fork lie next to the mug.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Gather measuring spoons and utensils?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Collect the ingredients",
+      "instruction_novice": "Get flour, sugar, cocoa powder, baking powder, salt, milk, and oil from the pantry and fridge.",
+      "instruction_expert": "Stage all ingredients.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "All ingredient containers are lined up beside the mug.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Collect the ingredients?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Add dry ingredients to mug",
+      "instruction_novice": "Measure about 4 tablespoons flour, 2 to 3 tablespoons sugar, 2 tablespoons cocoa, a quarter teaspoon baking powder, and a pinch of salt into the mug.",
+      "instruction_expert": "Measure dry into mug.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A mound of mixed dry powders sits in the bottom of the mug.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Add dry ingredients to mug?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Whisk dry ingredients together",
+      "instruction_novice": "Stir the dry ingredients with the fork so there are no cocoa clumps.",
+      "instruction_expert": "Fork-whisk dry mix.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The dry mix looks uniform brown with no lumps.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Whisk dry ingredients together?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Add milk and oil",
+      "instruction_novice": "Pour in about 3 tablespoons milk and 1 to 2 tablespoons oil, plus a splash of vanilla if you have it.",
+      "instruction_expert": "Add milk, oil, vanilla.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Liquid sits on top of the dry mix in the mug.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Add milk and oil?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Stir into smooth batter",
+      "instruction_novice": "Mix until smooth, scraping the bottom and sides of the mug so no dry flour is left.",
+      "instruction_expert": "Mix smooth, scrape bottom.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The mug holds a smooth, glossy batter with no dry pockets.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Stir into smooth batter?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Add mix-ins if desired",
+      "instruction_novice": "Drop in a few chocolate chips or other mix-ins and gently press them into the batter.",
+      "instruction_expert": "Optional chips on top.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Chocolate chips or mix-ins are visible in the batter surface.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Add mix-ins if desired?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Microwave the mug cake",
+      "instruction_novice": "Put the mug in the center of the microwave and cook on high for about 70 to 90 seconds, until the top looks set.",
+      "instruction_expert": "Microwave high 70-90s.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The cake has risen in the mug with a set, slightly springy top.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Microwave the mug cake?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 100.0,
+        "std_s": 60.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Remove carefully and cool",
+      "instruction_novice": "Use an oven mitt to take the hot mug out and let it rest for a minute or two.",
+      "instruction_expert": "Mitt out, rest 1-2 min.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The mug sits on the counter with steam rising off the cake.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Remove carefully and cool?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d11"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d11",
+      "name": "Top and serve",
+      "instruction_novice": "Add any topping you like, such as ice cream or whipped cream, and grab a spoon to eat.",
+      "instruction_expert": "Top and serve.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The finished mug cake is topped and a spoon is in it.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d11c1",
+          "question": "Is this step done: Top and serve?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d12"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d12",
+      "name": "Clean up the workspace",
+      "instruction_novice": "Put the ingredients away and place the measuring spoons in the sink or dishwasher.",
+      "instruction_expert": "Put away, clean tools.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The counter is clear of ingredients and used tools.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d12c1",
+          "question": "Is this step done: Clean up the workspace?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 120.0,
+        "std_s": 72.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

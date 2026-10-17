@@ -178,8 +178,9 @@ def main(run: str = "fused", fallback: str = "fused_oracle", render_videos: bool
             j["files"].append(str(out.relative_to(root)))
     (RESULTS / "renders_index.json").write_text(json.dumps({
         "run": run, "fallback": fallback,
-        "note": "Every render is drawn from the saved run log named here (results/runs/<run>.json, runs/<run>/<clip>.jsonl). "
-                "Development clips (results/dev_clips.json) are excluded from selection.",
+        "note": "Every render is drawn from the saved run log named here (runs/<run>/<clip>.jsonl; the logs behind the "
+                "renders are committed, the rest of runs/ is gitignored). Development clips (results/dev_clips.json) "
+                "are excluded from selection.",
         "rendered": jobs}, indent=2))
     return {j["kind"]: j["files"] for j in jobs}
 

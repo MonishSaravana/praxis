@@ -1,0 +1,342 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_94b1b5c776",
+  "title": "Grind Beans and Brew Coffee",
+  "domain": "cooking",
+  "summary": "The person is following a recipe on a tablet, has gathered coffee beans, a kitchen scale and a blade grinder, and is checking or rinsing the grinder at the sink. Next they will weigh and grind the beans, then brew and serve the coffee.",
+  "source": "open-set draft from 8 frames + the person's description 'making Coffee'",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.041692,
+    "latency_s": 14.058503707987256,
+    "cached": false,
+    "input_tokens": 3263,
+    "output_tokens": 1432,
+    "confidence": 0.72
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Review the recipe",
+      "instruction_novice": "Open your coffee recipe on the tablet and read through the amounts. Note how much coffee and water you need.",
+      "instruction_expert": "Check ratio and method.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The tablet shows the coffee recipe on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Review the recipe?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Gather beans, grinder, and scale",
+      "instruction_novice": "Bring the coffee beans, grinder, kitchen scale, and your brewer to the work area. Clear some counter space.",
+      "instruction_expert": "Stage beans, grinder, scale.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Beans, grinder, scale, and brewer sit together on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Gather beans, grinder, and scale?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Clean and dry the grinder",
+      "instruction_novice": "Unplug the grinder and wipe out the cup with a dry paper towel. Never put the motor base under water.",
+      "instruction_expert": "Unplug, wipe grinder cup dry.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The empty grinder cup is clean and dry with no old grounds.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Clean and dry the grinder?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Heat the water",
+      "instruction_novice": "Fill a kettle with fresh water and start heating it. Aim for just off the boil, about 93 to 96°C.",
+      "instruction_expert": "Heat water to ~95°C.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The kettle is on and heating water.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Heat the water?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 240.0,
+        "std_s": 144.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Weigh the coffee beans",
+      "instruction_novice": "Put a cup on the scale and press tare. Add beans until you reach the amount in the recipe, about 1 gram for every 15 to 17 grams of water.",
+      "instruction_expert": "Weigh beans, ~1:16.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The scale display shows the target bean weight.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Weigh the coffee beans?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Grind the beans",
+      "instruction_novice": "Pour the beans into the grinder, close the lid, and plug it in. Pulse in short bursts, shaking gently between pulses, until the grounds look even.",
+      "instruction_expert": "Pulse-grind to brew size.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The grinder cup holds evenly ground coffee.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Grind the beans?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Prepare the filter and brewer",
+      "instruction_novice": "Put a paper filter in the brewer and rinse it with hot water. Pour that rinse water out of the cup.",
+      "instruction_expert": "Rinse filter, dump water.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A wet filter sits in the brewer over an empty mug or carafe.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Prepare the filter and brewer?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Add the grounds",
+      "instruction_novice": "Unplug the grinder, then tap the grounds into the filter. Gently shake the brewer so the bed is level.",
+      "instruction_expert": "Add grounds, level bed.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A flat bed of coffee grounds sits in the filter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Add the grounds?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Bloom the coffee",
+      "instruction_novice": "Pour about twice the coffee's weight in hot water over the grounds to wet them. Wait about 30 seconds while they bubble.",
+      "instruction_expert": "Bloom 2x weight, 30s.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The grounds are wet and puffed up with bubbles.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Bloom the coffee?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Pour the remaining water",
+      "instruction_novice": "Slowly pour the rest of the water in circles until you reach the target weight. Let it drain completely.",
+      "instruction_expert": "Pour to target, drain.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The water has drained through and brewed coffee is in the mug or carafe.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Pour the remaining water?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d11"
+      ],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d11",
+      "name": "Serve and clean up",
+      "instruction_novice": "Remove the brewer and throw away the filter and grounds. Pour your coffee and add milk or sugar if you like.",
+      "instruction_expert": "Discard grounds, serve.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A filled coffee mug sits on the counter and the used filter is gone.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d11c1",
+          "question": "Is this step done: Serve and clean up?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

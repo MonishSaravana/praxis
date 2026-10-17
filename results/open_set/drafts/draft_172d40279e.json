@@ -1,0 +1,371 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_172d40279e",
+  "title": "Brew Coffee with Scale-Measured Grounds",
+  "domain": "cooking",
+  "summary": "The person is making coffee by weighing coffee grounds on a kitchen scale (tared with a bowl), then brewing and serving. The recipe is on a tablet.",
+  "source": "open-set draft from 8 frames + the person's description 'making Coffee'",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.039272,
+    "latency_s": 13.087850708980113,
+    "cached": false,
+    "input_tokens": 3263,
+    "output_tokens": 1311,
+    "confidence": 0.6
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Review the recipe on tablet",
+      "instruction_novice": "Open your coffee recipe on the tablet and check the amounts of coffee and water.",
+      "instruction_expert": "Check recipe ratio.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Tablet on the counter shows the coffee recipe.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Review the recipe on tablet?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Set up kitchen scale on counter",
+      "instruction_novice": "Take the scale out of its box and set it flat on the counter.",
+      "instruction_expert": "Place scale on counter.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Digital scale sits flat on the counter next to the tablet.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Set up kitchen scale on counter?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Gather coffee and a bowl",
+      "instruction_novice": "Grab your coffee beans or grounds and a clean bowl to weigh them in.",
+      "instruction_expert": "Get coffee and bowl.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Coffee bag and bowl are on the counter by the scale.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Gather coffee and a bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Place bowl and tare scale",
+      "instruction_novice": "Put the empty bowl on the scale and press the tare button so it reads zero.",
+      "instruction_expert": "Bowl on, tare to zero.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Bowl rests on the scale and the display reads 0.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Place bowl and tare scale?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Weigh the coffee",
+      "instruction_novice": "Spoon coffee into the bowl until the scale shows the amount in your recipe.",
+      "instruction_expert": "Weigh dose per recipe.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Bowl holds coffee and scale shows the target weight.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Weigh the coffee?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Grind beans if whole",
+      "instruction_novice": "If you have whole beans, grind them to a medium consistency.",
+      "instruction_expert": "Grind medium.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Ground coffee is in the grinder cup or bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Grind beans if whole?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Measure and heat water",
+      "instruction_novice": "Measure the water for your recipe and heat it until just off the boil.",
+      "instruction_expert": "Heat water ~93°C.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Kettle or pot of water is hot and steaming.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Measure and heat water?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 240.0,
+        "std_s": 144.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Add grounds to brewer",
+      "instruction_novice": "Pour the weighed grounds into your coffee maker, filter, or press.",
+      "instruction_expert": "Load grounds into brewer.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Grounds sit in the filter or press, bowl empty.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Add grounds to brewer?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Pour water and brew",
+      "instruction_novice": "Slowly pour the hot water over the grounds and let it steep for about four minutes.",
+      "instruction_expert": "Pour, steep ~4 min.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Brewer is full of steeping coffee.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Pour water and brew?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 270.0,
+        "std_s": 162.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Pour coffee into mug",
+      "instruction_novice": "Press or let it drip, then pour the coffee into your mug.",
+      "instruction_expert": "Press and pour.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Mug is filled with brewed coffee.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Pour coffee into mug?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d11"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d11",
+      "name": "Add milk or sugar",
+      "instruction_novice": "Add milk, sugar, or creamer if you like, and stir.",
+      "instruction_expert": "Doctor to taste.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Coffee in mug is stirred with any additions.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d11c1",
+          "question": "Is this step done: Add milk or sugar?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d12"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d12",
+      "name": "Clean up equipment",
+      "instruction_novice": "Throw out the grounds and rinse the brewer, bowl, and spoon in the sink.",
+      "instruction_expert": "Dump grounds, rinse gear.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Brewer and bowl are rinsed and the counter is clear.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d12c1",
+          "question": "Is this step done: Clean up equipment?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

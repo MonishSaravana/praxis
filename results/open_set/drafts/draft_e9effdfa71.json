@@ -1,0 +1,313 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_e9effdfa71",
+  "title": "Make Maruchan Ramen Noodle Soup",
+  "domain": "cooking",
+  "summary": "Cook a packet of Maruchan chicken ramen: get the packet and a bowl, boil water, cook the noodles, stir in the seasoning, and serve.",
+  "source": "open-set draft from 8 frames",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.036496,
+    "latency_s": 11.725622582947835,
+    "cached": false,
+    "input_tokens": 3249,
+    "output_tokens": 1175,
+    "confidence": 0.85
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Get ramen packet from drawer",
+      "instruction_novice": "Open the drawer and take out one packet of ramen noodle soup.",
+      "instruction_expert": "Grab ramen packet.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The person is holding a Maruchan ramen packet.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Get ramen packet from drawer?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Read package directions",
+      "instruction_novice": "Flip the packet over and read the cooking directions on the back.",
+      "instruction_expert": "Check back-of-pack directions.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The back of the packet with the directions is facing the camera.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Read package directions?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Get a bowl",
+      "instruction_novice": "Take a bowl from the counter that is big enough for soup.",
+      "instruction_expert": "Grab serving bowl.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A bowl is in hand or set near the stove.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Get a bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Boil two cups of water",
+      "instruction_novice": "Pour about two cups of water into a small pot, set it on the stove, and turn the burner to high until the water boils.",
+      "instruction_expert": "Boil 2 cups water.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A pot of water is boiling rapidly on the burner.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Boil two cups of water?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 300.0,
+        "std_s": 180.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Open packet and remove seasoning",
+      "instruction_novice": "Tear open the packet and set the small seasoning packet aside.",
+      "instruction_expert": "Open pack, set seasoning aside.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The noodle block is out of the wrapper and the seasoning packet sits on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Open packet and remove seasoning?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Add noodles to boiling water",
+      "instruction_novice": "Gently place the noodle block into the boiling water so it doesn't splash.",
+      "instruction_expert": "Drop in noodles.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The noodle block is in the boiling water in the pot.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Add noodles to boiling water?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 10.0,
+        "std_s": 6.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Cook noodles three minutes, stirring",
+      "instruction_novice": "Let the noodles cook for about three minutes, stirring now and then to break them apart.",
+      "instruction_expert": "Cook 3 min, stir.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The noodles are soft, separated, and loose in the pot.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Cook noodles three minutes, stirring?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Turn off heat, add seasoning",
+      "instruction_novice": "Turn off the burner, then empty the seasoning packet into the pot and stir well.",
+      "instruction_expert": "Heat off, stir in seasoning.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The burner is off and the broth in the pot is golden with the seasoning mixed in.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Turn off heat, add seasoning?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Pour soup into bowl",
+      "instruction_novice": "Carefully pour the noodles and broth into the bowl. Use an oven mitt if the pot handle is hot.",
+      "instruction_expert": "Transfer to bowl.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The bowl is filled with noodles and broth and the pot is empty.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Pour soup into bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Clean up and serve",
+      "instruction_novice": "Throw the wrapper in the trash and put the pot in the sink, then enjoy your soup.",
+      "instruction_expert": "Trash wrapper, serve.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The bowl of ramen sits ready with a utensil and the wrapper is in the trash.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Clean up and serve?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

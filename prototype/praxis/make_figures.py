@@ -48,7 +48,7 @@ def main() -> list[str]:
         fb = [x for r in runs["fused"]["per_clip"] for x in r["feedback_latency_s"]]
         if fb:
             out.append(str(F.bars({"p50": float(np.percentile(fb, 50)), "p95": float(np.percentile(fb, 95))},
-                                  "Feedback latency: GT step end → Praxis feedback (s)", "feedback_latency", "{:.1f}s")))
+                                  "Feedback latency: annotated step end to Praxis feedback (s)", "feedback_latency", "{:.1f}s")))
         out.append(str(F.per_category(runs["fused"]["per_category"], "step_acc", "Step accuracy by procedure (Praxis)")))
     cal = F.load("l5/calibration.json")
     if cal:
@@ -108,7 +108,7 @@ def main() -> list[str]:
                                 "recall": v["aggregate"]["step_recall_mean"],
                                 "acc": v["aggregate"]["step_acc_after_draft_mean"]}
                 for k, v in os_["conditions"].items()}
-        out.append(str(F.panels(rows, [("Recipe named correctly", "named", "{:.0%}"),
+        out.append(str(F.panels(rows, [("Recipe named correctly (of drafts)", "named", "{:.0%}"),
                                        ("Annotated steps covered by the draft", "recall", "{:.0%}"),
                                        ("Step accuracy after the draft", "acc", "{:.0%}")],
                                 "open_set_drafting", f"Recipes Praxis has never seen ({len(os_['recipes'])} recipes, "

@@ -28,6 +28,9 @@ of the verifier, and it is called only when something happens.
 - **Renders.** `renders/showcase_*_user.mp4` (what a wearer would see) and `renders/*_engineer.mp4` (under the hood).
   Failure cases are labeled `FAILURE CASE`. The assembly clips (`renders/assembly_*`) are IndustReal toy-car
   assembly with **no ground truth**: qualitative only.
+- **Also rendered from logs:** `renders/policy_demo_{novice,expert}_user.mp4` (same clip, two user profiles) and
+  `renders/live_replay_user.mp4` (live mode on a recording replayed in real time). The clip, alert and selection
+  rule behind every showcase are in `results/renders_index.json`.
 - **Local viewer.** Run `cd prototype && uv run python -m praxis.viewer fused`, then
   `cd .. && python3 -m http.server 8765`, and open <http://localhost:8765/renders/viewer/>. The viewer shows the
   video, the synced belief over the task graph, the event log and per-clip metrics.
@@ -35,4 +38,7 @@ of the verifier, and it is called only when something happens.
 ## Status and honesty notes
 - Every number in the deck or the interview must come from `results/` (see `docs/CLAIMS.md`).
 - Not tested on glasses. The input layer is camera-agnostic; `MetaGlassesSource` is a documented stub.
+- Live mode was run on a recorded clip replayed at real-time speed, not on a webcam (no camera in this build).
+- Open-set drafting (tasks outside the library) works in a first form; on unseen recipes it is much better when
+  the person says what they are making (`results/open_set/`).
 - Metrics come from CaptainCook4D (cooking). The assembly dataset's labels were unreachable this weekend.

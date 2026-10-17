@@ -1,0 +1,458 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_0ea3fcb720",
+  "title": "Weigh Ingredients and Make Flatbread on a Griddle",
+  "domain": "cooking",
+  "summary": "The person follows a tablet recipe, sets up a kitchen scale, tares a bowl, and weighs out ingredients. A rolling pin and griddle pan suggest homemade flatbread such as tortillas or roti, rolled out and cooked on the stovetop.",
+  "source": "open-set draft from 8 frames",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.051616,
+    "latency_s": 22.327555291936733,
+    "cached": true,
+    "input_tokens": 3249,
+    "output_tokens": 1931,
+    "confidence": 0.45
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Set up scale and recipe",
+      "instruction_novice": "Wipe the kitchen scale, place it on a flat counter, and open your recipe where you can see it.",
+      "instruction_expert": "Scale out, recipe up.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Clean scale sits on the counter beside the open tablet recipe.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Set up scale and recipe?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Tare the mixing bowl",
+      "instruction_novice": "Put the empty bowl on the scale and press the tare button so it reads zero.",
+      "instruction_expert": "Bowl on, tare.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Bowl rests on the scale and the display reads 0.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Tare the mixing bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Weigh the flour",
+      "instruction_novice": "Spoon flour into the bowl until the scale shows the amount in the recipe.",
+      "instruction_expert": "Weigh flour.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Bowl holds flour and the scale shows the target weight.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Weigh the flour?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Add salt and other dry ingredients",
+      "instruction_novice": "Tare again, then add the salt and any baking powder the recipe calls for.",
+      "instruction_expert": "Tare, add salt/leavening.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Dry ingredients are in the bowl on top of the flour.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Add salt and other dry ingredients?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Add fat",
+      "instruction_novice": "Weigh the butter or oil and rub it into the flour with your fingertips until it looks like coarse crumbs.",
+      "instruction_expert": "Rub in fat.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Flour mixture looks crumbly with no large butter lumps.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Add fat?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 120.0,
+        "std_s": 72.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Add water and mix",
+      "instruction_novice": "Pour in warm water a little at a time, stirring until a shaggy dough forms.",
+      "instruction_expert": "Add water, bring together.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A rough ball of dough sits in the bowl with no dry flour left.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Add water and mix?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Knead the dough",
+      "instruction_novice": "Knead the dough on the counter for a few minutes until it is smooth and soft.",
+      "instruction_expert": "Knead till smooth.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A smooth, elastic dough ball sits on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Knead the dough?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 300.0,
+        "std_s": 180.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Rest the dough",
+      "instruction_novice": "Cover the dough with a towel or lid and let it rest so it is easier to roll.",
+      "instruction_expert": "Cover, rest 15–30 min.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Covered dough ball sits in the bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Rest the dough?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 1200.0,
+        "std_s": 720.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Divide into portions",
+      "instruction_novice": "Cut the dough into equal pieces, weighing them on the scale if you want them identical, and roll each into a ball.",
+      "instruction_expert": "Portion, ball up.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Several equal dough balls are lined up on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Divide into portions?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Preheat the griddle",
+      "instruction_novice": "Put the pan on the burner over medium-high heat and let it get hot.",
+      "instruction_expert": "Heat pan med-high.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Pan sits on the glowing burner, hot and dry.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Preheat the griddle?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d11"
+      ],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d11",
+      "name": "Roll out a round",
+      "instruction_novice": "Dust a ball with flour and roll it out with the rolling pin into a thin, even circle.",
+      "instruction_expert": "Roll thin round.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A thin, flat circle of dough lies on the floured counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d11c1",
+          "question": "Is this step done: Roll out a round?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d12"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d12",
+      "name": "Cook first side",
+      "instruction_novice": "Lay the round in the hot pan and cook until bubbles form and the bottom has light brown spots.",
+      "instruction_expert": "Cook till bubbles.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Flatbread in the pan shows bubbles on top.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d12c1",
+          "question": "Is this step done: Cook first side?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d13"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d13",
+      "name": "Flip and finish",
+      "instruction_novice": "Flip it and cook the other side until spotted and puffed, then move it to a plate.",
+      "instruction_expert": "Flip, cook, remove.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A cooked, browned flatbread rests on a plate.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d13c1",
+          "question": "Is this step done: Flip and finish?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d14"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d14",
+      "name": "Repeat with remaining dough",
+      "instruction_novice": "Roll and cook the rest of the balls the same way, stacking them under a towel to keep warm.",
+      "instruction_expert": "Repeat, stack covered.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A covered stack of cooked flatbreads sits on the plate and no dough balls remain.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d14c1",
+          "question": "Is this step done: Repeat with remaining dough?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d15"
+      ],
+      "duration": {
+        "mean_s": 900.0,
+        "std_s": 540.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d15",
+      "name": "Turn off stove and clean up",
+      "instruction_novice": "Switch off the burner, clean the scale, and wipe down the counter.",
+      "instruction_expert": "Burner off, clean up.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Burner is off and the counter is clear and wiped.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d15c1",
+          "question": "Is this step done: Turn off stove and clean up?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 300.0,
+        "std_s": 180.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

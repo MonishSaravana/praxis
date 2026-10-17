@@ -1,0 +1,400 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_e2e6fdd57f",
+  "title": "Making Zoodles (Zucchini Noodles) with Garlic",
+  "domain": "cooking",
+  "summary": "Gather garlic and zucchini, peel and mince garlic, spiralize zucchini, then sauté garlic and zoodles briefly in oil, season, and serve.",
+  "source": "open-set draft from 8 frames + the person's description 'making Zoodles'",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.041236,
+    "latency_s": 17.773204958066344,
+    "cached": false,
+    "input_tokens": 3264,
+    "output_tokens": 1409,
+    "confidence": 0.8
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Review the recipe",
+      "instruction_novice": "Read through the recipe on your tablet so you know what's coming.",
+      "instruction_expert": "Check recipe.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Recipe is open on the tablet next to the stove.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Review the recipe?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Gather garlic and zucchini",
+      "instruction_novice": "Grab a garlic clove or two and your zucchini from the pantry or fridge.",
+      "instruction_expert": "Pull garlic, zucchini.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Garlic and zucchini sit on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Gather garlic and zucchini?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Get knife and tools",
+      "instruction_novice": "Get a sharp knife, a cutting board, and your spiralizer.",
+      "instruction_expert": "Knife, board, spiralizer out.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Knife, board, and spiralizer are on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Get knife and tools?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Peel the garlic cloves",
+      "instruction_novice": "Trim the root end and peel the papery skin off each clove with the knife.",
+      "instruction_expert": "Trim, peel garlic.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Clean white garlic cloves with skins removed.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Peel the garlic cloves?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Mince the garlic",
+      "instruction_novice": "Slice the cloves thin, then rock the knife across them until finely chopped.",
+      "instruction_expert": "Mince garlic fine.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A small pile of minced garlic on the board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Mince the garlic?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Wash and trim zucchini",
+      "instruction_novice": "Rinse the zucchini and cut off both ends so they sit flat.",
+      "instruction_expert": "Rinse, trim ends.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Clean zucchini with both ends cut flat.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Wash and trim zucchini?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Spiralize the zucchini",
+      "instruction_novice": "Secure a zucchini in the spiralizer and turn the handle to make long noodles.",
+      "instruction_expert": "Spiralize all zucchini.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A pile of long zucchini noodles in a bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Spiralize the zucchini?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Blot excess moisture",
+      "instruction_novice": "Pat the noodles with a paper towel to remove extra water so they don't get soggy.",
+      "instruction_expert": "Blot dry.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Zoodles look drier on paper towels.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Blot excess moisture?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Heat oil in pan",
+      "instruction_novice": "Put a pan on medium heat and add a tablespoon of olive oil.",
+      "instruction_expert": "Oil, medium heat.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Oil shimmers in the pan on the stove.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Heat oil in pan?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Sauté the garlic",
+      "instruction_novice": "Add the garlic and stir for about 30 seconds until fragrant, not brown.",
+      "instruction_expert": "Garlic 30s, fragrant.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Garlic sizzles lightly golden in the oil.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Sauté the garlic?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d11"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d11",
+      "name": "Cook the zoodles",
+      "instruction_novice": "Add the zoodles and toss gently for 2 to 3 minutes until just tender.",
+      "instruction_expert": "Toss 2–3 min.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Zoodles are bright green and slightly softened in the pan.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d11c1",
+          "question": "Is this step done: Cook the zoodles?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d12"
+      ],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d12",
+      "name": "Season to taste",
+      "instruction_novice": "Sprinkle with salt, pepper, and any extras like parmesan or red pepper flakes.",
+      "instruction_expert": "Salt, pepper, toppings.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Seasoning is visible on the zoodles.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d12c1",
+          "question": "Is this step done: Season to taste?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d13"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d13",
+      "name": "Plate and serve",
+      "instruction_novice": "Turn off the heat and move the zoodles to a plate right away.",
+      "instruction_expert": "Heat off, plate.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Plated zoodles with the burner turned off.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d13c1",
+          "question": "Is this step done: Plate and serve?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

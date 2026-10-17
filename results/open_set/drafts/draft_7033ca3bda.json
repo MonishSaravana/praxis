@@ -1,0 +1,313 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_7033ca3bda",
+  "title": "Peel and Chop an Onion",
+  "domain": "cooking",
+  "summary": "The person peeled garlic over a compost bin, grabbed an onion from a bag, and is now peeling the onion's papery skin; next they will trim, halve, and chop it on a cutting board.",
+  "source": "open-set draft from 8 frames",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.035836,
+    "latency_s": 12.401452791062184,
+    "cached": false,
+    "input_tokens": 3249,
+    "output_tokens": 1142,
+    "confidence": 0.6
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Peel garlic cloves over bin",
+      "instruction_novice": "Pinch and pull the papery skin off each garlic clove, dropping the skins into the bin.",
+      "instruction_expert": "Peel garlic over bin.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Clean white garlic cloves are in hand with skins in the bin.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Peel garlic cloves over bin?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Grab an onion from the bag",
+      "instruction_novice": "Take one onion out of the produce bag on the counter.",
+      "instruction_expert": "Grab onion.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A whole onion is held in both hands.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Grab an onion from the bag?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 10.0,
+        "std_s": 6.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Peel the onion's outer skin",
+      "instruction_novice": "Pick at the dry outer layer with your fingers and peel it away over the bin. Remove any soft or damaged layer too.",
+      "instruction_expert": "Strip papery skin.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The onion is pale and smooth with no brown skin left.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Peel the onion's outer skin?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Rinse the onion",
+      "instruction_novice": "Give the peeled onion a quick rinse under cold water and pat it dry.",
+      "instruction_expert": "Rinse, pat dry.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The clean onion sits on a dry cutting board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Rinse the onion?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Trim the stem end",
+      "instruction_novice": "Lay the onion on the cutting board and slice off the pointed stem end. Leave the hairy root end on to hold it together.",
+      "instruction_expert": "Trim top, keep root.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The onion has a flat cut top and an intact root end.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Trim the stem end?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Halve through the root",
+      "instruction_novice": "Stand the onion on its flat end and cut straight down through the root into two halves.",
+      "instruction_expert": "Halve pole to pole.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Two onion halves lie cut side down on the board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Halve through the root?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 10.0,
+        "std_s": 6.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Make lengthwise cuts",
+      "instruction_novice": "With your fingertips curled, slice each half lengthwise toward the root without cutting through it.",
+      "instruction_expert": "Vertical slices, root intact.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Each half shows parallel slits that are still joined at the root.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Make lengthwise cuts?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Cross-cut into dice",
+      "instruction_novice": "Turn the half and slice across the slits to make small pieces, working back toward the root.",
+      "instruction_expert": "Cross-cut to dice.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A pile of diced onion sits on the board with only the root stubs left.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Cross-cut into dice?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Discard root and scraps",
+      "instruction_novice": "Throw the root ends and any scraps into the bin.",
+      "instruction_expert": "Bin scraps.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Only the diced onion remains on the board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Discard root and scraps?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 10.0,
+        "std_s": 6.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Transfer onion to bowl or pan",
+      "instruction_novice": "Scrape the diced onion into a bowl or pan using the back of your knife.",
+      "instruction_expert": "Transfer diced onion.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The diced onion is in a bowl or pan and the board is empty.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Transfer onion to bowl or pan?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 10.0,
+        "std_s": 6.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

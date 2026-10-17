@@ -1,6 +1,7 @@
 {
  "_sources": {
   "data": "results/data/eval_manifest_summary.json",
+  "eval_error_types": "data/cc4d/manifest.json (CaptainCook4D error annotations, eval clips)",
   "l1_speed": "results/l1/l1_speed.json",
   "fast_path": "results/l1/l1_speed.json",
   "l1_quality": "results/l1/l1_quality_and_probes.json",
@@ -12,8 +13,10 @@
   "run_fused_heuristic_gate": "results/runs/fused_heuristic_gate.json",
   "run_local_only": "results/runs/local_only.json",
   "run_verifier_only": "results/runs/verifier_only.json",
+  "run_fused_distilled": "results/runs/fused_distilled.json",
   "run_fused_distilled_alone": "results/runs/fused_distilled_alone.json",
   "run_fused_no_escalation": "results/runs/fused_no_escalation.json",
+  "run_fused_claude_fast": "results/runs/fused_claude_fast.json",
   "run_baseline_stateless": "results/runs/baseline_stateless.json",
   "run_fused_oracle_excl": "results/runs/fused_oracle.json (aggregate_excl_dev_clips)",
   "run_baseline_excl": "results/runs/baseline_stateless.json (aggregate_excl_dev_clips)",
@@ -29,6 +32,8 @@
   "adaptive_detail": "results/l6/adaptive_detail.json",
   "semantic_baseline_stateless": "results/l6/mistake_semantic_baseline_stateless.json",
   "semantic_fused": "results/l6/mistake_semantic_fused.json",
+  "semantic_fused_claude_fast": "results/l6/mistake_semantic_fused_claude_fast.json",
+  "semantic_fused_distilled": "results/l6/mistake_semantic_fused_distilled.json",
   "semantic_fused_distilled_alone": "results/l6/mistake_semantic_fused_distilled_alone.json",
   "semantic_fused_heuristic_gate": "results/l6/mistake_semantic_fused_heuristic_gate.json",
   "semantic_fused_no_escalation": "results/l6/mistake_semantic_fused_no_escalation.json",
@@ -111,6 +116,17 @@
     "gt_mistakes": 19,
     "clips_with_mistakes": 4
    }
+  }
+ },
+ "eval_error_types": {
+  "n_timed_errors": 170,
+  "errors_with_tag": {
+   "Order Error": 96,
+   "Preparation Error": 57,
+   "Technique Error": 42,
+   "Measurement Error": 33,
+   "Timing Error": 10,
+   "Temperature Error": 8
   }
  },
  "l1_speed": {
@@ -2934,6 +2950,74 @@
   "view_requests": 9,
   "hints": 38
  },
+ "run_fused_distilled": {
+  "n_clips": 48,
+  "minutes": 234.8806337081822,
+  "step_acc": 0.5192122861305718,
+  "step_acc_after_recognition": 0.5192122861305718,
+  "step_acc_incl_between": 0.4354866868767952,
+  "transition_err_s": {
+   "n": 131,
+   "p50": 21.103632230214203,
+   "p95": 179.4854141838803,
+   "mean": 52.52639171853551
+  },
+  "task_top1": 1.0,
+  "t_recognize_s": {
+   "n": 48,
+   "p50": 0.0,
+   "p95": 0.0,
+   "mean": 0.0
+  },
+  "mistakes": {
+   "tp": 7,
+   "fp": 1,
+   "fn": 163,
+   "precision": 0.875,
+   "recall": 0.041176470588235294,
+   "f1": 0.07865168539325842,
+   "detect_minus_step_end_s": {
+    "n": 7,
+    "p50": -18.115700000000004,
+    "p95": -0.4751500000000066,
+    "mean": -21.37201248259927
+   },
+   "detect_minus_step_start_s": {
+    "n": 7,
+    "p50": 17.5462,
+    "p95": 34.064650969407495,
+    "mean": 18.951839895773883
+   },
+   "share_caught_before_step_end": 0.8571428571428571
+  },
+  "false_alarms_per_min": 0.004257481701290065,
+  "alerts_per_min": 0.03405985361032052,
+  "feedback_latency_s": {
+   "n": 74,
+   "p50": 0.4962999999999944,
+   "p95": 118.17724079826256,
+   "mean": 4.155444205671567
+  },
+  "progress_latency_s": {
+   "n": 131,
+   "p50": 1.5142000000000166,
+   "p95": 146.16734270490682,
+   "mean": 2.2533533496380693
+  },
+  "verifier_latency_ms_live": {
+   "n": 442,
+   "p50": 0.3471249365247786,
+   "p95": 4528.188621409936,
+   "mean": 482.12934917152955
+  },
+  "verifier_calls": 2981,
+  "verifier_errors": 0,
+  "escalated_frame_share": 0.1509591920343421,
+  "cost_usd": 1.84951437,
+  "cost_usd_per_video_min": 0.007874273586548023,
+  "view_requests": 1,
+  "hints": 77
+ },
  "run_fused_distilled_alone": {
   "n_clips": 48,
   "minutes": 234.8806337081822,
@@ -3069,6 +3153,74 @@
   "cost_usd_per_video_min": 0.0012073068414500008,
   "view_requests": 0,
   "hints": 71
+ },
+ "run_fused_claude_fast": {
+  "n_clips": 48,
+  "minutes": 234.8806337081822,
+  "step_acc": 0.4666149046571379,
+  "step_acc_after_recognition": 0.4666149046571379,
+  "step_acc_incl_between": 0.3937000364625575,
+  "transition_err_s": {
+   "n": 99,
+   "p50": 18.603627005668457,
+   "p95": 194.881222531909,
+   "mean": 48.37599013082555
+  },
+  "task_top1": 1.0,
+  "t_recognize_s": {
+   "n": 48,
+   "p50": 0.0,
+   "p95": 0.0,
+   "mean": 0.0
+  },
+  "mistakes": {
+   "tp": 5,
+   "fp": 0,
+   "fn": 165,
+   "precision": 1.0,
+   "recall": 0.029411764705882353,
+   "f1": 0.05714285714285715,
+   "detect_minus_step_end_s": {
+    "n": 5,
+    "p50": -41.63510000000002,
+    "p95": 6.123315383952069,
+    "mean": -44.21326588374172
+   },
+   "detect_minus_step_start_s": {
+    "n": 5,
+    "p50": 29.79220000000001,
+    "p95": 32.809425424553574,
+    "mean": 25.692048788570826
+   },
+   "share_caught_before_step_end": 0.6
+  },
+  "false_alarms_per_min": 0.0,
+  "alerts_per_min": 0.021287408506450323,
+  "feedback_latency_s": {
+   "n": 46,
+   "p50": 5.429888754534467,
+   "p95": 153.3105244654605,
+   "mean": 19.56155173142132
+  },
+  "progress_latency_s": {
+   "n": 99,
+   "p50": 4.251099999999951,
+   "p95": 169.72482999999997,
+   "mean": 5.056395159781044
+  },
+  "verifier_latency_ms_live": {
+   "n": 188,
+   "p50": 1688.5488125262782,
+   "p95": 5427.4663142859945,
+   "mean": 2493.07584927722
+  },
+  "verifier_calls": 2565,
+  "verifier_errors": 0,
+  "escalated_frame_share": 0.12997630964891968,
+  "cost_usd": 1.71146957,
+  "cost_usd_per_video_min": 0.007286550376589775,
+  "view_requests": 0,
+  "hints": 58
  },
  "run_baseline_stateless": {
   "n_clips": 48,
@@ -5262,6 +5414,48 @@
   },
   "spend_usd": 0.0
  },
+ "semantic_fused_claude_fast": {
+  "run": "fused_claude_fast",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 5,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.012772445103870194,
+  "time_window_hits": 5,
+  "semantic_yes": 2,
+  "semantic_partial": 1,
+  "strict_precision": 0.4,
+  "lenient_precision": 0.6,
+  "strict_recall": 0.011764705882352941,
+  "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+   "Order Error": 2,
+   "Timing Error": 1,
+   "Preparation Error": 1
+  },
+  "spend_usd": 0.011964
+ },
+ "semantic_fused_distilled": {
+  "run": "fused_distilled",
+  "judge": "claude-opus-5-5",
+  "judge_version": "mistake-judge-v1",
+  "n_alerts": 8,
+  "minutes": 234.8806337081822,
+  "strict_false_alarms_per_min": 0.025544890207740388,
+  "time_window_hits": 8,
+  "semantic_yes": 2,
+  "semantic_partial": 1,
+  "strict_precision": 0.25,
+  "lenient_precision": 0.375,
+  "strict_recall": 0.011764705882352941,
+  "n_gt_mistakes": 170,
+  "yes_by_annotated_tag": {
+   "Temperature Error": 1,
+   "Order Error": 1,
+   "Preparation Error": 1
+  },
+  "spend_usd": 0.010984
+ },
  "semantic_fused_distilled_alone": {
   "run": "fused_distilled_alone",
   "judge": "claude-opus-5-5",
@@ -5519,7 +5713,7 @@
   }
  },
  "spend": {
-  "total_usd": 94.61292817599998,
+  "total_usd": 98.34579049799999,
   "items": {
    "L3 compile (8 recipes, Fable 5.1)": 4.16358,
    "L3 compile (IndustReal graph)": 0.43374,
@@ -5530,6 +5724,8 @@
    "visual-uncertainty (last re-run, new calls only)": 0.2666216,
    "engine run: baseline_stateless": 18.352767600000085,
    "engine run: fused": 3.5941585419999997,
+   "engine run: fused_claude_fast": 1.4069881099999986,
+   "engine run: fused_distilled": 0.8710741700000003,
    "engine run: fused_distilled_alone": 5.276787,
    "engine run: fused_heuristic_gate": 3.831941284000001,
    "engine run: fused_no_escalation": 0.2835729960000002,
@@ -5541,7 +5737,11 @@
    "design selection (train split): design_selection_v4": 2.0962831100000003,
    "design selection (train split): design_selection_v5": 1.5288205539999997,
    "invalid engine run (quarantined): fused_claude_fast_localization_errors": 1.1792780700000007,
-   "mistake judge (Opus 5.5)": 0.020048,
+   "mistake judge (Opus 5.5)": 0.042996,
+   "open-set engine runs: open_set": 0.4181226259999997,
+   "open-set engine runs: open_set_smoke": 0.0027614160000000013,
+   "open-set drafts (Opus 5.5)": 0.806888,
+   "open-set draft judge (Opus 5.5)": 0.20408,
    "demo: industreal_demo.json": 0.02273438999999999,
    "demo: policy_demo.json": 0.014450286,
    "live mode: live_replay_10_18_0": 0.020445054,

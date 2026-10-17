@@ -1,0 +1,342 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_3a51c69d5d",
+  "title": "Brew coffee from whole beans (weigh, grind, brew)",
+  "domain": "cooking",
+  "summary": "Person is weighing whole coffee beans (Eight O'Clock) on a kitchen scale in a bowl, likely to grind and brew a cup of coffee, possibly following a recipe on a tablet.",
+  "source": "open-set draft from 8 frames",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.039016,
+    "latency_s": 12.786742458003573,
+    "cached": false,
+    "input_tokens": 3249,
+    "output_tokens": 1301,
+    "confidence": 0.72
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Gather mug and coffee gear",
+      "instruction_novice": "Grab a clean mug, your coffee bag, grinder, and brewer. Set them on the counter.",
+      "instruction_expert": "Stage mug, beans, grinder, brewer.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Mug, coffee bag, scale, and brewer sit on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Gather mug and coffee gear?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Place bowl on scale and tare",
+      "instruction_novice": "Set an empty bowl on the scale. Press the tare button so it reads zero.",
+      "instruction_expert": "Bowl on scale, tare.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Empty bowl on scale with display showing 0.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Place bowl on scale and tare?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Weigh out the coffee beans",
+      "instruction_novice": "Add beans a few at a time until you reach the target weight. About 15 to 20 grams makes one cup.",
+      "instruction_expert": "Weigh ~18 g beans.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Beans in bowl with scale showing the target weight.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Weigh out the coffee beans?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Close and store the coffee bag",
+      "instruction_novice": "Roll the bag top down and seal it. This keeps the remaining beans fresh.",
+      "instruction_expert": "Seal bag.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Coffee bag is rolled closed and set aside.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Close and store the coffee bag?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Heat the water",
+      "instruction_novice": "Fill a kettle with fresh water and bring it to a boil. Let it rest about 30 seconds off the boil.",
+      "instruction_expert": "Heat water ~200°F.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Kettle of hot water ready.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Heat the water?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 240.0,
+        "std_s": 144.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Grind the beans",
+      "instruction_novice": "Pour the beans into the grinder and grind to a medium texture, like coarse sand.",
+      "instruction_expert": "Grind medium.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Ground coffee in the grinder cup, no whole beans left.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Grind the beans?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Load grounds into brewer",
+      "instruction_novice": "Put a filter in the brewer and add the grounds. Shake gently to level them.",
+      "instruction_expert": "Filter in, grounds, level.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Leveled coffee grounds in a filter over the mug.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Load grounds into brewer?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Bloom the grounds",
+      "instruction_novice": "Pour just enough hot water to wet all the grounds. Wait about 30 seconds.",
+      "instruction_expert": "Bloom 2x weight, 30 s.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Grounds are wet and puffed up.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Bloom the grounds?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Pour remaining water slowly",
+      "instruction_novice": "Pour the rest of the water slowly in circles. Aim for about 16 times the coffee weight.",
+      "instruction_expert": "Pour to 1:16 ratio.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Water has been added and is dripping through into the mug.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Pour remaining water slowly?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 150.0,
+        "std_s": 90.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Remove brewer and discard grounds",
+      "instruction_novice": "When dripping stops, lift off the brewer. Throw away the filter and grounds.",
+      "instruction_expert": "Remove, discard grounds.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Mug full of brewed coffee; brewer removed.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Remove brewer and discard grounds?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d11"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d11",
+      "name": "Add milk or sugar and serve",
+      "instruction_novice": "Add milk or sugar if you like, and stir. Enjoy your coffee.",
+      "instruction_expert": "Doctor and serve.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Finished cup of coffee ready to drink.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d11c1",
+          "question": "Is this step done: Add milk or sugar and serve?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

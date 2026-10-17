@@ -1,0 +1,313 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_689f5abdb8",
+  "title": "Making Ramen (with fresh aromatics)",
+  "domain": "cooking",
+  "summary": "Person is peeling garlic over the trash bin as prep for homemade ramen; full flow covers prepping aromatics and toppings, boiling eggs and noodles, building the broth, and assembling the bowl.",
+  "source": "open-set draft from 8 frames + the person's description 'making Ramen'",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.039132,
+    "latency_s": 16.88807704206556,
+    "cached": false,
+    "input_tokens": 3263,
+    "output_tokens": 1304,
+    "confidence": 0.6
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Gather ingredients and tools",
+      "instruction_novice": "Get out your ramen noodles, broth or seasoning, garlic, green onions, eggs, and a pot. Keep everything within reach.",
+      "instruction_expert": "Mise en place: noodles, aromatics, eggs.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Ingredients and a pot are laid out on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Gather ingredients and tools?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 120.0,
+        "std_s": 72.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Peel the garlic cloves",
+      "instruction_novice": "Break cloves off the bulb and peel away the papery skin over the trash. Crush the clove lightly if the skin sticks.",
+      "instruction_expert": "Peel garlic.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Clean white garlic cloves are in hand with skins in the bin.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Peel the garlic cloves?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 120.0,
+        "std_s": 72.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Mince garlic and slice aromatics",
+      "instruction_novice": "Finely chop the garlic on a cutting board. Thinly slice green onions and any ginger.",
+      "instruction_expert": "Mince garlic, slice scallions.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Minced garlic and sliced scallions sit in small piles on the board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Mince garlic and slice aromatics?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Boil eggs",
+      "instruction_novice": "Lower eggs into boiling water and cook about 6 to 7 minutes for a jammy yolk. Then move them to cold water.",
+      "instruction_expert": "Soft-boil eggs 6.5 min, ice bath.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Eggs are cooling in a bowl of cold water.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Boil eggs?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 480.0,
+        "std_s": 288.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Sauté aromatics in pot",
+      "instruction_novice": "Heat a little oil in the pot on medium and stir the garlic and ginger until fragrant, about a minute. Don't let it brown too much.",
+      "instruction_expert": "Bloom garlic in oil.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Garlic is golden and fragrant in the oiled pot.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Sauté aromatics in pot?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Add broth and seasoning",
+      "instruction_novice": "Pour in water or broth and add the seasoning packet, soy sauce, or miso. Stir and bring it to a boil.",
+      "instruction_expert": "Add stock, season, boil.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Seasoned broth is boiling in the pot.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Add broth and seasoning?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 300.0,
+        "std_s": 180.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Cook the noodles",
+      "instruction_novice": "Drop the noodles into the boiling broth or a separate pot and cook per the package, usually 2 to 4 minutes. Loosen them with chopsticks.",
+      "instruction_expert": "Cook noodles 3 min.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Noodles are soft and separated in the pot.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Cook the noodles?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 210.0,
+        "std_s": 126.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Peel and halve eggs",
+      "instruction_novice": "Crack and peel the cooled eggs, then slice them in half lengthwise.",
+      "instruction_expert": "Peel, halve eggs.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Halved eggs with soft yolks sit on the board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Peel and halve eggs?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 120.0,
+        "std_s": 72.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Assemble the bowl",
+      "instruction_novice": "Pour noodles and broth into a bowl. Top with the egg halves, green onions, and any other toppings.",
+      "instruction_expert": "Bowl, broth, top.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A bowl of ramen topped with egg and scallions is ready.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Assemble the bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Turn off stove and clean up",
+      "instruction_novice": "Switch off the burner and put the pot in the sink. Toss any remaining scraps.",
+      "instruction_expert": "Burner off, tidy.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Stove is off and counter is clear.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Turn off stove and clean up?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 120.0,
+        "std_s": 72.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

@@ -1,0 +1,342 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_f77379e109",
+  "title": "Make Maruchan Chicken Ramen (Microwave Bowl)",
+  "domain": "cooking",
+  "summary": "Prepare a packet of Maruchan chicken ramen: get the packet and a bowl, add water and noodles, cook, stir in the seasoning, and serve.",
+  "source": "open-set draft from 8 frames + the person's description 'making Ramen'",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.038852,
+    "latency_s": 16.49889087502379,
+    "cached": false,
+    "input_tokens": 3263,
+    "output_tokens": 1290,
+    "confidence": 0.85
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Get ramen packet from drawer",
+      "instruction_novice": "Open the drawer and take out one packet of ramen. Close the drawer when you're done.",
+      "instruction_expert": "Grab one ramen packet.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The person is holding the ramen packet and the drawer is closed.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Get ramen packet from drawer?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Read package directions",
+      "instruction_novice": "Flip the packet over and check the cooking directions on the back. Note how much water and time it needs.",
+      "instruction_expert": "Check back-of-pack directions.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The back of the packet with its directions is facing the camera.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Read package directions?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Get a microwave-safe bowl",
+      "instruction_novice": "Pick a bowl big enough for the noodles and water. Make sure it's microwave-safe if you'll use the microwave.",
+      "instruction_expert": "Grab a large bowl.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The empty bowl is in hand or on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Get a microwave-safe bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Open packet and remove seasoning",
+      "instruction_novice": "Tear open the packet and take out the small seasoning sachet. Set the sachet aside.",
+      "instruction_expert": "Open pack, set flavor aside.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The open packet and the seasoning sachet are on the counter separately.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Open packet and remove seasoning?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Place noodles in bowl",
+      "instruction_novice": "Put the noodle block into the bowl. You can break it in half if it doesn't fit.",
+      "instruction_expert": "Noodle block into bowl.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The dry noodle block sits in the bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Place noodles in bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 10.0,
+        "std_s": 6.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Add two cups water",
+      "instruction_novice": "Pour about two cups of water over the noodles until they are covered.",
+      "instruction_expert": "Add 2 cups water.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The noodles are submerged in water in the bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Add two cups water?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Microwave noodles",
+      "instruction_novice": "Put the bowl in the microwave and cook on high for about five minutes. Watch it so the water doesn't boil over.",
+      "instruction_expert": "Microwave high ~5 min.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The microwave is running with the bowl inside.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Microwave noodles?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 300.0,
+        "std_s": 180.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Remove bowl carefully",
+      "instruction_novice": "Use an oven mitt or towel, because the bowl will be hot. Set it on the counter.",
+      "instruction_expert": "Remove with mitt.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The steaming bowl of soft noodles is on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Remove bowl carefully?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Stir in seasoning packet",
+      "instruction_novice": "Tear open the seasoning sachet and sprinkle it over the noodles. Stir well until it dissolves.",
+      "instruction_expert": "Add seasoning, stir.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The broth looks evenly golden and the empty sachet is set aside.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Stir in seasoning packet?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Let cool and serve",
+      "instruction_novice": "Let the ramen sit for a minute to cool a little. Then grab a fork or chopsticks and enjoy.",
+      "instruction_expert": "Rest 1 min, serve.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The bowl of ramen sits ready with a utensil in it.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Let cool and serve?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d11"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d11",
+      "name": "Discard wrappers",
+      "instruction_novice": "Throw the empty packet and seasoning wrapper in the trash.",
+      "instruction_expert": "Trash wrappers.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The counter is clear of ramen wrappers.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d11c1",
+          "question": "Is this step done: Discard wrappers?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 10.0,
+        "std_s": 6.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

@@ -492,14 +492,18 @@ def claims(m: dict) -> str:
             say(f"On mistakes, both systems are weak and we're honest about it. Strictly scored, Praxis's alerts named "
                 f"the actual annotated error {so['semantic_yes']} times out of {so['n_alerts']}; the stateless baseline "
                 f"did {sb['semantic_yes']} out of {sb['n_alerts']}. So Praxis catches more real mistakes but is less "
-                f"precise. Most annotated cooking errors, like the wrong amount or water temperature, can't be seen "
-                f"from a few frames.", "semantic_fused_oracle")
+                f"precise, and both catch only a small share of the {so['n_gt_mistakes']} annotated errors.",
+                "semantic_fused_oracle")
             n_order = so.get("yes_by_annotated_tag", {}).get("Order Error", 0)
             if so["semantic_yes"] and n_order * 2 > so["semantic_yes"]:
+                et = (m.get("eval_error_types") or {})
+                n_ord_all = et.get("errors_with_tag", {}).get("Order Error")
+                share = (f", the most common error type in the data ({n_ord_all} of {et['n_timed_errors']})"
+                         if n_ord_all and n_ord_all == max(et["errors_with_tag"].values()) else "")
                 say(f"The mistakes Praxis does catch tend to need task state: {n_order} of the {so['semantic_yes']} "
-                    f"annotated errors its alerts correctly named are in steps the dataset marks as done out of order. "
-                    f"You can only see that kind of error if you know where the person is in the task.",
-                    "semantic_fused_oracle")
+                    f"annotated errors its alerts correctly named are in steps the dataset marks as done out of "
+                    f"order{share}. You can only see that kind of error if you know where the person is in the task, "
+                    f"so better step tracking should mean more catches.", "semantic_fused_oracle")
         if so:
             say(f"Counting every alert that didn't name an annotated error as a false alarm, which is strict because "
                 f"some may be real but unannotated, Praxis raised about one every "
@@ -592,13 +596,14 @@ def claims(m: dict) -> str:
         if h and h["n_drafted"]:
             out.append(f"- \"For recipes it had never seen, Praxis didn't stay silent. When the person said what they "
                        f"were making, it drafted a step-by-step plan in about {h['draft_latency_median_s']:.0f} seconds "
-                       f"that covered {h['step_recall_mean'] * 100:.0f}% of the dataset's annotated steps on average, "
-                       f"and tracked the person's step with it {h['step_acc_after_draft_mean'] * 100:.0f}% of the time, "
-                       f"with no training video.\" (`results/open_set/open_set.json`)")
+                       f"(on {h['n_drafted']} of {h['n_clips']} recordings). The drafts covered "
+                       f"{h['step_recall_mean'] * 100:.0f}% of the recipe's steps in the dataset's own task graph on "
+                       f"average, and Praxis tracked the person's step with them {h['step_acc_after_draft_mean'] * 100:.0f}% "
+                       f"of the time, with no training video.\" (`results/open_set/open_set.json`)")
         if fr and fr["n_drafted"]:
             out.append(f"- \"From video alone after 30 seconds, it named the recipe on {fr['title_yes']} of "
-                       f"{fr['n_drafted']} recordings, so for unknown tasks the product should ask what you're making "
-                       f"rather than guess.\" (`results/open_set/open_set.json`)")
+                       f"{fr['n_drafted']} recordings ({fr['title_partial']} more partly), so for unknown tasks the product "
+                       f"should ask what you're making rather than guess.\" (`results/open_set/open_set.json`)")
     out.append("\n## Do NOT claim (not measured or not true yet)\n")
     for s in ["Praxis runs on smart glasses. It has not been tested on glasses; the glasses adapter is a documented stub "
               "(docs/GLASSES.md). Say instead: 'it runs live on a video stream in real time; glasses are one more input "
@@ -611,7 +616,8 @@ def claims(m: dict) -> str:
               "live use.",
               "That Praxis can coach any task out of the box. Open-set drafts were tested on 4 unseen recipes "
               "(8 recordings) in one domain; drafts have no mistake library, and the video-only draft often "
-              "misnamed the task (results/open_set/).",
+              "misnamed the task (results/open_set/). It also sometimes mistakes an unseen task for a known one "
+              "(a mug cake was announced as the library's mug pizza).",
               "That live mode was tested with a webcam. It was tested on a recorded clip replayed in real time (no camera "
               "was available to this build). Also don't say the slow path never stalls the loop: frontier-model "
               "escalations still block it for a few seconds (results/live/).",
@@ -640,7 +646,7 @@ LIMITATIONS = """## Limitations
   - Matching is by time window: an alert counts if it lands up to 5 s before the erroneous step starts and up to
     10 s after it ends. It is not matched by mistake type.
   - "Missing Step" errors have no timestamp, so they are excluded.
-  - Many CaptainCook4D errors are invisible from a few frames (e.g. 1 tbsp vs ½ tbsp).
+  - Some CaptainCook4D errors, such as measurement errors (1 tbsp vs ½ tbsp), are hard to see from a few frames.
 - **Verifier checks** are asked at fixed moments relative to the annotations (mid-step, and 1.5 s after the step
   ends). They stand in for the moments the engine chooses itself.
 - **Small training sets.** 3–5 train recordings per procedure for the step probes, and one run per variant (no

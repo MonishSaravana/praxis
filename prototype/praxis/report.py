@@ -46,6 +46,18 @@ def collect() -> dict:
 
     put("data", {k: v for k, v in (_j("data/eval_manifest_summary.json") or {}).items() if k != "clips"} or None,
         "results/data/eval_manifest_summary.json")
+    try:      # error types of the timed annotated errors in the eval clips (CaptainCook4D annotations)
+        import collections
+        from .data.cc4d import Clip, load_manifest
+        cnt, n_err = collections.Counter(), 0
+        for x in load_manifest()["eval"]:
+            for mk in Clip.from_json(x).mistakes():
+                n_err += 1
+                cnt.update(set(mk["tags"]))
+        put("eval_error_types", {"n_timed_errors": n_err, "errors_with_tag": dict(cnt.most_common())},
+            "data/cc4d/manifest.json (CaptainCook4D error annotations, eval clips)")
+    except FileNotFoundError:
+        pass
     sp = _j("l1/l1_speed.json")
     put("l1_speed", sp, "results/l1/l1_speed.json")
     if sp:

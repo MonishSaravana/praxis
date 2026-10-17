@@ -1,0 +1,106 @@
+{
+  "max_s": 120,
+  "recipes": [
+    "Coffee",
+    "Mug Cake",
+    "Ramen",
+    "Zoodles"
+  ],
+  "trigger": "after 30 s, the typed task check answered 'none of these' twice in a row, or nothing was recognized by 60 s",
+  "conditions": {
+    "frames": {
+      "aggregate": {
+        "n_clips": 1,
+        "n_drafted": 1,
+        "announced_library_task_first": 0,
+        "title_yes": 0,
+        "title_partial": 0,
+        "step_recall_mean": 0.0,
+        "draft_precision_mean": 0.0,
+        "step_acc_after_draft_mean": 0.0,
+        "t_draft_median_s": 30.0,
+        "draft_latency_median_s": 22.327555291936733
+      },
+      "per_clip": [
+        {
+          "clip": "5_11_full",
+          "recipe": "cc4d_coffee",
+          "announced_library_task_first": false,
+          "first_task": "draft_0ea3fcb720",
+          "t_first_task": 30.0,
+          "t_draft": 30.0,
+          "draft_title": "Weigh Ingredients and Make Flatbread on a Griddle",
+          "draft_latency_s": 22.327555291936733,
+          "draft_confidence": 0.45,
+          "title_match": "no",
+          "step_recall": 0.0,
+          "draft_precision": 0.0,
+          "n_draft_steps": 15,
+          "n_ref_steps": 16,
+          "tracked_s": 90.0,
+          "step_acc_after_draft": 0.0,
+          "share_frames_with_mapped_step": 0.0,
+          "judged": {
+            "ref_steps": [
+              "Wait about 30 seconds for the coffee to bloom. (You will see small bubbles or foam on the coffee grounds during this step.)",
+              "Pour a small amount of water into the filter to wet the grounds",
+              "Transfer the grounds to the filter cone",
+              "spread open filter in dripper to create a cone",
+              "Place the paper filter in the dripper",
+              "pour Slowly pour the rest of the water over the grounds in a circular motion. Do not overfill beyond the top of the paper filter",
+              "Prepare the filter insert by folding the paper filter in half to create a semi-circle, and in half again to create a quarter-circle",
+              "Discard the paper filter and coffee grounds",
+              "Boil the water. (While the water is boiling, assemble the filter cone)",
+              "Weigh the coffee beans (0.8oz-0.12 oz)",
+              "drain Let the coffee drain completely into the mug before removing the dripper",
+              "Grind the coffee beans until the coffee grounds are the consistency of coarse sand, about 20 seconds",
+              "Measure 12 ounces of cold water",
+              "Place the dripper on top of a coffee mug",
+              "transfer water to a kettle",
+              "check Once the water has boiled, check the temperature of the water. (The water should be between 195-205 degrees Fahrenheit or between 91-96 degrees Celsius. If the water is too hot, let it cool briefly.)"
+            ],
+            "draft_steps": [
+              "Set up scale and recipe",
+              "Tare the mixing bowl",
+              "Weigh the flour",
+              "Add salt and other dry ingredients",
+              "Add fat",
+              "Add water and mix",
+              "Knead the dough",
+              "Rest the dough",
+              "Divide into portions",
+              "Preheat the griddle",
+              "Roll out a round",
+              "Cook first side",
+              "Flip and finish",
+              "Repeat with remaining dough",
+              "Turn off stove and clean up"
+            ],
+            "ref_to_draft": {
+              "0": -1,
+              "1": -1,
+              "2": -1,
+              "3": -1,
+              "4": -1,
+              "5": -1,
+              "6": -1,
+              "7": -1,
+              "8": -1,
+              "9": -1,
+              "10": -1,
+              "11": -1,
+              "12": -1,
+              "13": -1,
+              "14": -1,
+              "15": -1
+            }
+          }
+        }
+      ]
+    }
+  },
+  "spend_usd": 0.012369416000000001,
+  "engine_spend_usd": 0.0027614160000000013,
+  "judge_spend_usd": 0.009608,
+  "drafts_cost_usd_all_saved": 0.051616
+}

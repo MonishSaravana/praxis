@@ -1,0 +1,313 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_fdeef43a4f",
+  "title": "Peel and Mince Garlic Cloves",
+  "domain": "cooking",
+  "summary": "Take garlic from the pantry drawer, separate cloves, peel them with a knife, then trim and mince for cooking.",
+  "source": "open-set draft from 8 frames",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.035516,
+    "latency_s": 11.484439542051405,
+    "cached": false,
+    "input_tokens": 3249,
+    "output_tokens": 1126,
+    "confidence": 0.6
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Get garlic bulb from storage",
+      "instruction_novice": "Open the produce drawer and take out a garlic bulb. Pick one that feels firm.",
+      "instruction_expert": "Grab garlic bulb.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A garlic bulb is in hand with the drawer closed.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Get garlic bulb from storage?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Grab knife and cutting board",
+      "instruction_novice": "Get a small sharp knife and a cutting board. Set them on the counter near you.",
+      "instruction_expert": "Knife and board out.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Knife and cutting board sit on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Grab knife and cutting board?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Separate cloves from bulb",
+      "instruction_novice": "Press the bulb with your palm to loosen it, then pull off the cloves you need.",
+      "instruction_expert": "Break off cloves.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Individual garlic cloves lie separated on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Separate cloves from bulb?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Trim root end of clove",
+      "instruction_novice": "Slice off the hard root end of each clove with the knife. Keep your fingers clear of the blade.",
+      "instruction_expert": "Trim root ends.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Each clove has its flat root end cut off.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Trim root end of clove?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Peel the cloves",
+      "instruction_novice": "Use the knife tip or your fingernail to lift the papery skin and peel it away. Lightly crushing the clove with the flat of the blade makes this easier.",
+      "instruction_expert": "Peel skins off.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Clean white cloves are free of papery skin.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Peel the cloves?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Discard the skins",
+      "instruction_novice": "Gather the papery skins and throw them in the trash or compost.",
+      "instruction_expert": "Bin the skins.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The counter is clear of garlic skins.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Discard the skins?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 20.0,
+        "std_s": 12.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Slice cloves thinly",
+      "instruction_novice": "Lay a clove flat on the board and cut it into thin slices. Curl your fingertips under while cutting.",
+      "instruction_expert": "Thin-slice cloves.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Cloves are cut into thin slices on the board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Slice cloves thinly?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Mince garlic finely",
+      "instruction_novice": "Rock the knife back and forth over the slices until the pieces are tiny. Scrape them into a pile and repeat.",
+      "instruction_expert": "Rock-chop to mince.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A small pile of finely minced garlic sits on the board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Mince garlic finely?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Transfer garlic to bowl",
+      "instruction_novice": "Use the flat of the knife to scoop the minced garlic into a small bowl.",
+      "instruction_expert": "Scrape into bowl.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The minced garlic is in a small bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Transfer garlic to bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 15.0,
+        "std_s": 9.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Rinse knife and board",
+      "instruction_novice": "Wash the knife and board in the sink and dry them so they're ready for the next step.",
+      "instruction_expert": "Wash tools.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The clean knife and board are drying beside the sink.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Rinse knife and board?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

@@ -1,0 +1,342 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_ac2cbfb6e7",
+  "title": "Make a simple coleslaw from a recipe",
+  "domain": "cooking",
+  "summary": "The person reads a recipe on a tablet, pulls a bowl from the dishwasher, grabs a whisk from the pantry and opens the knife drawer. Shredded cabbage is nearby, so this is likely a slaw with whisked dressing. The task is uncertain.",
+  "source": "open-set draft from 8 frames",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.045416,
+    "latency_s": 17.0076177919982,
+    "cached": false,
+    "input_tokens": 3249,
+    "output_tokens": 1621,
+    "confidence": 0.35
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Review the recipe",
+      "instruction_novice": "Read through the recipe on your tablet once before starting. Note every ingredient and tool you need.",
+      "instruction_expert": "Scan recipe, list items",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The tablet shows the recipe at the top of the stove.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Review the recipe?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Get a mixing bowl",
+      "instruction_novice": "Take a clean bowl from the dishwasher or cabinet. Set it on a flat, cool surface.",
+      "instruction_expert": "Bowl out, staged",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A clean pink bowl sits on the cool stovetop or counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Get a mixing bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Gather tools from pantry",
+      "instruction_novice": "Grab the whisk and any measuring spoons or cups the recipe calls for.",
+      "instruction_expert": "Whisk, measures out",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The whisk and measuring tools lie next to the bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Gather tools from pantry?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Get a knife and board",
+      "instruction_novice": "Choose a sharp knife from the drawer and set out a cutting board.",
+      "instruction_expert": "Knife and board ready",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A knife rests on a cutting board on the counter.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Get a knife and board?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Gather dressing ingredients",
+      "instruction_novice": "Take the mayo, vinegar, sugar and seasonings from the fridge and pantry. Line them up near the bowl.",
+      "instruction_expert": "Stage dressing ingredients",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Condiment jars and seasonings are lined up beside the bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Gather dressing ingredients?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Shred remaining vegetables",
+      "instruction_novice": "Thinly slice any remaining cabbage, then grate or slice the carrots. Keep your fingers curled away from the blade.",
+      "instruction_expert": "Shred cabbage, julienne carrot",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A pile of thin cabbage and carrot shreds sits on the plate or board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Shred remaining vegetables?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 300.0,
+        "std_s": 180.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Measure dressing into bowl",
+      "instruction_novice": "Measure each dressing ingredient carefully and add it to the bowl.",
+      "instruction_expert": "Measure dressing into bowl",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The dressing ingredients sit unmixed in the bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Measure dressing into bowl?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Whisk the dressing",
+      "instruction_novice": "Whisk until smooth with no streaks. Taste it and adjust the salt or sugar.",
+      "instruction_expert": "Whisk smooth, adjust",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A smooth, uniform dressing fills the bottom of the bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Whisk the dressing?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Toss vegetables with dressing",
+      "instruction_novice": "Add the shredded vegetables to the dressing. Toss until everything is evenly coated.",
+      "instruction_expert": "Toss to coat",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The cabbage is evenly coated with dressing in a larger bowl.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Toss vegetables with dressing?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Chill before serving",
+      "instruction_novice": "Cover the bowl and refrigerate it for at least 30 minutes so the flavors blend.",
+      "instruction_expert": "Cover, chill 30 min",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The covered bowl is placed in the refrigerator.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Chill before serving?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d11"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d11",
+      "name": "Clean up workspace",
+      "instruction_novice": "Put the ingredients away and rinse the tools. Wipe down the counter.",
+      "instruction_expert": "Stow, rinse, wipe",
+      "substeps": [],
+      "parts": [],
+      "end_state": "The counter is clear and the tools are in the sink or dishwasher.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d11c1",
+          "question": "Is this step done: Clean up workspace?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

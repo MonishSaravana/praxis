@@ -1,0 +1,342 @@
+{
+  "schema_version": "praxis.taskgraph/1",
+  "task_id": "draft_e6320014c7",
+  "title": "Garlic Zucchini Noodles (Zoodles)",
+  "domain": "cooking",
+  "summary": "Peel and mince garlic, spiralize zucchini, then sauté the zoodles briefly with garlic and oil in a skillet and season to serve.",
+  "source": "open-set draft from 8 frames + the person's description 'making Zoodles'",
+  "draft": true,
+  "compiler": {
+    "model": "claude-opus-5-5",
+    "prompt_version": "draft-v1",
+    "effort": "medium",
+    "cost_usd": 0.040556,
+    "latency_s": 16.984467125032097,
+    "cached": false,
+    "input_tokens": 3264,
+    "output_tokens": 1375,
+    "confidence": 0.8
+  },
+  "nodes": [
+    {
+      "id": "d1",
+      "name": "Separate garlic cloves from bulb",
+      "instruction_novice": "Press on the garlic bulb to break it apart. Pull off two or three cloves.",
+      "instruction_expert": "Break bulb, take 2-3 cloves.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A few loose garlic cloves sit on the counter beside the bulb.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d1c1",
+          "question": "Is this step done: Separate garlic cloves from bulb?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d2"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d2",
+      "name": "Peel the garlic cloves",
+      "instruction_novice": "Trim the root end and peel off the papery skin with your fingers. Smashing it lightly with a knife makes this easier.",
+      "instruction_expert": "Peel cloves.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Clean white peeled cloves with skins piled to the side.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d2c1",
+          "question": "Is this step done: Peel the garlic cloves?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d3"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d3",
+      "name": "Mince the garlic",
+      "instruction_novice": "Chop the peeled cloves into very small pieces on a cutting board. Keep your fingertips curled away from the blade.",
+      "instruction_expert": "Mince garlic finely.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A small pile of finely minced garlic is on the cutting board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d3c1",
+          "question": "Is this step done: Mince the garlic?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d4"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d4",
+      "name": "Wash and trim the zucchini",
+      "instruction_novice": "Rinse the zucchini under water and pat dry. Cut off both ends.",
+      "instruction_expert": "Rinse, trim zucchini ends.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Clean zucchini with both ends cut off lie on the board.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d4c1",
+          "question": "Is this step done: Wash and trim the zucchini?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d5"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d5",
+      "name": "Spiralize zucchini into noodles",
+      "instruction_novice": "Secure the zucchini in the spiralizer and turn the handle to make long noodles. Work steadily and watch your fingers near the blade.",
+      "instruction_expert": "Spiralize zucchini.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "A bowl holds a pile of long zucchini spirals.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d5c1",
+          "question": "Is this step done: Spiralize zucchini into noodles?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d6"
+      ],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d6",
+      "name": "Pat zoodles dry",
+      "instruction_novice": "Lay the noodles on a paper towel and gently press to remove excess water. This keeps them from getting soggy.",
+      "instruction_expert": "Blot excess moisture.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Zoodles rest on damp paper towels, looking drier.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d6c1",
+          "question": "Is this step done: Pat zoodles dry?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d7"
+      ],
+      "duration": {
+        "mean_s": 60.0,
+        "std_s": 36.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d7",
+      "name": "Heat oil in the skillet",
+      "instruction_novice": "Put the pan on medium heat and add about a tablespoon of oil. Wait until the oil shimmers.",
+      "instruction_expert": "Medium heat, 1 tbsp oil.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Oil shimmers in the pan on the lit burner.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d7c1",
+          "question": "Is this step done: Heat oil in the skillet?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d8"
+      ],
+      "duration": {
+        "mean_s": 90.0,
+        "std_s": 54.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d8",
+      "name": "Sauté the garlic",
+      "instruction_novice": "Add the minced garlic and stir for about 30 seconds until it smells fragrant. Don't let it brown.",
+      "instruction_expert": "Garlic 30s, until fragrant.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Garlic sizzles in the oil, pale golden.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d8c1",
+          "question": "Is this step done: Sauté the garlic?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d9"
+      ],
+      "duration": {
+        "mean_s": 40.0,
+        "std_s": 24.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d9",
+      "name": "Cook the zoodles",
+      "instruction_novice": "Add the zucchini noodles and toss them with tongs. Cook just 2 to 3 minutes until slightly tender.",
+      "instruction_expert": "Toss zoodles 2-3 min.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Zoodles in the pan are glossy and just softened.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d9c1",
+          "question": "Is this step done: Cook the zoodles?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d10"
+      ],
+      "duration": {
+        "mean_s": 180.0,
+        "std_s": 108.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d10",
+      "name": "Season to taste",
+      "instruction_novice": "Sprinkle with salt and pepper, and add any extras like parmesan or chili flakes. Toss to combine.",
+      "instruction_expert": "Salt, pepper, toss.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Seasonings are visibly mixed through the zoodles.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d10c1",
+          "question": "Is this step done: Season to taste?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [
+        "d11"
+      ],
+      "duration": {
+        "mean_s": 30.0,
+        "std_s": 18.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    },
+    {
+      "id": "d11",
+      "name": "Turn off heat and plate",
+      "instruction_novice": "Turn off the burner and move the zoodles to a plate. Serve right away.",
+      "instruction_expert": "Heat off, plate, serve.",
+      "substeps": [],
+      "parts": [],
+      "end_state": "Zoodles are on a plate and the burner is off.",
+      "view_hint": "",
+      "checks": [
+        {
+          "id": "d11c1",
+          "question": "Is this step done: Turn off heat and plate?",
+          "kind": "completion",
+          "roi": null
+        }
+      ],
+      "mistakes": [],
+      "successors": [],
+      "duration": {
+        "mean_s": 45.0,
+        "std_s": 27.0,
+        "n": 0,
+        "source": "draft"
+      },
+      "dataset_labels": []
+    }
+  ],
+  "start": [
+    "d1"
+  ]
+}

@@ -33,7 +33,8 @@ def run_live(stack: dict, verifier=None, escalation=None, calibrator=None, dev_c
              ecfg: EngineConfig | None = None, calibrators: dict | None = None, localizer=None) -> Path:
     out_dir = RUNS / name
     out_dir.mkdir(parents=True, exist_ok=True)
-    log = RunLog(out_dir / "live.jsonl", {"mode": "live", "source": source, "task_id": task_id,
+    from .paths import ROOT
+    log = RunLog(out_dir / "live.jsonl", {"mode": "live", "source": source.replace(str(ROOT) + "/", ""), "task_id": task_id,
                                           "verifier": getattr(verifier, "model", None),
                                           "escalation": getattr(escalation, "model", None)})
     src = make_source(source, fps=4.0)
