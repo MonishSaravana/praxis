@@ -597,7 +597,8 @@ def recognition_summary(run: str = "fused") -> dict:
 
 
 
-def dev_eval(designs: dict | None = None, max_s: float = 300.0, max_per_task: int = 3, workers: int = 3) -> dict:
+def dev_eval(designs: dict | None = None, max_s: float = 300.0, max_per_task: int = 3, workers: int = 3,
+             out_name: str = "design_selection") -> dict:
     """Design selection on the TRAIN split (never the eval clips): leave-one-recording-out step probes, engine with
     the task given, first `max_s` seconds of each train recording. Compares engine designs by step accuracy, cost,
     and calls."""
@@ -664,7 +665,7 @@ def dev_eval(designs: dict | None = None, max_s: float = 300.0, max_per_task: in
                                 "spend_usd": budget.usd}
         print(name, res["designs"][name], flush=True)
     (RESULTS / "dev").mkdir(parents=True, exist_ok=True)
-    (RESULTS / "dev" / "design_selection.json").write_text(json.dumps(res, indent=2, default=float))
+    (RESULTS / "dev" / f"{out_name}.json").write_text(json.dumps(res, indent=2, default=float))
     return res
 
 

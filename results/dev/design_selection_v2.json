@@ -1,0 +1,146 @@
+{
+  "protocol": "train-split recordings, leave-one-recording-out probes, first 300s, task given",
+  "n_recordings": 24,
+  "designs": {
+    "jev_ent0.85_default": {
+      "step_acc": 0.5668888132919644,
+      "verifier_calls": 206,
+      "cost_usd": 1.114312768,
+      "false_alarms_per_min": 0.0,
+      "mistakes": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 35,
+        "precision": 1.0,
+        "recall": 0.027777777777777776,
+        "f1": 0.05405405405405406,
+        "detect_minus_step_end_s": {
+          "n": 1,
+          "p50": -2.37588490107737,
+          "p95": -2.37588490107737,
+          "mean": -2.37588490107737
+        },
+        "detect_minus_step_start_s": {
+          "n": 1,
+          "p50": 33.06333868266407,
+          "p95": 33.06333868266407,
+          "mean": 33.06333868266407
+        },
+        "share_caught_before_step_end": 1.0
+      },
+      "spend_usd": 0.023533167999999997
+    },
+    "jev_ent0.40": {
+      "step_acc": 0.5706923382771748,
+      "verifier_calls": 538,
+      "cost_usd": 0.85043386,
+      "false_alarms_per_min": 0.0,
+      "mistakes": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 36,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "detect_minus_step_end_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "detect_minus_step_start_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "share_caught_before_step_end": null
+      },
+      "spend_usd": 0.04546626
+    },
+    "jev_ent0.25": {
+      "step_acc": 0.6503025369839582,
+      "verifier_calls": 945,
+      "cost_usd": 0.815813234,
+      "false_alarms_per_min": 0.008333333333333333,
+      "mistakes": {
+        "tp": 1,
+        "fp": 1,
+        "fn": 35,
+        "precision": 0.5,
+        "recall": 0.027777777777777776,
+        "f1": 0.05263157894736842,
+        "detect_minus_step_end_s": {
+          "n": 1,
+          "p50": -6.5605849010773625,
+          "p95": -6.5605849010773625,
+          "mean": -6.5605849010773625
+        },
+        "detect_minus_step_start_s": {
+          "n": 1,
+          "p50": 28.878638682664075,
+          "p95": 28.878638682664075,
+          "mean": 28.878638682664075
+        },
+        "share_caught_before_step_end": 1.0
+      },
+      "spend_usd": 0.13127903400000002
+    },
+    "opus_ent0.40": {
+      "step_acc": 0.561592595478401,
+      "verifier_calls": 568,
+      "cost_usd": 3.709108638,
+      "false_alarms_per_min": 0.0,
+      "mistakes": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 36,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "detect_minus_step_end_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "detect_minus_step_start_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "share_caught_before_step_end": null
+      },
+      "spend_usd": 3.211010837999998
+    },
+    "opus_ent0.25": {
+      "step_acc": 0.6175415898287386,
+      "verifier_calls": 913,
+      "cost_usd": 5.580852372,
+      "false_alarms_per_min": 0.0,
+      "mistakes": {
+        "tp": 1,
+        "fp": 0,
+        "fn": 35,
+        "precision": 1.0,
+        "recall": 0.027777777777777776,
+        "f1": 0.05405405405405406,
+        "detect_minus_step_end_s": {
+          "n": 1,
+          "p50": 0.7756150989226285,
+          "p95": 0.7756150989226285,
+          "mean": 0.7756150989226285
+        },
+        "detect_minus_step_start_s": {
+          "n": 1,
+          "p50": 36.214838682664066,
+          "p95": 36.214838682664066,
+          "mean": 36.214838682664066
+        },
+        "share_caught_before_step_end": 0.0
+      },
+      "spend_usd": 5.299798371999991
+    }
+  }
+}
