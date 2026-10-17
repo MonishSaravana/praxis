@@ -110,6 +110,8 @@ def compile_procedure(task_id: str, domain: str, source_text: str, steps: list[d
             duration=DurationPrior(mean_s=float(n["duration_guess_s"]), std_s=0.6 * float(n["duration_guess_s"]), n=0,
                                    source="compiler"),
             dataset_labels=[n["id"]]))
+    order = {s["id"]: i for i, s in enumerate(steps)}
+    nodes.sort(key=lambda n: order[n.id])          # node order == given step order (probes rely on it)
     missing = given - {n.id for n in nodes}
     if missing:
         raise RuntimeError(f"compiler dropped steps {missing}")

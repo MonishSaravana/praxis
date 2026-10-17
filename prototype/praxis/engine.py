@@ -92,6 +92,9 @@ class Engine:
             a[:-1, :10] += (1 - self.cfg.start_prior_mass) / ((self.tracker.K - 1) * 10)
             self.tracker.alpha = a / a.sum()
         self.policy = Policy(self.graph, self.cfg.policy, self.user)
+        ev = self.evidence.get(task_id)
+        if ev is not None and list(ev.ids) != list(self.graph.ids):
+            raise ValueError(f"evidence node order != graph node order for {task_id}")
         self._w("task", t, task_id=task_id, title=self.graph.title, oracle=oracle, posterior=posterior,
                 n_steps=len(self.graph.nodes))
         acts = [Action(t, "announce_task", f"Looks like you're {self.graph.title[0].lower() + self.graph.title[1:]}. "

@@ -40,7 +40,11 @@ def cmd_features(a):
                     continue
                 seen[c["task_id"]] = k + 1
             keep.append(c)
-        items = keep
+        # round-robin across tasks so a partial run still covers every procedure
+        by: dict[str, list] = {}
+        for c in keep:
+            by.setdefault(c["task_id"] + c["split"], []).append(c)
+        items = [c for k in range(max(map(len, by.values()))) for v in by.values() if k < len(v) for c in [v[k]]]
     ex = Extractor(stride_s=a.stride)
     for i, c in enumerate(items):
         waited = 0
