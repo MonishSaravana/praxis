@@ -1,5 +1,6 @@
-"""L3 · Procedure compiler (ours; uses Claude Opus offline by default, results cached + committed. The committed
-library was compiled with Claude Fable 5.1, recorded in each graph's `compiler` field).
+"""L3 · Procedure compiler (ours; uses a frontier Claude model offline, results cached + committed).
+Default: Claude Opus 5.5. The 9 graphs in the current library were compiled with Claude Fable 5.1
+(`results/l3/compile_summary.json`); they are kept as compiled because every evaluation used them.
 
 Instruction text (a manual, recipe, tutorial transcript, or a dataset's step list) -> typed TaskGraph.
 
