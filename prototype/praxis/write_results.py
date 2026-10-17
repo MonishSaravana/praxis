@@ -404,8 +404,9 @@ def write_all() -> None:
     text, m = build()
     wd = (RESULTS / "WHAT_DIDNT_WORK.md").read_text() if (RESULTS / "WHAT_DIDNT_WORK.md").exists() else ""
     wd = wd.replace("# What didn't work (engineering log, Oct 17–18)", "## What didn't work (engineering log)")
+    notes = (RESULTS / "FAILURES_NOTES.md").read_text() if (RESULTS / "FAILURES_NOTES.md").exists() else ""
     full = text.replace("## Failure analysis and limitations\n\nSee `results/FAILURES.md` (qualitative, with example frames) and the "
-                        "limitations below.\n", "") + "\n" + failures_section() + "\n" + wd + "\n" + LIMITATIONS
+                        "limitations below.\n", "") + "\n" + failures_section() + "\n" + notes + "\n" + wd + "\n" + LIMITATIONS
     (RESULTS / "RESULTS.md").write_text(full)
     (ROOT / "docs" / "CLAIMS.md").write_text(claims(m))
 
