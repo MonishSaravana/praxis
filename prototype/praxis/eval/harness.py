@@ -38,7 +38,13 @@ def load_stack(detector: str = "learned", evidence: str = "probe") -> dict:
         else:
             z = np.load(DATA / "taskgraph_emb" / f"{tid}.npz")
             ev[tid] = ZeroShotEvidence(g, {k: z[k] for k in z.files})
-    rec = TaskRecognizer.load(CKPT / "task_recognizer.pkl") if (CKPT / "task_recognizer.pkl").exists() else None
+    if (CKPT / "task_recognizer.pkl").exists():
+        rec = TaskRecognizer.load(CKPT / "task_recognizer.pkl")
+    else:   # zero-shot fallback: SigLIP2 frame vs each graph's title embedding
+        tids = sorted(lib)
+        te = np.concatenate([np.load(DATA / "taskgraph_emb" / f"{t}.npz")["task"] for t in tids])
+        rec = TaskRecognizer(task_ids=tids, text_emb=te)
+        rec.reset()
     det = LearnedDetector.load(CKPT / "l2_event_detector.pt") if detector == "learned" and (CKPT / "l2_event_detector.pt").exists() \
         else HeuristicDetector()
     thr = 0.5

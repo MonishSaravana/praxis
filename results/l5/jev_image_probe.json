@@ -1,0 +1,129 @@
+{
+  "when": "2026-10-17T03:33:23",
+  "models": {
+    "models": [
+      {
+        "name": "jev-latest",
+        "description": "The latest iteration of TypeSafe's System One Model: Jev",
+        "release_date": "2026-09-10T18:38:01.391457+00:00"
+      },
+      {
+        "name": "jev-preview",
+        "description": "A preview version of `jev-latest`: should be better in most ways",
+        "release_date": "2026-09-10T18:39:06.057655+00:00"
+      }
+    ]
+  },
+  "jev-1.14.0": {
+    "model": "jev-1.14.0",
+    "tests": [
+      {
+        "truth": "red",
+        "latency_ms": 40197.71875010338,
+        "answers": {
+          "is_red": {
+            "type": "noul",
+            "noul": 0.97
+          },
+          "color": {
+            "type": "choice",
+            "choice": "red",
+            "confidence": 1.0,
+            "probabilities": {
+              "red": 1.0,
+              "green": 0.0,
+              "blue": 0.0
+            }
+          }
+        },
+        "model": "jev-1.14.0",
+        "usage": {
+          "input_tokens": 766,
+          "output_tokens": 55
+        }
+      },
+      {
+        "truth": "blue",
+        "latency_ms": 117.0715840999037,
+        "answers": {
+          "is_red": {
+            "type": "noul",
+            "noul": 0.01
+          },
+          "color": {
+            "type": "choice",
+            "choice": "blue",
+            "confidence": 1.0,
+            "probabilities": {
+              "red": 0.0,
+              "green": 0.0,
+              "blue": 1.0
+            }
+          }
+        },
+        "model": "jev-1.14.0",
+        "usage": {
+          "input_tokens": 765,
+          "output_tokens": 55
+        }
+      }
+    ],
+    "works": true
+  },
+  "jev-1.13.0": {
+    "model": "jev-1.13.0",
+    "tests": [
+      {
+        "truth": "red",
+        "latency_ms": 40248.74925008044,
+        "answers": {
+          "is_red": {
+            "type": "noul",
+            "noul": 1.0
+          },
+          "color": {
+            "type": "choice",
+            "choice": "red",
+            "confidence": 1.0,
+            "probabilities": {
+              "red": 1.0,
+              "green": 0.0,
+              "blue": 0.0
+            }
+          }
+        },
+        "model": "jev-1.13.0",
+        "usage": {
+          "input_tokens": 768,
+          "output_tokens": 55
+        }
+      },
+      {
+        "truth": "blue",
+        "latency_ms": 195.13991696294397,
+        "answers": {
+          "is_red": {
+            "type": "noul",
+            "noul": 0.0
+          },
+          "color": {
+            "type": "choice",
+            "choice": "blue",
+            "confidence": 1.0,
+            "probabilities": {
+              "red": 0.0,
+              "green": 0.0,
+              "blue": 1.0
+            }
+          }
+        },
+        "model": "jev-1.13.0",
+        "usage": {
+          "input_tokens": 764,
+          "output_tokens": 55
+        }
+      }
+    ],
+    "works": true
+  }
+}
