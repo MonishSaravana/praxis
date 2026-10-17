@@ -30,7 +30,8 @@ class PolicyConfig:
     view_conf: float = 0.5          # P(view insufficient) needed to ask for a better view
     hesitation_ratio: float = 1.6
     cooldown_s: float = 4.0         # min gap between prominent cards
-    view_cooldown_s: float = 20.0
+    view_cooldown_s: float = 30.0
+    view_entropy: float = 0.5       # view requests only when the step belief is genuinely uncertain
     entropy_verify: float = 0.85    # belief entropy above which we spend a verifier call
     verify_min_gap_s: float = 3.0
     escalate_band: tuple[float, float] = (0.3, 0.7)
@@ -119,7 +120,9 @@ class Policy:
                                     "mistake_id": v.mistake.mistake_id, "p": round(p_deviation, 3)}))
                 return acts, False
         # 2) can't see: ask instead of guessing
-        if v.visibility == "insufficient" and t - self.last_view_t >= self.cfg.view_cooldown_s and card_ok:
+        # ask only when not seeing actually blocks us: the tracker itself is unsure which step this is
+        if v.visibility == "insufficient" and belief.entropy >= self.cfg.view_entropy and \
+                t - self.last_view_t >= self.cfg.view_cooldown_s and card_ok:
             self.last_view_t = self.last_card_t = t
             acts.append(Action(t, "view_request", v.view_request or f"Can you show me {node.view_hint}?", node.id,
                                {"direction": direction_of(v.view_request or node.view_hint)}))
