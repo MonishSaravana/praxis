@@ -1,0 +1,118 @@
+{
+  "protocol": "train-split recordings, leave-one-recording-out probes, first 300s, task given",
+  "n_recordings": 24,
+  "designs": {
+    "jev_ent0.15": {
+      "step_acc": 0.6829881096441482,
+      "verifier_calls": 1238,
+      "cost_usd": 0.725285758,
+      "false_alarms_per_min": 0.0,
+      "mistakes": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 36,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "detect_minus_step_end_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "detect_minus_step_start_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "share_caught_before_step_end": null
+      },
+      "spend_usd": 0.5074417580000005
+    },
+    "jev_ent0.10": {
+      "step_acc": 0.6836230259828798,
+      "verifier_calls": 1387,
+      "cost_usd": 0.635659956,
+      "false_alarms_per_min": 0.0,
+      "mistakes": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 36,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "detect_minus_step_end_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "detect_minus_step_start_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "share_caught_before_step_end": null
+      },
+      "spend_usd": 0.4047519559999992
+    },
+    "jev_ent0.25_w0.5": {
+      "step_acc": 0.5669167333081894,
+      "verifier_calls": 979,
+      "cost_usd": 0.792570446,
+      "false_alarms_per_min": 0.0,
+      "mistakes": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 36,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "detect_minus_step_end_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "detect_minus_step_start_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "share_caught_before_step_end": null
+      },
+      "spend_usd": 0.45196724600000066
+    },
+    "jev_ent0.25_w2": {
+      "step_acc": 0.5394190348751374,
+      "verifier_calls": 929,
+      "cost_usd": 0.862713726,
+      "false_alarms_per_min": 0.058333333333333334,
+      "mistakes": {
+        "tp": 0,
+        "fp": 7,
+        "fn": 36,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "detect_minus_step_end_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "detect_minus_step_start_s": {
+          "n": 0,
+          "p50": null,
+          "p95": null,
+          "mean": null
+        },
+        "share_caught_before_step_end": null
+      },
+      "spend_usd": 0.6318061259999989
+    }
+  }
+}

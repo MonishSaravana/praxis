@@ -50,6 +50,8 @@ class EngineConfig:
     step_choice: bool = True            # uncertain belief -> typed "which step?" question to the fast verifier
     step_choice_k: int = 4
     step_choice_weight: float = 1.0
+    mistake_screen: bool = True         # localization calls also screen the likeliest step's mistake library
+    mistake_screen_p: float = 0.5
     order_min_p: float = 0.8
     order_unseen_mass: float = 0.3
     order_conf: float = 0.6
@@ -313,15 +315,26 @@ class Engine:
         if len(cands) < 2:
             return
         opts = {k: f"{self.graph.node(k).name}: {self.graph.node(k).end_state}" for k in cands}
+        top = self.graph.node(cands[0])
+        screen = {m.id: f"{m.description} Looks like: {m.visual_cue}" for m in top.mistakes} if self.cfg.mistake_screen else None
         try:
-            ans = (self.loc or self.ver).choose_step(frames, opts, self.graph.title)
+            loc = self.loc or self.ver
+            ans = loc.choose_step(frames, opts, self.graph.title, mistakes=screen) if screen and loc is self.ver \
+                else loc.choose_step(frames, opts, self.graph.title)
         except Exception as e:  # noqa: BLE001
             self._w("step_choice", t, error=str(e)[:200])
             return
         self.tracker.observe_step_choice(ans["probs"], weight=self.cfg.step_choice_weight)
         self.n_escalated_frames += len(frames)
         self._w("step_choice", t, options=cands, probs=ans["probs"], choice=ans["choice"], latency_ms=ans["latency_ms"],
-                model=ans["model"], cost_usd=ans["cost_usd"])
+                model=ans["model"], cost_usd=ans["cost_usd"], mistake_screen=ans.get("mistake"))
+        # a positive mistake screen goes through the full verify path (fast verifier + strong-tier escalation +
+        # calibrated, precision-tuned policy) before the wearer hears anything
+        ms = ans.get("mistake")
+        if ms and ms["choice"] != "none" and ms["p"] >= self.cfg.mistake_screen_p:
+            b = self.tracker.belief()
+            if b.map_id == cands[0]:
+                self._verify(t, b, "mistake_screen", frame_at)
 
     def _check_order(self, t: float, belief, frame_at) -> None:
         """Stateful early warning: the person has started step j but a prerequisite of j was never seen.

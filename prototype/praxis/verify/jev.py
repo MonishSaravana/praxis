@@ -71,8 +71,10 @@ def _asset(rgb: np.ndarray, max_side: int = 768) -> tuple[str, dict, bytes]:
 class JevVerifier:
     name = "jev"
 
-    def choose_step(self, frames, options: dict[str, str], task: str) -> dict:
-        """Typed localization: which of these candidate steps is the person doing now? -> probabilities."""
+    def choose_step(self, frames, options: dict[str, str], task: str, mistakes: dict[str, str] | None = None) -> dict:
+        """Typed localization: which of these candidate steps is the person doing now? -> probabilities.
+        With `mistakes` (the likeliest step's mistake library), the same call also screens for a visible mistake
+        (Jev answers all questions of a request in parallel, so this adds no latency)."""
         self.budget.check()
         assets, refs = {}, []
         for f in frames:
@@ -83,8 +85,13 @@ class JevVerifier:
         crit["none"] = "None of these steps (between steps, or something else)"
         q = {"step": {"type": "choice", "instructions": f"The person is doing this task: {task}. Which step are they doing "
                                                          "in the most recent `frames`?", "criteria": crit}}
-        key = ResponseCache.key("choose_step-v1", self.model, q, [assets[r]["data_base64"][:4096] + str(len(assets[r]["data_base64"]))
-                                                                  for r in refs])
+        if mistakes:
+            mc = {"none": "No mistake is visible"}
+            mc.update(mistakes)
+            q["mistake"] = {"type": "choice", "instructions": "Is the person visibly making one of these mistakes in `frames`?",
+                            "criteria": mc}
+        key = ResponseCache.key("choose_step-v1" if not mistakes else "choose_step-screen-v1", self.model, q,
+                                [assets[r]["data_base64"][:4096] + str(len(assets[r]["data_base64"])) for r in refs])
         hit = self.cache.get(key) if self.cache else None
         if hit:
             resp, lat = hit["resp"], hit["latency_ms"]
@@ -96,8 +103,13 @@ class JevVerifier:
         u = resp.get("usage", {})
         usd = cost_usd(self.model, u.get("input_tokens", 0), 0)
         self.budget.add(usd)
-        return {"probs": {k: float(p) for k, p in a["probabilities"].items()}, "choice": a["choice"],
-                "latency_ms": lat, "model": resp.get("model"), "cost_usd": usd}
+        out = {"probs": {k: float(p) for k, p in a["probabilities"].items()}, "choice": a["choice"],
+               "latency_ms": lat, "model": resp.get("model"), "cost_usd": usd}
+        if "mistake" in resp["answers"]:
+            m = resp["answers"]["mistake"]
+            out["mistake"] = {"choice": m["choice"], "p": float(m["probabilities"].get(m["choice"], 0.0)),
+                              "p_none": float(m["probabilities"].get("none", 0.0))}
+        return out
 
     def choose_task(self, frames, options):
         key = ResponseCache.key("choose_task-v1", self.model, options, [to_jpeg(f, 768, 280)[-4096:] for f in frames])
