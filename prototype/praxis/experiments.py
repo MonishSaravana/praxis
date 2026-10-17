@@ -513,6 +513,71 @@ def visual_uncertainty(n: int = 60, modes=("blur", "occlude", "crop_away"), conf
     return res
 
 
+
+def join_mid_task(join_at: float = 90.0, window_s: float = 30.0, workers: int = 3, use_verifier: bool = True) -> dict:
+    """L3b/L4: start the engine `join_at` seconds into each clip with no history. Compare the mid-task prior
+    (uniform over steps, ancestors assumed done once localized) to naively assuming the task just started."""
+    import copy
+    from concurrent.futures import ThreadPoolExecutor
+    from .eval import harness
+    from .eval import metrics as M
+    from .eval.run_all import calibrators, engine_config, eval_clips
+    from .runlog import read_log
+    stack = harness.load_stack()
+    budget = _budget(1500, 10.0)
+    ver = make_verifier("jev", budget) if use_verifier else None
+    esc = make_verifier("claude_strong", budget) if use_verifier else None
+    cals = {"primary": calibrators("jev"), "escalation": calibrators("claude_strong")}
+    clips = [c for c in eval_clips() if c.duration >= join_at + 60]
+    res = {"join_at_s": join_at, "window_s": window_s, "use_verifier": use_verifier, "n_clips": len(clips), "modes": {}}
+    for mode, join_flag in (("mid_task_prior", True), ("assume_start", False)):
+        ecfg = engine_config({"join_mid_task": join_flag, "use_verifier": use_verifier})
+
+        def one(c):
+            st = dict(stack)
+            st["recognizer"] = copy.deepcopy(stack["recognizer"])
+            p = harness.run_clip(c, st, f"join_{mode}", ecfg, ver, esc, oracle_task=True, join_at=join_at, calibrators=cals)
+            recs = read_log(p)
+            segs = [(s.start - join_at, s.end - join_at, s.step) for s in c.segments if s.end - join_at > 0]
+            times = np.arange(0.5, window_s, 0.5)
+            gt = M.frame_labels(segs, times, between="next")
+            pred = M.predicted_labels(recs, times)
+            inside = np.array([any(a <= t < b for a, b, _ in segs) for t in times])
+            ok = gt == pred
+            first = next((float(t) for t, o in zip(times, ok) if o), None)
+            return {"clip": c.clip_id, "acc_first_window": float(ok.mean()),
+                    "acc_first_window_inside": float(ok[inside].mean()) if inside.any() else None, "t_first_correct": first}
+        with ThreadPoolExecutor(workers) as ex:
+            rows = list(ex.map(one, clips))
+        firsts = [r["t_first_correct"] for r in rows if r["t_first_correct"] is not None]
+        res["modes"][mode] = {"acc_first_window": float(np.mean([r["acc_first_window"] for r in rows])),
+                              "share_localized_within_window": len(firsts) / max(1, len(rows)),
+                              "t_first_correct_s": M.latency_summary(firsts), "per_clip": rows}
+        print(mode, {k: v for k, v in res["modes"][mode].items() if k != "per_clip"}, flush=True)
+    res["spend_usd"] = budget.usd
+    (RESULTS / "l3b").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l3b" / "join_mid_task.json").write_text(json.dumps(res, indent=2, default=float))
+    return res
+
+
+def recognition_summary(run: str = "fused") -> dict:
+    """L3b from the full-engine run (recognition on): top-1, time to recognize, per procedure."""
+    r = json.loads((RESULTS / "runs" / f"{run}.json").read_text())
+    rows = r["per_clip"]
+    t = [x["t_recognize"] for x in rows if x["task_correct"] and x["t_recognize"] is not None]
+    res = {"run": run, "n_clips": len(rows), "top1": float(np.mean([x["task_correct"] for x in rows])),
+           "recognized_any": float(np.mean([x["recognized_task"] is not None for x in rows])),
+           "t_recognize_s": {"p50": float(np.median(t)) if t else None, "p95": float(np.percentile(t, 95)) if t else None,
+                             "n": len(t)},
+           "confusions": [{"clip": x["clip"], "gt": x["task_id"], "pred": x["recognized_task"]} for x in rows if not x["task_correct"]],
+           "library_size": None}
+    from .tasks.compiler import load_library
+    res["library_size"] = len(load_library())
+    (RESULTS / "l3b").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l3b" / "recognition.json").write_text(json.dumps(res, indent=2))
+    return res
+
+
 if __name__ == "__main__":
     import sys
     t0 = time.time()
