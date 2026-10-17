@@ -1,0 +1,49 @@
+# Praxis prototype v0 — default configuration.
+# Swapping a layer implementation is a one-line change here (e.g. verifier.primary: distilled).
+
+input:
+  fps: 4.0              # frames/s the fast layers see
+  max_side: 640
+
+perception:
+  frame_backbone: siglip2      # per-frame: siglip2 | dinov2
+  window_backbone: vjepa2      # per-window clip encoder
+  vjepa_frames: 8
+  vjepa_size: 224
+  window_s: 2.0                # clip window length
+  window_stride_s: 1.0
+
+events:
+  detector: learned            # learned | heuristic
+  threshold: 0.5
+  min_gap_s: 2.0
+
+tracker:
+  local_weight: 1.0            # weight of SigLIP/visual evidence log-likelihood
+  boundary_weight: 1.0
+  verifier_weight: 4.0         # verifier verdicts are high-weight observations
+  entropy_verify: 0.9          # normalized entropy above which the verifier is called
+  entropy_view_request: 0.95
+
+verifier:
+  primary: claude_fast         # jev | claude_fast | distilled
+  escalation: claude_strong
+  roi_crops: true
+  frames_per_call: 3
+  claude_fast_model: claude-haiku-5-5
+  claude_strong_model: claude-opus-5-5
+  compiler_model: claude-fable-5-1
+  jev_model: jev-1.14.0
+  max_calls_per_run: 400       # hard cap so a bug can't loop calls
+  max_usd_per_run: 15.0
+  timeout_s: 30
+
+policy:
+  speak: false                 # macOS `say` in live mode
+  verify_conf: 0.6
+  mistake_conf: 0.7
+  view_request_conf: 0.5
+  hesitation_ratio: 1.6        # time on step / typical duration that triggers expanded detail
+  fast_ratio: 0.6
+  cooldown_s: 4.0
+  profile: auto                # auto | novice | expert
