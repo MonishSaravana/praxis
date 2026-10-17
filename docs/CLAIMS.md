@@ -9,14 +9,13 @@ Every sentence below comes from a file under `results/`, linked after it. This f
 - "It costs about 5x less to run: $0.018 vs $0.085 per minute of video, because most checks are fast typed questions and the frontier model is only called to escalate." (`results/runs/fused_oracle.json`)
 - "On mistakes, both systems are weak and we're honest about it. Strictly scored, Praxis's alerts named the actual annotated error 4 times out of 17; the stateless baseline did 2 out of 3. So Praxis catches more real mistakes but is less precise. Most annotated cooking errors, like the wrong amount or water temperature, can't be seen from a few frames." (`results/l6/mistake_semantic_fused_oracle.json`)
 - "The mistakes Praxis does catch tend to be ones that need state: doing steps in the wrong order, or using the wrong tool for the step it knows you're on." (`results/l6/mistake_semantic_fused_oracle.json`)
-- "False alarms: 0.017 per minute, i.e. about one every 59 minutes." (`results/runs/fused_oracle.json`)
-- "Only 14% of frames leave the local layers, and most of those go to a ~0.2-second typed check rather than a frontier model." (`results/runs/fused_oracle.json`)
+- "Counting every alert that didn't name an annotated error as a false alarm, which is strict because some may be real but unannotated, Praxis raised about one every 18 minutes of video." (`results/l6/mistake_semantic_fused_oracle.json`)
+- "Only 14% of frames leave the local layers, and 88% of those model calls are answered by the fast tier (Jev, ~0.2 s); the rest escalate to the frontier model." (`results/metrics.json: call_mix_fused_oracle (counted from the run logs)`)
 - "With no setup at all, it recognized which recipe was being made on 73% of held-out clips, with a median of 40 seconds." (`results/runs/fused.json`)
 - "With the task given, fusing local evidence with the verifier gives 54% step accuracy, vs 41% from local evidence alone." (`results/runs/fused_oracle.json`)
-- "It recognized which of 9 procedures was happening on its own on 73% of held-out clips, typically within 40 seconds." (`results/l3b/recognition.json`)
 - "On the same 469 labeled checks, Jev answered in 151 ms (median) at AUROC 0.70. Claude Opus answered in 3.8 s at AUROC 0.84. So we use Jev as the fast tier and escalate ambiguous cases to Opus." (`results/l5/compare_jev_vs_claude_fast.json`)
 - "Calibration on training data cut Jev's expected calibration error from 0.22 to 0.02 on held-out checks." (`results/l5/calibration.json`)
-- "We distilled the frontier verifier into a local model that agrees with it on 69% of held-out checks. It runs in about 0.0 ms on a laptop CPU and costs nothing per check." (`results/l7/distill.json`)
+- "We distilled the frontier verifier into a local model that agrees with it on 69% of held-out checks. It answers in 0.03 ms on a laptop CPU and costs nothing per check. Sending it only the checks it's confident about keeps teacher-level accuracy while removing 34% of frontier calls." (`results/l7/distill.json`)
 
 ## Do NOT claim (not measured or not true yet)
 
@@ -25,4 +24,6 @@ Every sentence below comes from a file under `results/`, linked after it. This f
 - Any user study, customer, pilot, or 'helps people learn faster'. Adaptive detail is an association on public data, and on CaptainCook4D it was NOT associated with annotated errors (see RESULTS.md).
 - Real-time point tracking. TAPNext++ ran offline for the crop experiment; it was too slow on this Mac for live use.
 - That the concept video is model output. It stays labeled 'Concept Prototype'.
-- Accuracy numbers from the concept-prototype application (48 videos / 192 states) unless they are the numbers in this file: this build used 48 clips / 8 procedure types from CaptainCook4D.
+- The application's '48 videos / 8 categories / 192 labeled action states' as if they were this build's set. This build's eval set is 48 clips / 8 procedure types / 302 annotated step segments / 170 timed errors (CaptainCook4D). Quote these instead.
+- Mistake precision from time-window matching (it is optimistic). Use the strict, judge-verified numbers.
+- That the distilled student replaces the frontier model. It handles routine completion checks; localization stays with the fast verifier (see RESULTS: fused_distilled vs fused_distilled_alone).

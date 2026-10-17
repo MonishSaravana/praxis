@@ -391,21 +391,21 @@ def claims(m: dict) -> str:
                 f"from a few frames.", "semantic_fused_oracle")
             say(f"The mistakes Praxis does catch tend to be ones that need state: doing steps in the wrong order, or "
                 f"using the wrong tool for the step it knows you're on.", "semantic_fused_oracle")
-        say(f"False alarms: {FO['false_alarms_per_min']:.3f} per minute, i.e. about one every "
-            f"{1 / max(FO['false_alarms_per_min'], 1e-9):.0f} minutes.", "run_fused_oracle")
-        say(f"Only {FO['escalated_frame_share'] * 100:.0f}% of frames leave the local layers, and most of those go to a "
-            f"~0.2-second typed check rather than a frontier model.", "run_fused_oracle")
+        if so:
+            say(f"Counting every alert that didn't name an annotated error as a false alarm, which is strict because "
+                f"some may be real but unannotated, Praxis raised about one every "
+                f"{1 / max(so['strict_false_alarms_per_min'], 1e-9):.0f} minutes of video.", "semantic_fused_oracle")
+        cm = m.get("call_mix_fused_oracle")
+        if cm and cm.get("fast_tier_share") is not None:
+            say(f"Only {FO['escalated_frame_share'] * 100:.0f}% of frames leave the local layers, and "
+                f"{cm['fast_tier_share'] * 100:.0f}% of those model calls are answered by the fast tier (Jev, ~0.2 s); "
+                f"the rest escalate to the frontier model.", "call_mix_fused_oracle")
     if F:
         say(f"With no setup at all, it recognized which recipe was being made on {F['task_top1'] * 100:.0f}% of held-out "
             f"clips, with a median of {F['t_recognize_s']['p50']:.0f} seconds.", "run_fused")
     if FO and L:
         say(f"With the task given, fusing local evidence with the verifier gives {FO['step_acc'] * 100:.0f}% step "
             f"accuracy, vs {L['step_acc'] * 100:.0f}% from local evidence alone.", "run_fused_oracle")
-    r = m.get("recognition")
-    if r:
-        say(f"It recognized which of {r['library_size']} procedures was happening on its own on "
-            f"{r['top1'] * 100:.0f}% of held-out clips, typically within {r['t_recognize_s']['p50']:.0f} seconds.",
-            "recognition")
     vc = m.get("verifier_compare")
     if vc and vc.get("by_verifier", {}).get("jev") and vc["by_verifier"].get("claude_strong"):
         j, o = vc["by_verifier"]["jev"], vc["by_verifier"]["claude_strong"]
@@ -419,8 +419,10 @@ def claims(m: dict) -> str:
     ds = m.get("distillation")
     if ds:
         say(f"We distilled the frontier verifier into a local model that agrees with it on "
-            f"{ds['agreement'] * 100:.0f}% of held-out checks. It runs in about {ds['student_latency_ms_p50']:.1f} ms "
-            f"on a laptop CPU and costs nothing per check.", "distillation")
+            f"{ds['agreement'] * 100:.0f}% of held-out checks. It answers in {ds['student_latency_ms_p50']:.2f} ms on a "
+            f"laptop CPU and costs nothing per check. Sending it only the checks it's confident about keeps "
+            f"teacher-level accuracy while removing {ds['routed_conf0.7']['share_handled_locally'] * 100:.0f}% of "
+            f"frontier calls.", "distillation")
     out.append("\n## Do NOT claim (not measured or not true yet)\n")
     for s in ["Praxis runs on smart glasses. It has not been tested on glasses; the glasses adapter is a documented stub "
               "(docs/GLASSES.md). Say instead: 'it runs live on a camera stream; glasses are an input adapter.'",
@@ -431,8 +433,12 @@ def claims(m: dict) -> str:
               "Real-time point tracking. TAPNext++ ran offline for the crop experiment; it was too slow on this Mac for "
               "live use.",
               "That the concept video is model output. It stays labeled 'Concept Prototype'.",
-              "Accuracy numbers from the concept-prototype application (48 videos / 192 states) unless they are the numbers "
-              "in this file: this build used 48 clips / 8 procedure types from CaptainCook4D."]:
+              "The application's '48 videos / 8 categories / 192 labeled action states' as if they were this build's "
+              "set. This build's eval set is 48 clips / 8 procedure types / 302 annotated step segments / 170 timed "
+              "errors (CaptainCook4D). Quote these instead.",
+              "Mistake precision from time-window matching (it is optimistic). Use the strict, judge-verified numbers.",
+              "That the distilled student replaces the frontier model. It handles routine completion checks; "
+              "localization stays with the fast verifier (see RESULTS: fused_distilled vs fused_distilled_alone)."]:
         out.append(f"- {s}")
     return "\n".join(out) + "\n"
 

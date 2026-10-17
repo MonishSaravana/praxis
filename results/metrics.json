@@ -18,6 +18,7 @@
   "run_baseline_excl": "results/runs/baseline_stateless.json (aggregate_excl_dev_clips)",
   "run_fused_excl": "results/runs/fused.json (aggregate_excl_dev_clips)",
   "recognition": "results/l3b/recognition.json",
+  "call_mix_fused_oracle": "results/metrics.json: call_mix_fused_oracle (counted from the run logs)",
   "join_mid_task": "results/l3b/join_mid_task.json",
   "verifier_compare": "results/l5/compare_jev_vs_claude_fast.json",
   "calibration": "results/l5/calibration.json",
@@ -3343,6 +3344,14 @@
    }
   ],
   "library_size": 9
+ },
+ "call_mix_fused_oracle": {
+  "calls_by_model": {
+   "jev-1.14.0": 2679,
+   "claude-opus-5-5": 351
+  },
+  "total": 3030,
+  "fast_tier_share": 0.8841584158415842
  },
  "join_mid_task": {
   "join_at_s": 90.0,

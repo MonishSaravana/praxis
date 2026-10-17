@@ -18,6 +18,24 @@ def _agg(name: str) -> dict | None:
     return r["aggregate"] if r else None
 
 
+def call_mix(run: str) -> dict | None:
+    """Which model answered each slow-path call in a run (from the run logs)."""
+    import collections
+    from .paths import RUNS
+    from .runlog import read_log
+    d = RUNS / run
+    if not d.exists():
+        return None
+    c = collections.Counter()
+    for f in d.glob("*.jsonl"):
+        for r in read_log(f):
+            if r["kind"] in ("verdict", "step_choice", "task_check") and not r.get("error"):
+                c[r.get("model") or "?"] += 1
+    tot = sum(c.values())
+    fast = sum(v for k, v in c.items() if k.startswith("jev"))
+    return {"calls_by_model": dict(c), "total": tot, "fast_tier_share": fast / tot if tot else None}
+
+
 def collect() -> dict:
     m: dict = {"_sources": {}}
 
@@ -57,6 +75,7 @@ def collect() -> dict:
         r = _j(f"runs/{v}.json")
         put(key, r.get("aggregate_excl_dev_clips") if r else None, f"results/runs/{v}.json (aggregate_excl_dev_clips)")
     put("recognition", _j("l3b/recognition.json"), "results/l3b/recognition.json")
+    put("call_mix_fused_oracle", call_mix("fused_oracle"), "results/metrics.json: call_mix_fused_oracle (counted from the run logs)")
     put("join_mid_task", _j("l3b/join_mid_task.json"), "results/l3b/join_mid_task.json")
     put("verifier_compare", _j("l5/compare_jev_vs_claude_fast.json"), "results/l5/compare_jev_vs_claude_fast.json")
     put("calibration", _j("l5/calibration.json"), "results/l5/calibration.json")
