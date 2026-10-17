@@ -1,0 +1,86 @@
+{
+  "n": 100,
+  "split": "train",
+  "rows": [
+    {
+      "framing": "recent3",
+      "verifier": "jev",
+      "model": "jev-1.14.0",
+      "n": 100,
+      "accuracy": 0.5,
+      "auroc": 0.6681034482758621,
+      "latency_ms_p50": 176.59789544995874,
+      "cost_usd_per_check": 0.00010696350000000001
+    },
+    {
+      "framing": "recent3",
+      "verifier": "claude_fast",
+      "model": "claude-haiku-5-5",
+      "n": 100,
+      "accuracy": 0.54,
+      "auroc": 0.5929802955665026,
+      "latency_ms_p50": 1821.9385624979623,
+      "cost_usd_per_check": 0.000252493
+    },
+    {
+      "framing": "recent3",
+      "verifier": "claude_sonnet",
+      "model": "claude-sonnet-5-5",
+      "n": 100,
+      "accuracy": 0.58,
+      "auroc": 0.645935960591133,
+      "latency_ms_p50": 1976.1461460147984,
+      "cost_usd_per_check": 0.005231146
+    },
+    {
+      "framing": "recent3",
+      "verifier": "claude_strong",
+      "model": "claude-opus-5-5",
+      "n": 100,
+      "accuracy": 0.72,
+      "auroc": 0.7746305418719212,
+      "latency_ms_p50": 3565.3795830439776,
+      "cost_usd_per_check": 0.009715172000000001
+    },
+    {
+      "framing": "span",
+      "verifier": "jev",
+      "model": "jev-1.14.0",
+      "n": 100,
+      "accuracy": 0.58,
+      "auroc": 0.6703612479474549,
+      "latency_ms_p50": 151.69316646642983,
+      "cost_usd_per_check": 0.00010698576000000002
+    },
+    {
+      "framing": "span",
+      "verifier": "claude_fast",
+      "model": "claude-haiku-5-5",
+      "n": 100,
+      "accuracy": 0.55,
+      "auroc": 0.5942118226600985,
+      "latency_ms_p50": 1427.069874946028,
+      "cost_usd_per_check": 0.00024083214999999996
+    },
+    {
+      "framing": "span",
+      "verifier": "claude_sonnet",
+      "model": "claude-sonnet-5-5",
+      "n": 100,
+      "accuracy": 0.71,
+      "auroc": 0.7323481116584565,
+      "latency_ms_p50": 1865.0952290045097,
+      "cost_usd_per_check": 0.0037381859999999992
+    },
+    {
+      "framing": "span",
+      "verifier": "claude_strong",
+      "model": "claude-opus-5-5",
+      "n": 100,
+      "accuracy": 0.82,
+      "auroc": 0.8643267651888341,
+      "latency_ms_p50": 3647.484750021249,
+      "cost_usd_per_check": 0.009616772
+    }
+  ]
+}
