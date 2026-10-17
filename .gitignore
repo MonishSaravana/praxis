@@ -25,3 +25,6 @@ renders/_work/
 # large/binary results kept out of git
 *.mp4.part
 *.pkl
+
+# Praxis Studio sessions: personal video, run logs, flags (never committed)
+/sessions/

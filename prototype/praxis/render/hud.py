@@ -106,8 +106,15 @@ class LogState:
                       for a in self.actions if a["action"] in CARD_DUR]
         self.cards.sort(key=lambda c: c.t)
 
+    def task_at(self, tau: float) -> dict | None:
+        t = [x for x in self.tasks if x["t"] <= tau]
+        return t[-1] if t else None
+
     def progress(self, tau: float) -> int:
-        return len({c["node"] for c in self.commits if c["t"] <= tau})
+        """Steps committed under the task running at tau (a Studio session can switch tasks)."""
+        task = self.task_at(tau)
+        t0 = task["t"] if task else -1.0
+        return len({c["node"] for c in self.commits if t0 <= c["t"] <= tau})
 
     def card(self, tau: float) -> tuple[Card | None, float]:
         """The one card on screen at tau and its opacity. Higher-priority cards are not overwritten."""
@@ -179,8 +186,9 @@ class UserView:
         s, W, H = self.s, self.W, self.H
         d = ImageDraw.Draw(img)
         # progress indicator (top-right): thin bar + k/N
-        if st.n_steps and st.tasks and st.tasks[0]["t"] <= tau:
-            k, n = st.progress(tau), st.n_steps
+        task = st.task_at(tau)
+        if task and (task.get("n_steps") or st.n_steps):
+            k, n = st.progress(tau), task.get("n_steps") or st.n_steps
             bw, bh = int(150 * s), int(6 * s)
             x1, y0 = W - int(36 * s), int(34 * s)
             x0 = x1 - bw

@@ -78,8 +78,17 @@ def main(argv=None):
     s.add_argument("--stride", type=float, default=2.0)
     s.add_argument("--wait", type=int, default=1800, help="seconds to wait for a video still downloading")
     s.set_defaults(fn=cmd_features)
+    s = sub.add_parser("studio", help="Praxis Studio: use the live engine on a camera or a video in the browser")
+    s.add_argument("--port", type=int, default=8800)
+    s.add_argument("--no-browser", action="store_true", help="don't open the browser")
+    s.set_defaults(fn=cmd_studio)
     a = p.parse_args(argv)
     a.fn(a)
+
+
+def cmd_studio(a):
+    from .studio.server import main as studio_main
+    studio_main(port=a.port, open_browser=not a.no_browser)
 
 
 if __name__ == "__main__":

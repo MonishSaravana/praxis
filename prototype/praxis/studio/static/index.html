@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Praxis Studio</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="brand"><b>Praxis</b> Studio <span class="tag">Instructions that can finally see how you're doing.</span></div>
+  <nav><a href="#/live" class="on">Live</a><a href="#/sessions">Sessions</a></nav>
+  <div class="pills">
+    <span id="p-conn" class="pill-s off">Not connected</span>
+    <span id="p-jev" class="pill-s off">Jev</span>
+    <span id="p-claude" class="pill-s off">Claude</span>
+    <span id="p-opus" class="pill-s off">Opus</span>
+    <span id="p-cost" class="pill-s off">$0.000</span>
+  </div>
+</header>
+
+<main id="view-live">
+  <section class="left">
+    <div id="stage" class="stage"><video id="video" playsinline muted></video></div>
+    <div id="runbar" class="runbar hidden">
+      <span id="clock" class="mono">0:00</span>
+      <span id="task-now" class="task-now"></span>
+      <button id="f-wrong" class="flag wrong">That's wrong <kbd>W</kbd></button>
+      <button id="f-missed" class="flag missed">It missed something <kbd>M</kbd></button>
+      <button id="stop" class="stop">Stop</button>
+    </div>
+    <form id="retask" class="retask hidden"><input id="retask-text" placeholder="Wrong task? Say what you're doing, e.g. &quot;making pinwheels&quot;"><button>Change task</button></form>
+    <div id="flag-box" class="flag-box hidden">
+      <form id="flag-form"><b id="flag-kind"></b>
+        <input id="flag-note" maxlength="300" placeholder="Optional one-line note. Enter saves, Esc skips the note.">
+        <button>Save flag</button></form>
+    </div>
+    <div id="errors" class="errors"></div>
+    <div class="under">
+      <div id="engstats" class="mono muted"></div>
+      <label class="toggle"><input type="checkbox" id="eng-toggle"> Engineer panel</label>
+    </div>
+    <div id="log" class="log"></div>
+  </section>
+
+  <aside class="right">
+    <div id="panel-setup" class="panel">
+      <h2>1 · Input</h2>
+      <label class="opt"><input type="radio" name="input" value="camera" id="in-camera" checked> Camera</label>
+      <label class="opt"><input type="radio" name="input" value="upload" id="in-upload"> Upload a video</label>
+      <label class="opt"><input type="radio" name="input" value="clip" id="in-clip"> Test clip from this Mac (CaptainCook4D)</label>
+      <div class="in-opt" data-for="camera">
+        <div class="row"><select id="cam"></select><button id="cam-allow" type="button">Allow camera</button></div>
+        <div id="cam-msg" class="muted small"></div>
+        <p class="hint">An iPhone through Continuity Camera shows up here as a camera.</p>
+      </div>
+      <div class="in-opt hidden" data-for="upload">
+        <input type="file" id="file" accept="video/*">
+        <p class="hint">Plays at real-time speed through the same live loop as the camera.</p>
+      </div>
+      <div class="in-opt hidden" data-for="clip"><select id="clip"></select>
+        <p class="hint">For testing without a camera. Clips marked "not in library" are recipes Praxis has never seen.</p></div>
+
+      <h2>2 · Task</h2>
+      <label class="opt"><input type="radio" name="task" value="auto" checked> Auto-recognize</label>
+      <label class="opt"><input type="radio" name="task" value="describe"> What are you doing?</label>
+      <label class="opt"><input type="radio" name="task" value="paste"> Paste instructions</label>
+      <label class="opt"><input type="radio" name="task" value="library"> Pick from the library</label>
+      <div class="task-opt" data-for="auto"><p class="hint">Recognizes the library tasks (8 recipes, the IndustReal toy car, and anything you've pasted). If it can't tell after about 30 s, it asks you instead of guessing.</p></div>
+      <div class="task-opt hidden" data-for="describe"><input id="describe" placeholder="e.g. making pour-over coffee">
+        <p class="hint">Uses a library task if your words clearly name one; otherwise drafts a plan from your words and the first few seconds of video.</p></div>
+      <div class="task-opt hidden" data-for="paste">
+        <textarea id="instructions" rows="7" placeholder="Paste the steps, a recipe or a manual…"></textarea>
+        <button id="compile" type="button">Compile to a task graph</button>
+        <div class="progress"><div id="compile-bar"></div></div>
+        <div id="compile-msg" class="muted small"></div>
+        <p class="hint">Claude Opus turns the text into typed steps with spoken instructions, visual end states, checks and common mistakes (about a minute; cached).</p>
+      </div>
+      <div class="task-opt hidden" data-for="library"><select id="lib"></select></div>
+
+      <h2>3 · Options</h2>
+      <label class="opt"><input type="checkbox" id="opus" checked> Opus escalations, in the background (off = Jev only: cheapest and fastest)</label>
+      <label class="opt"><input type="checkbox" id="speech" checked> Speak the coaching</label>
+      <label class="opt">Cost cap per session $ <input type="number" id="cap" value="1.00" min="0.05" step="0.05"></label>
+      <button id="start" class="primary">Start</button>
+      <p class="hint">Nothing is saved unless you press Save at the end. Closing the tab discards the session.</p>
+    </div>
+
+    <div id="panel-run" class="panel hidden">
+      <div id="engineer" class="engineer hidden"></div>
+      <p class="muted small">Flag a moment with <kbd>W</kbd> (that's wrong) or <kbd>M</kbd> (it missed something). Everything on the video is live engine output.</p>
+    </div>
+
+    <div id="panel-end" class="panel hidden">
+      <h2>Session ended</h2>
+      <div id="end-sum"></div>
+      <div class="row"><button id="save" class="primary">Save session</button><button id="discard">Discard</button></div>
+      <p id="end-msg" class="muted small"></p>
+      <button id="again">New session</button>
+    </div>
+  </aside>
+</main>
+
+<main id="view-sessions" class="hidden">
+  <div id="sessions"></div>
+  <div id="replay" class="hidden">
+    <a href="#/sessions">← All sessions</a>
+    <div id="rmeta" class="rmeta"></div>
+    <div class="replay-grid">
+      <div>
+        <div id="rstage" class="stage"><video id="rvideo" controls playsinline></video></div>
+        <div class="timeline"><div id="rflags"></div><div id="rcursor"></div></div>
+        <h3>Flags</h3><div id="rflaglist"></div>
+      </div>
+      <div id="rengineer" class="engineer"></div>
+    </div>
+  </div>
+</main>
+
+<script type="module" src="/static/app.js"></script>
+</body>
+</html>

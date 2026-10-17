@@ -76,8 +76,10 @@ def _schema() -> dict:
 
 def compile_procedure(task_id: str, domain: str, source_text: str, steps: list[dict],
                       ordering: list[tuple[str, str]] | None = None, mistake_hints: list[str] | None = None,
-                      model: str = "claude-opus-5-5", draft: bool = False, source: str = "") -> TaskGraph:
-    """steps: [{"id": ..., "name": ...}] in nominal order. ordering: (before, after) edges if known."""
+                      model: str = "claude-opus-5-5", draft: bool = False, source: str = "", effort: str = "high",
+                      on_progress=None) -> TaskGraph:
+    """steps: [{"id": ..., "name": ...}] in nominal order. ordering: (before, after) edges if known.
+    on_progress(n_chars): called as the graph streams in (Praxis Studio shows it as a progress indicator)."""
     load_env()
     client = anthropic.Anthropic(timeout=900, max_retries=2)
     user = [f"Task id: {task_id}\nDomain: {domain}\n\nSource procedure:\n{source_text}\n",
@@ -89,8 +91,13 @@ def compile_procedure(task_id: str, domain: str, source_text: str, steps: list[d
     t0 = time.perf_counter()
     kw = dict(model=model, max_tokens=32000, system=SYSTEM,
               messages=[{"role": "user", "content": "\n\n".join(user)}],
-              output_config={"format": {"type": "json_schema", "schema": _schema()}, "effort": "high"})
+              output_config={"format": {"type": "json_schema", "schema": _schema()}, "effort": effort})
     with client.messages.stream(**kw) as stream:
+        if on_progress is not None:
+            n = 0
+            for chunk in stream.text_stream:
+                n += len(chunk)
+                on_progress(n)
         resp = stream.get_final_message()
     if resp.stop_reason == "refusal":
         raise RuntimeError(f"compiler refusal for {task_id}")
@@ -129,7 +136,7 @@ def compile_procedure(task_id: str, domain: str, source_text: str, steps: list[d
         start = [s["id"] for s in steps if s["id"] not in has_pred]
     return TaskGraph(task_id=task_id, title=data["title"], domain=domain, summary=data["summary"], source=source,
                      draft=draft, nodes=nodes, start=start,
-                     compiler={"model": model, "prompt_version": PROMPT_VERSION, "cost_usd": usd,
+                     compiler={"model": model, "prompt_version": PROMPT_VERSION, "effort": effort, "cost_usd": usd,
                                "latency_s": time.perf_counter() - t0, "input_tokens": u.input_tokens,
                                "output_tokens": u.output_tokens})
 

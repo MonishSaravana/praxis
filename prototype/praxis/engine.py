@@ -386,13 +386,14 @@ class Engine:
         acts += self.policy.start(t, self.tracker.belief().map_id)
         self._emit(acts)
 
-    def request_draft(self, drafter) -> None:
+    def request_draft(self, drafter, at_s: float = 0.0) -> None:
         """The person said what they are doing and it isn't in the library: draft a graph from the frames so far plus
-        their description on the next tick (open-set path, `tasks/drafter.py`). Clears a task already running."""
+        their description on the first tick at or after at_s (open-set path, `tasks/drafter.py`), so a description
+        given at the start waits for a few seconds of video. Clears a task already running."""
         if self.rec is None:
             raise ValueError("drafting needs the recognizer path (engine started without a task)")
         self.drafter = drafter
-        self.cfg.open_set_draft, self.cfg.open_set_min_s, self.cfg.open_set_max_wait_s = True, 0.0, 0.0
+        self.cfg.open_set_draft, self.cfg.open_set_min_s, self.cfg.open_set_max_wait_s = True, at_s, at_s
         self._drafted = False
         if self.graph is not None:
             self._jobs = [j for j in self._jobs if j.kind not in ("verify", "localize", "order")]
