@@ -82,3 +82,19 @@ def build(model: str = "claude-fable-5-1", recipes: list[str] | None = None, ove
     (RESULTS / "l3").mkdir(parents=True, exist_ok=True)
     (RESULTS / "l3" / "compile_summary.json").write_text(json.dumps(out, indent=2))
     return out
+
+
+def dataset_graph(recipe: str) -> TaskGraph:
+    """Uncompiled graph straight from the dataset (ids, names, ordering, train-split duration priors).
+    Used only until the L3 compiler has run (it has no instructions/checks/mistakes); flagged in `compiler`."""
+    from .schema import Node
+    steps, edges = cc4d.recipe_steps(recipe)
+    durs, _ = train_stats(recipe)
+    succ = {s["id"]: sorted({b for a, b in edges if a == s["id"]}) for s in steps}
+    has_pred = {b for _, b in edges}
+    nodes = [Node(id=s["id"], name=s["name"], instruction_novice=s["name"], instruction_expert=s["name"],
+                  end_state=s["name"], successors=succ[s["id"]], duration=duration_prior(durs.get(s["id"], [])),
+                  dataset_labels=[s["id"]]) for s in steps]
+    return TaskGraph(task_id=cc4d.slug(recipe), title=recipe, domain="cooking", source="dataset step list (uncompiled)",
+                     nodes=nodes, start=[s["id"] for s in steps if s["id"] not in has_pred] or [steps[0]["id"]],
+                     compiler={"model": None, "note": "uncompiled dataset graph; replaced by L3 output once compiled"})
