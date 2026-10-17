@@ -35,6 +35,8 @@ class PolicyConfig:
     entropy_verify: float = 0.85    # belief entropy above which we spend a verifier call
     verify_min_gap_s: float = 3.0
     escalate_band: tuple[float, float] = (0.3, 0.7)
+    # per verifier tier (Verdict.role): (verify_conf, mistake_conf), tuned on train-split checks; overrides above
+    by_role: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -108,8 +110,9 @@ class Policy:
         acts: list[Action] = []
         node = self.g.node(v.node_id)
         card_ok = t - self.last_card_t >= self.cfg.cooldown_s
+        verify_conf, mistake_conf = self.cfg.by_role.get(v.role, (self.cfg.verify_conf, self.cfg.mistake_conf))
         # 1) mistakes first: they are the highest-value intervention
-        if v.step_status == "deviation" and v.mistake and p_deviation >= self.cfg.mistake_conf and card_ok:
+        if v.step_status == "deviation" and v.mistake and p_deviation >= mistake_conf and card_ok:
             key = (node.id, v.mistake.mistake_id or v.mistake.description[:40])
             if key not in self.flagged:
                 self.flagged.add(key)
@@ -128,7 +131,7 @@ class Policy:
                                {"direction": direction_of(v.view_request or node.view_hint)}))
             return acts, False
         # 3) verified -> pulse + proactively announce what's next
-        if v.step_status == "complete" and p_complete >= self.cfg.verify_conf:
+        if v.step_status == "complete" and p_complete >= verify_conf:
             started = self.step_started_t.get(node.id, belief.t - belief.time_on_step)
             self.user.on_step_done(t - started, node.duration.mean_s if node.duration else 30.0)
             acts.append(Action(t, "verified", node.name, node.id, {"p": round(p_complete, 3)}))

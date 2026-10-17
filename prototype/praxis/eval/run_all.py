@@ -38,10 +38,20 @@ def tuned_tracker() -> TrackerConfig:
 
 
 def tuned_policy() -> PolicyConfig:
+    """Precision-first thresholds per verifier tier, chosen on train-split checks (results/l6/policy_thresholds.json)."""
     p = RESULTS / "l6" / "policy_thresholds.json"
     if p.exists():
-        d = json.loads(p.read_text())["chosen"]
-        return PolicyConfig(verify_conf=d["verify_conf"], mistake_conf=d["mistake_conf"])
+        d = json.loads(p.read_text())
+        fast = d.get("from_fast", {}).get("chosen", {})
+        strong = d.get("from_strong", {}).get("chosen", {})
+        by_role = {}
+        if fast:
+            by_role["fast"] = (fast["verify_conf"], fast["mistake_conf"])
+            by_role["student"] = (fast["verify_conf"], fast["mistake_conf"])
+        if strong:
+            by_role["strong"] = (strong["verify_conf"], strong["mistake_conf"])
+        c = d["chosen"]
+        return PolicyConfig(verify_conf=c["verify_conf"], mistake_conf=c["mistake_conf"], by_role=by_role)
     return PolicyConfig()
 
 
