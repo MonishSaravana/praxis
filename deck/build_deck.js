@@ -48,7 +48,8 @@ const THEME = {
     folHlink: "5E676C",
   },
 };
-const MONO = "IBM Plex Mono";
+const MONO = "Archivo SemiBold"; // labels (was IBM Plex Mono; replaced at the founder's request)
+const LABEL = MONO;
 const SEMI = "Archivo SemiBold";
 const HEAD = THEME.headFontFace;
 const HUD = { ink: "16191B", text: "E8EBE9", orange: "FF5B14", green: "3DD68C", blue: "6EA8FF", red: "D92D20", plate: "F6F7F6", body: "3C4347" };
@@ -100,7 +101,7 @@ pres.defineSlideMaster({ title: "Praxis Photo", background: { color: C.text1 }, 
 // ---------- helpers (as in brand/deck) ----------
 function footer(slide, n, source, x0 = 0.5) {
   slide.addImage({ path: MK(`prog-light-${n}of${TOTAL}.png`), x: x0, y: 6.93, h: 0.3, w: 0.3 * MARK_RATIO, objectName: "progress-mark" });
-  if (source) slide.addText(source, { x: x0 + 1.0, y: 6.93, w: 12.83 - x0 - 1.0, h: 0.3, fontFace: MONO, fontSize: 9.5, color: C.text2, align: "right", valign: "middle", margin: 0, isTextBox: true, objectName: "footer-source" });
+  if (source) slide.addText(source, { x: x0 + 1.0, y: 6.93, w: 12.83 - x0 - 1.0, h: 0.3, fontFace: "Archivo", fontSize: 9.5, color: C.text2, align: "right", valign: "middle", margin: 0, isTextBox: true, objectName: "footer-source" });
 }
 function line(slide, x1, y1, x2, y2, opts) {
   const o = { x: Math.min(x1, x2), y: Math.min(y1, y2), w: Math.abs(x2 - x1), h: Math.abs(y2 - y1), line: { color: opts.color, width: opts.width || 1.5, dashType: opts.dash || "solid", endArrowType: opts.arrow ? "triangle" : undefined }, objectName: opts.name };
@@ -272,33 +273,80 @@ pres.addSection({ title: "Story" });
   s.addNotes("What it is: software, not glasses. It runs on a tablet at the bench today and on camera or display glasses through an input adapter. It speaks; cards appear only for mistakes and view requests, and the step graph is never shown. It verifies, logs, and flags mistakes only when confident. Mistake detection is our weakest number today (4 of 17 alerts named a real annotated error), so this slide shows step tracking, which is what we measure best. Buyer: the maintenance manager. User: the new tech.");
 }
 
-// ---------- 4 · How it works ----------
+const Q = (v) => (v * 13.333) / 100;
+// ---------- 4 · How it works (dark blueprint, from brand/deck/v2) ----------
 {
-  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Story" });
-  s.addText("HOW IT WORKS", { placeholder: "eyebrow" });
-  s.addText("Cheap models watch every frame. The big model\nis called only when something happens", { placeholder: "title" });
-  const bx = (name, x, y, w, h, title, spec, hero) => {
-    s.addShape(pres.ShapeType.roundRect, { x, y, w, h, rectRadius: 0.04, fill: { color: hero ? C.accent1 : C.background1 }, line: hero ? { type: "none" } : { color: C.text1, width: 1 }, objectName: `box-${name}` });
-    tb(s, title, { x: x + 0.2, y: y + 0.2, w: w - 0.4, h: 0.4, fontFace: SEMI, fontSize: 18 });
-    mono(s, spec, { x: x + 0.2, y: y + 0.66, w: w - 0.4, h: 0.45, fontSize: 11, color: hero ? C.text1 : C.text2 });
-  };
-  const Y = 2.55, H = 1.25, W = 2.76, G = (12.33 - 4 * 2.76) / 3;
-  const xs = [0, 1, 2, 3].map((i) => 0.5 + i * (W + G));
-  bx("camera", xs[0], Y, W, H, "Camera", "first-person video");
-  bx("local", xs[1], Y, W, H, "Local layers", "every frame · ~50 ms");
-  bx("tracker", xs[2], Y, W, H, "State tracker", "belief over the steps");
-  bx("coach", xs[3], Y, W, H, "Coach", "speaks when confident", true);
-  for (let i = 0; i < 3; i++) line(s, xs[i] + W, Y + H / 2, xs[i + 1], Y + H / 2, { color: C.text1, width: 1, arrow: true, name: "arrow-fast" });
-  const Y2 = 4.65;
-  bx("fast", xs[2], Y2, W, H, "Fast verifier", "rented · 151 ms median");
-  bx("frontier", xs[3], Y2, W, H, "Frontier model", "rented · 3.8 s · hard cases");
-  line(s, xs[2] + W / 2, Y + H, xs[2] + W / 2, Y2, { color: C.text1, width: 1, arrow: true, dash: "dash", name: "arrow-escalate" });
-  mono(s, "14% OF FRAMES", { x: xs[2] + W / 2 + 0.15, y: Y + H + 0.2, w: 1.9, h: 0.3, fontSize: 11, color: C.text1 });
-  line(s, xs[2] + W, Y2 + H / 2, xs[3], Y2 + H / 2, { color: C.text1, width: 1, arrow: true, dash: "dash", name: "arrow-fast-frontier" });
-  mono(s, "88% ANSWERED FAST · 12% ESCALATE", { x: xs[2], y: Y2 + H + 0.12, w: 6.0, h: 0.3, fontSize: 11, color: C.text2 });
-  mono(s, "OURS: TRACKER · DETECTOR · CALIBRATION · LOCAL STUDENT    RENTED: THE TWO VERIFIERS, SWAPPABLE", { x: 0.5, y: 6.5, w: 12.33, h: 0.3, fontSize: 10.5, color: C.text1 });
-  footer(s, 4, "Measured on 48 held-out first-person clips · full engine in appendix A1");
-  s.addNotes("Two speeds. Open models on the device turn every frame into features in about 50 ms. Our state tracker keeps a running belief about which step you're on, over a task graph compiled from the manual. Only when something happens (a step ends, it's unsure, or you're stuck) does it ask a rented model one typed question: that's 14% of frames, 88% of them answered by the fast tier. The frontier model is a swappable part; swapping it is one config line. The full engine diagram is appendix A1.");
+  const s = pres.addSlide({ masterName: "Praxis Dark Grid", sectionTitle: "Story" });
+  tb(s, "HOW PRAXIS WORKS · ENGINE v0", { x: Q(2.9), y: Q(3.1), w: Q(40), h: Q(1.6), fontFace: LABEL, fontSize: 10, charSpacing: 2, color: C.accent6, objectName: "eyebrow" });
+  s.addText([
+    { text: "The frontier model is one swappable part. " },
+    { text: "The tracking engine around it is ours.", options: { color: "6B7479" } },
+  ], { x: Q(2.9), y: Q(4.9), w: Q(80), h: Q(6.5), fontFace: THEME.headFontFace, fontSize: 24, color: C.background2, valign: "top", margin: 0, lineSpacingMultiple: 0.98, isTextBox: true, objectName: "headline" });
+
+  // 1600x900 blueprint coordinates → inches
+  const V = (px) => px / 120;
+  const OR = C.accent1;
+  function abox(name, kind, x, y, w, h, title, subs, tsize = 11.5) {
+    const st = {
+      ours: { fill: "1F2326", line: { color: "E8EBE9", width: 1.1 }, tc: "E8EBE9", sc: "9AA3A7", tag: "OURS" },
+      dim: { fill: "1A1D1F", line: { color: "4A5156", width: 1.1 }, tc: "C9CFCC", sc: "7D868B", tag: "OURS" },
+      open: { fill: "2A2F32", line: { type: "none" }, tc: "C9CFCC", sc: "8A9397", tag: "OPEN MODEL" },
+      rented: { fill: null, line: { color: "5E676C", width: 1.2, dashType: "dash" }, tc: "8A9397", sc: "6B7479", tag: "RENTED · SWAPPABLE" },
+      hero: { fill: "23282B", line: { color: "E8EBE9", width: 2.25 }, tc: "FFFFFF", sc: "9AA3A7", tag: "OURS" },
+      out: { fill: "FF5B14", line: { type: "none" }, tc: "16191B", sc: "16191B", tag: "" },
+    }[kind];
+    const runs = [{ text: title, options: { fontFace: SEMI, fontSize: tsize, color: st.tc, breakLine: true, paraSpaceAfter: 2 } }];
+    subs.forEach((t, i) => runs.push({ text: t, options: { fontFace: THEME.bodyFontFace, fontSize: 8.5, color: st.sc, breakLine: i < subs.length - 1 } }));
+    s.addText(runs, { shape: pres.ShapeType.roundRect, x: V(x), y: V(y), w: V(w), h: V(h), rectRadius: 0.06, fill: st.fill ? { color: st.fill } : { type: "none" }, line: st.line, valign: "top", margin: [kind === "hero" ? 12 : 9, 9, 4, 10], objectName: `box-${name}` });
+    if (st.tag) s.addText(st.tag, { x: V(x + w - 250), y: V(y + 6), w: V(240), h: V(16), fontFace: LABEL, fontSize: 6.5, charSpacing: 1.5, color: st.sc, align: "right", valign: "middle", margin: 0, isTextBox: true, objectName: `box-${name}-tag` });
+  }
+  const aline = (pts, name, lit, dash) => poly(s, pts.map(([x, y]) => [V(x), V(y)]), { color: lit ? OR : "6B7479", width: lit ? 1.9 : 1.2, arrow: true, dash, name });
+  const alab = (t, x, y, color = "9AA3A7", w = 220, align = "left") => s.addText(t, { x: V(x), y: V(y - 11), w: V(w), h: V(16), fontFace: t === t.toUpperCase() ? LABEL : THEME.bodyFontFace, fontSize: t === t.toUpperCase() ? 7.5 : 8.5, charSpacing: t === t.toUpperCase() ? 1 : 0, color, align, valign: "middle", margin: 0, isTextBox: true, objectName: "arrow-label" });
+
+  abox("compiler", "ours", 560, 196, 480, 70, "Procedure compiler", ["manual → task graph · 8 procedures for $4.16"], 10.5);
+  aline([[800, 266], [800, 298]], "arrow-compiler-tracker"); alab("task graph", 810, 288);
+  alab("EVERY FRAME · ON THE DEVICE · ~50 MS", 46, 318, "FF5B14", 400);
+  abox("camera", "ours", 46, 400, 150, 92, "Camera", ["first-person", "4 frames / s"], 11);
+  abox("perception", "open", 236, 386, 170, 120, "Perception", ["SigLIP2", "V-JEPA 2 · hands"], 11);
+  abox("event-detector", "ours", 430, 330, 170, 100, "Event detector", ["did a step end?"], 9.5);
+  abox("task-recognizer", "ours", 430, 462, 170, 100, "Task recognizer", ["which job is it?"], 9.5);
+  abox("state-tracker", "hero", 640, 300, 380, 290, "State tracker", ["where you are in the procedure", "Bayesian semi-Markov model"], 18);
+  [0.03, 0.06, 0.14, 0.7, 0.12, 0.05, 0.03].forEach((p, i) => {
+    const h = Math.max(4, (p * 150) / 0.7), bx = 668 + i * 46;
+    s.addShape(pres.ShapeType.rect, { x: V(bx), y: V(548 - h), w: V(32), h: V(h), fill: { color: i === 3 ? "FF5B14" : "3A4044" }, line: { type: "none" }, objectName: `belief-bar-${i + 1}` });
+    s.addText(`S${i + 1}`, { x: V(bx - 6), y: V(556), w: V(44), h: V(16), fontFace: LABEL, fontSize: 6.5, color: i === 3 ? "E8EBE9" : "6B7479", align: "center", valign: "middle", margin: 0, isTextBox: true, objectName: `belief-label-${i + 1}` });
+  });
+  abox("policy", "ours", 1074, 386, 160, 120, "Policy", ["speak? verify?", "flag? ask?"], 11);
+  abox("coach", "out", 1286, 398, 268, 96, "Coach", ["voice + HUD · speaks only", "when confident"], 13);
+  aline([[196, 446], [234, 446]], "arrow-camera-perception", true);
+  aline([[406, 420], [428, 392]], "arrow-perception-detector", true);
+  aline([[406, 472], [428, 500]], "arrow-perception-recognizer", true);
+  aline([[600, 380], [638, 380]], "arrow-detector-tracker", true);
+  aline([[600, 512], [638, 512]], "arrow-recognizer-tracker", true);
+  aline([[1020, 446], [1072, 446]], "arrow-tracker-policy", true);
+  aline([[1234, 446], [1284, 446]], "arrow-policy-coach", true);
+  s.addShape(pres.ShapeType.roundRect, { x: V(30), y: V(640), w: V(1540), h: V(190), rectRadius: 0.1, fill: { type: "none" }, line: { color: "2A2F32", width: 1.1, dashType: "sysDash" }, objectName: "band-slow" });
+  alab("ONLY WHEN SOMETHING HAPPENS", 46, 664, "6B7479", 400);
+  abox("flywheel", "dim", 236, 690, 360, 110, "Flywheel + local student", ["0.03 ms per check, free", "34% fewer frontier calls"], 10.5);
+  abox("verifier", "rented", 640, 690, 380, 110, "Verifier", ["fast: Jev · 151 ms", "hard cases: Claude Opus · 3.8 s"], 10.5);
+  abox("calibration", "dim", 1074, 690, 160, 110, "Calibration", ["error", "0.22 → 0.02"], 10.5);
+  aline([[760, 590], [760, 688]], "arrow-tracker-verifier"); alab("14% of frames", 772, 636, "C9CFCC");
+  aline([[1020, 745], [1072, 745]], "arrow-verifier-calibration");
+  aline([[1154, 690], [1154, 615], [960, 615], [960, 592]], "arrow-calibration-tracker"); alab("evidence", 1166, 640);
+  aline([[596, 745], [638, 745]], "arrow-student-verifier");
+  aline([[700, 590], [700, 612], [416, 612], [416, 688]], "arrow-tracker-flywheel", false, "dash"); alab("session records", 428, 640);
+  // legend
+  let lx = 46;
+  [["ours", "Ours"], ["open", "Open model, on device"], ["rented", "Rented, swappable"]].forEach(([k, t]) => {
+    const o = { x: V(lx), y: V(853), w: V(26), h: V(15), rectRadius: 0.02, objectName: `legend-${k}` };
+    if (k === "ours") s.addShape(pres.ShapeType.roundRect, { ...o, fill: { color: "1F2326" }, line: { color: "E8EBE9", width: 1 } });
+    if (k === "open") s.addShape(pres.ShapeType.roundRect, { ...o, fill: { color: "2A2F32" }, line: { type: "none" } });
+    if (k === "rented") s.addShape(pres.ShapeType.roundRect, { ...o, fill: { type: "none" }, line: { color: "5E676C", width: 1, dashType: "dash" } });
+    alab(t, lx + 36, 861, "9AA3A7", 230);
+    lx += 36 + { ours: 70, open: 220, rented: 200 }[k];
+  });
+  alab("48 held-out clips of public first-person video · one run each", 860, 861, "5E676C", 694, "right");
+  s.addNotes("Walk it left to right along the orange path, which is what happens on every frame, on the device, in about 50 ms: open models turn the frame into features, our detector and recognizer feed our state tracker, and the policy decides whether the coach says anything. Below, in the dark, is the only rented part: on 14% of frames the tracker asks a verifier one typed question (Jev in 151 ms, Claude Opus for hard cases). We calibrate the answer and feed it back. Every session trains our local student, which already handles routine checks. Swapping the rented model is a one-line config change.");
 }
 
 // ---------- 5 · Evidence ----------
@@ -342,7 +390,7 @@ pres.addSection({ title: "Story" });
   hero(s, 9.1, 2.45, 3.73, `${pacc[0]}% → ${pacc[pacc.length - 1]}%`, "step accuracy on videos it never trained on, from 1 to 9 recordings. Still rising.", { size: 30 });
   tb(s, "Today this is public video. Next, it's our customers' sessions: step-labeled skilled work that nobody else has.", { x: 9.1, y: 4.75, w: 3.73, h: 1.5, fontSize: 16, color: BODY });
   footer(s, 6, "Retrained on random subsets of public train-split recordings, 5 seeds per point");
-  s.addNotes("We retrained our step models on growing slices of the training data and scored them only on recordings they never saw, so this isn't memorization. Steady gains per doubling, not 'exponential'. The local student model shows the same pattern: 62.6% to 72.5% on 469 held-out checks from 4 to 30 recordings (appendix A5). The engine we evaluated used only 3 recordings per procedure, so there's headroom we haven't used yet. Contracts include the right to use de-identified procedural data, with a discount for sharing.");
+  s.addNotes("We retrained our step models on growing slices of the training data and scored them only on recordings they never saw, so this isn't memorization. Steady gains per doubling, not 'exponential'. The local student model shows the same pattern: 62.6% to 72.5% on 469 held-out checks from 4 to 30 recordings (appendix A3). The engine we evaluated used only 3 recordings per procedure, so there's headroom we haven't used yet. Contracts include the right to use de-identified procedural data, with a discount for sharing.");
 }
 
 // ---------- 7 · Why now ----------
@@ -395,7 +443,7 @@ pres.addSection({ title: "Market" });
     tb(s, big, { x: 1.65 + bw + 0.15, y, w: 2.5, h: 0.42, fontFace: HEAD, fontSize: 20, color: k === "WEDGE" ? C.accent2 : C.text1, valign: "middle" });
     tb(s, cap, { x: 1.65, y: y + 0.5, w: 10.5, h: 0.4, fontSize: 14, color: BODY });
   });
-  footer(s, 8, "BLS OEWS national tables, May 2025 · prices are our hypotheses · year 3 is a goal, not a forecast · math in appendix A3");
+  footer(s, 8, "BLS OEWS national tables, May 2025 · prices are our hypotheses · year 3 is a goal, not a forecast · math in appendix A2");
   s.addNotes("Bars are to scale. The wedge we sell first is about $306M a year: new maintenance techs coached for six months. The SAM adds verified records for every maintenance tech at $50 a month, which is a product hypothesis we haven't validated (it's 82% of the SAM). The TAM extends that to everyone who follows written procedures: installation, maintenance and repair (6.09M), electricians (0.76M) and production (8.57M). Not counted: other countries, aviation, field service outside these groups, and robotics.");
 }
 
@@ -469,7 +517,7 @@ pres.addSection({ title: "Why we win" });
   });
   mono(s, "OUTREACH SO FAR: 14 EMAILS SENT 17 OCT · 56 SCHEDULED FOR 19 OCT", { x: 0.5, y: 6.3, w: 12.33, h: 0.3, fontSize: 10.5, color: C.text2 });
   footer(s, 11, "Pricing is our hypothesis, anchored on Tulip's $100–250 per station per month · run cost about $1.08 an hour");
-  s.addNotes("First 10: facilities teams, HVAC and equipment-service shops, technical training programs, and Dynamics 365 Guides customers who need a replacement, each with a metric agreed up front. Next 100: case studies, and reading procedures straight from the maintenance apps shops already use. Then 1,000: distributors and glasses partners; new techs first, then records for the whole team. Who pays: the maintenance or service manager. How: a short paid pilot, then a subscription per trainee per month ($150-250 to test) plus a one-time setup per procedure. It costs us about $1.08 an hour to run today ($0.48 with the local model), against $4.76 an hour to the customer at 2 hours a day. Pricing risk: all-shift use squeezes a flat seat, so price by coached hours or tiers (appendix A4). Update the outreach line with real replies before Tuesday.");
+  s.addNotes("First 10: facilities teams, HVAC and equipment-service shops, technical training programs, and Dynamics 365 Guides customers who need a replacement, each with a metric agreed up front. Next 100: case studies, and reading procedures straight from the maintenance apps shops already use. Then 1,000: distributors and glasses partners; new techs first, then records for the whole team. Who pays: the maintenance or service manager. How: a short paid pilot, then a subscription per trainee per month ($150-250 to test) plus a one-time setup per procedure. It costs us about $1.08 an hour to run today ($0.48 with the local model), against $4.76 an hour to the customer at 2 hours a day. Pricing risk: all-shift use squeezes a flat seat, so price by coached hours or tiers (appendix A3). Update the outreach line with real replies before Tuesday.");
 }
 
 // ---------- 12 · Founder ----------
@@ -559,108 +607,10 @@ const appx = (eb, title) => {
   return s;
 };
 
-// ---------- 5 · Architecture (native diagram, from brand/deck) ----------
-{
-  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Appendix" });
-  s.addText("APPENDIX · A1", { placeholder: "eyebrow" });
-  s.addText("The frontier model is one swappable part. The tracking engine around it is ours", { placeholder: "title" });
-  const OPEN = "D6DBD8";
-  const legend = [["ours", "Ours: code and trained weights"], ["open", "Open model, frozen, runs on the device"], ["rented", "Rented API behind a typed interface"]];
-  let lx = 0.5;
-  legend.forEach(([k, label]) => {
-    const sw = { x: lx, y: 2.03, w: 0.3, h: 0.17, rectRadius: 0.03, objectName: `legend-${k}` };
-    if (k === "ours") s.addShape(pres.ShapeType.roundRect, { ...sw, fill: { color: C.background1 }, line: { color: C.text1, width: 1.25 } });
-    if (k === "open") s.addShape(pres.ShapeType.roundRect, { ...sw, fill: { color: OPEN }, line: { type: "none" } });
-    if (k === "rented") s.addShape(pres.ShapeType.roundRect, { ...sw, fill: { type: "none" }, line: { color: C.text1, width: 1.25, dashType: "dash" } });
-    s.addText(label, { x: lx + 0.4, y: 1.98, w: 3.4, h: 0.27, fontSize: 11, color: C.text1, margin: 0, valign: "middle", isTextBox: true, objectName: `legend-${k}-label` });
-    lx += 0.4 + { ours: 2.35, open: 2.75, rented: 2.6 }[k] + 0.3;
-  });
-  function box(name, kind, x, y, w, h, title, plain, specs = [], opts = {}) {
-    const base = { x, y, w, h, rectRadius: 0.05, objectName: `box-${name}` };
-    let shape;
-    if (kind === "ours") shape = { fill: { color: C.background1 }, line: { color: C.text1, width: opts.hero ? 2.5 : 1.25 } };
-    if (kind === "open") shape = { fill: { color: OPEN }, line: { type: "none" } };
-    if (kind === "rented") shape = { fill: { type: "none" }, line: { color: C.text1, width: 1.4, dashType: "dash" } };
-    if (kind === "out") shape = { fill: { color: C.accent1 }, line: { type: "none" } };
-    const r = [
-      { text: title, options: { fontFace: SEMI, fontSize: 13, color: C.text1, breakLine: true } },
-      { text: plain, options: { fontSize: 10.5, color: kind === "out" ? C.text1 : BODY, breakLine: specs.length > 0, paraSpaceAfter: opts.compact ? 0 : 3 } },
-    ];
-    specs.forEach((t, i) => r.push({ text: t, options: { fontFace: MONO, fontSize: 8.5, color: kind === "out" ? C.text1 : C.text2, breakLine: i < specs.length - 1 } }));
-    s.addText(r, { shape: pres.ShapeType.roundRect, ...base, ...shape, valign: "top", margin: opts.compact ? [4, 9, 2, 9] : [7, 9, 6, 9], isTextBox: false });
-    const tag = { ours: "OURS", open: "OPEN MODEL", rented: "RENTED · SWAPPABLE", out: "" }[kind];
-    if (tag) s.addText(tag, { x: x + w - 1.6, y: y + 0.06, w: 1.52, h: 0.16, fontFace: MONO, fontSize: 7.5, charSpacing: 1, color: kind === "ours" ? C.text1 : C.text2, align: "right", margin: 0, valign: "top", isTextBox: true, objectName: `box-${name}-tag` });
-  }
-  const label = (t, x, y, w = 2.2, align = "left", name = "arrow-label") =>
-    s.addText(t, { x, y, w, h: 0.2, fontFace: MONO, fontSize: 8.5, color: C.text1, margin: 0, valign: "middle", align, isTextBox: true, objectName: name });
-  const arrow = (pts, name, dash) => poly(s, pts, { color: C.text1, width: 1.25, arrow: true, dash, name });
-  const bandLabel = (t, x, y) => s.addText(t, { x, y, w: 9, h: 0.2, fontFace: MONO, fontSize: 8.5, charSpacing: 1, color: C.text2, margin: 0, valign: "middle", isTextBox: true, objectName: "band-label" });
-  bandLabel("OFFLINE, ONCE PER PROCEDURE", 0.5, 2.5);
-  box("compiler", "ours", 4.05, 2.4, 4.9, 0.8, "Procedure compiler", "Turns a manual into a task graph the engine can track", ["steps · checks · common mistakes · typical durations"]);
-  s.addText([
-    { text: "8 procedures compiled", options: { breakLine: true } },
-    { text: "96 steps · 207 checks", options: { breakLine: true } },
-    { text: "267 known mistakes", options: { breakLine: true } },
-    { text: "$4.16 total, one-time" },
-  ], { x: 9.15, y: 2.4, w: 3.0, h: 0.8, fontFace: MONO, fontSize: 9, color: C.text2, margin: 0, valign: "middle", isTextBox: true, objectName: "compiler-stats" });
-  s.addShape(pres.ShapeType.roundRect, { x: 0.35, y: 3.32, w: 12.63, h: 1.92, rectRadius: 0.08, fill: { color: C.background1, transparency: 45 }, line: { type: "none" }, objectName: "band-fast" });
-  bandLabel("FAST PATH · EVERY FRAME · ON THE DEVICE", 0.5, 3.38);
-  s.addText("3.1× FASTER THAN REAL TIME", { x: 8.83, y: 3.38, w: 4.0, h: 0.2, fontFace: MONO, fontSize: 8.5, charSpacing: 1, color: C.text2, align: "right", margin: 0, valign: "middle", isTextBox: true, objectName: "band-label-speed" });
-  const Y = 3.62, H = 1.5;
-  box("camera", "ours", 0.5, Y, 1.45, H, "Camera", "Live video", ["first-person", "4 frames / s", "webcam or file", "glasses adapter:", "not yet tested"]);
-  box("perception", "open", 2.12, Y, 1.75, H, "Perception", "What's in view", ["SigLIP2 · 20 ms/frame", "hands · 6 ms/frame", "V-JEPA 2 · 221ms @1Hz"]);
-  box("event-detector", "ours", 4.04, Y, 1.8, 0.73, "Event detector", "Did a step just end?", ["F1 0.38 vs rule 0.24"], { compact: true });
-  box("task-recognizer", "ours", 4.04, Y + 0.77, 1.8, 0.73, "Task recognizer", "Which job is this?", ["73% top-1, 40 s"], { compact: true });
-  box("state-tracker", "ours", 6.01, Y, 2.9, H, "State tracker", "Where you are in the procedure", ["Bayesian semi-Markov model", "over the task graph"], { hero: true });
-  const ps = [0.02, 0.04, 0.09, 0.7, 0.1, 0.03, 0.02];
-  ps.forEach((p, i) => {
-    const bh = Math.max(0.02, (p * 0.3) / 0.7), bx = 6.18 + i * 0.22;
-    s.addShape(pres.ShapeType.rect, { x: bx, y: 4.9 - bh, w: 0.15, h: bh, fill: { color: i === 3 ? C.accent1 : C.accent6 }, line: { type: "none" }, objectName: `belief-bar-${i + 1}` });
-    s.addText(`S${i + 1}`, { x: bx - 0.05, y: 4.93, w: 0.25, h: 0.15, fontFace: MONO, fontSize: 7, color: i === 3 ? C.text1 : C.text2, align: "center", margin: 0, valign: "middle", isTextBox: true, objectName: `belief-label-${i + 1}` });
-  });
-  s.addText([
-    { text: "→ P(step)", options: { breakLine: true } },
-    { text: "→ time on step", options: { breakLine: true } },
-    { text: "→ uncertainty" },
-  ], { x: 7.78, y: 4.52, w: 1.1, h: 0.56, fontFace: MONO, fontSize: 8.5, color: C.text1, margin: 0, valign: "middle", isTextBox: true, objectName: "tracker-outputs" });
-  box("policy", "ours", 9.08, Y, 1.8, H, "Policy", "Should it say anything?", ["speak", "verify", "flag a mistake", "ask for a better view", "expand the detail"]);
-  box("coach", "out", 11.05, Y + 0.18, 1.78, 1.14, "Coach", "Voice + HUD", ["speaks only", "when confident"]);
-  const mid = Y + H / 2;
-  arrow([[1.95, mid], [2.12, mid]], "arrow-camera-perception");
-  arrow([[3.87, Y + 0.355], [4.04, Y + 0.355]], "arrow-perception-detector");
-  arrow([[3.87, Y + 1.145], [4.04, Y + 1.145]], "arrow-perception-recognizer");
-  arrow([[5.84, Y + 0.355], [6.01, Y + 0.355]], "arrow-detector-tracker");
-  arrow([[5.84, Y + 1.145], [6.01, Y + 1.145]], "arrow-recognizer-tracker");
-  arrow([[8.91, mid], [9.08, mid]], "arrow-tracker-policy");
-  arrow([[10.88, mid], [11.05, mid]], "arrow-policy-coach");
-  arrow([[7.5, 3.2], [7.5, Y]], "arrow-compiler-tracker");
-  label("task graph", 7.58, 3.4, 1.2);
-  arrow([[5.93, 3.2], [5.93, Y + 1.4], [5.84, Y + 1.4]], "arrow-compiler-recognizer");
-  label("library", 5.15, 3.4, 0.7, "right");
-  s.addShape(pres.ShapeType.roundRect, { x: 0.35, y: 5.5, w: 12.63, h: 1.3, rectRadius: 0.08, fill: { type: "none" }, line: { color: "B9C0BC", width: 1, dashType: "sysDash" }, objectName: "band-slow" });
-  bandLabel("SLOW PATH · ONLY WHEN SOMETHING HAPPENS", 0.5, 5.56);
-  const SY = 5.82, SH = 0.9;
-  box("flywheel", "ours", 2.0, SY, 3.85, SH, "Flywheel + local student", "Every session becomes training data", ["student: 0.03 ms per check, free", "takes routine checks: 34% fewer frontier calls"]);
-  box("verifier", "rented", 6.01, SY, 2.9, SH, "Verifier", "Answers one typed question", ["fast: Jev · 151 ms · 88% of calls", "hard cases: Claude Opus · 3.8 s"]);
-  box("calibration", "ours", 9.08, SY, 1.8, SH, "Calibration", "Trusts each answer", ["the right amount", "error 0.22 → 0.02"]);
-  arrow([[6.6, Y + H], [6.6, SY]], "arrow-tracker-verifier");
-  label("step ends · unsure · stuck", 6.68, 5.26, 1.88);
-  label("14% of frames", 6.68, 5.56, 1.4);
-  arrow([[8.91, SY + 0.45], [9.08, SY + 0.45]], "arrow-verifier-calibration");
-  arrow([[9.98, SY], [9.98, 5.42], [8.6, 5.42], [8.6, Y + H]], "arrow-calibration-tracker");
-  label("evidence", 9.08, 5.56, 0.85);
-  arrow([[5.85, SY + 0.45], [6.01, SY + 0.45]], "arrow-student-verifier");
-  arrow([[6.3, Y + H], [6.3, 5.38], [5.55, 5.38], [5.55, SY]], "arrow-tracker-flywheel", "dash");
-  label("session records", 3.9, 5.58, 1.55, "right");
-  footer(s, TOTAL, "Measured on 48 held-out first-person clips from a public dataset (CaptainCook4D)");
-  s.addNotes("Walk it left to right. Open models on the device turn every frame into features. Our state tracker keeps a running belief about which step you're on, using a task graph we compiled from the manual. Only when something happens (a step ends, it's unsure, or you're stuck) does it ask a rented model one typed question: that's 14% of frames. We calibrate the answer and feed it back, and the policy decides whether to say anything. Every session becomes training data, and our local student already handles routine checks. If asked 'isn't this a wrapper?': with the same frontier model, our layers make it about 13% more accurate at a fifth of the cost, and swapping the rented model is a one-line config change.");
-}
-
-
 // ---------- 3 · Status quo ----------
 {
   const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Appendix" });
-  s.addText("APPENDIX · A2", { placeholder: "eyebrow" });
+  s.addText("APPENDIX · A1", { placeholder: "eyebrow" });
   s.addText("The status quo: what each tool does today, and what it misses", { placeholder: "title" });
   const cols = [
     ["SHADOWING", "A senior tech, side by side", "The real teacher today", "About $44 an hour of senior time, one trainee at a time"],
@@ -685,7 +635,7 @@ const appx = (eb, title) => {
 
 // A2 · market math
 {
-  const s = appx("APPENDIX · A3", "Market math, and the assumptions behind it");
+  const s = appx("APPENDIX · A2", "Market math, and the assumptions behind it");
   const R = (a) => a.map((t, i) => ({ text: t, options: i === 0 ? { fontFace: SEMI } : {} }));
   s.addTable([
     [TH(""), TH("WHO (BLS)"), TH("MATH"), TH("PER YEAR")],
@@ -703,7 +653,7 @@ const appx = (eb, title) => {
 
 // A3 · unit economics
 {
-  const s = appx("APPENDIX · A4", "Unit economics, and the pricing risk");
+  const s = appx("APPENDIX · A3", "Unit economics, and the pricing risk");
   const R = (a) => a.map((t) => ({ text: t }));
   s.addTable([
     [TH("DESIGN"), TH("$ / VIDEO-MIN"), TH("$ / TRAINEE-MONTH, 2 H/DAY"), TH("MARGIN AT $200")],
@@ -719,7 +669,7 @@ const appx = (eb, title) => {
 // ---------- 12 · Moat: learning curves ----------
 {
   const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Appendix" });
-  s.addText("APPENDIX · A5", { placeholder: "eyebrow" });
+  s.addText("APPENDIX · A4", { placeholder: "eyebrow" });
   s.addText("Both learning curves: step models and the local student", { placeholder: "title" });
   const Pr = LC.probes, pk = {};
   Pr.rows.forEach((r) => { if (Pr.n_train_avail[r.task] >= 9) (pk[r.k] = pk[r.k] || []).push(r.acc); });
@@ -755,7 +705,7 @@ const appx = (eb, title) => {
 
 // A1 · training data
 {
-  const s = appx("APPENDIX · A6", "Training data, stated plainly");
+  const s = appx("APPENDIX · A5", "Training data, stated plainly");
   tb(s, runs([
     ["Train and test never overlap. ", "Everything learned uses only the dataset's official train-split recordings"],
     ["Small on purpose. ", "A weekend-scale proof: the step-change detector trained on 24 recordings, the step models on 3 per procedure, the student on checks from 30"],
@@ -780,7 +730,7 @@ const appx = (eb, title) => {
 
 // A6 · competitors
 {
-  const s = appx("APPENDIX · A7", "Who else is here, and how we differ");
+  const s = appx("APPENDIX · A6", "Who else is here, and how we differ");
   const R = (a) => a.map((t) => ({ text: t }));
   s.addTable([
     [TH("CATEGORY"), TH("EXAMPLES"), TH("US VS THEM")],
@@ -796,7 +746,7 @@ const appx = (eb, title) => {
 
 // A4 · risks
 {
-  const s = appx("APPENDIX · A8", "The risks we see, and what we do about each");
+  const s = appx("APPENDIX · A7", "The risks we see, and what we do about each");
   const R = (a) => a.map((t, i) => ({ text: t, options: i === 0 ? { fontFace: SEMI } : {} }));
   s.addTable([
     [TH("RISK"), TH("WHAT WE DO")],
@@ -812,7 +762,7 @@ const appx = (eb, title) => {
 }
 // A5 · glasses + voice
 {
-  const s = appx("APPENDIX · A9", "Glasses and voice: what's built, and what's designed");
+  const s = appx("APPENDIX · A8", "Glasses and voice: what's built, and what's designed");
   const cols = [
     ["BUILT", C.accent3, ["Runs live in real time on a recorded stream, with the local layers at about 50 ms per frame", "Model calls run in the background, so the live loop never waits (worst lag 0.8 s)", "Speaks its instructions; an urgent line cuts the queue", "Praxis Studio: the engine in a browser, on a camera, an upload or a test clip"]],
     ["DESIGNED, NOT BUILT", C.text2, ["Glasses input adapters (Meta camera toolkit, Android XR), one adapter pattern per device", "Voice input in natural language: \"skip that\", \"why?\", \"no, I'm still on the belt\"", "Push-to-talk by default; a protection headset in loud plants", "Face and badge blur; a local-model tier for sensitive sites"]],

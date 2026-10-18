@@ -1,6 +1,6 @@
 # Deck
 
-`Praxis_SAH_Oct2026.pptx` is the Startups @ Harvard grant deck: 14 core slides plus a 9-slide appendix, in the Praxis
+`Praxis_SAH_Oct2026.pptx` is the Startups @ Harvard grant deck: 14 core slides plus an 8-slide appendix, in the Praxis
 brand (`brand/BRAND.md`). It's built by `build_deck.js`, so edit the script, not the .pptx. If you edit the .pptx in
 PowerPoint, the next build overwrites your changes.
 
@@ -24,4 +24,4 @@ cd deck && npm install --cache "$TMPDIR/npm-cache" && node build_deck.js
   on any slide.
 - **Speaker notes.** Each slide's notes give the absolute numbers and the honest caveats.
 - **Preview.** `Praxis_SAH_Oct2026.pdf` is rendered from the .pptx with the brand fonts (LibreOffice). Re-render it after every rebuild.
-- **Versions.** Rendered snapshots with their review notes live in `brand/deck/v2.5/` (and later versions beside it).
+- **Versions.** Rendered snapshots live in `brand/deck/v2.5/`, `brand/deck/v2.6/` and later versions beside them.
