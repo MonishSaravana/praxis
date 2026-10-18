@@ -158,8 +158,9 @@ vary by place; check them before any pilot rather than assuming.
 **Status (2026-10-17, evening): first version built in Studio, see `BACKEND.md`.** Ran: company profiles, upload
 and local ingest of three public maintenance manuals (97–222 pages, under 2 s each), procedure finding, compiling one
 FIST 4-1A procedure ($0.164) and a recipe card ($0.188) from their sections only, review/approve/lock in the admin
-page, a locked live run on a test clip, and three Claude answers with page citations. Not measured: tracking quality on
-a compiled graph (the live run was starved by GPU contention), retrieval quality, anything on maintenance footage.
+page, a locked live run on a test clip, and three Claude answers with page citations. On a locked re-run, steps committed and
+instructions advanced through 12 of 17 steps (with some back-and-forth; GPU shared with other jobs). Not measured:
+tracking accuracy on a compiled graph, retrieval quality, anything on maintenance footage.
 
 **Why this matters most for the wedge.** Claude is general. It does not know a specific plant's machines,
 torque specs or safety steps. A maintenance org's own procedures are exactly what turns "a model with a camera"

@@ -1,5 +1,5 @@
 {
-  "total_usd": 111.51887162599998,
+  "total_usd": 117.57768494399997,
   "items": {
     "L3 compile (8 recipes, Fable 5.1)": 4.16358,
     "L3 compile (IndustReal graph)": 0.43374,
@@ -37,8 +37,16 @@
     "live mode check: cached_rerun": 0.0008537760000000001,
     "live mode check: replay_unchanged": 0.053709702,
     "live mode check: replay_unchanged_studio": 0.00021113400000000003,
+    "multi-task run: combined_A0": 0.19644928799999964,
+    "multi-task run: combined_A1": 0.22681847999999982,
+    "multi-task run: combined_A2": 0.19666911599999967,
+    "multi-task run: combined_B0": 0.2890796159999995,
+    "multi-task run: combined_B1": 0.29772245999999886,
+    "multi-task run: combined_B2": 0.24389706599999955,
     "multi-task run: smoke": 0.017981880000000006,
     "multi-task run: smoke_2": 0.13811080399999998,
+    "multi-task run: solfix_C1": 0.2498805120000003,
+    "multi-task run: solfix_C2": 0.24367446600000023,
     "multi-task run: train_sweep_default_W20_thr0.4": 0.22215895800000035,
     "multi-task run: train_sweep_default_W20_thr0.7": 0.2214606239999997,
     "multi-task run: train_sweep_earlier_commit_W20_thr0.7": 0.2001037499999997,
@@ -50,10 +58,11 @@
     "model test: which_task_bakeoff": 1.8966565699999998,
     "ENIGMA-51 graph compile (Opus)": 0.996516,
     "ENIGMA-51 run: doc_value": 0.908172,
+    "ENIGMA-51 run: enigma_switch": 0.16862231400000022,
     "ENIGMA-51 run: enigma_task_given": 0.13776646799999992,
     "OpenAI calls: gpt-6-luna": 0.10024190000000001,
     "OpenAI calls: gpt-6-sol": 1.893778,
-    "OpenAI calls: gpt-6.1-sol": 5.2044108,
+    "OpenAI calls: gpt-6.1-sol": 9.1504108,
     "M2 two-clip test": 0.00170982
   },
   "untracked": [
