@@ -113,6 +113,12 @@ class EngineConfig:
     rewind_lag_s: float = 10.0           # belonged to something else, so steps "done" meanwhile are undone
     nontask_landmarks: bool = False      # baby / door / phone etc. mean interruption: skip the re-check (unmeasured)
     nontask_thr: float = 0.12            # SigLIP2 cosine for a non-task landmark to count
+    # what's on screen: say the first instruction as soon as the task is known, and let the instruction follow the
+    # belief when another, not-yet-done step holds the majority for follow_ticks ticks (it used to change only on a
+    # commit, so it lagged the belief: results/enigma51/doc_value.json). Fixed defaults, not tuned.
+    speak_on_start: bool = True
+    follow_belief_p: float = 0.5
+    follow_ticks: int = 3                # 0 = off
     recognize_thr: float | None = None   # optional earlier first commit (a wrong guess can now be undone): recognizer
     recognize_hold_s: float | None = None  # posterior threshold / hold time; None = the recognizer's own (0.9 / 2 s)
     tracker: TrackerConfig = field(default_factory=TrackerConfig)
@@ -247,8 +253,11 @@ class Engine:
         self._strong_streak: tuple = (None, 0)
         self._t_last = 0.0
         self._away_ok_t = offtask.window_s if offtask is not None else 0.0   # landmark window full of this task
+        self._follow: tuple = (None, 0)
         if task_id is not None:
             self._start_task(0.0, task_id, oracle=True)
+            if cfg.speak_on_start:          # the task is known at the start: say the first instruction right away
+                self._emit(self.policy.start(0.0, self.tracker.belief().map_id))
 
     # ------------------------------------------------------------------ helpers
     def _w(self, kind: str, t: float, **kw) -> None:
@@ -275,6 +284,7 @@ class Engine:
                              max_mass=self._max_mass, order_flagged=self._order_flagged)
         self.tasks[task_id] = self.slot
         self._recheck_i, self._switch_cand = 0, None
+        self._follow = (None, 0)
         self._next_recheck = t + self.cfg.recheck_min_gap_s
         ev = self.evidence.get(task_id)
         if ev is not None and list(ev.ids) != list(self.graph.ids):
@@ -400,6 +410,7 @@ class Engine:
                 self._check_order(t, belief, frame_at)
                 self._emit(pol.start(t, belief.map_id))
         self._last_switch_map = belief.map_id
+        self._follow_belief(t, belief)
         if self.cfg.async_slow_path:
             self._journal.append({"t": t, "ops": ops, "snap": self._snapshot(), "late": []})
 
@@ -446,6 +457,20 @@ class Engine:
         self._w("belief", t, **bd, user=self.user.state())
         if self.cfg.async_slow_path:
             self._prune()
+
+    def _follow_belief(self, t: float, belief) -> None:
+        """The on-screen instruction follows a confident belief change without waiting for a commit."""
+        cfg, pol, tr = self.cfg, self.policy, self.tracker
+        m = belief.map_id
+        if not cfg.follow_ticks or m == DONE or m == pol.announced_step or m in tr.completed \
+                or belief.map_p_on < cfg.follow_belief_p or (self.slot is not None and self.slot.interrupted):
+            self._follow = (None, 0)
+            return
+        n = self._follow[1] + 1 if self._follow[0] == m else 1
+        self._follow = (m, n)
+        if n >= cfg.follow_ticks:
+            self._emit(pol.start(t, m))
+            self._follow = (None, 0)
 
     def _causal_peak(self, scores, thr, attr) -> float | None:
         if len(scores) < 3:

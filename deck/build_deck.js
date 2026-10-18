@@ -27,7 +27,7 @@ async function applyTheme(file, theme) {
 const A = (f) => path.join(ROOT, "brand", "deck", "assets", f);
 const MK = (f) => path.join(__dirname, "assets", "marks", f);
 const P = (px) => px / 144;
-const TOTAL = 17; // main-deck slides; appendix slides carry the full mark
+const TOTAL = 16; // main-deck slides; appendix slides carry the full mark
 
 const THEME = {
   name: "Praxis",
@@ -203,6 +203,9 @@ const mean = (a) => a.reduce((x, y) => x + y, 0) / a.length;
 const pct1 = (v) => Math.round(v * 1000) / 10;
 const runs = (pairs, gap = 10) => pairs.flatMap(([a, b], i) => [{ text: a, options: { fontFace: SEMI } }, { text: b, options: { breakLine: i < pairs.length - 1, paraSpaceAfter: gap } }]);
 
+const tableOpts = (colW, w = 12.33) => ({ x: 0.5, y: 2.2, w, colW, fontFace: "Archivo", fontSize: 12, color: "16191B", border: { type: "solid", color: "C9CFCC", pt: 0.75 }, valign: "middle", rowH: 0.52, fill: { color: "F6F7F6" } });
+const TH = (t) => ({ text: t, options: { fontFace: MONO, fontSize: 10, color: "E8EBE9", fill: { color: "16191B" } } });
+
 // ================================================================== MAIN DECK
 
 // ---------- 1 · Cover ----------
@@ -229,86 +232,78 @@ pres.addSection({ title: "Problem" });
   const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Problem" });
   s.addText("THE PROBLEM", { placeholder: "eyebrow" });
   s.addText(titleWithMark("A new maintenance technician takes ", "about a year", " to work alone"), { placeholder: "title" });
-  const cols = [
-    { x: 0.5, big: ">1 yr", cap: "of on-the-job training is typical for industrial machinery mechanics and maintenance workers." },
-    { x: 6.92, big: "9–14 mo", cap: "before a new hire is profitable, in a survey of 35 aviation repair stations. Some took 24." },
-  ];
-  cols.forEach((c, i) => {
-    line(s, c.x, 2.75, c.x + 5.91, 2.75, { color: C.text1, width: 1.5, name: `stat-rule-${i + 1}` });
-    s.addText(c.big, { x: c.x, y: 2.95, w: 5.91, h: 1.0, fontFace: HEAD, fontSize: 54, color: C.text1, margin: 0, valign: "top", isTextBox: true, objectName: `stat-${i + 1}` });
-    s.addText(c.cap, { x: c.x, y: 4.05, w: 5.4, h: 0.9, fontSize: 16, color: C.text1, margin: 0, valign: "top", isTextBox: true, objectName: `stat-${i + 1}-caption` });
-  });
-  plateCard(s, 0.5, 5.2, 12.33, 1.2, "problem-why");
+  const cw = 12.33 / 4;
+  [
+    [">1 yr", "of on-the-job training is typical for industrial machinery mechanics"],
+    ["9–14 mo", "before a new hire is profitable (survey of 35 aviation repair stations)"],
+    ["$44 / h", "for a median tech's time with benefits. The senior techs who train cost more"],
+    ["51,900", "US openings a year for machinery mechanics and millwrights alone"],
+  ].forEach(([b, c], i) => statCol(s, 0.5 + i * cw, 2.3, cw - 0.3, b, c, { size: 36, capH: 1.0 }));
+  plateCard(s, 0.5, 4.75, 12.33, 1.6, "problem-why");
   tb(s, [
     { text: "Manuals and videos can't see you. ", options: { fontFace: SEMI } },
-    { text: "So the real teacher is a senior tech standing next to the new hire. That time costs about $44 an hour, and it isn't in anyone's training budget." },
-  ], { x: 0.85, y: 5.2, w: 11.6, h: 1.2, fontSize: 16, valign: "middle", objectName: "problem-why-text" });
-  footer(s, 2, "Sources: BLS Occupational Outlook Handbook · BLS Employer Costs for Employee Compensation · 2017 aviation repair-station survey");
-  s.addNotes("BLS says on-the-job training for these jobs typically lasts more than a year. In a 2017 survey of 35 aviation repair stations, new hires took 9 to 14 months on average to become profitable, and some took 24. $44 an hour is the BLS median wage ($30.82) with benefits (wages are 70.2% of employer cost); senior techs cost more. Formal training budgets (about $1,254 per employee a year, ATD) leave out coaching and mentoring, which is most of how a technician learns. Sources: docs/POSITIONING.md [P8, P21, P22, P23].");
+    { text: "So the real teacher is a senior tech standing next to the new hire, one trainee at a time. That time isn't in anyone's training budget, and when the senior tech retires, the know-how leaves with them." },
+  ], { x: 0.85, y: 4.75, w: 11.6, h: 1.6, fontSize: 17, valign: "middle", objectName: "problem-why-text" });
+  footer(s, 2, "BLS Occupational Outlook Handbook · BLS Employer Costs for Employee Compensation, June 2025 · ARSA member survey, 2017");
+  s.addNotes("BLS: on-the-job training for these jobs typically lasts more than a year. ARSA (2017, 35 repair stations): 9 to 14 months to profitability, some 24. $44/h = BLS median $30.82 ÷ 70.2% wage share. Formal training budgets (about $1,254 per employee a year, ATD) leave out coaching and mentoring, which is most of how a technician learns. In a vendor survey, 47% of maintenance teams lost knowledge they couldn't recover when someone left.");
 }
 
-// ---------- 3–6 · Product on the job ----------
+// ---------- 3 · Status quo ----------
+{
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Problem" });
+  s.addText("WHY IT'S STILL UNSOLVED", { placeholder: "eyebrow" });
+  s.addText(titleWithMark("Every tool today shows the steps. None of them ", "watches the work"), { placeholder: "title" });
+  const cols = [
+    ["SHADOWING", "A senior tech, side by side", "The real teacher today", "About $44 an hour of senior time, one trainee at a time"],
+    ["MANUALS + VIDEOS", "PDFs, binders, YouTube", "Explain what should happen", "Can't see what you're actually doing"],
+    ["PROCEDURE APPS", "MaintainX, Tulip, Augmentir", "Put the steps on a phone; collect sign-offs and photos", "A checkbox isn't proof the step was done right"],
+    ["FIXED CAMERAS", "Retrocausal, Invisible AI", "Watch one workstation on a line", "Maintenance moves around the machine"],
+  ];
+  const cw = 12.33 / 4, gap = 0.15;
+  cols.forEach(([k, who, does, miss], i) => {
+    const x = 0.5 + i * cw, w = cw - gap;
+    plateCard(s, x, 2.2, w, 2.75, `status-${i + 1}`);
+    mono(s, k, { x: x + 0.25, y: 2.4, w: w - 0.5, h: 0.3, fontSize: 10.5, color: C.text1 });
+    tb(s, who, { x: x + 0.25, y: 2.75, w: w - 0.5, h: 0.6, fontFace: SEMI, fontSize: 15 });
+    tb(s, does, { x: x + 0.25, y: 3.35, w: w - 0.5, h: 0.65, fontSize: 13, color: BODY });
+    line(s, x + 0.25, 4.05, x + w - 0.25, 4.05, { color: C.accent6, width: 0.75, name: "status-rule" });
+    tb(s, [{ text: "MISSES  ", options: { fontFace: MONO, fontSize: 9.5, color: C.accent5 } }, { text: miss }], { x: x + 0.25, y: 4.15, w: w - 0.5, h: 0.75, fontSize: 13 });
+  });
+  darkPanel(s, 0.5, 5.25, 12.33, 1.15, "PRAXIS", "Watches the work, follows the person around the machine, and runs on hardware a shop already owns.", 18);
+  footer(s, 3, "Competitor pages checked 2026-10-17 · docs/COMPETITORS.md");
+  s.addNotes("Don't claim nobody else is here. Procedure apps already compile instructions (Tulip, Augmentir, Squint). Tulip is testing camera checks of whether a procedure was followed. Retrocausal tracks whole procedures, but on fixed cameras at a station. First-person entrants (Viture + NVIDIA, Strivr) are the closest: see the competition slide.");
+}
+
+// ---------- 4 · Product ----------
 pres.addSection({ title: "Product" });
 {
-  const s = pres.addSlide({ masterName: "Praxis Photo", sectionTitle: "Product" });
-  photo(s, "photo-step.jpg");
-  const reg = [800, 300, 1260, 820];
-  hudRegion(s, reg, HUD.orange);
-  hudProgress(s, 3, 8);
-  const chip = hudChip(s, "Loosen the four float-bowl screws a half turn each", 903);
-  hudLeader(s, chip, reg, HUD.orange);
-  conceptTag(s);
-  s.addNotes("Step tracking. Praxis recognizes the job by itself (73% of held-out clips, median 40 seconds) and keeps a running belief about which step you're on. The screen stays quiet: a progress mark, one short instruction, and the part it's talking about.");
-}
-{
-  const s = pres.addSlide({ masterName: "Praxis Photo", sectionTitle: "Product" });
-  photo(s, "photo-verified.jpg");
-  const reg = [470, 560, 860, 860];
-  hudRegion(s, reg, HUD.green);
-  hudPulse(s, 660, 740, HUD.green);
-  hudProgress(s, 5, 11, 56, 56, 154);
-  const chip = hudChip(s, "Rotate the crank to bring cylinder 3 to TDC", 770, { label: "STEP 5 VERIFIED · VALVE LASH SET", labelColor: HUD.green });
-  hudLeader(s, chip, reg, HUD.green);
-  conceptTag(s);
-  s.addNotes("Verified. When the step is done, a green ring confirms it and the instruction moves on. No one has to tick a checklist.");
-}
-{
-  const s = pres.addSlide({ masterName: "Praxis Photo", sectionTitle: "Product" });
-  photo(s, "photo-mistake.jpg");
-  const reg = [720, 160, 1160, 600];
-  hudRegion(s, reg, HUD.red);
-  hudProgress(s, 2, 7);
-  const card = hudCard(s, "MISTAKE CAUGHT", HUD.red, HUD.red, "Lockout was skipped.", "Open and lock the feeder breaker, tag it, then test for zero voltage.", 1164, 660);
-  hudLeader(s, card, reg, HUD.red);
-  conceptTag(s);
-  s.addNotes("Mistake caught. Praxis knows where you are in the procedure, so it can tell a step was skipped and say how to fix it. Out-of-order mistakes are the most common error type in our eval data, and you can only see them if you track state. Honest caveat if asked: mistake detection is our weakest number today (4 of 17 alerts named a real annotated error).");
-}
-{
-  const s = pres.addSlide({ masterName: "Praxis Photo", sectionTitle: "Product" });
-  photo(s, "photo-view.jpg");
-  const reg = [330, 620, 780, 1010];
-  hudRegion(s, reg, HUD.blue, true);
-  hudProgress(s, 6, 12, 56, 56, 154);
-  const card = hudCard(s, "NEED A BETTER VIEW", HUD.blue, "1D4ED8", "Can't see the bearing cap.", "Lean in over cylinder 2 and hold still for two seconds.", 1164, 56);
-  hudLeader(s, card, reg, HUD.blue);
-  conceptTag(s);
-  s.addNotes("Needs a better view. When it isn't sure, it asks instead of guessing. On blurred or blocked views it asked for a better look 77-98% of the time and was never confidently wrong.");
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Product" });
+  s.addText("THE PRODUCT", { placeholder: "eyebrow" });
+  s.addText(titleWithMark("Praxis turns the manuals a shop already has into ", "a coach that sees"), { placeholder: "title" });
+  [
+    ["01", "Load", "Upload the procedures you already use: checklists, work orders, manuals. Praxis compiles them into steps, checks and common mistakes."],
+    ["02", "Coach", "A new tech wears glasses or props up a phone. Praxis tracks the step they're on and says one short line at a time."],
+    ["03", "Verify and record", "Critical steps are checked and logged with keyframes. The manager sees proof, not checkboxes."],
+  ].forEach(([n, h, b], i) => {
+    const y = 2.2 + i * 1.4;
+    line(s, 0.5, y, 5.9, y, { color: C.text1, width: 1.5, name: "product-rule" });
+    mono(s, n, { x: 0.5, y: y + 0.18, w: 0.6, h: 0.3, fontSize: 11, color: C.accent2 });
+    tb(s, h, { x: 1.1, y: y + 0.13, w: 4.8, h: 0.4, fontFace: SEMI, fontSize: 18 });
+    tb(s, b, { x: 1.1, y: y + 0.55, w: 4.8, h: 0.8, fontSize: 13.5, color: BODY });
+  });
+  const tw = 3.04, th = tw * 9 / 16, x0 = 6.6;
+  [["hud-step.jpg", "STEP TRACKING"], ["hud-verified.jpg", "STEP VERIFIED"], ["hud-mistake.jpg", "MISTAKE CAUGHT"], ["hud-view.jpg", "ASKS FOR A BETTER VIEW"]].forEach(([f, cap], i) => {
+    const x = x0 + (i % 2) * (tw + 0.15), y = 2.2 + Math.floor(i / 2) * (th + 0.5);
+    s.addImage({ path: path.join(ROOT, "brand", "mocks", f), x, y, w: tw, h: th, objectName: "hud-thumb" });
+    mono(s, cap, { x, y: y + th + 0.08, w: tw, h: 0.28, fontSize: 9.5, color: C.text1 });
+  });
+  footer(s, 4, "HUD images are concept mocks on stock photos · the engine behind them is real");
+  s.addNotes("What it is: software, not glasses. It runs on a tablet at the bench today, and on camera or display glasses through an input adapter. It speaks; cards appear only for mistakes and view requests. The task graph is never shown to the wearer. Buyer: the maintenance or service manager. User: the new technician. Safety-critical steps like lockout stay the tech's responsibility: Praxis prompts and records them, and never approves them.");
 }
 
-// ---------- 7 · Divider ----------
-pres.addSection({ title: "How it works" });
+// ---------- 5 · Architecture (native diagram, from brand/deck) ----------
 {
-  const s = pres.addSlide({ masterName: "Praxis Dark Grid", sectionTitle: "How it works" });
-  s.addText("02 · HOW IT WORKS", { placeholder: "eyebrow" });
-  s.addText("A tracking problem, not a seeing problem", { placeholder: "title" });
-  s.addText("Praxis keeps a running belief about where you are in the procedure, and speaks only when it's sure.", { placeholder: "body" });
-  s.addImage({ path: MK(`prog-dark-7of${TOTAL}.png`), x: 13.333 - 1.2 - 5 * MARK_RATIO, y: 1.25, h: 5, w: 5 * MARK_RATIO, objectName: "progress-mark-large" });
-  s.addNotes("Our conviction: coaching someone through physical work is a tracking problem, not a seeing problem. Most competitors either stream video to a big model and hope, or bolt a camera to one workstation. We keep a belief about where the person is, and only ask a big model when something happens.");
-}
-
-// ---------- 8 · Architecture (native diagram, from brand/deck) ----------
-{
-  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "How it works" });
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Product" });
   s.addText("HOW PRAXIS WORKS · ENGINE v0", { placeholder: "eyebrow" });
   s.addText("The frontier model is one swappable part. The tracking engine around it is ours", { placeholder: "title" });
   const OPEN = "D6DBD8";
@@ -399,20 +394,21 @@ pres.addSection({ title: "How it works" });
   arrow([[5.85, SY + 0.45], [6.01, SY + 0.45]], "arrow-student-verifier");
   arrow([[6.3, Y + H], [6.3, 5.38], [5.55, 5.38], [5.55, SY]], "arrow-tracker-flywheel", "dash");
   label("session records", 3.9, 5.58, 1.55, "right");
-  footer(s, 8, "Measured on 48 held-out first-person clips from a public dataset (CaptainCook4D) · results/RESULTS.md · docs/CLAIMS.md");
+  footer(s, 5, "Measured on 48 held-out first-person clips from a public dataset (CaptainCook4D) · results/RESULTS.md · docs/CLAIMS.md");
   s.addNotes("Walk it left to right. Open models on the device turn every frame into features. Our state tracker keeps a running belief about which step you're on, using a task graph we compiled from the manual. Only when something happens (a step ends, it's unsure, or you're stuck) does it ask a rented model one typed question: that's 14% of frames. We calibrate the answer and feed it back, and the policy decides whether to say anything. Every session becomes training data, and our local student already handles routine checks. If asked 'isn't this a wrapper?': with the same frontier model, our layers make it about 13% more accurate at a fifth of the cost, and swapping the rented model is a one-line config change.");
 }
 
-// ---------- 9 · Results (relative framing) ----------
+
+// ---------- 6 · Results (relative framing) ----------
 {
-  const s = pres.addSlide({ masterName: "Praxis Split", sectionTitle: "How it works" });
+  const s = pres.addSlide({ masterName: "Praxis Split", sectionTitle: "Product" });
   s.addShape(pres.ShapeType.rect, { x: 0, y: 0, w: 7.2, h: 7.5, fill: { color: C.text1 }, line: { type: "none" }, objectName: "results-panel" });
   const labels = ["Model every 5 s", "Praxis", "Praxis + our local model"];
   s.addChart(pres.ChartType.bar, [{ name: "Relative step accuracy", labels, values: [100, 113, 109] }],
     { ...darkChart("Step accuracy · same frontier model on a timer = 100"), chartColors: ["4A5156", "FF5B14", "FF5B14"], x: 0.5, y: 0.7, w: 6.2, h: 2.7, valAxisMaxVal: 135, valAxisMinVal: 0, dataLabelFormatCode: "0", objectName: "chart-accuracy" });
   s.addChart(pres.ChartType.bar, [{ name: "Cost per video-minute", labels, values: [0.085, 0.018, 0.008] }],
     { ...darkChart("Cost per minute of video"), chartColors: ["4A5156", "FF5B14", "FF5B14"], x: 0.5, y: 3.9, w: 6.2, h: 2.7, valAxisMaxVal: 0.11, valAxisMinVal: 0, dataLabelFormatCode: '"$"0.000', objectName: "chart-cost" });
-  s.addText("RESULTS", { placeholder: "eyebrow" });
+  s.addText("EVIDENCE · IT ALREADY WORKS", { placeholder: "eyebrow" });
   s.addText("Same frontier model. 13% more accurate at a fifth of the cost", { placeholder: "title" });
   const rows = [
     { y: 2.9, big: "+13%", vs: "accuracy", cap: "tracking the current step, versus the same model called every 5 seconds" },
@@ -427,15 +423,161 @@ pres.addSection({ title: "How it works" });
     ], { x: 7.85, y: r.y + 0.08, w: 4.98, h: 0.55, margin: 0, valign: "middle", isTextBox: true, objectName: `result-${i + 1}` });
     s.addText(r.cap, { x: 7.85, y: r.y + 0.62, w: 4.98, h: 0.55, fontSize: 14, color: C.text1, margin: 0, valign: "top", isTextBox: true, objectName: `result-${i + 1}-caption` });
   });
-  footer(s, 9, "48 held-out clips · results/runs", 7.85);
+  footer(s, 6, "48 held-out clips · results/runs", 7.85);
   s.addNotes("Like-for-like: the same frontier model, the same frames. With our layers around it, it tracks the current step about 13% more accurately (54% vs 48% of frames) at about a fifth of the cost, because most checks never leave the device. With our distilled local model doing routine checks, it's 11x cheaper and still about 9% more accurate (52% vs 48%). The baseline calls the model every 5 seconds, not every frame. All measured on 48 held-out first-person clips from a public cooking dataset (CaptainCook4D), task given, one run per system. Say so if asked: procedures are procedures; maintenance footage is the first thing the grant funds.");
 }
 
-// ---------- 10 · Learning curves ----------
+
+
+// ---------- 7 · Why now ----------
+pres.addSection({ title: "Market" });
 {
-  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "How it works" });
-  s.addText("OUR OWN MODELS · LEARNING CURVES", { placeholder: "eyebrow" });
-  s.addText(titleWithMark("Our own models already get better with ", "every recording"), { placeholder: "title" });
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Market" });
+  s.addText("WHY NOW", { placeholder: "eyebrow" });
+  s.addText(titleWithMark("2026 is the first year this ", "can be sold"), { placeholder: "title" });
+  const cw = 12.33 / 3;
+  [
+    ["01", "Glasses opened their cameras to apps", "Meta's camera toolkit for third-party apps reached 1.0 in September. Android XR glasses are reported for November. Viture + NVIDIA ship coaching glasses in Q1 2027."],
+    ["02", "Vision checks got cheap enough to sell", "Asking a model only when something happens costs us about $1 an hour of video. A model on a timer costs about $5, more than the price."],
+    ["03", "The last generation is ending", "Microsoft ends Dynamics 365 Guides and Remote Assist on Dec 31, 2026. Its frontline customers are choosing a replacement now."],
+  ].forEach(([n, h, b], i) => {
+    const x = 0.5 + i * cw, w = cw - 0.35;
+    line(s, x, 2.2, x + w, 2.2, { color: C.text1, width: 1.5, name: "why-rule" });
+    mono(s, n, { x, y: 2.38, w: 0.6, h: 0.3, fontSize: 11, color: C.accent2 });
+    tb(s, h, { x, y: 2.75, w, h: 0.75, fontFace: SEMI, fontSize: 18 });
+    tb(s, b, { x, y: 3.5, w, h: 1.4, fontSize: 14, color: BODY });
+  });
+  darkPanel(s, 0.5, 5.15, 12.33, 1.25, "THE OPEN LAYER", "The hardware and plumbing are being built around us. Nobody publishes numbers on the coach itself, and that's the part we've measured.", 17);
+  footer(s, 7, "Meta Wearables toolkit 1.0 · 9to5Google · Viture/NVIDIA (16 Jun 2026) · Microsoft Dynamics 365 Guides retirement · docs/POSITIONING.md");
+  s.addNotes("Why not 2023: no glasses let third-party apps read the camera, and calling a vision model often enough to coach was too expensive and too slow. Our two-speed design is what makes the cost work: local layers on every frame, a model only on events (14% of frames). Apple glasses are reported for 2027, not announced. Say 'designed to run on' glasses until an adapter has run on that device.");
+}
+
+// ---------- 8 · Why businesses, not consumers ----------
+{
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Market" });
+  s.addText("WHY NOT CONSUMERS FIRST", { placeholder: "eyebrow" });
+  s.addText("We sell to businesses first, because that's where the budget and the repeat data are", { placeholder: "title" });
+  const H = (t, hl) => ({ text: t, options: { fontFace: MONO, fontSize: 10, color: hl ? "16191B" : "E8EBE9", fill: { color: hl ? "FF5B14" : "16191B" } } });
+  const L = (t) => ({ text: t, options: { fontFace: SEMI } });
+  const M = (t) => ({ text: t, options: { fill: { color: "FFFFFF" } } });
+  s.addTable([
+    [H(""), H("CONSUMERS"), H("MAINTENANCE TEAMS", true)],
+    [L("Who pays"), { text: "Unproven. Frontdoor's expert-video plan fell from $99 to $25 a year" }, M("Budgets exist. Autodesk is buying MaintainX, a procedures app, for $3.6B")],
+    [L("Does the task repeat?"), { text: "Rarely. Most home tasks happen a few times a year" }, M("Every machine, every month. The data compounds")],
+    [L("Who owns distribution"), { text: "Meta, Google and Apple, with free assistants" }, M("Maintenance managers we can reach directly")],
+    [L("Works without glasses"), { text: "Needs glasses or a propped-up phone" }, M("A tablet at the bench works today")],
+    [L("Fits what we've measured"), { text: "Open-ended tasks: it named 0 of 7 unseen recipes from video alone" }, M("Written procedures, which we compile into steps")],
+  ], { ...tableOpts([2.73, 4.8, 4.8]), y: 2.2, rowH: 0.62, fontSize: 13, objectName: "table-consumer-vs-business" });
+  mono(s, "CONSUMER IS WHERE WE END UP: ONCE GLASSES ARE EVERYWHERE AND OUR MODELS RUN ON THE DEVICE FOR ALMOST NOTHING", { x: 0.5, y: 6.25, w: 12.33, h: 0.3, color: C.text1 });
+  footer(s, 8, "Frontdoor pricing 2023→2024 · Autodesk–MaintainX (28 May 2026) · results/open_set · docs/USE_CASES.md");
+  s.addNotes("This is a choice about order, not about size. The big platforms will fight for consumers with free assistants; we'd lose that fight today and learn little, because consumer tasks don't repeat. In maintenance the same checklist runs every month, someone signs a budget, and ROI shows up in a 30-day pilot. Consumers come back in the last phase, when glasses distribution is open and our models run on the device.");
+}
+
+// ---------- 9 · Market ----------
+{
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Market" });
+  s.addText("MARKET · US, PER YEAR, BOTTOM-UP", { placeholder: "eyebrow" });
+  s.addText(titleWithMark("A ", "$1.8B first market", " inside a $9B one"), { placeholder: "title" });
+  const rows = [
+    ["TAM", "≈ $9.2B", "15.4M US workers who follow written procedures: installation, maintenance and repair (6.09M), electricians (0.76M), production (8.57M) × $50 a month", C.text2],
+    ["SAM", "≈ $1.8B", "2.47M US maintenance and repair techs. Coaching ~255k new hires a year ($200 × 6 months = $306M) + verified records for all ($50 a month = $1.48B)", C.text1],
+    ["SOM · YEAR 3", "≈ $3M ARR", "1% of new US maintenance techs: ~2,550 trainees a year, roughly 100 mid-size maintenance teams", C.accent2],
+  ];
+  rows.forEach(([k, big, math, col], i) => {
+    const y = 2.2 + i * 1.42;
+    line(s, 0.5, y, 7.3, y, { color: C.text1, width: 1.5, name: "market-rule" });
+    mono(s, k, { x: 0.5, y: y + 0.2, w: 1.6, h: 0.3, fontSize: 11, color: C.text1 });
+    tb(s, big, { x: 2.1, y: y + 0.1, w: 5.2, h: 0.55, fontFace: HEAD, fontSize: 28, color: col });
+    tb(s, math, { x: 2.1, y: y + 0.65, w: 5.2, h: 0.7, fontSize: 12.5, color: BODY });
+  });
+  const cx = 10.15, cy = 4.35;
+  const circ = (r, fill, name, lineColor) => s.addShape(pres.ShapeType.ellipse, { x: cx - r, y: cy - r + (2.05 - r) * 0.55, w: 2 * r, h: 2 * r, fill: { color: fill }, line: lineColor ? { color: lineColor, width: 1 } : { type: "none" }, objectName: name });
+  circ(2.05, "F6F7F6", "circle-tam", "9AA3A7");
+  circ(1.2, "D6DBD8", "circle-sam");
+  circ(0.42, "FF5B14", "circle-som");
+  mono(s, "TAM", { x: cx - 0.5, y: 2.45, w: 1.0, h: 0.25, fontSize: 10, color: C.text2, align: "center" });
+  mono(s, "SAM", { x: cx - 0.5, y: 3.5, w: 1.0, h: 0.25, fontSize: 10, color: C.text1, align: "center" });
+  mono(s, "SOM", { x: cx - 0.5, y: 5.65, w: 1.0, h: 0.25, fontSize: 10, color: C.text1, align: "center" });
+  footer(s, 9, "BLS OEWS national tables, May 2025 · BLS Occupational Outlook · prices are our hypotheses · SOM is a goal, not a forecast");
+  s.addNotes("Say the assumptions out loud: $200 a month for coaching and $50 a month for every-worker records are our pricing hypotheses; openings include people changing jobs; the SOM is a goal. Not counted: other countries, field service outside these groups, aviation, and the robotics upside. The wedge alone is a beachhead in the low hundreds of millions; the prize is every technician, then every physical procedure. Full math in appendix A2.");
+}
+
+// ---------- 10 · Business model + GTM ----------
+{
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Market" });
+  s.addText("BUSINESS MODEL + GO-TO-MARKET", { placeholder: "eyebrow" });
+  s.addText(titleWithMark("It pays for itself if it saves a senior tech ", "an hour a week"), { placeholder: "title" });
+  plateCard(s, 0.5, 2.2, 5.6, 4.2, "card-model");
+  mono(s, "HOW WE MAKE MONEY", { x: 0.8, y: 2.42, w: 5.0, h: 0.3, fontSize: 11, color: C.text1 });
+  tb(s, runs([
+    ["Paid pilot first, ", "with a metric agreed up front: time until the new tech works alone"],
+    ["Then a subscription ", "per trainee, per month. We'll test $150 to $250"],
+    ["Plus a one-time setup ", "per procedure, compiled from their manuals"],
+  ]), { x: 0.8, y: 2.85, w: 5.0, h: 2.0, fontSize: 14 });
+  line(s, 0.8, 4.95, 5.8, 4.95, { color: C.accent6, width: 0.75, name: "model-rule" });
+  tb(s, [
+    { text: "$4.76", options: { fontFace: HEAD, fontSize: 22, color: C.text1 } }, { text: " an hour to the customer\n", options: { fontSize: 13 } },
+    { text: "$1.08", options: { fontFace: HEAD, fontSize: 22, color: C.accent2 } }, { text: " an hour for us to run", options: { fontSize: 13 } },
+  ], { x: 0.8, y: 5.05, w: 5.0, h: 1.2, objectName: "unit-economics" });
+  const steps = [
+    ["FIRST 10", "Founder-led paid pilots", "Boston-area facilities teams, HVAC and equipment-service shops, training programs, and Dynamics 365 Guides customers who need a replacement. 70 contacted this week"],
+    ["NEXT 100", "Case studies + integrations", "Pilot results with an agreed metric. Read procedures straight from the CMMS and procedure apps shops use. Training programs send their students to employers"],
+    ["THEN 1,000", "Partners + land-and-expand", "Industrial distributors and glasses makers. From one site to every site; from new techs to records for the whole workforce"],
+  ];
+  steps.forEach(([k, h, b], i) => {
+    const y = 2.2 + i * 1.42, x = 6.6;
+    line(s, x, y, 12.83, y, { color: C.text1, width: 1.5, name: "gtm-rule" });
+    mono(s, k, { x, y: y + 0.18, w: 1.5, h: 0.3, fontSize: 11, color: C.accent2 });
+    tb(s, h, { x: x + 1.55, y: y + 0.13, w: 4.65, h: 0.4, fontFace: SEMI, fontSize: 16 });
+    tb(s, b, { x: x + 1.55, y: y + 0.5, w: 4.65, h: 0.9, fontSize: 12.5, color: BODY });
+  });
+  footer(s, 10, "$200 per trainee-month at 2 h/day · run cost = measured $ per video-minute × 60 · docs/POSITIONING.md · docs/OUTREACH.md");
+  s.addNotes("Break-even: $2,400 a year ÷ 52 weeks ÷ $44 an hour ≈ 1 hour of senior-tech time a week. Outreach: 14 emails went out Oct 17 to HVAC and equipment-service shops and others; 56 more (universities, colleges, towns, unions, associations) go out Monday Oct 19. Update this with real replies before the interview. Contracts include the right to use de-identified procedural data, with a discount for sharing, so the data flywheel starts on day one.");
+}
+
+// ---------- 11 · Competition ----------
+pres.addSection({ title: "Why we win" });
+{
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Why we win" });
+  s.addText("COMPETITION", { placeholder: "eyebrow" });
+  s.addText("The closest competitors are hardware-led. We're software on what shops already own", { placeholder: "title" });
+  const X0 = 0.9, X1 = 7.7, Y0 = 2.25, Y1 = 6.35, mx = (X0 + X1) / 2, my = (Y0 + Y1) / 2;
+  s.addShape(pres.ShapeType.rect, { x: mx, y: Y0, w: X1 - mx, h: my - Y0, fill: { color: C.background1 }, line: { type: "none" }, objectName: "quadrant-target" });
+  line(s, X0, my, X1, my, { color: C.text1, width: 1.25, name: "axis-x" });
+  line(s, mx, Y0, mx, Y1, { color: C.text1, width: 1.25, name: "axis-y" });
+  mono(s, "WATCHES THE WORK", { x: mx + 0.1, y: Y0 - 0.02, w: 2.5, h: 0.25, fontSize: 9, color: C.text2 });
+  mono(s, "SHOWS THE STEPS", { x: mx + 0.1, y: Y1 - 0.25, w: 2.5, h: 0.25, fontSize: 9, color: C.text2 });
+  mono(s, "FIXED STATION", { x: X0, y: my + 0.05, w: 2.0, h: 0.25, fontSize: 9, color: C.text2 });
+  mono(s, "FOLLOWS THE PERSON", { x: X1 - 2.2, y: my + 0.05, w: 2.2, h: 0.25, fontSize: 9, color: C.text2, align: "right" });
+  const dot = (x, y, label, hero) => {
+    s.addShape(pres.ShapeType.ellipse, { x: x - 0.09, y: y - 0.09, w: 0.18, h: 0.18, fill: { color: hero ? C.accent1 : C.text1 }, line: { type: "none" }, objectName: "competitor-dot" });
+    tb(s, label, { x: x + 0.16, y: y - 0.16, w: 2.6, h: 0.32, fontSize: hero ? 15 : 12, fontFace: hero ? SEMI : THEME.bodyFontFace, valign: "middle" });
+  };
+  dot(1.4, 2.95, "Retrocausal, Invisible AI");
+  dot(1.4, 3.45, "Tulip camera checks (testing)");
+  dot(1.4, 5.25, "Tulip, Augmentir, Dozuki");
+  dot(4.5, 5.75, "MaintainX (phone app)");
+  dot(4.5, 4.75, "Meta AI, Gemini: no plan, no state");
+  dot(4.5, 3.4, "Viture Helix + NVIDIA, Strivr");
+  dot(5.4, 2.75, "Praxis", true);
+  const x = 8.25, w = 4.58;
+  mono(s, "VS THE CLOSEST (TOP RIGHT)", { x, y: 2.25, w, h: 0.3, fontSize: 11, color: C.text1 });
+  tb(s, runs([
+    ["Software, not hardware. ", "Runs on a tablet today, and on whatever glasses a shop picks"],
+    ["Runs now. ", "Helix ships Q1 2027; Strivr films each customer first"],
+    ["Published accuracy. ", "Neither of them publishes any"],
+    ["Asks for a better view ", "instead of guessing"],
+    ["Reads the procedures ", "a shop already has; no authoring"],
+  ], 8), { x, y: 2.7, w, h: 3.6, fontSize: 13.5 });
+  footer(s, 11, "Public product pages, checked 2026-10-17 · docs/COMPETITORS.md · docs/POSITIONING.md");
+  s.addNotes("Honest version: Tulip, Augmentir and Squint already compile instructions. Tulip is testing vision-language camera checks. Retrocausal tracks procedures, on fixed cameras. On live mistake detection we're behind fixed-camera vendors today. If Viture's Helix accepts outside apps, we'd rather run on it than fight it. If a platform ships a coach: they're building our hardware and plumbing, and we go deep in maintenance with its procedures, records and data.");
+}
+
+// ---------- 12 · Moat: learning curves ----------
+{
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Why we win" });
+  s.addText("MOAT · THE DATA FLYWHEEL", { placeholder: "eyebrow" });
+  s.addText(titleWithMark("Our moat is data that gets better with ", "every session"), { placeholder: "title" });
   const Pr = LC.probes, pk = {};
   Pr.rows.forEach((r) => { if (Pr.n_train_avail[r.task] >= 9) (pk[r.k] = pk[r.k] || []).push(r.acc); });
   const ks = Object.keys(pk).map(Number).sort((a, b) => a - b);
@@ -461,109 +603,40 @@ pres.addSection({ title: "How it works" });
     { name: "Our local model", labels: ns.map(String), values: sacc },
     { name: "Frontier model it learns from", labels: ns.map(String), values: ns.map(() => teacher) },
   ], { ...chart(6.92, "Training recordings", 50, 90), chartColors: ["FF5B14", "9AA3A7"], objectName: "chart-student" });
-  mono(s, "TRAINED IN SECONDS ON A LAPTOP · TESTED ONLY ON RECORDINGS IT NEVER SAW · NEITHER CURVE HAS LEVELED OFF", { x: 0.5, y: 6.42, w: 12.33, h: 0.3, color: C.text1 });
-  footer(s, 10, "Random subsets of public train-split recordings, 5 seeds per point · results/scaling/learning_curve.json");
+  mono(s, "TESTED ONLY ON RECORDINGS IT NEVER SAW · NEITHER CURVE HAS LEVELED OFF · CUSTOMERS PAY US TO COLLECT THIS DATA", { x: 0.5, y: 6.42, w: 12.33, h: 0.3, color: C.text1 });
+  footer(s, 12, "Random subsets of public train-split recordings, 5 seeds per point · results/scaling/learning_curve.json");
   s.addNotes("We retrained our learned layers on growing slices of the training data and scored them only on recordings they never saw, so this isn't memorization. Left: the 3 procedures with 9 training recordings, held-out step accuracy. Right: the local student model on the same 469 held-out checks as the headline result. Steady gains per doubling of data, not 'exponential'. If asked for counts: up to 9 recordings per procedure, 30 recordings for the student. Every customer session is new training data. The engine we evaluated used only 3 recordings per procedure, so there's headroom we haven't used yet (not re-measured end to end).");
 }
 
-// ---------- 11 · Why now ----------
-pres.addSection({ title: "Market" });
+
+
+// ---------- 13 · Founder ----------
+pres.addSection({ title: "Team" });
 {
-  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Market" });
-  s.addText("WHY NOW", { placeholder: "eyebrow" });
-  s.addText(titleWithMark("Everyone is building the glasses. Nobody has proven ", "the coach"), { placeholder: "title" });
-  const ev = [
-    ["JUN 2026", "Viture + NVIDIA announce Helix, safety glasses that coach workers", true],
-    ["AUG 2026", "NVIDIA open-sources its toolkit for AI agents on glasses", true],
-    ["SEPT 2026", "Meta opens its glasses' camera to third-party apps", true],
-    ["NOV 2026", "Google + Samsung Android XR glasses (reported)", false],
-    ["2027", "Apple glasses (reported)", false],
-  ];
-  const cw = 12.33 / 5;
-  line(s, 0.5, 2.55, 12.83, 2.55, { color: C.text1, width: 1.5, name: "timeline" });
-  ev.forEach(([d, t, done], i) => {
-    const x = 0.5 + i * cw;
-    s.addShape(pres.ShapeType.ellipse, { x, y: 2.44, w: 0.22, h: 0.22, fill: { color: done ? C.text1 : C.background2 }, line: { color: C.text1, width: 1.5 }, objectName: "timeline-dot" });
-    mono(s, d, { x, y: 2.85, w: cw - 0.25, h: 0.3, fontSize: 11, color: C.text1 });
-    tb(s, t, { x, y: 3.2, w: cw - 0.3, h: 1.1, fontSize: 15 });
-  });
-  darkPanel(s, 0.5, 4.65, 12.33, 1.75, "SO WE DON'T FIGHT FOR CONSUMERS", "We sell to businesses, on whatever glasses they pick, or a phone. The hardware and plumbing are being built around us. The part nobody publishes numbers on is the coach, and that's the part we've measured.");
-  footer(s, 11, "Viture/NVIDIA release · NVIDIA XR AI beta · Meta Wearables toolkit 1.0 · 9to5Google · Apple: reported, not announced");
-  s.addNotes("Filled dots happened; open dots are reported. Say 'designed to run on' glasses until an adapter has run on that device: today it runs live on a video stream on a laptop, and glasses are one more input adapter. Apple is reported only. Sources in docs/POSITIONING.md 'Why now'.");
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Team" });
+  s.addText("WHY ME", { placeholder: "eyebrow" });
+  s.addText(titleWithMark("I've built real-time vision on messy video before, and I built this ", "in a week"), { placeholder: "title" });
+  const cw = 12.33 / 3;
+  [
+    ["7 years", "of competitive robotics. Mentoring teammates taught me how hard it is to coach someone when you can't see what they see."],
+    ["LipTrac", "Real-time lip reading from ordinary video: Conv3D + Bi-GRU, 60,000+ frames, tested with 12 people. Provisional patent filed."],
+    ["1 week", "to build Praxis solo: a 7-layer engine, an eval on 48 held-out videos, and a live web app. First commit: Oct 17."],
+  ].forEach(([b, c], i) => statCol(s, 0.5 + i * cw, 2.3, cw - 0.35, b, c, { size: 36, capH: 1.4, color: i === 2 ? C.accent2 : C.text1 }));
+  plateCard(s, 0.5, 5.1, 12.33, 1.25, "founder-card");
+  tb(s, [
+    { text: "Monish Saravana · Harvard College · solo founder\n", options: { fontFace: SEMI, fontSize: 16 } },
+    { text: "Also built autonomous path planning for oil-cleanup boats from aerial imagery. The common thread: getting useful structure out of messy real-world video.", options: { fontSize: 14, color: BODY } },
+  ], { x: 0.85, y: 5.1, w: 11.6, h: 1.25, valign: "middle", objectName: "founder-text" });
+  footer(s, 13, "context/APPLICATION.md · git history of this repository");
+  s.addNotes("Solo founder is a known risk: the grant tests demand before hiring, and the first hires come after the pilot. If asked what 'in a week' means: the first commit on this codebase was Oct 17; the engine, the eval harness on 48 held-out clips, the learning curves and Praxis Studio were all built since.");
 }
 
-// ---------- 12 · Wedge + how we charge ----------
+// ---------- 14 · Long game ----------
+pres.addSection({ title: "Vision" });
 {
-  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Market" });
-  s.addText("WHERE WE START", { placeholder: "eyebrow" });
-  s.addText(titleWithMark("We start with new ", "maintenance and repair", " technicians"), { placeholder: "title" });
-  const why = [
-    ["01", "The work moves around the machine", "A camera bolted to a workbench can't follow it. A first-person camera can."],
-    ["02", "The procedures already live on their phones", "Autodesk is buying MaintainX, a maintenance-procedures app, for $3.6B. We give those procedures eyes."],
-    ["03", "New hires keep coming", "About 51,900 US openings a year for machinery maintenance mechanics and millwrights."],
-  ];
-  why.forEach(([n, h, b], i) => {
-    const y = 2.2 + i * 1.4;
-    line(s, 0.5, y, 6.9, y, { color: C.text1, width: 1.5, name: "row-rule" });
-    mono(s, n, { x: 0.5, y: y + 0.18, w: 0.6, h: 0.3, fontSize: 11, color: C.accent2 });
-    tb(s, h, { x: 1.1, y: y + 0.15, w: 5.8, h: 0.4, fontFace: SEMI, fontSize: 17 });
-    tb(s, b, { x: 1.1, y: y + 0.55, w: 5.8, h: 0.75, fontSize: 14, color: BODY });
-  });
-  plateCard(s, 7.35, 2.2, 5.48, 4.2, "card-pricing");
-  mono(s, "HOW WE CHARGE", { x: 7.7, y: 2.45, w: 4.8, h: 0.3, fontSize: 11, color: C.text1 });
-  tb(s, runs([
-    ["A subscription ", "per trainee, per month. We'll test $150 to $250"],
-    ["A one-time setup ", "per procedure, compiled from their existing manuals"],
-    ["Reusable ", "for every new hire. Edit the procedure and every trainee gets the update"],
-    ["No repeat walkthroughs: ", "a manager doesn't have to stop work to show it again"],
-  ]), { x: 7.7, y: 2.9, w: 4.8, h: 2.6, fontSize: 14 });
-  mono(s, "TULIP LISTS $100–250 PER STATION PER MONTH. ONE RETROCAUSAL LISTING WORKS OUT TO ABOUT $500.", { x: 7.7, y: 5.6, w: 4.8, h: 0.6, fontSize: 9, color: C.text2 });
-  footer(s, 12, "Autodesk–MaintainX (28 May 2026) · BLS Occupational Outlook 2025–35 · pricing is our hypothesis, to be tested in pilots");
-  s.addNotes("Expansion after maintenance: field service (HVAC, equipment), then assembly lines, then regulated maintenance (aviation, medical devices). They share the same physical building blocks: fasteners, connectors, orientation, torque.");
-}
-
-// ---------- 13 · Economics ----------
-{
-  const s = pres.addSlide({ masterName: "Praxis Split", sectionTitle: "Market" });
-  s.addShape(pres.ShapeType.rect, { x: 0, y: 0, w: 7.2, h: 7.5, fill: { color: C.text1 }, line: { type: "none" }, objectName: "economics-panel" });
-  s.addChart(pres.ChartType.bar, [{ name: "Customer cost per hour", labels: ["Senior tech's time", "Praxis"], values: [43.9, 4.76] }],
-    { ...darkChart("What the customer pays, per hour"), chartColors: ["4A5156", "FF5B14"], x: 0.5, y: 0.7, w: 6.2, h: 2.7, valAxisMaxVal: 56, valAxisMinVal: 0, dataLabelFormatCode: '"$"0.00', objectName: "chart-customer-hour" });
-  s.addChart(pres.ChartType.bar, [{ name: "Our cost per hour", labels: ["Model every 5 s", "Praxis today", "Praxis + our local model"], values: [5.1, 1.08, 0.48] }],
-    { ...darkChart("What it costs us to run, per hour"), chartColors: ["4A5156", "FF5B14", "FF5B14"], x: 0.5, y: 3.9, w: 6.2, h: 2.7, valAxisMaxVal: 6.6, valAxisMinVal: 0, dataLabelFormatCode: '"$"0.00', objectName: "chart-our-hour" });
-  s.addText("UNIT ECONOMICS", { placeholder: "eyebrow" });
-  s.addText("An hour of Praxis costs what 6 minutes of a senior tech does", { placeholder: "title" });
-  const rows = [
-    { y: 3.25, big: "1 h / week", cap: "of senior-tech time saved pays for a $200-a-month seat" },
-    { y: 4.85, big: "$1.08", vs: "vs $5.10", cap: "per hour to run. A frontier model on a timer costs more than the price, so the architecture is the business model" },
-  ];
-  rows.forEach((r, i) => {
-    line(s, 7.85, r.y, 12.83, r.y, { color: C.text1, width: 1.5, name: `economics-rule-${i + 1}` });
-    s.addText([
-      { text: r.big, options: { fontFace: HEAD, fontSize: 30, color: i === 0 ? C.accent2 : C.text1 } },
-      ...(r.vs ? [{ text: "  " + r.vs, options: { fontFace: HEAD, fontSize: 16, color: C.text2 } }] : []),
-    ], { x: 7.85, y: r.y + 0.1, w: 4.98, h: 0.6, margin: 0, valign: "middle", isTextBox: true, objectName: `economics-${i + 1}` });
-    s.addText(r.cap, { x: 7.85, y: r.y + 0.75, w: 4.98, h: 0.75, fontSize: 14, color: C.text1, margin: 0, valign: "top", isTextBox: true, objectName: `economics-${i + 1}-caption` });
-  });
-  footer(s, 13, "BLS · $200/month at 2 h/day · $/video-min × 60", 7.85);
-  s.addNotes("Senior tech: BLS median $30.82 an hour divided by the 70.2% wage share is about $44 fully loaded, which is low for a senior tech. Praxis at $200 per trainee-month and 2 hours a day is about $4.76 an hour. Break-even: $2,400 a year / 52 / $44 is about 1 hour a week. Run cost is measured cost per video-minute times 60. Pricing risk: if trainees wear it all shift, a flat $200 seat leaves about a 9% margin today and about 60% with the local model, so price by coached hours or tiers (appendix).");
-}
-
-// ---------- 14 · Divider: the long game ----------
-pres.addSection({ title: "Long game" });
-{
-  const s = pres.addSlide({ masterName: "Praxis Dark Grid", sectionTitle: "Long game" });
-  s.addText("03 · THE LONG GAME", { placeholder: "eyebrow" });
-  s.addText("Today we coach the people. Next, the robots", { placeholder: "title" });
-  s.addText("Every session is step-labeled video of real skilled work: exactly what robots need to learn the same jobs, and to be checked while they do them.", { placeholder: "body" });
-  s.addImage({ path: MK(`prog-dark-14of${TOTAL}.png`), x: 13.333 - 1.2 - 5 * MARK_RATIO, y: 1.25, h: 5, w: 5 * MARK_RATIO, objectName: "progress-mark-large" });
-  s.addNotes("The full line: today we coach the people; next we train and check the robots that work next to them. Customers pay us to collect the data that robot labs pay crowds to stage.");
-}
-
-// ---------- 15 · Staircase ----------
-{
-  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Long game" });
+  const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Vision" });
   s.addText("THE LONG GAME", { placeholder: "eyebrow" });
-  s.addText("Each step pays for itself and builds what the next one needs", { placeholder: "title" });
+  s.addText(titleWithMark("Today we coach the people. Next, ", "the robots"), { placeholder: "title" });
   const steps = [
     ["NOW", "Coach new technicians", "Paid per trainee. Produces step-labeled video of real skilled work"],
     ["YEARS 1.5–3", "The record of physical work", "Capture your best tech once. Proof that each critical step was done"],
@@ -580,38 +653,46 @@ pres.addSection({ title: "Long game" });
     tb(s, h, { x: x + 0.2, y: y + 0.55, w: w - 0.4, h: 0.65, fontFace: SEMI, fontSize: 16 });
     tb(s, b, { x: x + 0.2, y: y + 1.2, w: w - 0.4, h: 0.95, fontSize: 13, color: cur ? C.text1 : BODY });
   });
-  footer(s, 15, "Each step has a gate: a condition, not a date · robot-brain valuations: Figure, Physical Intelligence, Skild · docs/VISION.md");
-  s.addNotes("Why it compounds: robot companies already pay for first-person human video, and investors are paying for the robot brain (Figure, Physical Intelligence, Skild). The plants where we coach technicians are the ones buying robots, and those robots need maintaining too. Honest risks: human video doesn't transfer straight to robots, and robot policy work is capital-heavy, so the last step is an option, gated on a paying robot partner. With customers and workers the story is 'robots work next to you', not automation.");
+  footer(s, 14, "Each step has a gate: a condition, not a date · robot-brain valuations: Figure, Physical Intelligence, Skild · docs/VISION.md");
+  s.addNotes("Two horizons. Near term: coach new maintenance technicians. Long term: the model of how physical work gets done correctly, which robots need to learn the same jobs and to be checked while they do them. Robot companies already pay for first-person human video; our customers pay us to collect ours. The plants we coach in are the ones buying robots, and those robots need maintaining too. Honest risks: human video doesn't transfer straight to robots, and robot policy work is capital-heavy, so the last step is an option gated on a paying robot partner. With customers and workers, the story is 'robots work next to you'.");
 }
 
-// ---------- 16 · Gaps + ask ----------
+// ---------- 15 · Ask ----------
 pres.addSection({ title: "Ask" });
 {
   const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Ask" });
-  s.addText("WHAT THE GRANT BUYS", { placeholder: "eyebrow" });
-  s.addText(titleWithMark("What isn't proven yet, and what ", "$10k", " over six months buys"), { placeholder: "title" });
-  line(s, 0.5, 2.2, 6.4, 2.2, { color: C.text1, width: 1.5, name: "gaps-rule" });
-  mono(s, "NOT PROVEN YET", { x: 0.5, y: 2.4, w: 5.9, h: 0.3, fontSize: 11, color: C.text1 });
-  tb(s, runs([
-    ["Catching mistakes. ", "4 of 17 alerts named a real annotated error. Our weakest number"],
-    ["Maintenance footage. ", "Every metric so far is on public cooking video"],
-    ["Glasses. ", "It runs live on a video stream on a laptop; no glasses yet"],
-    ["Customers. ", "None yet. Outreach to maintenance managers has started"],
-  ], 12), { x: 0.5, y: 2.85, w: 5.9, h: 3.4, fontSize: 15 });
-  line(s, 6.92, 2.2, 12.83, 2.2, { color: C.text1, width: 1.5, name: "budget-rule" });
-  mono(s, "$10K · SIX MONTHS", { x: 6.92, y: 2.4, w: 5.9, h: 0.3, fontSize: 11, color: C.text1 });
-  const rows = [["$3,000", "Model, API and GPU experiments"], ["$2,500", "Smart glasses and capture gear"], ["$2,000", "Recording and labeling real maintenance tasks"], ["$1,500", "Inference and storage"], ["$1,000", "Company formation"]];
-  rows.forEach(([a, b], i) => {
-    const y = 2.85 + i * 0.42;
-    mono(s, a, { x: 6.92, y, w: 1.2, h: 0.35, fontSize: 12, color: C.accent2 });
-    tb(s, b, { x: 8.2, y: y - 0.02, w: 4.6, h: 0.35, fontSize: 15 });
+  s.addText("THE ASK", { placeholder: "eyebrow" });
+  s.addText(titleWithMark("$10k turns a working prototype into ", "a paid maintenance pilot"), { placeholder: "title" });
+  mono(s, "TODAY", { x: 0.5, y: 2.2, w: 5.4, h: 0.3, fontSize: 11, color: C.text2 });
+  mono(s, "BY APRIL", { x: 6.92, y: 2.2, w: 5.9, h: 0.3, fontSize: 11, color: C.accent2 });
+  [
+    ["Measured on public cooking video", "Measured on real maintenance footage"],
+    ["Runs live on a laptop", "Running on glasses in the field"],
+    ["Mistake alerts: 4 of 17 named a real error", "Mistake detection re-measured on maintenance"],
+    ["No customers; 70 maintenance teams contacted", "A first paid pilot, with a metric agreed up front"],
+  ].forEach(([a, b], i) => {
+    const y = 2.6 + i * 0.6;
+    line(s, 0.5, y, 12.83, y, { color: C.accent6, width: 0.75, name: "ask-rule" });
+    tb(s, a, { x: 0.5, y: y + 0.12, w: 5.6, h: 0.4, fontSize: 15, color: BODY });
+    tb(s, "→", { x: 6.25, y: y + 0.08, w: 0.5, h: 0.4, fontSize: 18, color: C.accent1 });
+    tb(s, b, { x: 6.92, y: y + 0.12, w: 5.9, h: 0.4, fontSize: 15, fontFace: SEMI });
   });
-  darkPanel(s, 6.92, 5.0, 5.91, 1.5, "GOAL BY APRIL", "Measured on real maintenance footage, running on glasses, and a first paid pilot with a metric agreed up front.", 15);
-  footer(s, 16, "docs/CLAIMS.md · context/APPLICATION.md");
-  s.addNotes("The mistake number: the errors it does catch all need task state (steps done out of order), so better tracking should mean more catches. The grant funds exactly the experiments that close these gaps.");
+  mono(s, "USE OF FUNDS · $10,000 · SIX MONTHS", { x: 0.5, y: 5.2, w: 8, h: 0.3, fontSize: 11, color: C.text1 });
+  const funds = [[3000, "Models, API, GPUs"], [2500, "Glasses + capture"], [2000, "Maintenance data"], [1500, "Inference + storage"], [1000, "Formation"]];
+  let fx = 0.5;
+  const fills = ["16191B", "3C4347", "5E676C", "9AA3A7", "C9CFCC"];
+  funds.forEach(([amt, lab], i) => {
+    const w = 12.33 * amt / 10000;
+    s.addShape(pres.ShapeType.rect, { x: fx, y: 5.6, w: w - 0.04, h: 0.42, fill: { color: i === 0 ? "FF5B14" : fills[i] }, line: { type: "none" }, objectName: "funds-bar" });
+    mono(s, `$${amt.toLocaleString("en-US")}`, { x: fx, y: 6.08, w: w - 0.1, h: 0.25, fontSize: 10, color: C.text1 });
+    tb(s, lab, { x: fx, y: 6.3, w: w - 0.1, h: 0.3, fontSize: 11.5, color: BODY });
+    fx += w;
+  });
+  footer(s, 15, "Budget as submitted in the application · results/ and docs/CLAIMS.md for today's numbers");
+  s.addNotes("The point isn't the budget split, it's what becomes true by April that isn't true today. The mistake number: the errors it does catch all need task state (steps done out of order), so better tracking and locked procedures should mean more catches. A first paid pilot by April is the commitment. 70 contacted: 14 sent Oct 17, 56 scheduled for Oct 19; update with replies.");
 }
 
-// ---------- 17 · Close ----------
+// ---------- 16 · Close ----------
 {
   const s = pres.addSlide({ masterName: "Praxis Dark Grid", sectionTitle: "Ask" });
   s.addImage({ path: A("mark-dark-full.png"), x: 0.83, y: 0.83, h: 5.83, w: 5.83 * MARK_RATIO, objectName: "mark-large" });
@@ -625,6 +706,7 @@ pres.addSection({ title: "Ask" });
   s.addNotes("Thank you. Happy to go deeper on the engine, the data or the plan; the appendix has the details.");
 }
 
+
 // ================================================================== APPENDIX
 pres.addSection({ title: "Appendix" });
 const appx = (eb, title) => {
@@ -633,8 +715,6 @@ const appx = (eb, title) => {
   s.addText(title, { placeholder: "title" });
   return s;
 };
-const tableOpts = (colW, w = 12.33) => ({ x: 0.5, y: 2.2, w, colW, fontFace: "Archivo", fontSize: 12, color: "16191B", border: { type: "solid", color: "C9CFCC", pt: 0.75 }, valign: "middle", rowH: 0.52, fill: { color: "F6F7F6" } });
-const TH = (t) => ({ text: t, options: { fontFace: MONO, fontSize: 10, color: "E8EBE9", fill: { color: "16191B" } } });
 
 // A1 · training data
 {
@@ -661,20 +741,22 @@ const TH = (t) => ({ text: t, options: { fontFace: MONO, fontSize: 10, color: "E
   footer(s, TOTAL, "results/RESULTS.md · results/scaling/learning_curve.json · docs/DATA.md");
 }
 
-// A2 · competitors
+// A2 · market math
 {
-  const s = appx("APPENDIX · A2", "Who else is here, and how we differ");
-  const R = (a) => a.map((t) => ({ text: t }));
+  const s = appx("APPENDIX · A2", "Market math, and the assumptions behind it");
+  const R = (a) => a.map((t, i) => ({ text: t, options: i === 0 ? { fontFace: SEMI } : {} }));
   s.addTable([
-    [TH("CATEGORY"), TH("EXAMPLES"), TH("US VS THEM")],
-    R(["Instruction platforms", "Tulip, Augmentir, Dozuki", "They show the steps; we watch the work. Natural integration partners"]),
-    R(["Line cameras", "Retrocausal, Invisible AI, Tulip Vision", "Fixed at a station on a production line. Can't follow a person around a machine"]),
-    R(["First-person coaching", "Viture Helix + NVIDIA, Strivr", "Closest. Hardware-led or high-touch; no published accuracy"]),
-    R(["Toolkits", "NVIDIA XR AI, Meta's camera toolkit, Android XR", "Complements: the plumbing we build on"]),
-    R(["General assistants", "Meta AI, Gemini Live", "Answer questions about a frame. No plan, no state, no calibration"]),
-  ], { ...tableOpts([2.6, 3.9, 5.83]), objectName: "table-competitors" });
-  tb(s, "If a big platform ships a coach: they're building our hardware and plumbing. We go deep in one vertical, with its procedures, records and data.", { x: 0.5, y: 5.65, w: 12.33, h: 0.7, fontSize: 15, color: C.accent2 });
-  footer(s, TOTAL, "docs/COMPETITORS.md · docs/POSITIONING.md · docs/PITCH_QA.md");
+    [TH(""), TH("WHO (BLS)"), TH("MATH"), TH("PER YEAR")],
+    R(["TAM", "Installation, maintenance + repair 6,086,190 · electricians 757,220 · production 8,565,760 = 15.4M", "15.4M × $50 a month × 12", "≈ $9.2B"]),
+    R(["SAM", "General maintenance + repair, machinery mechanics + millwrights, HVAC = 2.47M jobs, ~255k openings a year", "255k × $200 × 6 months = $306M; 2.47M × $50 × 12 = $1.48B", "≈ $1.8B"]),
+    R(["SOM", "1% of new maintenance techs ≈ 2,550 trainees a year, ~100 mid-size teams", "2,550 × $200 × 6 months", "≈ $3M ARR"]),
+  ], { ...tableOpts([1.1, 5.3, 4.33, 1.6]), rowH: 0.7, objectName: "table-market" });
+  tb(s, runs([
+    ["Prices are hypotheses. ", "$200 a month for coaching anchors on Tulip's $100–250 per station; $50 a month for every-worker records is a guess"],
+    ["Openings ", "include people changing jobs, so new-tech counts are an upper bound"],
+    ["Not counted: ", "other countries, field service outside these groups, aviation maintenance, and the robotics upside"],
+  ], 6), { x: 0.5, y: 5.3, w: 12.33, h: 1.3, fontSize: 13 });
+  footer(s, TOTAL, "BLS OEWS national tables, May 2025 · BLS Occupational Outlook Handbook · docs/PITCH_QA.md Part 7");
 }
 
 // A3 · unit economics
@@ -692,9 +774,25 @@ const TH = (t) => ({ text: t, options: { fontFace: MONO, fontSize: 10, color: "E
   footer(s, TOTAL, "Cost per video-minute: docs/CLAIMS.md · 2,520 coached minutes a month = 2 h/day × 21 days · senior-tech cost: BLS");
 }
 
-// A4 · glasses + voice
+// A4 · risks
 {
-  const s = appx("APPENDIX · A4", "Glasses and voice: what's built, and what's designed");
+  const s = appx("APPENDIX · A4", "The risks we see, and what we do about each");
+  const R = (a) => a.map((t, i) => ({ text: t, options: i === 0 ? { fontFace: SEMI } : {} }));
+  s.addTable([
+    [TH("RISK"), TH("WHAT WE DO")],
+    R(["Meta or Google ships a coach", "They're building our hardware and plumbing. We go deep in maintenance with its procedures, records and data, and run on their glasses"]),
+    R(["Glasses aren't ready", "It works on a tablet or phone today. Glasses are one more input adapter"]),
+    R(["Mistake detection is weak (4 of 17)", "Locked procedures, maintenance data and the tech saying \"done\" all add evidence. Measured in every pilot"]),
+    R(["Privacy, unions, monitoring laws", "Fast layers run locally; only event keyframes leave (14% of frames). Coaching for the worker, aggregates for the employer. Blur next"]),
+    R(["A wrong prompt on a safety-critical step", "Lockout and similar steps stay the tech's job. Praxis prompts and records them, and never approves them"]),
+    R(["Depending on model vendors", "The verifier is swappable in one config line, and our local student already handles routine checks"]),
+    R(["Solo founder", "The grant tests demand before hiring. First hires come after the pilot"]),
+  ], { ...tableOpts([3.6, 8.73]), rowH: 0.52, fontSize: 12, objectName: "table-risks" });
+  footer(s, TOTAL, "docs/PITCH_QA.md · docs/NEXT.md · docs/CLAIMS.md");
+}
+// A5 · glasses + voice
+{
+  const s = appx("APPENDIX · A5", "Glasses and voice: what's built, and what's designed");
   const cols = [
     ["BUILT", C.accent3, ["Runs live in real time on a recorded stream, with the local layers at about 50 ms per frame", "Model calls run in the background, so the live loop never waits (worst lag 0.8 s)", "Speaks its instructions; an urgent line cuts the queue", "Praxis Studio: the engine in a browser, on a camera, an upload or a test clip"]],
     ["DESIGNED, NOT BUILT", C.text2, ["Glasses input adapters (Meta camera toolkit, Android XR), one adapter pattern per device", "Voice input in natural language: \"skip that\", \"why?\", \"no, I'm still on the belt\"", "Push-to-talk by default; a protection headset in loud plants", "Face and badge blur; a local-model tier for sensitive sites"]],
@@ -707,6 +805,22 @@ const TH = (t) => ({ text: t, options: { fontFace: MONO, fontSize: 10, color: "E
     tb(s, items.map((t, j) => ({ text: t, options: { bullet: true, breakLine: j < items.length - 1, paraSpaceAfter: 8 } })), { x, y: 2.9, w: 5.91, h: 3.4, fontSize: 14 });
   });
   footer(s, TOTAL, "docs/GLASSES.md · docs/VOICE.md · docs/NEXT.md · we say \"designed to run on\" glasses until an adapter has run on that device");
+}
+
+// A6 · competitors
+{
+  const s = appx("APPENDIX · A6", "Who else is here, and how we differ");
+  const R = (a) => a.map((t) => ({ text: t }));
+  s.addTable([
+    [TH("CATEGORY"), TH("EXAMPLES"), TH("US VS THEM")],
+    R(["Instruction platforms", "Tulip, Augmentir, Dozuki", "They show the steps; we watch the work. Natural integration partners"]),
+    R(["Line cameras", "Retrocausal, Invisible AI, Tulip Vision", "Fixed at a station on a production line. Can't follow a person around a machine"]),
+    R(["First-person coaching", "Viture Helix + NVIDIA, Strivr", "Closest. Hardware-led or high-touch; no published accuracy"]),
+    R(["Toolkits", "NVIDIA XR AI, Meta's camera toolkit, Android XR", "Complements: the plumbing we build on"]),
+    R(["General assistants", "Meta AI, Gemini Live", "Answer questions about a frame. No plan, no state, no calibration"]),
+  ], { ...tableOpts([2.6, 3.9, 5.83]), objectName: "table-competitors" });
+  tb(s, "If a big platform ships a coach: they're building our hardware and plumbing. We go deep in one vertical, with its procedures, records and data.", { x: 0.5, y: 5.65, w: 12.33, h: 0.7, fontSize: 15, color: C.accent2 });
+  footer(s, TOTAL, "docs/COMPETITORS.md · docs/POSITIONING.md · docs/PITCH_QA.md");
 }
 
 (async () => {

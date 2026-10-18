@@ -23,38 +23,41 @@
  },
  "matched_subset": {
   "videos": [
-   "141"
+   "107",
+   "141",
+   "144",
+   "53"
   ],
-  "n": 12,
+  "n": 66,
   "general": {
-   "n": 12,
-   "correct": 0.25,
-   "adjacent": 0.0,
-   "wrong": 0.75,
-   "no_answer": 0.0,
-   "latency_ms_p50": null
-  },
-  "general+doc": {
-   "n": 12,
-   "correct": 0.25,
-   "adjacent": 0.08333333333333333,
+   "n": 66,
+   "correct": 0.3181818181818182,
+   "adjacent": 0.015151515151515152,
    "wrong": 0.6666666666666666,
    "no_answer": 0.0,
    "latency_ms_p50": null
   },
+  "general+doc": {
+   "n": 66,
+   "correct": 0.36363636363636365,
+   "adjacent": 0.09090909090909091,
+   "wrong": 0.5454545454545454,
+   "no_answer": 0.0,
+   "latency_ms_p50": null
+  },
   "praxis": {
-   "n": 12,
-   "correct": 0.08333333333333333,
-   "adjacent": 0.16666666666666666,
-   "wrong": 0.3333333333333333,
-   "no_answer": 0.4166666666666667,
+   "n": 66,
+   "correct": 0.18181818181818182,
+   "adjacent": 0.12121212121212122,
+   "wrong": 0.48484848484848486,
+   "no_answer": 0.21212121212121213,
    "latency_ms_p50": null
   },
   "praxis_believed": {
-   "n": 12,
-   "correct": 0.5,
-   "adjacent": 0.16666666666666666,
-   "wrong": 0.3333333333333333,
+   "n": 66,
+   "correct": 0.5909090909090909,
+   "adjacent": 0.13636363636363635,
+   "wrong": 0.2727272727272727,
    "no_answer": 0.0,
    "latency_ms_p50": null
   }
@@ -68,16 +71,16 @@
    "praxis": {
     "grade": "no_answer"
    },
-   "praxis_believed": {
-    "answer": "Screw board to bench.",
-    "node": "s3",
-    "grade": "correct"
-   },
    "general": {
     "answer": "Set the board flat on the wooden base and align its mounting holes with the standoffs.",
     "latency_ms": 4048.7101670587435,
     "cost_usd": 0.002652,
     "cached": true,
+    "grade": "correct"
+   },
+   "praxis_believed": {
+    "answer": "Screw board to bench.",
+    "node": "s3",
     "grade": "correct"
    },
    "general+doc": {
@@ -105,15 +108,15 @@
     "cached": true,
     "grade": "wrong"
    },
-   "praxis": {
-    "grade": "no_answer"
-   },
    "general": {
     "answer": "Disconnect any power source and verify the large capacitors are discharged before continuing to handle the board.",
     "latency_ms": 4752.753334003501,
     "cost_usd": 0.002632,
     "cached": true,
     "grade": "wrong"
+   },
+   "praxis": {
+    "grade": "no_answer"
    }
   },
   {
@@ -124,16 +127,16 @@
    "praxis": {
     "grade": "no_answer"
    },
+   "praxis_believed": {
+    "answer": "Supply on, current up, 5 V.",
+    "node": "s4",
+    "grade": "correct"
+   },
    "general": {
     "answer": "Set the bench supply to the board\u2019s specified voltage before connecting the board.",
     "latency_ms": 4716.009582974948,
     "cost_usd": 0.002602,
     "cached": true,
-    "grade": "correct"
-   },
-   "praxis_believed": {
-    "answer": "Supply on, current up, 5 V.",
-    "node": "s4",
     "grade": "correct"
    },
    "general+doc": {
@@ -161,15 +164,15 @@
     "cached": true,
     "grade": "wrong"
    },
+   "praxis": {
+    "grade": "no_answer"
+   },
    "general": {
     "answer": "Press the oscilloscope\u2019s lower-left power button to turn it on.",
     "latency_ms": 3926.502540940419,
     "cost_usd": 0.002562,
     "cached": true,
     "grade": "wrong"
-   },
-   "praxis": {
-    "grade": "no_answer"
    }
   },
   {
@@ -177,17 +180,17 @@
    "video": "141",
    "step": "s7",
    "praxis_logged": true,
-   "praxis_believed": {
-    "answer": "Supply off, knobs zero, unplug.",
-    "node": "s6",
-    "grade": "adjacent"
-   },
    "general+doc": {
     "answer": "Look at the soldering iron.",
     "latency_ms": 3846.1609999649227,
     "cost_usd": 0.005846,
     "cached": true,
     "grade": "wrong"
+   },
+   "praxis_believed": {
+    "answer": "Supply off, knobs zero, unplug.",
+    "node": "s6",
+    "grade": "adjacent"
    },
    "general": {
     "answer": "Remove the loosened mounting screw from the board and set it aside.",
@@ -205,8 +208,8 @@
    "video": "141",
    "step": "s8",
    "praxis_logged": true,
-   "praxis": {
-    "answer": "Sit down and place the high-voltage board on the work area. Use the screwdriver to take out the bench screws, then screw the board firmly to the workbench.",
+   "praxis_believed": {
+    "answer": "Screw board to bench.",
     "node": "s3",
     "grade": "wrong"
    },
@@ -224,8 +227,8 @@
     "cached": true,
     "grade": "correct"
    },
-   "praxis_believed": {
-    "answer": "Screw board to bench.",
+   "praxis": {
+    "answer": "Sit down and place the high-voltage board on the work area. Use the screwdriver to take out the bench screws, then screw the board firmly to the workbench.",
     "node": "s3",
     "grade": "wrong"
    }
@@ -235,6 +238,16 @@
    "video": "141",
    "step": "s9",
    "praxis_logged": true,
+   "praxis_believed": {
+    "answer": "Iron on, UP to 200.",
+    "node": "s8",
+    "grade": "adjacent"
+   },
+   "praxis": {
+    "answer": "Sit down and place the high-voltage board on the work area. Use the screwdriver to take out the bench screws, then screw the board firmly to the workbench.",
+    "node": "s3",
+    "grade": "wrong"
+   },
    "general+doc": {
     "answer": "Pick up the soldering iron by its insulated handle.",
     "latency_ms": 4536.857541068457,
@@ -242,21 +255,11 @@
     "cached": true,
     "grade": "wrong"
    },
-   "praxis_believed": {
-    "answer": "Iron on, UP to 200.",
-    "node": "s8",
-    "grade": "adjacent"
-   },
    "general": {
     "answer": "Bring the circuit board fully into view and inspect the area you intend to repair.",
     "latency_ms": 5303.069540997967,
     "cost_usd": 0.002862,
     "cached": true,
-    "grade": "wrong"
-   },
-   "praxis": {
-    "answer": "Sit down and place the high-voltage board on the work area. Use the screwdriver to take out the bench screws, then screw the board firmly to the workbench.",
-    "node": "s3",
     "grade": "wrong"
    }
   },
@@ -265,11 +268,6 @@
    "video": "141",
    "step": "s10",
    "praxis_logged": true,
-   "praxis_believed": {
-    "answer": "Iron on, UP to 200.",
-    "node": "s8",
-    "grade": "wrong"
-   },
    "praxis": {
     "answer": "Sit down and place the high-voltage board on the work area. Use the screwdriver to take out the bench screws, then screw the board firmly to the workbench.",
     "node": "s3",
@@ -287,6 +285,11 @@
     "latency_ms": 4246.916666976176,
     "cost_usd": 0.002632,
     "cached": true,
+    "grade": "wrong"
+   },
+   "praxis_believed": {
+    "answer": "Iron on, UP to 200.",
+    "node": "s8",
     "grade": "wrong"
    }
   },
@@ -414,7 +417,7 @@
    "id": "107_56",
    "video": "107",
    "step": "s5",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Verify the board is unpowered and its capacitors are discharged before handling the components.",
     "latency_ms": 4200.931833009236,
@@ -430,22 +433,28 @@
     "grade": "adjacent"
    },
    "praxis": {
-    "grade": "not_run"
+    "grade": "no_answer"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Sit, place board on work area.",
+    "node": "s5",
+    "grade": "correct"
    }
   },
   {
    "id": "107_64",
    "video": "107",
    "step": "s6",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the base of the electric screwdriver until it clicks.",
+    "node": "s6",
+    "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Click battery into screwdriver.",
+    "node": "s6",
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Connect the battery to the electric screwdriver.",
@@ -466,12 +475,16 @@
    "id": "107_90",
    "video": "107",
    "step": "s7",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the base of the electric screwdriver until it clicks.",
+    "node": "s6",
+    "grade": "adjacent"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Screw board down.",
+    "node": "s7",
+    "grade": "correct"
    },
    "general": {
     "answer": "Hold the board steady and gently tighten the mounting screw at its right edge with the drill.",
@@ -492,9 +505,11 @@
    "id": "107_245",
    "video": "107",
    "step": "s7",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Iron on, UP to 200.",
+    "node": "s12",
+    "grade": "wrong"
    },
    "general": {
     "answer": "Pick up the soldering iron by its insulated handle from the holder beside the station.",
@@ -511,14 +526,16 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the base of the electric screwdriver until it clicks.",
+    "node": "s6",
+    "grade": "adjacent"
    }
   },
   {
    "id": "107_421",
    "video": "107",
    "step": "s8",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Adjust the power supply\u2019s current knob until the green LED lights up.",
     "latency_ms": 4701.67733298149,
@@ -527,7 +544,9 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply on, current to green, 5 V.",
+    "node": "s8",
+    "grade": "correct"
    },
    "general": {
     "answer": "Switch off the bench power supply before connecting the board for testing.",
@@ -537,14 +556,16 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Look at the soldering iron and switch it on at the socket. Press the yellow UP button until it shows 200 degrees.",
+    "node": "s12",
+    "grade": "wrong"
    }
   },
   {
    "id": "107_465",
    "video": "107",
    "step": "s15",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Activate oscilloscope channel 2 by pressing the blue-outlined \u201cCH2 MENU\u201d button.",
     "latency_ms": 3904.945832910016,
@@ -560,17 +581,21 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2-7.",
+    "node": "s15",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "node": "s15",
+    "grade": "correct"
    }
   },
   {
    "id": "107_645",
    "video": "107",
    "step": "s15",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Bring the electrical board into view so you can identify the next test point before connecting any leads.",
     "latency_ms": 3487.671541981399,
@@ -579,10 +604,14 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2-7.",
+    "node": "s15",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "node": "s15",
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Remove the board from the workbench using the electric screwdriver.",
@@ -596,7 +625,7 @@
    "id": "107_842",
    "video": "107",
    "step": "s16",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Adjust the bench power supply\u2019s voltage knob to the board\u2019s required supply voltage before connecting it.",
     "latency_ms": 3062.1798749780282,
@@ -605,7 +634,9 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply off, knobs zero, unclip.",
+    "node": "s10",
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Adjust the power supply\u2019s voltage knob to set the output to 5 volts.",
@@ -615,14 +646,16 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "node": "s15",
+    "grade": "adjacent"
    }
   },
   {
    "id": "107_965",
    "video": "107",
    "step": "s16",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Rotate the position knob above the blue-outlined CH2 MENU button.",
     "latency_ms": 3392.0170000055805,
@@ -638,19 +671,25 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2-7.",
+    "node": "s15",
+    "grade": "adjacent"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "node": "s15",
+    "grade": "adjacent"
    }
   },
   {
    "id": "107_1101",
    "video": "107",
    "step": "s17",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2-7.",
+    "node": "s15",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Turn on the oscilloscope using the socket switch.",
@@ -660,7 +699,9 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "node": "s15",
+    "grade": "wrong"
    },
    "general": {
     "answer": "Turn on the oscilloscope and check that its display lights up.",
@@ -674,12 +715,16 @@
    "id": "107_1120",
    "video": "107",
    "step": "s17",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis": {
-    "grade": "not_run"
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "node": "s15",
+    "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2-7.",
+    "node": "s15",
+    "grade": "wrong"
    },
    "general": {
     "answer": "Verify that the board is disconnected from power and its large capacitors are safely discharged before continuing.",
@@ -700,9 +745,9 @@
    "id": "144_47",
    "video": "144",
    "step": "s3",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis": {
-    "grade": "not_run"
+    "grade": "no_answer"
    },
    "general": {
     "answer": "Before touching the board, isolate its power supply and verify absence of voltage with a properly rated tester.",
@@ -712,7 +757,9 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Panel A: press both greens.",
+    "node": "s3",
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Return to the workbench and sit down.",
@@ -726,9 +773,11 @@
    "id": "144_83",
    "video": "144",
    "step": "s5",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "correct"
    },
    "general": {
     "answer": "Slide the battery pack into the drill\u2019s base until it clicks into place.",
@@ -738,7 +787,9 @@
     "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Battery into screwdriver.",
+    "node": "s5",
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Connect the battery to the electric screwdriver.",
@@ -752,24 +803,28 @@
    "id": "144_117",
    "video": "144",
    "step": "s6",
-   "praxis_logged": false,
-   "general": {
-    "answer": "Place the screw in the board\u2019s lower-left mounting hole and tighten it gently.",
-    "latency_ms": 4813.657791935839,
-    "cost_usd": 0.002952,
-    "cached": true,
-    "grade": "correct"
-   },
-   "praxis_believed": {
-    "grade": "not_run"
-   },
-   "praxis": {
-    "grade": "not_run"
-   },
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Secure the board to the workbench using the electric screwdriver.",
     "latency_ms": 3067.676250007935,
     "cost_usd": 0.005364,
+    "cached": true,
+    "grade": "correct"
+   },
+   "praxis_believed": {
+    "answer": "Unscrew bench, screw board down.",
+    "node": "s6",
+    "grade": "correct"
+   },
+   "praxis": {
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "adjacent"
+   },
+   "general": {
+    "answer": "Place the screw in the board\u2019s lower-left mounting hole and tighten it gently.",
+    "latency_ms": 4813.657791935839,
+    "cost_usd": 0.002952,
     "cached": true,
     "grade": "correct"
    }
@@ -778,24 +833,28 @@
    "id": "144_155",
    "video": "144",
    "step": "s7",
-   "praxis_logged": false,
-   "general+doc": {
-    "answer": "Adjust the power supply\u2019s current knob until the green LED lights up.",
-    "latency_ms": 6792.347916983999,
-    "cost_usd": 0.005424,
-    "cached": true,
-    "grade": "wrong"
-   },
-   "praxis_believed": {
-    "grade": "not_run"
-   },
-   "praxis": {
-    "grade": "not_run"
-   },
+   "praxis_logged": true,
    "general": {
     "answer": "Turn on the oscilloscope using its front-panel power button.",
     "latency_ms": 3978.5767500288785,
     "cost_usd": 0.002642,
+    "cached": true,
+    "grade": "wrong"
+   },
+   "praxis_believed": {
+    "answer": "Supply on, 5 V, watch red LED.",
+    "node": "s7",
+    "grade": "correct"
+   },
+   "praxis": {
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
+   },
+   "general+doc": {
+    "answer": "Adjust the power supply\u2019s current knob until the green LED lights up.",
+    "latency_ms": 6792.347916983999,
+    "cost_usd": 0.005424,
     "cached": true,
     "grade": "wrong"
    }
@@ -804,7 +863,7 @@
    "id": "144_177",
    "video": "144",
    "step": "s7",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Secure the black alligator clip to the exposed metal lead held in your left hand.",
     "latency_ms": 3632.0482079172507,
@@ -813,10 +872,14 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply on, 5 V, watch red LED.",
+    "node": "s7",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Connect the power supply cables to the board\u2019s power points.",
@@ -830,7 +893,7 @@
    "id": "144_211",
    "video": "144",
    "step": "s9",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Keep the driver squarely seated on the board\u2019s mounting screw and carefully loosen it.",
     "latency_ms": 5088.173082913272,
@@ -846,17 +909,21 @@
     "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply on, 5 V, watch red LED.",
+    "node": "s7",
+    "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    }
   },
   {
    "id": "144_286",
    "video": "144",
    "step": "s9",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Lift the soldering iron from its holder and bring the tip toward the board\u2019s solder joints.",
     "latency_ms": 5029.771583969705,
@@ -865,10 +932,14 @@
     "grade": "adjacent"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Say Record, toggle lamp.",
+    "node": "s1",
+    "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Grasp the black capacitor on the board with pliers.",
@@ -882,7 +953,7 @@
    "id": "144_400",
    "video": "144",
    "step": "s10",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Lower the soldering iron temperature to 160\u00b0C using the yellow DOWN button.",
     "latency_ms": 8043.570582987741,
@@ -891,7 +962,9 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general": {
     "answer": "Move the drill aside to clear working space around the circuit board.",
@@ -901,14 +974,16 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "200\u00b0C, heat both pins, both sides.",
+    "node": "s10",
+    "grade": "correct"
    }
   },
   {
    "id": "144_428",
    "video": "144",
    "step": "s12",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Secure the board to the workbench using the electric screwdriver.",
     "latency_ms": 2569.2177079617977,
@@ -917,7 +992,9 @@
     "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general": {
     "answer": "Set the board flat on the wooden support with the components facing up.",
@@ -927,19 +1004,25 @@
     "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply on, 5 V, watch red LED.",
+    "node": "s7",
+    "grade": "correct"
    }
   },
   {
    "id": "144_466",
    "video": "144",
    "step": "s12",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Unscrew bench, screw board down.",
+    "node": "s6",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general": {
     "answer": "Set the bench power supply to the board\u2019s specified voltage before connecting the board.",
@@ -960,7 +1043,7 @@
    "id": "144_529",
    "video": "144",
    "step": "s13",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Secure the oscilloscope probe connection, then check the displayed waveform.",
     "latency_ms": 4222.791958018206,
@@ -969,10 +1052,14 @@
     "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2, ground TP1, probe TP2\u20137.",
+    "node": "s13",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Disconnect the power supply cables from the board.",
@@ -986,9 +1073,11 @@
    "id": "144_622",
    "video": "144",
    "step": "s13",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Turn the position knob above the blue-outlined CH2 MENU button.",
@@ -1005,16 +1094,20 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2, ground TP1, probe TP2\u20137.",
+    "node": "s13",
+    "grade": "correct"
    }
   },
   {
    "id": "144_727",
    "video": "144",
    "step": "s14",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2, ground TP1, probe TP2\u20137.",
+    "node": "s13",
+    "grade": "adjacent"
    },
    "general": {
     "answer": "With the power supply off, inspect the board\u2019s power leads and oscilloscope probe connections.",
@@ -1024,7 +1117,9 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Disconnect the oscilloscope probe tip and ground clip from the board.",
@@ -1038,7 +1133,7 @@
    "id": "144_743",
    "video": "144",
    "step": "s14",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Deactivate oscilloscope channel 2 using the blue-outlined \u201cCH2 MENU\u201d button.",
     "latency_ms": 3948.808833025396,
@@ -1047,10 +1142,14 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2, ground TP1, probe TP2\u20137.",
+    "node": "s13",
+    "grade": "adjacent"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general": {
     "answer": "Switch off the bench power supply before reconnecting the loose leads to the board.",
@@ -1064,7 +1163,7 @@
    "id": "144_779",
    "video": "144",
    "step": "s15",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Turn on the power supply using the socket switch.",
     "latency_ms": 4396.085583022796,
@@ -1073,7 +1172,9 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general": {
     "answer": "Place the circuit board securely on the wooden work surface before connecting the test leads.",
@@ -1083,14 +1184,16 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Unscrew bench, screw board down.",
+    "node": "s6",
+    "grade": "wrong"
    }
   },
   {
    "id": "144_846",
    "video": "144",
    "step": "s15",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Touch the black capacitor\u2019s second pin with the soldering iron probe for 5 seconds.",
     "latency_ms": 4441.777041996829,
@@ -1106,17 +1209,21 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "200\u00b0C, heat both pins, both sides.",
+    "node": "s10",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    }
   },
   {
    "id": "144_930",
    "video": "144",
    "step": "s16",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Align the display assembly with the mounting posts and gently lower it into place without pinching any wires.",
     "latency_ms": 3831.365166930482,
@@ -1125,7 +1232,9 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "node": "s5",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Carefully remove the display from the board.",
@@ -1135,14 +1244,16 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Unmount, 4 back screws, display off.",
+    "node": "s9",
+    "grade": "wrong"
    }
   },
   {
    "id": "144_1021",
    "video": "144",
    "step": "s16",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Set the board flat on the wooden work surface with the display facing up.",
     "latency_ms": 2942.4072090769187,
@@ -1158,22 +1269,24 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Place the display back on the board and screw it on with the electric screwdriver.",
+    "node": "s16",
+    "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Screw display back on.",
+    "node": "s16",
+    "grade": "wrong"
    }
   },
   {
    "id": "144_1139",
    "video": "144",
    "step": "s17",
-   "praxis_logged": false,
-   "general": {
-    "answer": "Connect the red power clip to the board\u2019s positive supply terminal, with the power supply output off.",
-    "latency_ms": 5554.187749978155,
-    "cost_usd": 0.003312,
-    "cached": true,
+   "praxis_logged": true,
+   "praxis": {
+    "answer": "Screw the board down, power it at 5 volts and check the red LED. Then repeat the oscilloscope checks on test points 2 to 7, and switch off and disconnect everything.",
+    "node": "s17",
     "grade": "correct"
    },
    "general+doc": {
@@ -1184,19 +1297,29 @@
     "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Mount, 5 V, scope TP2\u20137, shut down.",
+    "node": "s17",
+    "grade": "correct"
    },
-   "praxis": {
-    "grade": "not_run"
+   "general": {
+    "answer": "Connect the red power clip to the board\u2019s positive supply terminal, with the power supply output off.",
+    "latency_ms": 5554.187749978155,
+    "cost_usd": 0.003312,
+    "cached": true,
+    "grade": "correct"
    }
   },
   {
    "id": "144_1293",
    "video": "144",
    "step": "s17",
-   "praxis_logged": false,
-   "praxis": {
-    "grade": "not_run"
+   "praxis_logged": true,
+   "general": {
+    "answer": "Check the oscilloscope waveform before making any adjustments to the powered board.",
+    "latency_ms": 3689.7534580202773,
+    "cost_usd": 0.002602,
+    "cached": true,
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Turn the oscilloscope\u2019s position knob located above the blue-outlined CH2 MENU button.",
@@ -1206,13 +1329,13 @@
     "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Mount, 5 V, scope TP2\u20137, shut down.",
+    "node": "s17",
+    "grade": "correct"
    },
-   "general": {
-    "answer": "Check the oscilloscope waveform before making any adjustments to the powered board.",
-    "latency_ms": 3689.7534580202773,
-    "cost_usd": 0.002602,
-    "cached": true,
+   "praxis": {
+    "answer": "Screw the board down, power it at 5 volts and check the red LED. Then repeat the oscilloscope checks on test points 2 to 7, and switch off and disconnect everything.",
+    "node": "s17",
     "grade": "correct"
    }
   },
@@ -1220,7 +1343,7 @@
    "id": "144_1459",
    "video": "144",
    "step": "s19",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Move the circuit board into the clear work area in front of the soldering station.",
     "latency_ms": 5113.72612498235,
@@ -1229,7 +1352,9 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Screw the board down, power it at 5 volts and check the red LED. Then repeat the oscilloscope checks on test points 2 to 7, and switch off and disconnect everything.",
+    "node": "s17",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Turn on the screwdriver\u2019s battery charger using the socket switch.",
@@ -1239,14 +1364,16 @@
     "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Battery to charger, log results.",
+    "node": "s19",
+    "grade": "correct"
    }
   },
   {
    "id": "53_61",
    "video": "53",
    "step": "s3",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Remove the screws from the workbench using the screwdriver.",
     "latency_ms": 4731.322041945532,
@@ -1255,10 +1382,12 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Screw board to bench.",
+    "node": "s3",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "grade": "no_answer"
    },
    "general": {
     "answer": "Look down at the circuit board on the wooden mat and inspect it for visible damage or loose connections.",
@@ -1272,12 +1401,14 @@
    "id": "53_110",
    "video": "53",
    "step": "s3",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis": {
-    "grade": "not_run"
+    "grade": "no_answer"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Screw board to bench.",
+    "node": "s3",
+    "grade": "correct"
    },
    "general": {
     "answer": "Keep the screwdriver seated in the board\u2019s upper-right screw and turn counterclockwise to loosen it.",
@@ -1298,12 +1429,14 @@
    "id": "53_174",
    "video": "53",
    "step": "s4",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply on, 5 V, connect, check LED.",
+    "node": "s4",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "grade": "no_answer"
    },
    "general+doc": {
     "answer": "Continue adjusting the voltage knob until the power supply reads 5.0 V.",
@@ -1324,7 +1457,7 @@
    "id": "53_190",
    "video": "53",
    "step": "s4",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Clamp the red alligator clip onto the exposed component lead held in your right hand.",
     "latency_ms": 3792.3477919539437,
@@ -1333,10 +1466,12 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "grade": "no_answer"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply on, 5 V, connect, check LED.",
+    "node": "s4",
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Observe the board for a few seconds to verify that the red LED turns on.",
@@ -1350,7 +1485,7 @@
    "id": "53_219",
    "video": "53",
    "step": "s6",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Secure the board to the workbench using the screwdriver.",
     "latency_ms": 3212.3075000708923,
@@ -1366,22 +1501,26 @@
     "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "grade": "no_answer"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply on, 5 V, connect, check LED.",
+    "node": "s4",
+    "grade": "wrong"
    }
   },
   {
    "id": "53_262",
    "video": "53",
    "step": "s6",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply on, 5 V, connect, check LED.",
+    "node": "s4",
+    "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "grade": "no_answer"
    },
    "general+doc": {
     "answer": "Unscrew the four screws on the back of the board using the screwdriver.",
@@ -1402,12 +1541,14 @@
    "id": "53_318",
    "video": "53",
    "step": "s7",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Iron on, UP to 200.",
+    "node": "s7",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "grade": "no_answer"
    },
    "general+doc": {
     "answer": "Press the yellow UP button until the soldering iron\u2019s set temperature reaches 200\u00b0C.",
@@ -1428,7 +1569,7 @@
    "id": "53_344",
    "video": "53",
    "step": "s7",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Grab the black capacitor on the board with the pliers.",
     "latency_ms": 4080.6159999920055,
@@ -1437,7 +1578,9 @@
     "grade": "adjacent"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Pliers on cap, 5 s per pin.",
+    "node": "s8",
+    "grade": "adjacent"
    },
    "general": {
     "answer": "Place the electrical board on the clear workbench area so you can inspect it.",
@@ -1447,14 +1590,16 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "adjacent"
    }
   },
   {
    "id": "53_380",
    "video": "53",
    "step": "s8",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Lower the soldering iron temperature to 160\u00b0C using the yellow DOWN button.",
     "latency_ms": 4132.209083996713,
@@ -1463,10 +1608,14 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Unmount, 200, heat front and back pins.",
+    "node": "s14",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "correct"
    },
    "general": {
     "answer": "Place the soldering iron in its stand before repositioning the circuit board.",
@@ -1480,10 +1629,7 @@
    "id": "53_445",
    "video": "53",
    "step": "s8",
-   "praxis_logged": false,
-   "praxis_believed": {
-    "grade": "not_run"
-   },
+   "praxis_logged": true,
    "general": {
     "answer": "Hold the soldering iron tip against the solder joint until the solder melts.",
     "latency_ms": 3889.760415884666,
@@ -1499,14 +1645,26 @@
     "grade": "adjacent"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "correct"
+   },
+   "praxis_believed": {
+    "answer": "Unmount, 200, heat front and back pins.",
+    "node": "s14",
+    "grade": "wrong"
    }
   },
   {
    "id": "53_526",
    "video": "53",
    "step": "s11",
-   "praxis_logged": false,
+   "praxis_logged": true,
+   "praxis_believed": {
+    "answer": "Screw board to bench.",
+    "node": "s3",
+    "grade": "correct"
+   },
    "general": {
     "answer": "Hold the board steady and continue turning the screwdriver on the fastener at the board\u2019s upper-right edge.",
     "latency_ms": 2754.772874992341,
@@ -1522,17 +1680,16 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
-   },
-   "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "wrong"
    }
   },
   {
    "id": "53_551",
    "video": "53",
    "step": "s11",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Disable the power supply output, then place the board on the clear workbench for inspection.",
     "latency_ms": 4439.992250059731,
@@ -1541,10 +1698,14 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Screw board to bench.",
+    "node": "s3",
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Adjust the power supply\u2019s current knob until the green LED lights up.",
@@ -1558,12 +1719,16 @@
    "id": "53_595",
    "video": "53",
    "step": "s12",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply on, 5 V, connect, check LED.",
+    "node": "s4",
+    "grade": "adjacent"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Connect the oscilloscope probe\u2019s ground clip to test point 1 on the board.",
@@ -1584,7 +1749,7 @@
    "id": "53_684",
    "video": "53",
    "step": "s12",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Adjust the oscilloscope\u2019s time base and trigger controls to stabilize the waveform from the board.",
     "latency_ms": 3913.3336250670254,
@@ -1593,10 +1758,14 @@
     "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2 to TP7.",
+    "node": "s12",
+    "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Observe the oscilloscope\u2019s display.",
@@ -1610,7 +1779,7 @@
    "id": "53_787",
    "video": "53",
    "step": "s14",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Keep the board steady and continue loosening the top-right screw with the screwdriver.",
     "latency_ms": 3000.4848750540987,
@@ -1619,10 +1788,14 @@
     "grade": "correct"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2 to TP7.",
+    "node": "s12",
+    "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Unscrew the remaining screws on the back of the board using the screwdriver.",
@@ -1636,9 +1809,11 @@
    "id": "53_1019",
    "video": "53",
    "step": "s14",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Carefully disconnect and remove the display from the board.",
@@ -1655,16 +1830,20 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Supply on, 5 V, connect, check LED.",
+    "node": "s4",
+    "grade": "wrong"
    }
   },
   {
    "id": "53_1262",
    "video": "53",
    "step": "s16",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Mount, power, check LED, shut off.",
+    "node": "s11",
+    "grade": "correct"
    },
    "general+doc": {
     "answer": "Adjust the power supply\u2019s voltage knob until the display reads 5 V.",
@@ -1681,16 +1860,20 @@
     "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "wrong"
    }
   },
   {
    "id": "53_1279",
    "video": "53",
    "step": "s16",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "wrong"
    },
    "general+doc": {
     "answer": "Connect the power supply cables to the board\u2019s power points.",
@@ -1707,14 +1890,16 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2 to TP7.",
+    "node": "s12",
+    "grade": "adjacent"
    }
   },
   {
    "id": "53_1316",
    "video": "53",
    "step": "s17",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Connect the oscilloscope probe\u2019s ground clip to test point 1 on the board.",
     "latency_ms": 2635.8059169724584,
@@ -1723,10 +1908,14 @@
     "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2 to TP7.",
+    "node": "s12",
+    "grade": "correct"
    },
    "general": {
     "answer": "Attach the oscilloscope probe\u2019s ground clip to the board\u2019s ground, then place the probe tip on the test point you want to measure.",
@@ -1740,7 +1929,7 @@
    "id": "53_1410",
    "video": "53",
    "step": "s17",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general+doc": {
     "answer": "Press the oscilloscope\u2019s \u201cAuto Set\u201d button.",
     "latency_ms": 3523.196000023745,
@@ -1749,7 +1938,9 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2 to TP7.",
+    "node": "s12",
+    "grade": "correct"
    },
    "general": {
     "answer": "Hold the oscilloscope probe steady on the board\u2019s test point and check the displayed waveform.",
@@ -1759,14 +1950,16 @@
     "grade": "correct"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "wrong"
    }
   },
   {
    "id": "53_1516",
    "video": "53",
    "step": "s18",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "general": {
     "answer": "Verify the board is disconnected from power, then inspect it for damaged components and loose connections.",
     "latency_ms": 3575.8072920143604,
@@ -1775,7 +1968,9 @@
     "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "CH2 on, ground TP1, probe TP2 to TP7.",
+    "node": "s12",
+    "grade": "adjacent"
    },
    "general+doc": {
     "answer": "Observe the low-voltage board for a few seconds.",
@@ -1785,19 +1980,25 @@
     "grade": "wrong"
    },
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "wrong"
    }
   },
   {
    "id": "53_1576",
    "video": "53",
    "step": "s18",
-   "praxis_logged": false,
+   "praxis_logged": true,
    "praxis": {
-    "grade": "not_run"
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "node": "s8",
+    "grade": "wrong"
    },
    "praxis_believed": {
-    "grade": "not_run"
+    "answer": "Screw board to bench.",
+    "node": "s3",
+    "grade": "wrong"
    },
    "general": {
     "answer": "Hold the board steady and seat the screwdriver in the lower-left mounting screw.",
@@ -1816,7 +2017,412 @@
   }
  ],
  "spend_openai_usd": 0.547418,
- "spend_judge_usd": 0.512412,
- "spend_usd_non_openai": 0.512412,
- "spend_note": "cumulative over runs of this test (OpenAI calls are also counted from their response cache in praxis.spend)"
+ "spend_judge_usd": 0.908172,
+ "spend_usd_non_openai": 0.908172,
+ "praxis_shown_postfix": {
+  "label": "post-fix, same moments (display rule replayed on the logged beliefs; threshold fixed before judging)",
+  "n": 66,
+  "correct": 32,
+  "adjacent": 12,
+  "wrong": 22,
+  "no_answer": 0,
+  "rows": [
+   {
+    "id": "141_44",
+    "node": "s2",
+    "answer": "Walk over to panel A and look at it for a moment. Then press both green buttons.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "141_62",
+    "node": "s3",
+    "answer": "Sit down and place the high-voltage board on the work area. Use the screwdriver to take out the bench screws, then screw the board firmly to the workbench.",
+    "grade": "correct"
+   },
+   {
+    "id": "141_93",
+    "node": "s4",
+    "answer": "Look at the power supply and switch it on with the turret switch. Turn the current knob until the green LED lights, then turn the voltage knob to 5 volts.",
+    "grade": "correct"
+   },
+   {
+    "id": "141_114",
+    "node": "s4",
+    "answer": "Look at the power supply and switch it on with the turret switch. Turn the current knob until the green LED lights, then turn the voltage knob to 5 volts.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "141_148",
+    "node": "s5",
+    "answer": "Connect the power supply cables to the board's power points. Then watch the board for a few seconds to make sure the red and green LEDs come on.",
+    "grade": "wrong"
+   },
+   {
+    "id": "141_170",
+    "node": "s3",
+    "answer": "Sit down and place the high-voltage board on the work area. Use the screwdriver to take out the bench screws, then screw the board firmly to the workbench.",
+    "grade": "wrong"
+   },
+   {
+    "id": "141_188",
+    "node": "s8",
+    "answer": "Look at the soldering iron and switch it on with the turret switch. Press the yellow UP button until the display reads 200 degrees.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "141_214",
+    "node": "s8",
+    "answer": "Look at the soldering iron and switch it on with the turret switch. Press the yellow UP button until the display reads 200 degrees.",
+    "grade": "wrong"
+   },
+   {
+    "id": "141_283",
+    "node": "s8",
+    "answer": "Look at the soldering iron and switch it on with the turret switch. Press the yellow UP button until the display reads 200 degrees.",
+    "grade": "wrong"
+   },
+   {
+    "id": "141_366",
+    "node": "s13",
+    "answer": "Switch on the oscilloscope with the turret switch. Then press the CH2 MENU button with the blue outline.",
+    "grade": "correct"
+   },
+   {
+    "id": "141_421",
+    "node": "s14",
+    "answer": "Clip the probe's ground to test point 1. Touch the probe tip to test point 2, press Auto Set, check the display, and adjust the position knob above CH2 MENU. Repeat for test points 3 to 7.",
+    "grade": "correct"
+   },
+   {
+    "id": "141_671",
+    "node": "s7",
+    "answer": "Use the screwdriver to unscrew the board from the workbench and free it.",
+    "grade": "wrong"
+   },
+   {
+    "id": "107_56",
+    "node": "s5",
+    "answer": "Go back to the workbench and sit down. Look at the high voltage board for a moment, then place it on the work area.",
+    "grade": "correct"
+   },
+   {
+    "id": "107_64",
+    "node": "s6",
+    "answer": "Slide the battery into the base of the electric screwdriver until it clicks.",
+    "grade": "correct"
+   },
+   {
+    "id": "107_90",
+    "node": "s7",
+    "answer": "Use the electric screwdriver to secure the board to the workbench. On the first pass, take the screws out of the workbench first.",
+    "grade": "correct"
+   },
+   {
+    "id": "107_245",
+    "node": "s12",
+    "answer": "Look at the soldering iron and switch it on at the socket. Press the yellow UP button until it shows 200 degrees.",
+    "grade": "wrong"
+   },
+   {
+    "id": "107_421",
+    "node": "s8",
+    "answer": "Look at the power supply and switch it on at the socket. Turn the current knob until the green LED lights up, then turn the voltage knob to 5 volts.",
+    "grade": "correct"
+   },
+   {
+    "id": "107_465",
+    "node": "s15",
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "grade": "correct"
+   },
+   {
+    "id": "107_645",
+    "node": "s15",
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "grade": "correct"
+   },
+   {
+    "id": "107_842",
+    "node": "s6",
+    "answer": "Slide the battery into the base of the electric screwdriver until it clicks.",
+    "grade": "wrong"
+   },
+   {
+    "id": "107_965",
+    "node": "s15",
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "107_1101",
+    "node": "s15",
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "grade": "wrong"
+   },
+   {
+    "id": "107_1120",
+    "node": "s15",
+    "answer": "Switch the oscilloscope on and press the blue CH2 MENU button. Clip the ground to test point 1, touch the tip to test point 2, press Auto Set, watch the screen, and turn the position knob. Do this for test points 3 to 7.",
+    "grade": "wrong"
+   },
+   {
+    "id": "144_47",
+    "node": "s1",
+    "answer": "Sit at the workbench and say \"Record\", then wait for the beep. Look at the bench lamp and switch it on, then off.",
+    "grade": "wrong"
+   },
+   {
+    "id": "144_83",
+    "node": "s5",
+    "answer": "Slide the battery into the bottom of the electric screwdriver until it clicks.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_117",
+    "node": "s6",
+    "answer": "Use the screwdriver to take the screws out of the workbench, then use them to screw the board down.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_155",
+    "node": "s7",
+    "answer": "Look at the power supply and switch it on at the socket. Turn the current knob until the green LED lights, set voltage to 5 volts, connect the cables to the board and watch for the red LED.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_177",
+    "node": "s7",
+    "answer": "Look at the power supply and switch it on at the socket. Turn the current knob until the green LED lights, set voltage to 5 volts, connect the cables to the board and watch for the red LED.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_211",
+    "node": "s7",
+    "answer": "Look at the power supply and switch it on at the socket. Turn the current knob until the green LED lights, set voltage to 5 volts, connect the cables to the board and watch for the red LED.",
+    "grade": "wrong"
+   },
+   {
+    "id": "144_286",
+    "node": "s6",
+    "answer": "Use the screwdriver to take the screws out of the workbench, then use them to screw the board down.",
+    "grade": "wrong"
+   },
+   {
+    "id": "144_400",
+    "node": "s10",
+    "answer": "Turn on the soldering iron and press UP to 200 degrees. Hold the black capacitor with pliers and touch each pin for 5 seconds, front then back with the board upright.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_428",
+    "node": "s10",
+    "answer": "Turn on the soldering iron and press UP to 200 degrees. Hold the black capacitor with pliers and touch each pin for 5 seconds, front then back with the board upright.",
+    "grade": "wrong"
+   },
+   {
+    "id": "144_466",
+    "node": "s6",
+    "answer": "Use the screwdriver to take the screws out of the workbench, then use them to screw the board down.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_529",
+    "node": "s13",
+    "answer": "Turn on the oscilloscope and press the blue CH2 MENU button. Clip ground to test point 1, touch the tip to point 2, press Auto Set, watch the screen and turn the position knob; repeat for points 3 to 7.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_622",
+    "node": "s13",
+    "answer": "Turn on the oscilloscope and press the blue CH2 MENU button. Clip ground to test point 1, touch the tip to point 2, press Auto Set, watch the screen and turn the position knob; repeat for points 3 to 7.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_727",
+    "node": "s13",
+    "answer": "Turn on the oscilloscope and press the blue CH2 MENU button. Clip ground to test point 1, touch the tip to point 2, press Auto Set, watch the screen and turn the position knob; repeat for points 3 to 7.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "144_743",
+    "node": "s13",
+    "answer": "Turn on the oscilloscope and press the blue CH2 MENU button. Clip ground to test point 1, touch the tip to point 2, press Auto Set, watch the screen and turn the position knob; repeat for points 3 to 7.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "144_779",
+    "node": "s6",
+    "answer": "Use the screwdriver to take the screws out of the workbench, then use them to screw the board down.",
+    "grade": "wrong"
+   },
+   {
+    "id": "144_846",
+    "node": "s10",
+    "answer": "Turn on the soldering iron and press UP to 200 degrees. Hold the black capacitor with pliers and touch each pin for 5 seconds, front then back with the board upright.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_930",
+    "node": "s10",
+    "answer": "Turn on the soldering iron and press UP to 200 degrees. Hold the black capacitor with pliers and touch each pin for 5 seconds, front then back with the board upright.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "144_1021",
+    "node": "s16",
+    "answer": "Place the display back on the board and screw it on with the electric screwdriver.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_1139",
+    "node": "s17",
+    "answer": "Screw the board down, power it at 5 volts and check the red LED. Then repeat the oscilloscope checks on test points 2 to 7, and switch off and disconnect everything.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_1293",
+    "node": "s17",
+    "answer": "Screw the board down, power it at 5 volts and check the red LED. Then repeat the oscilloscope checks on test points 2 to 7, and switch off and disconnect everything.",
+    "grade": "correct"
+   },
+   {
+    "id": "144_1459",
+    "node": "s19",
+    "answer": "Take the battery out of the screwdriver and put it on the charger, then switch the charger on at the socket. Write the repair results in the log.",
+    "grade": "correct"
+   },
+   {
+    "id": "53_61",
+    "node": "s1",
+    "answer": "Sit at the workbench and say \"Record\" clearly, then wait for the beep. Look at the bench lamp and switch it on, then off again.",
+    "grade": "wrong"
+   },
+   {
+    "id": "53_110",
+    "node": "s3",
+    "answer": "Go back and sit at the bench, then look at the low-voltage board for a moment. Place it on the work area, take the screws out of the bench with the screwdriver, and screw the board down.",
+    "grade": "correct"
+   },
+   {
+    "id": "53_174",
+    "node": "s4",
+    "answer": "Look at the power supply and switch it on at the socket. Turn the current knob until the green LED lights, set the voltage to 5 volts, and connect the cables to the board's power points. Then watch for the red LED on the board.",
+    "grade": "correct"
+   },
+   {
+    "id": "53_190",
+    "node": "s4",
+    "answer": "Look at the power supply and switch it on at the socket. Turn the current knob until the green LED lights, set the voltage to 5 volts, and connect the cables to the board's power points. Then watch for the red LED on the board.",
+    "grade": "correct"
+   },
+   {
+    "id": "53_219",
+    "node": "s4",
+    "answer": "Look at the power supply and switch it on at the socket. Turn the current knob until the green LED lights, set the voltage to 5 volts, and connect the cables to the board's power points. Then watch for the red LED on the board.",
+    "grade": "wrong"
+   },
+   {
+    "id": "53_262",
+    "node": "s3",
+    "answer": "Go back and sit at the bench, then look at the low-voltage board for a moment. Place it on the work area, take the screws out of the bench with the screwdriver, and screw the board down.",
+    "grade": "wrong"
+   },
+   {
+    "id": "53_318",
+    "node": "s3",
+    "answer": "Go back and sit at the bench, then look at the low-voltage board for a moment. Place it on the work area, take the screws out of the bench with the screwdriver, and screw the board down.",
+    "grade": "wrong"
+   },
+   {
+    "id": "53_344",
+    "node": "s8",
+    "answer": "Grip the black capacitor with the pliers and pick up the soldering iron. Hold the tip on the first pin for 5 seconds, then on the second pin for 5 seconds. Put the pliers and the iron down.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "53_380",
+    "node": "s9",
+    "answer": "Stand the board up on its edge and grip the black capacitor with the pliers again. Heat each of its pins on the back of the board for 5 seconds, then put the iron away, lay the board down, and set the pliers on the bench.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "53_445",
+    "node": "s9",
+    "answer": "Stand the board up on its edge and grip the black capacitor with the pliers again. Heat each of its pins on the back of the board for 5 seconds, then put the iron away, lay the board down, and set the pliers on the bench.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "53_526",
+    "node": "s3",
+    "answer": "Go back and sit at the bench, then look at the low-voltage board for a moment. Place it on the work area, take the screws out of the bench with the screwdriver, and screw the board down.",
+    "grade": "correct"
+   },
+   {
+    "id": "53_551",
+    "node": "s3",
+    "answer": "Go back and sit at the bench, then look at the low-voltage board for a moment. Place it on the work area, take the screws out of the bench with the screwdriver, and screw the board down.",
+    "grade": "correct"
+   },
+   {
+    "id": "53_595",
+    "node": "s4",
+    "answer": "Look at the power supply and switch it on at the socket. Turn the current knob until the green LED lights, set the voltage to 5 volts, and connect the cables to the board's power points. Then watch for the red LED on the board.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "53_684",
+    "node": "s12",
+    "answer": "Make sure the probe and clip are free, switch on the oscilloscope, and press the blue-outlined CH2 MENU button. Clip the ground to test point 1 and touch the probe tip to test point 2, then press Auto Set, watch the screen, and turn the position knob above CH2 MENU. Repeat for test points 3 to 7.",
+    "grade": "correct"
+   },
+   {
+    "id": "53_787",
+    "node": "s12",
+    "answer": "Make sure the probe and clip are free, switch on the oscilloscope, and press the blue-outlined CH2 MENU button. Clip the ground to test point 1 and touch the probe tip to test point 2, then press Auto Set, watch the screen, and turn the position knob above CH2 MENU. Repeat for test points 3 to 7.",
+    "grade": "wrong"
+   },
+   {
+    "id": "53_1019",
+    "node": "s3",
+    "answer": "Go back and sit at the bench, then look at the low-voltage board for a moment. Place it on the work area, take the screws out of the bench with the screwdriver, and screw the board down.",
+    "grade": "wrong"
+   },
+   {
+    "id": "53_1262",
+    "node": "s3",
+    "answer": "Go back and sit at the bench, then look at the low-voltage board for a moment. Place it on the work area, take the screws out of the bench with the screwdriver, and screw the board down.",
+    "grade": "wrong"
+   },
+   {
+    "id": "53_1279",
+    "node": "s11",
+    "answer": "Screw the board back onto the bench. Look at the supply, turn the current knob until the green LED lights, connect the cables, and check that the board's red LED comes on. Then switch the supply off and turn both knobs to zero.",
+    "grade": "correct"
+   },
+   {
+    "id": "53_1316",
+    "node": "s12",
+    "answer": "Make sure the probe and clip are free, switch on the oscilloscope, and press the blue-outlined CH2 MENU button. Clip the ground to test point 1 and touch the probe tip to test point 2, then press Auto Set, watch the screen, and turn the position knob above CH2 MENU. Repeat for test points 3 to 7.",
+    "grade": "correct"
+   },
+   {
+    "id": "53_1410",
+    "node": "s12",
+    "answer": "Make sure the probe and clip are free, switch on the oscilloscope, and press the blue-outlined CH2 MENU button. Clip the ground to test point 1 and touch the probe tip to test point 2, then press Auto Set, watch the screen, and turn the position knob above CH2 MENU. Repeat for test points 3 to 7.",
+    "grade": "correct"
+   },
+   {
+    "id": "53_1516",
+    "node": "s12",
+    "answer": "Make sure the probe and clip are free, switch on the oscilloscope, and press the blue-outlined CH2 MENU button. Clip the ground to test point 1 and touch the probe tip to test point 2, then press Auto Set, watch the screen, and turn the position knob above CH2 MENU. Repeat for test points 3 to 7.",
+    "grade": "adjacent"
+   },
+   {
+    "id": "53_1576",
+    "node": "s3",
+    "answer": "Go back and sit at the bench, then look at the low-voltage board for a moment. Place it on the work area, take the screws out of the bench with the screwdriver, and screw the board down.",
+    "grade": "wrong"
+   }
+  ]
+ }
 }

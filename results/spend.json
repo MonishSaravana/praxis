@@ -1,5 +1,5 @@
 {
-  "total_usd": 110.44836202799998,
+  "total_usd": 111.51887162599998,
   "items": {
     "L3 compile (8 recipes, Fable 5.1)": 4.16358,
     "L3 compile (IndustReal graph)": 0.43374,
@@ -49,11 +49,11 @@
     "multi-task run: train_sweep_two_confirmations_W20_thr0.7": 0.20267704799999955,
     "model test: which_task_bakeoff": 1.8966565699999998,
     "ENIGMA-51 graph compile (Opus)": 0.996516,
-    "ENIGMA-51 run: doc_value": 0.512412,
-    "ENIGMA-51 run: enigma_task_given": 0.03027086999999996,
+    "ENIGMA-51 run: doc_value": 0.908172,
+    "ENIGMA-51 run: enigma_task_given": 0.13776646799999992,
     "OpenAI calls: gpt-6-luna": 0.10024190000000001,
     "OpenAI calls: gpt-6-sol": 1.893778,
-    "OpenAI calls: gpt-6.1-sol": 4.6371568,
+    "OpenAI calls: gpt-6.1-sol": 5.2044108,
     "M2 two-clip test": 0.00170982
   },
   "untracked": [

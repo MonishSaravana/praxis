@@ -217,3 +217,49 @@ def report(run: str = "enigma_task_given") -> dict:
     out["first_instruction_by_video"] = first
     out["nothing_shown"] = why
     return out
+
+
+def postfix_answers(run: str = "enigma_task_given") -> list[dict]:
+    """Praxis's on-screen instruction at each moment under the display fix (said at start; follows a majority belief
+    held 3 s), replayed on the logged beliefs of the same runs. Label: post-fix, same moments."""
+    from .display_sim import shown_at, shown_events
+    lib = E.library()
+    items = json.loads((ITEMS / "items.json").read_text())
+    evs = {}
+    out = []
+    for it in items:
+        g = lib[it["task_id"]]
+        if it["video"] not in evs:
+            evs[it["video"]] = shown_events(read_log(RUNS / run / f"enigma_{it['video']}.jsonl"), g, 0.5, 3, True)
+        node = shown_at(evs[it["video"]], it["t"])
+        out.append({"id": it["id"], "node": node,
+                    "answer": (g.node(node).instruction_novice if node else None)})
+    return out
+
+
+def judge_postfix(run: str = "enigma_task_given", judge_budget: float = 0.5, workers: int = 4) -> dict:
+    """Judge only the post-fix shown answers (the other arms are already judged and unchanged)."""
+    from concurrent.futures import ThreadPoolExecutor
+    from ..verify.common import Budget
+    lib = E.library()
+    items = {it["id"]: it for it in json.loads((ITEMS / "items.json").read_text())}
+    ans = postfix_answers(run)
+    jb = Budget(len(ans) + 5, judge_budget)
+
+    def one(a):
+        it = items[a["id"]]
+        if a["answer"] is None:
+            return {**a, "grade": "no_answer"}
+        return {**a, "grade": _judge(jb, it, a["answer"], lib[it["task_id"]])["grade"]}
+    with ThreadPoolExecutor(workers) as ex:
+        rows = list(ex.map(one, ans))
+    gr = [r["grade"] for r in rows]
+    p = RESULTS / "enigma51" / "doc_value.json"
+    res = json.loads(p.read_text())
+    res["praxis_shown_postfix"] = {"label": "post-fix, same moments (display rule replayed on the logged beliefs; "
+                                            "threshold fixed before judging)", "n": len(gr),
+                                   **{k: gr.count(k) for k in ("correct", "adjacent", "wrong", "no_answer")}, "rows": rows}
+    res["spend_judge_usd"] = res.get("spend_judge_usd", 0.0) + jb.usd
+    res["spend_usd_non_openai"] = res["spend_judge_usd"]
+    p.write_text(json.dumps(res, indent=1, default=float))
+    return res["praxis_shown_postfix"] | {"spend_usd": jb.usd}
