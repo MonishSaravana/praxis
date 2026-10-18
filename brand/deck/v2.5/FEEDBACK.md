@@ -40,4 +40,50 @@ Items 1–10 are the review's top 10 issues, in its order. Items 11–12 are its
 
 ## Designer review
 
-Filled in below after the designer pass.
+**Score: 6.5/10 before these fixes.** "The deck has the right bones and no longer reads as vibe slop. What stops it
+reading as studio work is grid discipline and vertical rhythm."
+
+### Deck-wide fixes
+
+| # | Fix | Status | What changed |
+|---|---|---|---|
+| 1 | Lock one grid | Fixed | Margins are 0.5" and 12.83". Two columns at x 0.5 / 6.9 (5.93" wide); three columns at x 0.5 / 4.745 / 8.99 (3.84" wide). Applied to slides 2, 9, 11, 12, 13 and appendix A2 |
+| 2 | Title system with no orphans | Fixed | Manual two-line breaks on 2, 4, 6, 7, 8, 9, 10, 12 and 13. Content starts at 1.95" under one-line titles |
+| 3 | Fill the dead bands | Fixed | Slide 2 heroes are 80pt with 22pt captions. Slide 7 gets a two-number cost strip. Slides 9 and 12 are rebalanced |
+| 4 | Footer system | Partly fixed | Footers are one line and never wrap. **Declined:** moving the page number to x 0.5 on split slides, because the layout puts it beside the dark panel |
+| 5 | One orange per slide | Fixed | Cover and product HUD outlines are white, with orange only on the leader and caption. Slide 5: only the Praxis accuracy bar is orange. Slide 14: only "$10k". Slide 9: orange moved to the argument ("$99 → $25") |
+| 6 | One diagram language | Fixed | Slides 4 and 10 use 1pt graphite borders. Appendix tables use horizontal rules only, with no cell fills |
+| 7 | Chart parity | Fixed | 2.5pt lines, 7px markers, a lighter grid, mono chart titles on slide 5. The appendix A5 axes start at 0% |
+| 8 | Break the template | Partly fixed | Slide sizes now vary (80pt heroes on 2, the equation on 11). **Declined:** a full-bleed 140pt number. The numerals in this deck are too wide in Archivo Expanded |
+
+### Core-slide notes
+
+| Slide | Fix | Status |
+|---|---|---|
+| 1 | Single accent, keep inside the margin | Fixed. HUD is white, the caption and tag end at 12.83", the meta line is on the footer baseline |
+| 2 | Empty bottom; tight gutter | Fixed. Two-column grid, 80pt numerals |
+| 3 | Four oranges; crowded rows | Fixed. White target box; 12pt mono labels with 16pt body |
+| 4 | Dead quadrant; floating note | Fixed. The "ours vs rented" note is one full-width line at the bottom |
+| 5 | Stats repeat the headline; four oranges | Fixed. One "1/5" hero; only the Praxis accuracy bar is orange; left-aligned mono chart titles |
+| 6 | Line too heavy | Fixed. 2.5pt line, 7px markers, lighter grid |
+| 7 | Floating cost line | Fixed. Turned into a $1 vs $5 strip at 36pt |
+| 8 | "$9B one" orphan; four bar colors; $300M vs $306M | Fixed. Title broken across two lines with "$306M", TAM and SAM in two steel tints, labels centered on the bars |
+| 9 | Unequal columns; arbitrary orange | Fixed |
+| 10 | Cramped cards; mismatched borders | Fixed. Descriptions start at x 4.0", graphite borders, rules between right-column items |
+| 11 | Equation labels don't map to the terms | Fixed. One label under each term; three-column grid; outreach line in steel |
+| 12 | "I" orphan; columns stop short | Fixed |
+| 13 | "done right" orphan; dot mismatch | Fixed. Balanced break; same dot size and y as slide 7 |
+| 14 | Dense; ask buried; two oranges | Fixed. Table moved up; metric line in graphite; proportional budget strip; email moved to the footer |
+
+### Appendix
+
+- **A2:** card row now ends at 12.83". Fixed.
+- **A3, A4, A7, A8:** horizontal-rule tables. Fixed.
+- **A5:** axes from 0%. Fixed.
+- **A1:** in-box text is still about 8.5pt. Declined; it's the brand team's diagram, and it's for Q&A, not projection.
+- **A6, A9:** left as text slides.
+
+## Still open (needs Monish)
+
+- Outreach replies for slide 11, plus one quote (the Gmail check was skipped at your request).
+- A named robotics result for slide 12, and a maintenance advisor or a shadowing day.
