@@ -49,12 +49,15 @@ def collect(clips: list[Clip], ids_by_task: dict[str, list[str]], step: int = 2)
     return out
 
 
-def fit_all(min_train_per_task: int = 1) -> dict:
+def fit_all(min_train_per_task: int = 1, heldout_report: bool = True) -> dict:
+    """Fit the step probes and the task recognizer on every train recording with features (into CKPT).
+    heldout_report=False: train only; no eval-clip accuracies and no results/l1 report (for refits before a final run,
+    so nothing about the eval clips is looked at)."""
     man = load_manifest()
     from ..data.cc4d import RECIPES, recipe_steps, slug
     ids = {slug(r): [s["id"] for s in recipe_steps(r)[0]] for r in RECIPES}   # == compiled graph node order
     train = collect([Clip.from_json(c) for c in man["train"]], ids)
-    test = collect([Clip.from_json(c) for c in man["eval"]], ids)
+    test = collect([Clip.from_json(c) for c in man["eval"]], ids) if heldout_report else {}
     report: dict = {"n_train_recordings": {}, "probe_test_acc": {}, "backbones": {}}
     CKPT.mkdir(parents=True, exist_ok=True)
     # ---- per-task step probes (SigLIP2 frame + V-JEPA 2 window: the configured backbones)
@@ -80,6 +83,9 @@ def fit_all(min_train_per_task: int = 1) -> dict:
     y = np.concatenate([[tasks.index(v["task"])] * len(v["siglip"][::2]) for v in train.values()])
     rec = TaskRecognizer(task_ids=tasks).fit(X, y)
     rec.save(CKPT / "task_recognizer.pkl")
+    if not heldout_report:
+        report["n_train_recordings_total"] = len(train)
+        return report
     Xt = np.concatenate([np.concatenate([v["siglip"], v["window"]], 1) for v in test.values()])
     yt = np.concatenate([[tasks.index(v["task"])] * len(v["siglip"]) for v in test.values()])
     report["task_frame_acc_test"] = float((rec.clf.predict(rec.scaler.transform(Xt)) == yt).mean())

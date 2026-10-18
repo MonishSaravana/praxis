@@ -159,8 +159,10 @@ vary by place; check them before any pilot rather than assuming.
 and local ingest of three public maintenance manuals (97–222 pages, under 2 s each), procedure finding, compiling one
 FIST 4-1A procedure ($0.164) and a recipe card ($0.188) from their sections only, review/approve/lock in the admin
 page, a locked live run on a test clip, and three Claude answers with page citations. On a locked re-run, steps committed and
-instructions advanced through 12 of 17 steps (with some back-and-forth; GPU shared with other jobs). Not measured:
-tracking accuracy on a compiled graph, retrieval quality, anything on maintenance footage.
+instructions advanced through 12 of 17 steps (with some back-and-forth; GPU shared with other jobs). On ENIGMA-51 repair footage (a hyper-specific procedure),
+the general model answered 0 of 4 procedure questions and Praxis 4 of 4; live tracking of the document-only procedure was
+weak (proxy 0.29). Marking steps on one reference recording took a company procedure from 0.20 to 0.40 step accuracy
+offline (cooking clips); not yet tested on maintenance footage.
 
 **Why this matters most for the wedge.** Claude is general. It does not know a specific plant's machines,
 torque specs or safety steps. A maintenance org's own procedures are exactly what turns "a model with a camera"

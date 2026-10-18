@@ -1,5 +1,5 @@
 {
-  "total_usd": 117.57768494399997,
+  "total_usd": 123.77543676999997,
   "items": {
     "L3 compile (8 recipes, Fable 5.1)": 4.16358,
     "L3 compile (IndustReal graph)": 0.43374,
@@ -14,9 +14,12 @@
     "engine run: fused_distilled": 0.8710741700000003,
     "engine run: fused_distilled_alone": 5.276787,
     "engine run: fused_heuristic_gate": 3.831941284000001,
+    "engine run: fused_mt": 3.4323260359999903,
+    "engine run: fused_mt_smoke": 0.042981870000000005,
     "engine run: fused_no_escalation": 0.2835729960000002,
     "engine run: fused_oracle": 4.307100345999991,
     "engine run: local_only": 0.0,
+    "engine run: local_only_v2models": 0.0,
     "engine run: verifier_only": 18.054604169999912,
     "design selection (train split): design_selection_v2": 8.711087671999989,
     "design selection (train split): design_selection_v3": 1.9959670859999992,
@@ -43,6 +46,8 @@
     "multi-task run: combined_B0": 0.2890796159999995,
     "multi-task run: combined_B1": 0.29772245999999886,
     "multi-task run: combined_B2": 0.24389706599999955,
+    "multi-task run: eval_splices_mt": 0.159666738,
+    "multi-task run: eval_splices_single": 0.20148118199999984,
     "multi-task run: smoke": 0.017981880000000006,
     "multi-task run: smoke_2": 0.13811080399999998,
     "multi-task run: solfix_C1": 0.2498805120000003,
@@ -62,7 +67,7 @@
     "ENIGMA-51 run: enigma_task_given": 0.13776646799999992,
     "OpenAI calls: gpt-6-luna": 0.10024190000000001,
     "OpenAI calls: gpt-6-sol": 1.893778,
-    "OpenAI calls: gpt-6.1-sol": 9.1504108,
+    "OpenAI calls: gpt-6.1-sol": 11.5117068,
     "M2 two-clip test": 0.00170982
   },
   "untracked": [

@@ -12,5 +12,16 @@
   },
   "config": "strict_p0.8_W20_thr0.7",
   "chosen_from": "results/multitask/train_switch_sweep.json",
-  "away_from": "results/multitask/free_away_sweep_decoupled.json"
+  "away_from": "results/multitask/free_away_sweep_decoupled.json",
+  "task_checker": {
+    "kind": "openai:gpt-6.1-sol",
+    "overrides": {
+      "recognize_min_s": 10.0,
+      "recognize_agree": 2,
+      "switch_p": 0.9
+    },
+    "applies_to": "automatic mode (fused_mt); task-given mode and Studio keep the fast tier (Jev) and the overrides above",
+    "from": "results/multitask/sol_fix_train.json, config C2",
+    "decided": "2026-10-18 by the founder ('do whatever you think is best') on TRAIN results; the pre-set rule in sol_fix_train.json chose neither C (both > 1 point of step accuracy below B0). Against Jev (A0) C2 was better on every measure but false alarms (6 vs 4 in 120 min). Report it as a decision, not the rule's outcome."
+  }
 }

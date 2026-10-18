@@ -75,6 +75,13 @@ def multitask_overrides() -> dict:
     return dict(json.loads(p.read_text())["overrides"]) if p.exists() else {}
 
 
+def task_checker_choice() -> dict | None:
+    """Who answers "which task?" in automatic multi-task mode, with the engine overrides chosen with it
+    (results/multitask/chosen.json "task_checker"); None = the fast tier."""
+    p = RESULTS / "multitask" / "chosen.json"
+    return json.loads(p.read_text()).get("task_checker") if p.exists() else None
+
+
 def apply_overrides(cfg: EngineConfig, overrides: dict) -> EngineConfig:
     for k, v in overrides.items():
         if k.startswith("policy."):
@@ -109,8 +116,9 @@ def eval_clips(limit: int = 0, only: list[str] | None = None, need_features: boo
 
 
 def run_variant(name: str, limit: int = 0, only: list[str] | None = None, workers: int = 3, budget_usd: float = 40.0,
-                tag: str = "") -> dict:
-    """tag: suffix for output names (smoke tests use tag='_smoke' so final results are never overwritten)."""
+                tag: str = "", budget_openai_usd: float = 0.0) -> dict:
+    """tag: suffix for output names (smoke tests use tag='_smoke' so final results are never overwritten).
+    spend_usd records the non-OpenAI calls (OpenAI calls are tracked from their response cache)."""
     from ..experiments import _budget, make_verifier
     over, vk, ek, det, oracle, *rest = VARIANTS[name]
     lk = rest[0] if rest else None
@@ -120,15 +128,23 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
         if not mt:
             raise RuntimeError("no multi-task configuration chosen yet (results/multitask/chosen.json)")
         over = {**mt, "multi_task": True, "switching": mode == "auto"}     # task given: no switching
+        tcc = task_checker_choice() if mode == "auto" else None
+        if tcc:
+            over.update(tcc["overrides"])
+    else:
+        tcc = None
     win = over.pop("offtask_window", None)
     stack = harness.load_stack(detector=det, offtask_window=win)
     ecfg = engine_config(over)
     if det == "heuristic":
         ecfg.boundary_thr = stack["boundary_thr"]
     budget = _budget(max_calls=4000, max_usd=budget_usd)
-    ver = make_verifier(vk, budget) if vk else None
-    esc = make_verifier(ek, budget) if ek else None
-    loc = make_verifier(lk, budget) if lk else None
+    obudget = _budget(max_calls=4000, max_usd=budget_openai_usd)       # OpenAI models: their own cap
+    pick = lambda k: obudget if k.startswith("openai:") else budget     # noqa: E731
+    ver = make_verifier(vk, pick(vk)) if vk else None
+    esc = make_verifier(ek, pick(ek)) if ek else None
+    loc = make_verifier(lk, pick(lk)) if lk else None
+    tc = make_verifier(tcc["kind"], pick(tcc["kind"])) if tcc else None
     cals = {"primary": calibrators(vk if vk != "distilled" else None), "escalation": calibrators(ek)}
     clips = eval_clips(limit, only)
     t0 = time.time()
@@ -137,7 +153,8 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
         import copy
         st = dict(stack)
         st["recognizer"] = copy.deepcopy(stack["recognizer"])
-        p = harness.run_clip(c, st, name + tag, ecfg, ver, esc, oracle_task=oracle, calibrators=cals, localizer=loc)
+        p = harness.run_clip(c, st, name + tag, ecfg, ver, esc, oracle_task=oracle, calibrators=cals, localizer=loc,
+                             task_checker=tc)
         return harness.score_clip(c, p)
 
     with ThreadPoolExecutor(workers) as ex:
@@ -145,10 +162,12 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
     dev = set(json.loads((RESULTS / "dev_clips.json").read_text())["dev_clips"]) if (RESULTS / "dev_clips.json").exists() else set()
     res = {"variant": name, "localizer": lk, "aggregate_excl_dev_clips": harness.aggregate([r for r in rows if r["clip"] not in dev]),
            "dev_clips": sorted(dev),
-           "config": {"engine_overrides": over, "verifier": vk, "escalation": ek, "detector": det,
+           "config": {"engine_overrides": over, "verifier": vk, "escalation": ek, "task_checker": tcc["kind"] if tcc else vk,
+                      "detector": det,
                                        "oracle_task": oracle, "tracker": vars(ecfg.tracker), "policy": vars(ecfg.policy)},
            "aggregate": harness.aggregate(rows), "per_category": harness.per_category(rows), "per_clip": rows,
-           "wall_s": time.time() - t0, "spend_usd": budget.usd, "calls": budget.calls}
+           "wall_s": time.time() - t0, "spend_usd": budget.usd, "calls": budget.calls,
+           "spend_usd_openai": obudget.usd, "calls_openai": obudget.calls}
     (RESULTS / "runs").mkdir(parents=True, exist_ok=True)
     (RESULTS / "runs" / f"{name}{tag}.json").write_text(json.dumps(res, indent=1, default=float))
     return res

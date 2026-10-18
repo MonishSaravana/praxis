@@ -411,3 +411,44 @@ options: no first task before 10 s (`recognize_min_s`), and only after two typed
 
   Adopting C2 for the final held-out test is the founder's decision on train results. It is not the outcome of the
   pre-set rule, and it would be reported that way.
+
+### 13.2 Decisions for the final held-out test (2026-10-18)
+
+- **C2 adopted for automatic mode** (the founder: "do whatever you think is best"). Sol answers "which task?", with no
+  first task before 10 s, two agreeing answers, and a switch bar of 0.9. It is recorded in
+  `results/multitask/chosen.json` under `task_checker` and used by `run_all` for `fused_mt` only. Task-given mode and
+  Studio keep Jev and the earlier overrides, which are untested with Sol. This is a decision on train results, not the
+  pre-set rule's outcome.
+- **Small models refit on all 70 train recordings**, following the learning curve. The step probes and recognizer are
+  in `data/checkpoints/`; the 24-recording versions are kept in `data/checkpoints/v1_24rec/`. The refit is train-only
+  (`fit_all(heldout_report=False)`), so no eval clip was looked at. Earlier eval-split results used the
+  24-recording models; train-split runs use their own fold models and are unaffected.
+
+## 14. Final held-out test (EVAL split, paid, 2026-10-18)
+
+Founder-approved: caps $6.00 main and $2.60 OpenAI; spent $3.83 main and $1.92 OpenAI. It uses the C2 configuration
+for automatic mode and the small models refit on all 70 train recordings. Nothing in it was tuned on these clips.
+
+| Run | Result |
+|---|---|
+| Local models only, task given, 48 clips (`results/runs/local_only_v2models.json`) | step accuracy **48.7%** (same config with the 24-recording models: 40.7%) |
+| E1: automatic multi-task, 48 single-recipe clips, Jev + Opus strong tier + Sol task checks (`results/runs/fused_mt.json`) | step accuracy **42.7%** (earlier automatic single-task run, old models: 30.1%); first task right 35/48 (same as before); right task at the end 40/48; **5 wrong switches** (10 more wrong guesses corrected); false alarms 0.017/min (unchanged); $3.43 main + $1.46 OpenAI |
+
+**Held-out SYNTHETIC splices** (22 spliced eval sessions, 167 min, Jev fast tier, no strong tier;
+`results/multitask/eval_splices_{mt,single}.json`):
+
+| | E4 single-task engine | E3 multi-task (C2) |
+|---|---|---|
+| Step accuracy | 22.7% | **39.1%** |
+| Right task (share of time) | 42.1% | **63.5%** |
+| Switches caught (of 25) | 0 | **22** (median 57 s after the hard cut) |
+| Wrong switches | **0** | 7 (2.5 per hour) |
+| Job resumed after a switch, of 10 | 0 | **8** |
+| Resume step exact / within one, of 10 | 1 / 2 | **5 / 6** |
+| Interruption taken as a library task, of 6 | **0** | 1 |
+| Interruptions paused with "Coming back to ...?" | 0 | 4 |
+
+- **What changed between the E1 and earlier rows:** both the models and the engine. The local-models-only row
+  isolates the models (+8.0 points). E3 against E4 isolates the multi-task engine: same models, same splices.
+- **The cost of multi-task:** wrong switches. There were 5 on 48 single-recipe clips, and 7 in 167 minutes of splices,
+  where the single-task engine can never switch.
