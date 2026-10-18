@@ -232,8 +232,9 @@ def section_map(pages: list[str], outline: list[dict] | None = None) -> tuple[li
             seen.add(h[0])
             uniq.append(h)
     heads = uniq
-    if not heads or heads[0][0] > 0:
-        heads.insert(0, (0, 1, "", "Front matter"))
+    front = not heads or heads[0][0] > 0
+    if front:                                   # text before the first heading (not a heading line itself)
+        heads.insert(0, (0, 1, "", "Front matter" if heads else "Full text"))
     secs: list[Section] = []
     stack: list[Section] = []
     for k, (i, lvl, num, title) in enumerate(heads):
@@ -250,7 +251,7 @@ def section_map(pages: list[str], outline: list[dict] | None = None) -> tuple[li
         sec.n_chars = sum(len(lines[x].text) + 1 for x in range(i, end))
         secs.append(sec)
         stack.append(sec)
-    head_idx = {h[0] for h in heads}
+    head_idx = {h[0] for k, h in enumerate(heads) if not (front and k == 0)}
     for run in find_steps(lines, 0, len(lines), head_idx):          # each run belongs to the deepest section holding it
         a, b = run[0].line_start, run[-1].line_end
         owner = None

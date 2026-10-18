@@ -53,7 +53,8 @@ def card_answer(question: str, step: dict | None, paged: bool = True) -> dict | 
         hits = [c for c in cards if c["kind"] in kinds.split("|") and (not label or c["label"].startswith(label))]
         if hits:
             c = hits[0]
-            where = f"page {c['page']}" if paged and c.get("page") else "the procedure"
+            where = (f"page {c['page']}" if paged and c.get("page") else "") or \
+                    (f"step {c['step_no']} of the procedure" if c.get("step_no") else "the procedure")
             head = c["label"].split(": ", 1)[-1] if c["kind"] == "spec" else ""
             text = (f"{head}. " if head else "") + f"The manual says: {c['text']}"
             return {"answer": text, "source": "card", "cost_usd": 0.0, "cached": False, "answerable": True,

@@ -104,6 +104,33 @@ def collect() -> dict:
     put("renders", [{k: x.get(k) for k in ("kind", "run", "clip", "t", "text", "pred", "gt", "label", "selection", "files")}
                     for x in ri["rendered"]] if ri else None, "results/renders_index.json")
     put("distillation", _j("l7/distill.json"), "results/l7/distill.json")
+    # multi-task (docs/MULTITASK.md sections 11-14)
+    put("run_local_only_v2models", _agg("local_only_v2models"), "results/runs/local_only_v2models.json")
+    put("run_fused_mt", _agg("fused_mt"), "results/runs/fused_mt.json")
+    for n in ("eval_splices_mt", "eval_splices_single"):
+        r = _j(f"multitask/{n}.json")
+        put(f"mt_{n}", r["splices"]["aggregate"] if r and r.get("splices") else None, f"results/multitask/{n}.json")
+    ct = _j("multitask/combined_train.json")
+    put("mt_combined_train", {k: ct[k] for k in ("runs", "kept", "best_overrides") if k in ct} if ct else None,
+        "results/multitask/combined_train.json")
+    sf = _j("multitask/sol_fix_train.json")
+    put("mt_sol_fix_train", {k: sf[k] for k in ("runs", "chosen", "sol_default") if k in sf} if sf else None,
+        "results/multitask/sol_fix_train.json")
+    put("mt_task_checker", (_j("multitask/chosen.json") or {}).get("task_checker"), "results/multitask/chosen.json")
+    mlc = _j("multitask/learning_curve.json")
+    put("mt_probe_learning_curve", {k: v for k, v in mlc.items() if k != "per_recording"} if mlc else None,
+        "results/multitask/learning_curve.json")
+    es = _j("enigma51/enigma_switch.json")
+    put("enigma_switch", {**es["aggregate"], "label": es["label"]} if es else None, "results/enigma51/enigma_switch.json")
+    bf = _j("enigma51/backend_flow.json")
+    if bf:
+        q = bf.get("questions") or {}
+        put("enigma_backend_flow", {"moments": (bf.get("moments") or {}).get("table"),
+                                    "moments_videos": (bf.get("moments") or {}).get("videos"),
+                                    "questions": {k: q.get(k) for k in ("n", "correct", "partial", "wrong")} if q else None,
+                                    "runs": (bf.get("runs") or {}).get("rows"),
+                                    "mean_step_acc_derived": (bf.get("runs") or {}).get("mean_step_acc_derived")},
+            "results/enigma51/backend_flow.json")
     put("spend", _j("spend.json"), "results/spend.json")
     (RESULTS / "metrics.json").write_text(json.dumps(m, indent=1, default=float))
     return m

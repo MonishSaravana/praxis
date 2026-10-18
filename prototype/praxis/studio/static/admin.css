@@ -308,3 +308,29 @@ details.peek summary { cursor: pointer; font-size: 12px; color: var(--sub); }
 /* style.css sizes the Live page's Start button (button.primary: full width); admin buttons size to their label */
 .admin-body button.primary { width: auto; margin-top: 0; padding: 7px 12px; font-weight: 600; }
 .admin-body button.primary.sm { padding: 5px 9px; }
+
+/* ---------------- reference video step marking ---------------- */
+.mark-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 36%); gap: 18px; align-items: start; }
+.mark-grid > div { min-width: 0; }
+.mark-video { overflow: hidden; background: #000; }
+.mark-video video { display: block; width: 100%; max-height: 62vh; background: #000; }
+.mk-timeline { position: relative; height: 34px; margin: 10px 0 4px; border-radius: 8px; background: var(--line-2); cursor: pointer; overflow: hidden; }
+.mk-spans { position: absolute; inset: 0; }
+.mk-span { position: absolute; top: 4px; bottom: 4px; border-radius: 5px; background: #d9dde3; border: 1px solid #c4c9d0; font-size: 11px;
+  font-weight: 600; color: var(--ink-2); display: flex; align-items: center; justify-content: center; overflow: hidden; white-space: nowrap; }
+.mk-span:nth-child(even) { background: #e6e9ed; }
+.mk-span.on { background: var(--green-bg); border-color: #9fd9bb; color: var(--green-ink); }
+.mk-head { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--ink); transform: translateX(-1px); pointer-events: none; }
+.mk-steps { position: sticky; top: 74px; max-height: calc(100vh - 96px); overflow: auto; }
+.mk-steps-h { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; border-bottom: 1px solid var(--line-2);
+  position: sticky; top: 0; background: #fff; z-index: 1; }
+.mk-row { display: grid; grid-template-columns: 26px minmax(0, 1fr) auto auto auto; gap: 6px; align-items: center; padding: 7px 10px 7px 12px;
+  border-bottom: 1px solid #f1f2f4; }
+.mk-row .no { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 600;
+  background: var(--soft); color: var(--sub); font-variant-numeric: tabular-nums; }
+.mk-row.set .no { background: var(--ink); color: #fff; }
+.mk-row.on { background: var(--green-bg); }
+.mk-row.on .no { background: var(--green-ink); color: #fff; }
+.mk-row .nm { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mk-row .mk-t { font-variant-numeric: tabular-nums; min-width: 58px; }
+@media (max-width: 1100px) { .mark-grid { grid-template-columns: minmax(0, 1fr); } .mk-steps { position: static; max-height: none; } }

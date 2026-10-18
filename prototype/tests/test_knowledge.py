@@ -308,3 +308,46 @@ def test_reference_video_alignment_is_ordered():
     assert [a <= b for (a, _), (b, _) in zip(spans, spans[1:])] == [True, True]
     assert all(a <= k < b for (a, b), k in zip(spans, (1, 4, 7)))
     assert spans[0][0] == 0 and spans[-1][1] == 9               # the spans cover the whole video
+
+
+def test_numbered_list_without_heading_is_found():
+    lines, secs, _ = section_map(["\n".join(f"{i}. Turn the knob number {i};" for i in range(1, 8))])
+    assert len(secs) == 1 and len(secs[0].steps) == 7 and secs[0].steps[0].n == 1
+
+
+def test_reference_marks_train_a_local_probe(tmp_path):
+    """Marks on a reference recording -> frame labels -> a probe that prefers each step on its own frames."""
+    import numpy as np
+    from praxis.knowledge import refs
+    from praxis.knowledge.store import write_json
+    o = Org.create("Acme", root=tmp_path)
+    v = o.new_version("replace-filter", "Replace filter", {"doc_hash": "x", "doc_version": 1})
+    d = o.version_dir("replace-filter", v)
+    d.mkdir(parents=True)
+    g = _graph(task_id="org-acme-replace-filter")
+    g.save(d / "graph.json")
+    write_json(d / "review.json", {"safety": []})
+    h = "ab" * 32
+    vd = o.dir / "videos" / h
+    vd.mkdir(parents=True)
+    (vd / "source.mp4").write_bytes(b"")
+    write_json(vd / "meta.json", {"hash": h, "filename": "demo.mp4"})
+    rng = np.random.default_rng(0)
+    t = np.arange(0, 60, 0.25, dtype=np.float32)
+    centers = rng.normal(size=(3, 16))                      # each step looks different
+    step_of = np.where(t < 20, 0, np.where(t < 40, 1, 2))
+    frame = centers[step_of] + 0.3 * rng.normal(size=(len(t), 16))
+    np.savez(refs.features_path(o, h), t=t, siglip=frame.astype(np.float16), window=np.zeros((len(t), 4), np.float16))
+    assert refs.frame_labels(g.ids, {"s1": 0.0, "s2": 20.0, "s3": 40.0}, t).tolist() == step_of.tolist()
+    assert (refs.frame_labels(g.ids, {"s2": 20.0}, t)[: 80] == -1).all()     # before the first mark: unlabelled
+    with pytest.raises(ValueError):
+        refs.train_local(o, "replace-filter", v)                           # nothing marked yet
+    refs.save_marks(o, "replace-filter", v, h, {"s1": 0.0, "s2": 20.0, "s3": 40.0, "nope": 5.0}, "person")
+    assert refs.load_marks(o, "replace-filter", v)[h]["marks"] == {"s1": 0.0, "s2": 20.0, "s3": 40.0}
+    meta = refs.train_local(o, "replace-filter", v)
+    assert meta["steps_covered"] == 3 and meta["source"] == "person" and meta["frames"] == len(t)
+    probe = refs.load_probe(o, "replace-filter", v)
+    ll = probe.loglik(frame[[10, 100, 200]], np.zeros((3, 4), np.float32))
+    assert ll.ndim in (1, 2)
+    per = np.stack([probe.loglik(frame[i:i + 1], np.zeros((1, 4), np.float32)).reshape(-1) for i in (10, 100, 200)])
+    assert per.argmax(1).tolist() == [0, 1, 2]

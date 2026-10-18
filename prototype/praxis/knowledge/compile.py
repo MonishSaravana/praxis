@@ -16,7 +16,7 @@ import numpy as np
 
 from ..verify.common import cost_usd
 from .budget import LedgerBudget, backend_budget, estimate_tokens
-from .cards import procedure_cards, safety_suggested, step_cards_matched, step_cards_numbered
+from .cards import procedure_cards, safety_suggested, step_cards_aligned, step_cards_numbered
 from .ingest import load_sections
 from .sections import section_text, step_names
 from .store import Org, now, read_json, slug, write_json
@@ -133,7 +133,7 @@ def compile_section(org: Org, h: str, sid: str, effort: str = "medium", texts=No
     g.source = (f"{meta.get('filename')} (v{meta.get('version')}), section '{sec.title}'"
                 + (f", {pages}" if meta.get("paged") else ""))
     say("cards", 0)
-    cards = step_cards_numbered(lines, sec.steps) if local else step_cards_matched(lines, sec, g.nodes)
+    cards = step_cards_numbered(lines, sec.steps) if local else step_cards_aligned(lines, sec, g.nodes)
     cards = {n.id: cards.get(n.id, []) for n in g.nodes}
     cards["_procedure"] = procedure_cards(lines, sec)
     review = {"safety": [], "safety_suggested": safety_suggested(cards, g.nodes), "notes": "", "edited": False}
@@ -232,7 +232,7 @@ def find_section_like(org: Org, h: str, title: str) -> str | None:
     return loose[0].id if loose else None
 
 
-def refresh_cards(org: Org, pid: str, v: int) -> dict:
+def refresh_cards(org: Org, pid: str, v: int, force: bool = False) -> dict:
     """Re-extract one version's knowledge cards from its source section (local, $0), keeping manual edits out of
     it: only for versions not edited by hand. Safety flags a manager set are kept."""
     from ..tasks.schema import TaskGraph
@@ -240,12 +240,12 @@ def refresh_cards(org: Org, pid: str, v: int) -> dict:
     info = next(x for x in p["versions"] if x["version"] == v)
     d = org.version_dir(pid, v)
     review = read_json(d / "review.json", {})
-    if review.get("edited"):
+    if review.get("edited") and not force:
         raise ValueError("this version was edited by hand; its cards are kept")
     lines, sec = _section(org, info["doc_hash"], info["section_id"])
     g = TaskGraph.load(d / "graph.json")
     local = info.get("steps_from") == "manual numbering"
-    cards = step_cards_numbered(lines, sec.steps) if local else step_cards_matched(lines, sec, g.nodes)
+    cards = step_cards_numbered(lines, sec.steps) if local else step_cards_aligned(lines, sec, g.nodes)
     cards = {n.id: cards.get(n.id, []) for n in g.nodes}
     cards["_procedure"] = procedure_cards(lines, sec)
     review["safety_suggested"] = safety_suggested(cards, g.nodes)

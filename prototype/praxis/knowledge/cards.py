@@ -19,7 +19,7 @@ SPECS = [
     ("torque", re.compile(rf"{NUM}\s*(?:N\s*[·.\-]?\s*m|Nm|kgf?\s*[·.\-]?\s*m|(?:ft|in)\s*[·.\-]?\s*lb[sf]?|lb[sf]?\s*[·.\-]?\s*(?:ft|in))\b", re.I)),
     ("pressure", re.compile(rf"{NUM}\s*(?:psi[ag]?|bar|kPa|MPa|inHg|mmHg)\b", re.I)),
     ("temperature", re.compile(rf"-?{NUM}\s*°\s*[CF]\b|-?{NUM}\s*deg(?:rees)?\s*[CF]\b", re.I)),
-    ("electrical", re.compile(rf"{NUM}\s*(?:V(?:AC|DC)?|A|mA|kW|W|Hz|Ω|ohms?|kV)\b")),
+    ("electrical", re.compile(rf"{NUM}\s*(?:V(?:AC|DC)?|A|mA|kW|W|Hz|Ω|ohms?|kV|[Vv]olts?|[Aa]mps?)\b")),
     ("volume", re.compile(rf"{NUM}\s*(?:L|l|litres?|liters?|ml|mL|qt|quarts?|gal(?:lons?)?|fl\.?\s*oz)\b")),
     ("dimension", re.compile(rf"{NUM}[\s-]*(?:mm|cm|in\.|inch(?:es)?|thou|µm)(?![a-z])", re.I)),
     ("angle", re.compile(rf"{NUM}[\s-]*(?:degrees?|deg\.?)(?!\s*[CF]\b)|{NUM}\s*°(?!\s*[CF]\b)", re.I)),
@@ -42,6 +42,9 @@ def extract(text: str, page: int, max_len: int = 220) -> list[dict]:
     """Cards found in one passage. Each card: kind, label, text (a verbatim quote, trimmed), page."""
     cards: list[dict] = []
     seen: set[tuple] = set()
+    num = re.match(r"^\s*(?:step\s+)?(\d{1,3})\s*[.):]\s+", text, re.I)    # the manual's own step number, if any
+    if num:
+        text = text[num.end():]
 
     def add(kind, label, quote):
         q = quote.strip()
@@ -49,7 +52,10 @@ def extract(text: str, page: int, max_len: int = 220) -> list[dict]:
         key = (kind, label.lower(), q.lower())
         if key not in seen:
             seen.add(key)
-            cards.append({"kind": kind, "label": label, "text": q, "page": page})
+            c = {"kind": kind, "label": label, "text": q, "page": page}
+            if num:
+                c["step_no"] = int(num.group(1))
+            cards.append(c)
 
     for sent in _sentences(text):
         if ADMONITION.match(sent):
@@ -60,7 +66,8 @@ def extract(text: str, page: int, max_len: int = 220) -> list[dict]:
             continue
         for name, rx in SPECS:
             for m in rx.finditer(sent):
-                add("spec", f"{name}: {m.group(0).strip()}", sent)
+                kind = "temperature" if name == "angle" and re.search(r"temperature|heat|iron|oven|°", sent, re.I) else name
+                add("spec", f"{kind}: {m.group(0).strip()}", sent)
         for m in PART.finditer(sent):
             add("part", f"part {m.group(1).rstrip('.,)')}", sent)
         for m in FIGURE.finditer(sent):
@@ -121,6 +128,33 @@ def step_cards_matched(lines: list[Line], sec: Section, nodes: list, win: int = 
             cs += extract(lines[j].text, lines[j].page)
         cs.append({"kind": "source", "label": "matched passage", "page": lines[best[0]].page,
                    "text": " ".join(lines[j].text for j in best)[:220]})
+        out[n.id] = _dedupe(cs)
+    return out
+
+
+def step_cards_aligned(lines: list[Line], sec: Section, nodes: list) -> dict[str, list[dict]]:
+    """Cards per compiled step when the compiler's steps group or rename the manual's lines: split the section's lines
+    into one contiguous span per step, in order (both follow the manual's order), maximizing each line's BM25 match to
+    its step's name, instructions and parts. Every line lands in exactly one step, so a merged step keeps all its specs."""
+    import numpy as np
+    from .video import align
+    idx = [i for i in range(sec.line_start, sec.line_end)]
+    if not idx or not nodes:
+        return {}
+    bm = BM25([tokens(lines[i].text) for i in idx])
+    sim = np.zeros((len(nodes), len(idx)))
+    for k, n in enumerate(nodes):
+        sc = bm.scores(tokens(" ".join([n.name, n.instruction_novice, " ".join(n.parts), " ".join(n.substeps)]), expand=True))
+        sim[k] = sc / (sc.max() or 1.0)
+    out: dict[str, list[dict]] = {}
+    for n, (a, b) in zip(nodes, align(sim)):
+        cs = []
+        if a > 0 and ADMONITION.match(lines[idx[a - 1]].text):
+            cs += extract(lines[idx[a - 1]].text, lines[idx[a - 1]].page)
+        for j in range(a, b):
+            cs += extract(lines[idx[j]].text, lines[idx[j]].page)
+        span = " ".join(lines[idx[j]].text for j in range(a, b))
+        cs.append({"kind": "source", "label": f"source lines {a + 1}–{b}", "page": lines[idx[a]].page, "text": span[:220]})
         out[n.id] = _dedupe(cs)
     return out
 

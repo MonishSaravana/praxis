@@ -1,0 +1,228 @@
+{
+  "label": "offline, local tracking only (no verifier), task given; 6 CaptainCook4D pinwheels eval clips with human step labels; company graph = knowledge-backend compile of a recipe card; references = train clips",
+  "eval_clips": [
+    "10_18_0",
+    "10_24_0",
+    "10_46_0",
+    "10_47_0",
+    "10_48_0",
+    "10_50_0"
+  ],
+  "reference_clips": [
+    "10_16_full",
+    "10_26_full",
+    "10_31_full"
+  ],
+  "rows": [
+    {
+      "condition": "built-in graph, trained on 6 labelled recordings",
+      "frames_kept": 1.0,
+      "step_acc": 0.47,
+      "per_clip": [
+        0.83,
+        0.45,
+        0.55,
+        0.22,
+        0.29,
+        0.46
+      ],
+      "commits_mean": 0.5,
+      "instructs_mean": 12.8
+    },
+    {
+      "condition": "built-in graph, trained on 6 labelled recordings",
+      "frames_kept": 0.4,
+      "step_acc": 0.476,
+      "per_clip": [
+        0.83,
+        0.46,
+        0.56,
+        0.27,
+        0.29,
+        0.43
+      ],
+      "commits_mean": 1.2,
+      "instructs_mean": 12.7
+    },
+    {
+      "condition": "built-in graph, trained on 6 labelled recordings",
+      "frames_kept": 0.15,
+      "step_acc": 0.381,
+      "per_clip": [
+        0.6,
+        0.43,
+        0.37,
+        0.28,
+        0.3,
+        0.31
+      ],
+      "commits_mean": 0.7,
+      "instructs_mean": 7.5
+    },
+    {
+      "condition": "company graph, document only (zero-shot)",
+      "frames_kept": 1.0,
+      "step_acc": 0.196,
+      "per_clip": [
+        0.23,
+        0.19,
+        0.21,
+        0.22,
+        0.18,
+        0.15
+      ],
+      "commits_mean": 0.0,
+      "instructs_mean": 2.8
+    },
+    {
+      "condition": "company graph, document only (zero-shot)",
+      "frames_kept": 0.4,
+      "step_acc": 0.194,
+      "per_clip": [
+        0.23,
+        0.19,
+        0.2,
+        0.22,
+        0.18,
+        0.15
+      ],
+      "commits_mean": 0.0,
+      "instructs_mean": 2.8
+    },
+    {
+      "condition": "company graph, document only (zero-shot)",
+      "frames_kept": 0.15,
+      "step_acc": 0.237,
+      "per_clip": [
+        0.34,
+        0.25,
+        0.4,
+        0.25,
+        0.09,
+        0.1
+      ],
+      "commits_mean": 0.0,
+      "instructs_mean": 2.0
+    },
+    {
+      "condition": "company graph + 1 reference recording(s), automatic step labels",
+      "frames_kept": 1.0,
+      "step_acc": 0.259,
+      "per_clip": [
+        0.33,
+        0.41,
+        0.17,
+        0.25,
+        0.29,
+        0.1
+      ],
+      "commits_mean": 0.0,
+      "instructs_mean": 5.2
+    },
+    {
+      "condition": "company graph + 1 reference recording(s), automatic step labels",
+      "frames_kept": 0.4,
+      "step_acc": 0.261,
+      "per_clip": [
+        0.34,
+        0.41,
+        0.17,
+        0.25,
+        0.3,
+        0.1
+      ],
+      "commits_mean": 0.0,
+      "instructs_mean": 5.2
+    },
+    {
+      "condition": "company graph + 1 reference recording(s), human step labels",
+      "frames_kept": 1.0,
+      "step_acc": 0.432,
+      "per_clip": [
+        0.66,
+        0.57,
+        0.53,
+        0.1,
+        0.35,
+        0.39
+      ],
+      "commits_mean": 0.0,
+      "instructs_mean": 11.7
+    },
+    {
+      "condition": "company graph + 1 reference recording(s), human step labels",
+      "frames_kept": 0.4,
+      "step_acc": 0.432,
+      "per_clip": [
+        0.65,
+        0.57,
+        0.53,
+        0.1,
+        0.35,
+        0.39
+      ],
+      "commits_mean": 0.5,
+      "instructs_mean": 11.8
+    },
+    {
+      "condition": "company graph + 3 reference recording(s), automatic step labels",
+      "frames_kept": 1.0,
+      "step_acc": 0.329,
+      "per_clip": [
+        0.39,
+        0.38,
+        0.35,
+        0.29,
+        0.34,
+        0.23
+      ],
+      "commits_mean": 0.0,
+      "instructs_mean": 11.3
+    },
+    {
+      "condition": "company graph + 3 reference recording(s), automatic step labels",
+      "frames_kept": 0.4,
+      "step_acc": 0.33,
+      "per_clip": [
+        0.38,
+        0.39,
+        0.36,
+        0.3,
+        0.34,
+        0.22
+      ],
+      "commits_mean": 0.3,
+      "instructs_mean": 11.2
+    },
+    {
+      "condition": "company graph + 3 reference recording(s), human step labels",
+      "frames_kept": 1.0,
+      "step_acc": 0.475,
+      "per_clip": [
+        0.87,
+        0.52,
+        0.35,
+        0.25,
+        0.34,
+        0.52
+      ],
+      "commits_mean": 0.7,
+      "instructs_mean": 10.0
+    },
+    {
+      "condition": "company graph + 3 reference recording(s), human step labels",
+      "frames_kept": 0.4,
+      "step_acc": 0.499,
+      "per_clip": [
+        0.87,
+        0.49,
+        0.58,
+        0.24,
+        0.34,
+        0.47
+      ],
+      "commits_mean": 0.5,
+      "instructs_mean": 9.5
+    }
+  ]
+}

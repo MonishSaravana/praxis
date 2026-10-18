@@ -1,0 +1,240 @@
+{
+ "questions": {
+  "label": "Technician questions answered from the company's uploaded procedures through the backend's ask endpoint (Opus 5.5, retrieval over all four documents); blind-judged by gpt-6.1-sol against reference answers written from the documents before any answer was seen",
+  "n": 15,
+  "correct": 11,
+  "partial": 2,
+  "wrong": 2,
+  "rows": [
+   {
+    "doc": "high-voltage-screwdriver",
+    "step": "s3 Power board and check LEDs light",
+    "question": "What voltage do I set on the power supply?",
+    "reference": "5 volts: turn the current knob until the green LED lights, then set the voltage knob to 5 V.",
+    "answer": "5 Volts. The manual says: Adjust the voltage knob of the power supply setting a voltage of 5 Volts;",
+    "source": "card",
+    "citations": [
+     "step 16 of the procedure"
+    ],
+    "answer_cost_usd": 0.0,
+    "grade": "partial"
+   },
+   {
+    "doc": "high-voltage-screwdriver",
+    "step": "s3 Power board and check LEDs light",
+    "question": "Which LEDs on the board should come on?",
+    "reference": "The red and the green LEDs.",
+    "answer": "Both the red and green LEDs on the board should light up. Watch the board for a few seconds after connecting the power cables to confirm.",
+    "source": "model",
+    "citations": [
+     "High-voltage board repair (manual screwdriver), \u00a7 Full text",
+     "High-voltage board repair (manual screwdriver), \u00a7 Full text",
+     "High-voltage board repair (electric screwdriver), \u00a7 High Voltage Board Repair Procedure (Electric Screwdriver)"
+    ],
+    "answer_cost_usd": 0.013424,
+    "grade": "correct"
+   },
+   {
+    "doc": "high-voltage-screwdriver",
+    "step": "s6 Turn on soldering iron, set 200 degrees",
+    "question": "What temperature should the soldering iron be at?",
+    "reference": "200 degrees, set with the yellow UP button.",
+    "answer": "200 degrees. The manual says: Set the temperature of the soldering iron to 200 degrees using the yellow button \"UP\";",
+    "source": "card",
+    "citations": [
+     "step 25 of the procedure"
+    ],
+    "answer_cost_usd": 0.0,
+    "grade": "correct"
+   },
+   {
+    "doc": "high-voltage-screwdriver",
+    "step": "s7 Resolder resistor pins on board front",
+    "question": "How long do I hold the iron on each resistor pin?",
+    "reference": "5 seconds on each pin (first pin, then second), with the resistor held in pliers.",
+    "answer": "5 seconds per pin. Touch the first resistor pin for 5 seconds, then the second pin for 5 seconds, with the iron set to 200 degrees.",
+    "source": "model",
+    "citations": [
+     "High-voltage board repair (manual screwdriver), \u00a7 Full text"
+    ],
+    "answer_cost_usd": 0.013288,
+    "grade": "partial"
+   },
+   {
+    "doc": "high-voltage-screwdriver",
+    "step": "s9 Lower iron temperature and turn off",
+    "question": "What temperature do I turn the iron down to before switching it off?",
+    "reference": "The minimum, 160 degrees, with the yellow DOWN button.",
+    "answer": "160 degrees. The manual says: Return to minimum temperature of soldering iron (160 degrees) using yellow button \"DOWN\";",
+    "source": "card",
+    "citations": [
+     "step 40 of the procedure"
+    ],
+    "answer_cost_usd": 0.0,
+    "grade": "correct"
+   },
+   {
+    "doc": "high-voltage-electric-screwdriver",
+    "step": "s3 Place board and connect screwdriver battery",
+    "question": "What do I do with the screwdriver before fixing the board?",
+    "reference": "Connect the battery to the electric screwdriver.",
+    "answer": "After clicking the battery on, use the electric screwdriver to remove the screws from the workbench. Then secure the board to the workbench with it.",
+    "source": "model",
+    "citations": [
+     "High-voltage board repair (electric screwdriver), \u00a7 High Voltage Board Repair Procedure (Electric Screwdriver)"
+    ],
+    "answer_cost_usd": 0.013272,
+    "grade": "wrong"
+   },
+   {
+    "doc": "high-voltage-electric-screwdriver",
+    "step": "s9 Desolder capacitor pins on front side",
+    "question": "Which component am I heating, and how?",
+    "reference": "The capacitor: hold it with pliers and touch each of its pins with the soldering iron for 5 seconds.",
+    "answer": "You're heating the capacitor's two pins. Grip the capacitor with pliers, touch the soldering iron probe (set to 200 degrees) to the first pin for 5 seconds, then the second pin for 5 seconds.",
+    "source": "model",
+    "citations": [
+     "High-voltage board repair (electric screwdriver), \u00a7 High Voltage Board Repair Procedure (Electric Screwdriver)",
+     "High-voltage board repair (electric screwdriver), \u00a7 High Voltage Board Repair Procedure (Electric Screwdriver)"
+    ],
+    "answer_cost_usd": 0.016292,
+    "grade": "correct"
+   },
+   {
+    "doc": "high-voltage-electric-screwdriver",
+    "step": "s13 Probe test points with oscilloscope",
+    "question": "Where does the probe's ground clip go?",
+    "reference": "On test point 1 (the probe tip then checks test point 2, and the others up to 7).",
+    "answer": "Clip the probe's ground to test point 1, then touch the probe tip to test point 2.",
+    "source": "model",
+    "citations": [
+     "High-voltage board repair (electric screwdriver), \u00a7 High Voltage Board Repair Procedure (Electric Screwdriver)",
+     "High-voltage board repair (electric screwdriver), \u00a7 High Voltage Board Repair Procedure (Electric Screwdriver)"
+    ],
+    "answer_cost_usd": 0.01394,
+    "grade": "correct"
+   },
+   {
+    "doc": "high-voltage-electric-screwdriver",
+    "step": "s13 Probe test points with oscilloscope",
+    "question": "Which oscilloscope channel do I use?",
+    "reference": "Channel 2, activated with the CH2 MENU button (blue outline).",
+    "answer": "Use channel 2. Press the blue-outlined CH2 MENU button to activate it.",
+    "source": "model",
+    "citations": [
+     "High-voltage board repair (electric screwdriver), \u00a7 High Voltage Board Repair Procedure (Electric Screwdriver)",
+     "High-voltage board repair (manual screwdriver), \u00a7 Full text"
+    ],
+    "answer_cost_usd": 0.014736,
+    "grade": "correct"
+   },
+   {
+    "doc": "high-voltage-electric-screwdriver",
+    "step": "s17 Put screwdriver battery on charger",
+    "question": "What do I do with the screwdriver battery at the end?",
+    "reference": "Disconnect it, connect it to the battery charger and turn the charger on with the socket switch.",
+    "answer": "Take the battery off the electric screwdriver, connect it to the battery charger, then switch the charger on at its socket switch. After that, record the repair outcome in the log.",
+    "source": "model",
+    "citations": [
+     "High-voltage board repair (electric screwdriver), \u00a7 High Voltage Board Repair Procedure (Electric Screwdriver)"
+    ],
+    "answer_cost_usd": 0.010712,
+    "grade": "correct"
+   },
+   {
+    "doc": "low-voltage-electric-screwdriver",
+    "step": "s6 Power board and check red LED",
+    "question": "Which LED should come on when the board is powered?",
+    "reference": "The red LED.",
+    "answer": "The red LED. After connecting the power supply cables, watch the board for a few seconds to check that the red LED turns on.",
+    "source": "model",
+    "citations": [
+     "Low-voltage board repair (electric screwdriver), \u00a7 Low Voltage Board Repair Procedure (Electric Screwdriver)",
+     "Low-voltage board repair (electric screwdriver), \u00a7 Low Voltage Board Repair Procedure (Electric Screwdriver)"
+    ],
+    "answer_cost_usd": 0.013932,
+    "grade": "correct"
+   },
+   {
+    "doc": "low-voltage-electric-screwdriver",
+    "step": "s8 Unscrew board and remove display",
+    "question": "How many screws hold the display?",
+    "reference": "4 screws on the back of the board, removed with the electric screwdriver, then the display comes off.",
+    "answer": "Four screws, on the back of the board. Unscrew all 4 with the electric screwdriver, then lift off the display.",
+    "source": "model",
+    "citations": [
+     "Low-voltage board repair (electric screwdriver), \u00a7 Low Voltage Board Repair Procedure (Electric Screwdriver)"
+    ],
+    "answer_cost_usd": 0.012288,
+    "grade": "correct"
+   },
+   {
+    "doc": "low-voltage-electric-screwdriver",
+    "step": "s10 Desolder capacitor pins front and back",
+    "question": "Which capacitor do I desolder?",
+    "reference": "The black capacitor.",
+    "answer": "The black capacitor on the board. Grip it with pliers, then touch each of its two pins with the iron for 5 seconds, first on the front, then on the back.",
+    "source": "model",
+    "citations": [
+     "Low-voltage board repair (electric screwdriver), \u00a7 Low Voltage Board Repair Procedure (Electric Screwdriver)"
+    ],
+    "answer_cost_usd": 0.015636,
+    "grade": "correct"
+   },
+   {
+    "doc": "low-voltage-electric-screwdriver",
+    "step": "s13 Test points 2-7 with oscilloscope",
+    "question": "After Auto Set on test point 2, what do I do next?",
+    "reference": "Repeat the same checks (probe tip on the point, Auto Set, look at the display) for test points 3 to 7.",
+    "answer": "Watch the oscilloscope display, then turn the position knob above the blue-outlined CH2 MENU button. Repeat tip, Auto Set, and observe for test points 3 through 7.",
+    "source": "model",
+    "citations": [
+     "Low-voltage board repair (electric screwdriver), \u00a7 Low Voltage Board Repair Procedure (Electric Screwdriver)",
+     "Low-voltage board repair (electric screwdriver), \u00a7 Low Voltage Board Repair Procedure (Electric Screwdriver)"
+    ],
+    "answer_cost_usd": 0.015244,
+    "grade": "wrong"
+   },
+   {
+    "doc": "low-voltage-electric-screwdriver",
+    "step": "s19 Record repair results in log",
+    "question": "Where do I write down the results?",
+    "reference": "In the log.",
+    "answer": "Write the results of the repair operations in the log. The documents don't say where the log is kept, so check with a supervisor if you can't find it.",
+    "source": "model",
+    "citations": [
+     "Low-voltage board repair (electric screwdriver), \u00a7 Low Voltage Board Repair Procedure (Electric Screwdriver)"
+    ],
+    "answer_cost_usd": 0.010828,
+    "grade": "correct"
+   },
+   {
+    "doc": "low-voltage-screwdriver",
+    "question": "What do I take off after removing the board from the workbench?",
+    "skipped": "procedure not approved"
+   },
+   {
+    "doc": "low-voltage-screwdriver",
+    "question": "After switching the supply on, what do I adjust first?",
+    "skipped": "procedure not approved"
+   },
+   {
+    "doc": "low-voltage-screwdriver",
+    "question": "What holds the capacitor while I heat it?",
+    "skipped": "procedure not approved"
+   },
+   {
+    "doc": "low-voltage-screwdriver",
+    "question": "What do I press after putting the probe on a test point?",
+    "skipped": "procedure not approved"
+   },
+   {
+    "doc": "low-voltage-screwdriver",
+    "question": "What do I press on panel A when I'm finished?",
+    "skipped": "procedure not approved"
+   }
+  ],
+  "spend_backend_usd": 0.1635920000000004,
+  "spend_judge_openai_usd": 0.010264000000000002
+ }
+}

@@ -1,0 +1,16 @@
+{
+  "label": "ENIGMA-51 video 141, Studio live session (locked, Jev + Opus escalations); PROXY labels derived from object interactions (data/enigma51.py), not human step labels",
+  "video": "141",
+  "graph": "backend-compiled (19 steps)",
+  "derived_segments": 12,
+  "step_acc_derived": 0.294,
+  "object_consistency": 0.449,
+  "object_chance": 0.285,
+  "n_interactions": 276,
+  "compare_offline_other_session": {
+    "step_acc_derived": 0.491,
+    "object_consistency": 0.572,
+    "object_chance": 0.166,
+    "note": "offline harness, different compile of the same procedure, gpt-6.1-sol strong tier"
+  }
+}

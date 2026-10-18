@@ -243,6 +243,93 @@ Questions (P4), every answer real output:
 Per-question cost came in under the estimate (88–112 output tokens, not ~400). Network note: from this sandbox, calls
 to the Anthropic API failed TLS through the proxy and were run outside it; nothing about that affects Studio itself.
 
+## 8b. Speed and accuracy (measured 2026-10-18, $0)
+
+**Where live time goes** (quiet machine, Apple Silicon, MPS): SigLIP2 19.5 ms per frame, MediaPipe hands 5.4 ms
+(CPU), V-JEPA 2 214 ms per 8-frame window once a second on a second thread. At the engine's 4 frames a second that
+is about 0.3 s of work per second: roughly 3× headroom. Both slow live runs shared the GPU with other sessions'
+training and feature jobs; everything slowed 10–30× (SigLIP2 alone took 251 ms with one feature job running) and
+V-JEPA's window held the shared GPU lock long enough to starve per-frame work.
+
+**Does a slow machine cost accuracy, or only lag?** `python -m praxis.eval.company_tracking` replays six
+CaptainCook4D pinwheels eval clips offline with human step labels, task given, local tracking only (no verifier),
+keeping a share of frames (`results/backend/company_tracking.json`):
+
+| Graph | 100% frames | 40% | 15% |
+|---|---|---|---|
+| Built-in pinwheels graph (probe trained on 6 labelled recordings) | 0.470 | 0.476 | 0.381 |
+| Company-compiled recipe card, document only (zero-shot) | 0.196 | 0.194 | 0.237 |
+
+Down to 40% of frames it is lag, not accuracy; at 15% (the first live run) step accuracy drops and spoken
+instructions fall from 12.8 to 7.5 per clip. Studio's company panel now warns when the engine keeps under half
+its frames.
+
+**The bigger lever is not speed.** A freshly compiled procedure has no visual training, so locally it barely
+advances (0.20, no commits); in the live re-run the paid verifier did the advancing. One or a few reference
+recordings of the job fix most of that (same eval, company graph):
+
+| Company graph plus | Step accuracy |
+|---|---|
+| nothing (document only) | 0.196 |
+| 1 reference recording, steps aligned automatically (no labelling) | 0.259 |
+| 3 reference recordings, steps aligned automatically | 0.329 |
+| 1 reference recording, step starts marked by a person | 0.432 |
+| 3 reference recordings, step starts marked by a person | 0.475 |
+
+With three marked recordings the company's procedure tracks as well as the built-in graph trained on six. That
+means fewer verifier calls (faster, cheaper) for a company procedure.
+
+**Built: reference-recording step marking** (`knowledge/refs.py`, admin → Reference videos → Mark steps). The page
+plays the recording with a timeline of step spans; a manager sets each step's start (Set button or the M key), can
+start from an automatic in-order alignment, saves, and clicks "Train local tracking". Training runs locally on the
+video's cached features (SigLIP2 frames + V-JEPA windows from Studio's encoders) and live sessions use the trained
+tracker from then on (the procedure page and table say which procedures have one). Checked end to end through this
+product code ($0, `results/backend/refs_e2e.json`): one pinwheels training recording uploaded to Test Kitchen, marks
+saved, trained, scored offline on the six eval clips — document only 0.196, automatic marks 0.218, marks taken from
+the dataset's step labels (standing in for a manager's clicks) 0.395. Slightly below the offline experiment above
+(0.259 and 0.432), likely because a mark fills a step up to the next mark, gaps included. Test Kitchen's approved
+procedure now uses that tracker, labelled "taken from the dataset's step labels (a test)" in the UI. Limits: one recipe, six eval clips, large
+per-clip spread, local tracking only; not measured on maintenance footage (ENIGMA-51 has one recording per
+procedure on this machine, so no reference recordings to train from without downloading more of the dataset).
+
+## 8c. Maintenance footage: ENIGMA-51 high-voltage board repair (approved, 2026-10-18)
+
+The use case: a hyper-specific job whose details a general model cannot know until it reads the company's
+document. ENIGMA-51 (first-person repairs of electrical boards in an industrial-like lab) ships the written procedures
+the technicians followed; four repair videos are on this machine. Company "ENIGMA repair lab": the four procedures
+uploaded and ingested locally ($0); the high-voltage, manual-screwdriver procedure (113 numbered lines) compiled
+through the backend into 19 steps (split call + compile, 4,615 in / 9,790 out tokens, **$0.231**); safety-critical
+steps marked (energizing the board twice, the 200-degree soldering iron); approved and locked.
+Scripts: `prototype/praxis/eval/backend_scripts/`.
+
+**Does a general model know the details without the document?** Same model both ways (Claude Opus 5.5, effort
+low); scored by a fixed check for the fact the procedure states (`results/backend/enigma_questions.json`):
+
+| Question (asked mid-step) | General model, no document | Praxis (company question box) |
+|---|---|---|
+| Voltage to set on the power supply? | "I can't tell … check the board's schematic" ✗ | "5 Volts", step 16 (card, 2 ms, $0) ✓ |
+| Soldering iron temperature and button? | "330–350 °C … ▲/▼ buttons" ✗ | "200 degrees … yellow button UP" (card, $0) ✓ |
+| Which buttons on panel A? | "I don't have panel A's layout" ✗ | "both green buttons" (passages + Claude, 3.0 s) ✓ |
+| Oscilloscope channel and button? | "typically CH1 … Autoset" ✗ | "channel 2 … blue-outlined CH2 MENU button" (3.0 s) ✓ |
+| **Correct** | **0 of 4** | **4 of 4** |
+
+Spend $0.039. Four questions, one procedure: an illustration of the use case, not a benchmark. The other session's
+`doc_value` study on the same videos (66 moments, judged blind) points the same way: general 32% correct, general with
+the whole procedure pasted into every request 36%, Praxis's tracked step 59%.
+
+**Locked live run on video 141** (16.7 min, Studio session, Jev + Opus escalations, quiet machine:
+98 ms per frame, 59% of frames, 0.36 s lag; **$0.165**; `results/backend/enigma_live_141.json`). Locked start at
+t=0; both safety banners fired at the right steps (soldering iron at 170 s, board power-up at 780 s); two
+mistake alerts about the iron's temperature ("You've gone past 200. Press DOWN to get back to 200 degrees."),
+not checked against the video. Tracking was weak: it jumped ahead to the oscilloscope step at 123 s, held "repeat
+the cycle" from 343 s to 780 s, and committed one step. Against PROXY labels derived from ENIGMA's object
+interactions (not human step labels): step accuracy 0.29, object consistency 0.45 (chance 0.29). The other session's
+offline run on the same video (different compile, full frames, a different strong verifier) scored 0.49 and 0.57.
+Reading: a document-only procedure tracks weakly on real repair footage; reference recordings (8b) are the lever,
+but this machine has only one recording per ENIGMA procedure, so that is untested on maintenance footage.
+
+**Total for the approved test: $0.435** of the $1.30 cap.
+
 ## 9. How a device adapter passes a company profile
 
 The glasses (or a phone) adapter speaks the same WebSocket as the Studio page (`/ws`, protocol in
@@ -273,6 +360,8 @@ closed-set recognition accuracy; anything on maintenance footage.
 New: `prototype/praxis/knowledge/` (`__init__`, `parse`, `pdfkit_tool.swift`, `sections`, `chunk`, `index`, `cards`,
 `store`, `ingest`, `budget`, `compile`, `qa`, `video`), `prototype/praxis/studio/org_api.py`,
 `prototype/praxis/studio/org_session.py`, `prototype/praxis/studio/static/{admin.html, admin.css, admin.js, org.js}`,
+`prototype/praxis/eval/company_tracking.py` (section 8b), `prototype/praxis/knowledge/refs.py` (step marking and
+training), `prototype/praxis/eval/backend_scripts/` (ENIGMA and marking runs),
 `prototype/tests/test_knowledge.py` (17 tests; the full suite, 47 tests, passes). Small additive edits:
 `studio/server.py`, `studio/static/app.js`, `studio/static/index.html`, `tasks/compiler.py` (error carries usage),
 `.claude/launch.json` (a Studio entry on port 8801), `docs/NEXT.md` (item 4 status line). Data (gitignored):

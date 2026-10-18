@@ -15,7 +15,7 @@ from .parse import parse
 from .sections import Line, Section, Step, section_map
 from .store import Org, read_json, write_json
 
-INGEST_VERSION = "ingest-v2"
+INGEST_VERSION = "ingest-v4"
 _SEARCHERS: dict[tuple, Searcher] = {}
 _LOCK = threading.Lock()
 

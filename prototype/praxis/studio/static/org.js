@@ -126,6 +126,7 @@ function runPanel() {
   if (!el) return null;
   if (!el.dataset.ready) {
     el.innerHTML = `<div class="orgp"><div class="orgp-h"><b id="orgp-name"></b><span id="orgp-mode"></span></div>
+      <div id="orgp-busy" class="org-note hidden" role="status"></div>
       <div id="orgp-step"><div class="wait">Waiting for the first step…</div></div>
       <form class="orgp-ask" id="orgp-ask"><input id="orgp-q" placeholder="Ask: what's the torque? why this step?" autocomplete="off" aria-label="Question"><button>Ask</button></form>
       <label class="orgp-opt"><input type="checkbox" id="orgp-model"> Answer with Claude · about $0.02 (off: quote the manual)</label>
@@ -139,6 +140,16 @@ function runPanel() {
 const card = (c) => `<span class="orgp-card ${esc(c.kind)}" title="${esc(c.text)}"><b>${esc(c.label)}</b>${esc(c.text)}${c.page ? ` · p. ${c.page}` : ""}</span>`;
 
 function onMessage(m) {
+  if (m.type === "status" && O.org && $("#orgp-busy")) {
+    // The engine runs at 4 frames a second. Offline on six test clips, keeping 40% of frames cost no accuracy and
+    // keeping 15% did (results/backend/company_tracking.json), so warn when the share stays low.
+    const share = m.t > 10 ? m.frames_engine / Math.max(1, m.t * 4) : 1;
+    const el = $("#orgp-busy");
+    el.classList.toggle("hidden", share >= 0.5);
+    if (share < 0.5) el.innerHTML = `<b>${share < 0.25 ? "Machine too busy" : "Machine busy"}:</b> processing ${Math.round(100 * share)}% of frames.
+      ${share < 0.25 ? "Tracking gets worse at this rate. " : ""}Close other GPU work (training or feature jobs) for live sessions.`;
+    return;
+  }
   if (m.type === "started") {
     O.sessionId = m.session;
     const el = runPanel();

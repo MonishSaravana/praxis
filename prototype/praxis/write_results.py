@@ -135,6 +135,7 @@ def build() -> tuple[str, str]:
         md.append("- Recognition mistakes are between visually similar recipes (see `results/l3b/recognition.json`). "
                   "One wrong recognition costs that clip's whole step track.")
         md.append(f"\nSource: {src(m, 'run_fused')}.\n")
+    md += multitask_section(m)
     md.append("## Latency\n")
     if F:
         md.append(f"- **Feedback latency** (GT end of an action → Praxis says 'verified' or flags a mistake about that "
@@ -435,6 +436,75 @@ def build() -> tuple[str, str]:
 
 
 LIVE_RUNS = (("inline", "live_replay_10_18_0"), ("async", "live_replay_async"))
+
+
+def multitask_section(m: dict) -> list[str]:
+    """Multi-task engine (docs/MULTITASK.md): task set, switching, pausing and resuming; and the repair-footage checks."""
+    L, L2 = m.get("run_local_only") or {}, m.get("run_local_only_v2models") or {}
+    F, MT = m.get("run_fused") or {}, m.get("run_fused_mt") or {}
+    E1, E0 = m.get("mt_eval_splices_mt") or {}, m.get("mt_eval_splices_single") or {}
+    lc, tc = m.get("mt_probe_learning_curve") or {}, m.get("mt_task_checker") or {}
+    if not (MT or E1):
+        return []
+    md = ["## Multi-task: switching, pausing and resuming\n",
+          "The engine keeps a set of tasks: one is active, others can be paused with their progress. It keeps checking "
+          "which task is happening, and it can switch to another task or resume a paused one. When the person walks "
+          "away it pauses the job and asks \"Coming back to the ...?\"; a paused task closes only when the person says "
+          "they're done, or at the end of the session (never on a timer). Settings were chosen on the train split only "
+          "(docs/MULTITASK.md, sections 11-13). In automatic mode, gpt-6.1-sol answers \"which task?\": it guesses no "
+          "task before 10 s, needs two agreeing answers, and switches above 0.9. The founder adopted that setting on "
+          "train results; the pre-set rule did not choose it (results/multitask/sol_fix_train.json).\n"]
+    if L and L2:
+        md.append(f"- **More training video:** the small local models were refit on all "
+                  f"{lc.get('train_recordings_all', 'the')} train recordings (they had been trained on 24). Local-only "
+                  f"step accuracy with the task given went from {pct(L['step_acc'])} to **{pct(L2['step_acc'])}** on the "
+                  f"same {L2['n_clips']} held-out clips. The train-split check (fold models trained on 16 vs about 47 "
+                  f"recordings) showed the same direction: {pct(lc.get('step_acc_v1'))} to {pct(lc.get('step_acc_all'))}.")
+    if MT:
+        md.append(f"- **Automatic mode on {MT['n_clips']} single-recipe held-out clips** (`fused_mt`: multi-task engine, "
+                  f"refit models, Jev fast tier, Opus strong tier, {tc.get('kind', 'the fast tier')} deciding the task): step "
+                  f"accuracy **{pct(MT['step_acc'])}**"
+                  + (f" (the earlier automatic run `fused`, older models and single-task engine: {pct(F['step_acc'])})" if F else "")
+                  + f". First task guess right on {pct(MT['task_top1'])} of clips, right task at the end on "
+                  f"{pct(MT.get('task_final_correct'))}. **{MT.get('wrong_switches')} wrong switches** across the "
+                  f"{MT['n_clips']} clips; {MT.get('recovered_switches')} more wrong guesses were corrected. False alarms "
+                  f"{num(MT['false_alarms_per_min'], 3)} per minute.")
+    if E1 and E0:
+        n_sw = E1["switches_detected"] + E1["missed_switches"]
+        md.append(f"\n**SYNTHETIC multi-task sessions** (held-out clips spliced together, {num(E1['minutes'], 0)} min). "
+                  f"CaptainCook4D has one recipe per video, so sessions are spliced at annotated step ends: a switch to "
+                  f"another recipe, a switch and come back, or 60 s of a recipe that isn't in the library. The cuts are "
+                  f"hard (the camera jumps), so switch latency here is not a real-life latency. Replay has no user, so "
+                  f"\"Coming back to ...?\" is never answered. Same models and fast tier in both columns, no strong tier.\n")
+        r1, r0, i1, i0 = E1.get("resume", {}), E0.get("resume", {}), E1.get("interrupt", {}), E0.get("interrupt", {})
+        md.append(table([
+            ["Step accuracy", pct(E0["step_acc"]), pct(E1["step_acc"])],
+            ["Right task (share of time)", pct(E0["correct_task_share"]), pct(E1["correct_task_share"])],
+            [f"Switches caught (of {n_sw})", str(E0["switches_detected"]), str(E1["switches_detected"])],
+            ["Switch latency, median (hard cuts)", "n/a", f"{num(E1['switch_latency_s'].get('p50'), 0)} s"],
+            ["Wrong switches", str(E0["wrong_switches"]), str(E1["wrong_switches"])],
+            [f"Job resumed after a switch (of {r1.get('n')})", str(r0.get("resumed")), str(r1.get("resumed"))],
+            [f"Resume step exact / within one (of {r1.get('n')})", f"{r0.get('step_exact')} / {r0.get('step_within1')}",
+             f"{r1.get('step_exact')} / {r1.get('step_within1')}"],
+            [f"Interruption taken as a library task (of {i1.get('n')})", str(i0.get("switched_to_a_library_task")),
+             str(i1.get("switched_to_a_library_task"))],
+            ["Interruptions paused with \"Coming back to ...?\"", str(i0.get("interruption_pauses")),
+             str(i1.get("interruption_pauses"))]],
+            ["", "Single-task engine", "Multi-task engine"]))
+        md.append("")
+    es = m.get("enigma_switch")
+    if es:
+        rs, it = es.get("resume", {}), es.get("interrupt", {})
+        md.append(f"- **Repair footage (ENIGMA-51, SYNTHETIC splices, PROXY step labels):** across "
+                  f"{num(es['minutes'], 0)} min, a switch to a *different repair job* was noticed in "
+                  f"{rs.get('switch_detected')} of {rs.get('n')} sessions. All four procedures name the same parts and tools, "
+                  f"so the off-task signal could not tell the jobs apart. Of {it.get('n')} unrelated interruptions, "
+                  f"{it.get('paused_as_interruption')} were paused as designed and {it.get('switched_to_a_library_task')} "
+                  f"became wrong switches.")
+    md.append(f"\nSources: {src(m, 'run_fused_mt')}, {src(m, 'mt_eval_splices_mt')}, {src(m, 'mt_eval_splices_single')}, "
+              f"{src(m, 'run_local_only_v2models')}, {src(m, 'mt_probe_learning_curve')}"
+              + (f", {src(m, 'enigma_switch')}" if es else "") + ".\n")
+    return md
 
 
 def _live_runs() -> list[tuple[str, str, dict]]:
@@ -792,15 +862,22 @@ def claims(m: dict) -> str:
                        f"{f1(n0, 'heldout_videos_tol5s'):.2f} trained on {n0} recordings to "
                        f"{f1(n1, 'heldout_videos_tol5s'):.2f} on {n1}; on procedure types it never saw, from "
                        f"{f1(n0, 'heldout_procedure_types_tol5s'):.2f} to {f1(n1, 'heldout_procedure_types_tol5s'):.2f}.\" {src}")
+    mt_safe(m, say, out)
     out.append("\n## Do NOT claim (not measured or not true yet)\n")
     if lc:
+        L2 = m.get("run_local_only_v2models")
         out.append("- That the models get 'exponentially' better with data. The learning curves show steady gains per "
-                   "doubling of training data. Also don't say the full engine got better from them: the engine's own "
-                   "step models used 3 recordings per procedure, and it hasn't been re-run with more (results/scaling/).")
+                   "doubling of training data."
+                   + (f" The engine itself was re-run once with step models refit on all train recordings (local-only "
+                      f"{(m.get('run_local_only') or {}).get('step_acc', 0) * 100:.0f}% to {L2['step_acc'] * 100:.0f}%, "
+                      f"results/runs/local_only_v2models.json); one re-run is not a curve."
+                      if L2 else " Also don't say the full engine got better from them: the engine's own step models "
+                      "used 3 recordings per procedure, and it hasn't been re-run with more (results/scaling/)."))
         if lc.get("detector_partial") and not lc.get("detector"):
             out.append("- That the step-change detector improves with more data. Its learning-curve run was interrupted, "
                        "and the runs that finished were noisy with no clear trend from 6 to 24 recordings "
                        "(results/scaling/learning_curve.json, detector_partial).")
+    mt_dont(m, out)
     va = (live["async"][1].get("answer_timing") or {}).get("landed_s", {}).get("verdict") if "async" in live else None
     live_dont = ("That live mode was tested with a webcam. It was tested on a recorded clip replayed in real time (no "
                  "camera was available to this build). "
@@ -833,6 +910,43 @@ def claims(m: dict) -> str:
               "localization stays with the fast verifier (see RESULTS: fused_distilled vs fused_distilled_alone)."]:
         out.append(f"- {s}")
     return "\n".join(out) + "\n"
+
+
+def mt_safe(m: dict, say, out: list[str]) -> None:
+    """Multi-task sentences for docs/CLAIMS.md (each from a measured file)."""
+    MT, E1, E0 = m.get("run_fused_mt"), m.get("mt_eval_splices_mt"), m.get("mt_eval_splices_single")
+    L, L2 = m.get("run_local_only"), m.get("run_local_only_v2models")
+    if L and L2:
+        say(f"Retraining the small local models on all our training recordings raised step accuracy on the held-out "
+            f"clips from {L['step_acc'] * 100:.0f}% to {L2['step_acc'] * 100:.0f}%, measured in the mode that makes no model "
+            f"calls at all.",
+            "run_local_only_v2models")
+    if E1 and E0:
+        r1 = E1.get("resume", {})
+        say(f"On synthetic multi-task sessions spliced from held-out clips, the multi-task engine caught "
+            f"{E1['switches_detected']} of {E1['switches_detected'] + E1['missed_switches']} task switches, and when the "
+            f"person came back to an earlier task it resumed it in {r1.get('resumed')} of {r1.get('n')} cases, at the "
+            f"exact step in {r1.get('step_exact')} of the {r1.get('n')}. Step accuracy went from {E0['step_acc'] * 100:.0f}% with the "
+            f"single-task engine to {E1['step_acc'] * 100:.0f}%.", "mt_eval_splices_mt")
+    if MT:
+        say(f"In fully automatic mode on {MT['n_clips']} held-out single-recipe clips, the multi-task engine tracked "
+            f"the step {MT['step_acc'] * 100:.0f}% of the time and ended on the right recipe in "
+            f"{MT['task_final_correct'] * 100:.0f}% of clips; it switched tasks wrongly {MT['wrong_switches']} times.",
+            "run_fused_mt")
+
+
+def mt_dont(m: dict, out: list[str]) -> None:
+    E1, es = m.get("mt_eval_splices_mt"), m.get("enigma_switch")
+    if E1:
+        out.append(f"- A real-life switch-detection time. The {E1['switch_latency_s'].get('p50', 0):.0f} s median is on "
+                   "spliced videos with hard cuts; nobody walked between jobs (results/multitask/eval_splices_mt.json).")
+        out.append("- That multi-task has no downside. It switches wrongly at times (single-recipe clips: see "
+                   "results/runs/fused_mt.json; splices: results/multitask/eval_splices_mt.json), which the single-task "
+                   "engine never does.")
+    if es:
+        out.append(f"- That Praxis notices when a technician silently switches to a similar repair job. On repair footage "
+                   f"it noticed {es.get('resume', {}).get('switch_detected')} of {es.get('resume', {}).get('n')} such "
+                   "switches (results/enigma51/enigma_switch.json); the switch has to be said or scanned.")
 
 
 LIMITATIONS = """## Limitations

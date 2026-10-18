@@ -117,6 +117,8 @@ def org_detail(oid: str):
                       "doc_title": titles.get(last.get("doc_name"), last.get("doc_name")), "pages": last.get("pages"),
                       "paged": last.get("paged"), "doc_version": last.get("doc_version"), "cost_usd": last.get("cost_usd"),
                       "assigned": p["id"] in settings["assigned"],
+                      "local_tracking": "reference recordings" if (o.version_dir(p["id"], p["approved_version"] or last["version"])
+                                                                   / "refs" / "probe.pkl").exists() else "document only",
                       "source_updated": bool(newer and newer["version"] != last.get("doc_version"))})
     stats = {"pages": sum((d["versions"][-1].get("pages") or 0) for d in docs if d["versions"]),
              "chunks": sum((d["versions"][-1].get("n_chunks") or 0) for d in docs if d["versions"]),
@@ -323,7 +325,17 @@ def procedure(oid: str, pid: str, v: int | None = None):
     newer = d["versions"][-1] if d and d["versions"][-1]["version"] != ver.get("doc_version") else None
     return {"proc": p, "version": x["version"], "info": ver, "graph": x["graph"].model_dump(), "cards": x["cards"],
             "review": x["review"], "source": x["source"], "refs": x["refs"],
-            "newer_doc": {"version": newer["version"], "hash": newer["hash"], "filename": newer["filename"]} if newer else None}
+            "newer_doc": {"version": newer["version"], "hash": newer["hash"], "filename": newer["filename"]} if newer else None,
+            "local": _local_status(o, pid, x["version"])}
+
+
+def _local_status(o: Org, pid: str, v: int) -> dict:
+    from ..knowledge.refs import load_marks, probe_meta
+    vids = {m["hash"]: m for m in o.videos()}
+    marks = load_marks(o, pid, v)
+    return {"probe": probe_meta(o, pid, v),
+            "marked_videos": [{"video": h, "filename": (vids.get(h) or {}).get("filename"), "marked_steps": len(m["marks"]),
+                               "source": m["source"], "saved": m["saved"]} for h, m in marks.items()]}
 
 
 @router.post("/api/orgs/{oid}/procedures/{pid}/edit")
@@ -389,6 +401,67 @@ def procedure_ref_image(oid: str, pid: str, v: int, name: str):
     if not p.exists():
         raise HTTPException(404, "no reference frame")
     return FileResponse(p, media_type="image/jpeg")
+
+
+@router.get("/api/orgs/{oid}/videos/{h}/file")
+def video_file(oid: str, h: str):
+    o = _org(oid)
+    try:
+        p = o.video_path(h)
+    except (ValueError, StopIteration) as e:
+        raise HTTPException(404, "no such video") from e
+    return FileResponse(p, media_type="video/mp4")
+
+
+@router.get("/api/orgs/{oid}/procedures/{pid}/marking/{h}")
+def marking_get(oid: str, pid: str, h: str, v: int | None = None):
+    """What the step-marking page needs: the steps, any saved marks for this video, and whether features exist."""
+    from ..knowledge.refs import features_path, load_marks, probe_meta
+    o = _org(oid)
+    x = o.load_version(pid, v)
+    meta = next((m for m in o.videos() if m["hash"] == h), None)
+    if meta is None:
+        raise HTTPException(404, "no such video")
+    saved = load_marks(o, pid, x["version"]).get(h)
+    return {"proc": {"id": pid, "title": x["graph"].title, "version": x["version"],
+                     "approved": x["proc"].get("approved_version") == x["version"]},
+            "steps": [{"id": n.id, "name": n.name, "end_state": n.end_state} for n in x["graph"].nodes],
+            "video": meta, "saved": saved, "features_ready": features_path(o, h).exists(), "probe": probe_meta(o, pid, x["version"])}
+
+
+@router.post("/api/orgs/{oid}/procedures/{pid}/marking/{h}/auto")
+def marking_auto(oid: str, pid: str, h: str, body: dict):
+    """Background job: video features (once per video, local) + an automatic in-order alignment of steps to time."""
+    from ..knowledge.refs import auto_marks, video_features
+    o = _org(oid)
+    v = int(body["version"])
+
+    def run(job):
+        job.progress("features")
+        f = video_features(o, h, _core().encoders(), progress=job.progress)
+        job.progress("aligning")
+        return {"marks": auto_marks(o, pid, v, f, _texts()), "duration_s": float(f["t"][-1]) if len(f["t"]) else 0.0}
+    return Job("auto-marks", run, org=o.id, proc=pid, video=h).status()
+
+
+@router.post("/api/orgs/{oid}/procedures/{pid}/marking/{h}")
+def marking_save(oid: str, pid: str, h: str, body: dict):
+    from ..knowledge.refs import save_marks
+    o = _org(oid)
+    return save_marks(o, pid, int(body["version"]), h, body.get("marks") or {}, body.get("source") or "person")
+
+
+@router.post("/api/orgs/{oid}/procedures/{pid}/train")
+def procedure_train(oid: str, pid: str, body: dict):
+    """Background job: train the version's local tracker on every marked reference video (local, $0)."""
+    from ..knowledge.refs import train_local
+    o = _org(oid)
+    v = int(body["version"])
+
+    def run(job):
+        job.progress("training")
+        return train_local(o, pid, v, _core().encoders(), progress=job.progress)
+    return Job("train", run, org=o.id, proc=pid, version=v).status()
 
 
 @router.post("/api/orgs/{oid}/procedures/{pid}/refs/clear")

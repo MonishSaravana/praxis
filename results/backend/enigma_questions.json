@@ -1,0 +1,90 @@
+{
+  "label": "ENIGMA-51 high-voltage repair procedure; same model both ways (Claude Opus 5.5, effort low); fixed fact check against the written procedure",
+  "rows": [
+    {
+      "question": "What voltage should I set on the power supply before I connect it to the board?",
+      "step": "Power board and check LEDs light",
+      "general": {
+        "answer": "I can't tell the correct voltage from here, so check the board's schematic, silkscreen, or service manual for its rated input. Start the supply at 0 V with a low current limit, then ramp up slowly while watching the current draw.",
+        "correct": false,
+        "cost_usd": 0.00285,
+        "latency_ms": 2489
+      },
+      "praxis": {
+        "answer": "5 Volts. The manual says: Adjust the voltage knob of the power supply setting a voltage of 5 Volts;",
+        "correct": true,
+        "source": "card",
+        "citations": [
+          "the procedure"
+        ],
+        "cost_usd": 0.0,
+        "latency_ms": 2
+      }
+    },
+    {
+      "question": "What temperature do I set the soldering iron to, and which button do I use?",
+      "step": "Turn on soldering iron, set 200 degrees",
+      "general": {
+        "answer": "Set about **330\u2013350 \u00b0C for leaded solder** or **350\u2013380 \u00b0C for lead-free**. I can't identify your iron's controls, so look at it so I can read the model or labels (most use **\u25b2/\u25bc buttons or a dial**). Since this is a high-voltage board, make sure it's unplugged and its capacitors are discharged before soldering.",
+        "correct": false,
+        "cost_usd": 0.00456,
+        "latency_ms": 4066
+      },
+      "praxis": {
+        "answer": "200 degrees. The manual says: Set the temperature of the soldering iron to 200 degrees using the yellow button \"UP\";",
+        "correct": true,
+        "source": "card",
+        "citations": [
+          "the procedure"
+        ],
+        "cost_usd": 0.0,
+        "latency_ms": 2
+      }
+    },
+    {
+      "question": "When I get to the lab, which buttons do I press on panel A?",
+      "step": "Enter lab and press panel A green buttons",
+      "general": {
+        "answer": "I don't have panel A's layout or procedure on file. Can you show it to me through the glasses or name its model so I can pull up the right sequence? Until then, keep the high-voltage board de-energized and the bench supply off.",
+        "correct": false,
+        "cost_usd": 0.00281,
+        "latency_ms": 2515
+      },
+      "praxis": {
+        "answer": "Press both green buttons on panel A. After entering and closing the door, look at panel A for a moment first, then press the two green buttons.",
+        "correct": true,
+        "source": "model",
+        "citations": [
+          "High-voltage board repair (manual screwdriver), \u00a7 Front matter"
+        ],
+        "cost_usd": 0.01184,
+        "latency_ms": 2982
+      }
+    },
+    {
+      "question": "Which oscilloscope channel and button do I use for the probe?",
+      "step": "Turn on oscilloscope and activate CH2",
+      "general": {
+        "answer": "I can't see which oscilloscope model you have, but typically you plug the probe into CH1 and press **Autoset** (or the CH1 button to enable it). Since this is a high-voltage board, use a rated differential probe rather than clipping a standard probe's ground lead to the circuit.",
+        "correct": false,
+        "cost_usd": 0.00335,
+        "latency_ms": 2453
+      },
+      "praxis": {
+        "answer": "Use channel 2. Press the blue-outlined CH2 MENU button to activate probe 2's channel.",
+        "correct": true,
+        "source": "model",
+        "citations": [
+          "High-voltage board repair (manual screwdriver), \u00a7 Front matter",
+          "High-voltage board repair (manual screwdriver), \u00a7 Front matter"
+        ],
+        "cost_usd": 0.01387,
+        "latency_ms": 2892
+      }
+    }
+  ],
+  "general_correct": 0,
+  "praxis_correct": 4,
+  "n": 4,
+  "spend_usd": 0.0393
+}

@@ -23,6 +23,7 @@ def runtime_library(org: Org, texts, only: list[str] | None = None):
     safety steps, source document."""
     from ..evidence import ZeroShotEvidence
     from ..knowledge.compile import embed_version
+    from ..knowledge.refs import load_probe
     graphs, evidence, info = {}, {}, {}
     for tid, x in org.library(only).items():
         g = x["graph"]
@@ -30,9 +31,11 @@ def runtime_library(org: Org, texts, only: list[str] | None = None):
             embed_version(org, x["proc_id"], x["version"], texts)
         z = np.load(x["emb"])
         graphs[tid] = g
-        evidence[tid] = ZeroShotEvidence(g, {k: z[k] for k in z.files})
+        probe = load_probe(org, x["proc_id"], x["version"])      # trained on marked reference recordings, if any
+        evidence[tid] = probe if probe is not None else ZeroShotEvidence(g, {k: z[k] for k in z.files})
         ver = next(v for v in x["proc"]["versions"] if v["version"] == x["version"])
         info[tid] = {"proc_id": x["proc_id"], "version": x["version"], "cards": x["cards"],
+                     "local": "reference recordings" if probe is not None else "document only",
                      "safety": x["review"].get("safety", []), "doc": ver.get("doc_hash"), "paged": ver.get("paged", True),
                      "refs": x.get("refs") or {}, "task_emb": np.asarray(z["task"], np.float32).reshape(1, -1)}
     return graphs, evidence, info
@@ -92,7 +95,8 @@ class OrgStudioSession(StudioSession):
             raise ValueError("pick one of this company's approved procedures")
         cfg["org_name"] = org.meta["name"]
         cfg["org_locked"] = self.locked
-        cfg["org_procedures"] = {t: {"proc_id": i["proc_id"], "version": i["version"]} for t, i in view.info.items()}
+        cfg["org_procedures"] = {t: {"proc_id": i["proc_id"], "version": i["version"], "local_tracking": i["local"]}
+                                 for t, i in view.info.items()}
         self.view = view
         self.cur: dict = {"task_id": None, "node": None}
         self.warned: set = set()
@@ -138,8 +142,15 @@ class OrgStudioSession(StudioSession):
                 self.warned.add((self.cur["task_id"], r["node"]))
                 ctx = self.step_context()
                 warn = [c for c in ctx["cards"] if c["kind"] in ("warning", "safety")]
-                text = warn[0]["text"] if warn else f"Safety-critical step: {ctx['name']}. Follow the procedure exactly."
-                page = warn[0].get("page") if warn else None
+                specs = [c for c in ctx["cards"] if c["kind"] == "spec"]
+                if warn:
+                    text, page = warn[0]["text"], warn[0].get("page")
+                elif specs:                         # no written warning: say the step's own spec, as the procedure states it
+                    c = specs[0]
+                    text = f"{ctx['name']}. The procedure says: {c['text']}" + (f" (step {c['step_no']})" if c.get("step_no") else "")
+                    page = c.get("page")
+                else:
+                    text, page = f"{ctx['name']}. Follow the procedure exactly.", None
                 self.log.write("org_safety", r["t"], node=r["node"], text=text, page=page)
                 self.send({"type": "org_safety", "node": r["node"], "name": ctx["name"], "text": text,
                            "page": page if info["paged"] else None})
