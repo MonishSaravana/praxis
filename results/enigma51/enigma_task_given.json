@@ -1,0 +1,83 @@
+{
+ "label": "ENIGMA-51 PROXY metrics (derived step segments; object consistency) - not human step labels",
+ "strong": "openai:gpt-6.1-sol",
+ "rows": [
+  {
+   "video": "141",
+   "task_id": "enigma_hv_manual",
+   "minutes": 16.678333333333335,
+   "n_steps": 19,
+   "derived_segments": 11,
+   "step_acc_derived": 0.49147381242387334,
+   "object_consistency": {
+    "n": 276,
+    "consistency": 0.572463768115942,
+    "chance": 0.1664759725400456
+   },
+   "commits": 7,
+   "verifier_calls": 330,
+   "strong_calls": 32,
+   "mistake_alerts": 3,
+   "cost_usd": 0.15886887
+  },
+  {
+   "video": "107",
+   "task_id": "enigma_hv_electric",
+   "minutes": 20.36,
+   "n_steps": 20,
+   "derived_segments": 10,
+   "step_acc_derived": 0.28171731789676796,
+   "object_consistency": {
+    "n": 227,
+    "consistency": 0.6167400881057269,
+    "chance": 0.18149779735682842
+   },
+   "commits": 3,
+   "verifier_calls": 357,
+   "strong_calls": 33,
+   "mistake_alerts": 2,
+   "cost_usd": 0.167248046
+  },
+  {
+   "video": "144",
+   "task_id": "enigma_lv_electric",
+   "minutes": 25.546666666666667,
+   "n_steps": 20,
+   "derived_segments": 15,
+   "step_acc_derived": 0.58530986993114,
+   "object_consistency": {
+    "n": 291,
+    "consistency": 0.8109965635738832,
+    "chance": 0.30360824742268055
+   },
+   "commits": 4,
+   "verifier_calls": 378,
+   "strong_calls": 54,
+   "mistake_alerts": 2,
+   "cost_usd": 0.252731938
+  },
+  {
+   "video": "53",
+   "task_id": "enigma_lv_manual",
+   "minutes": 27.890555555555558,
+   "n_steps": 20,
+   "derived_segments": 13,
+   "step_acc_derived": 0.2522609819121447,
+   "object_consistency": {
+    "n": 407,
+    "consistency": 0.7665847665847666,
+    "chance": 0.31412776412776405
+   },
+   "commits": 1,
+   "verifier_calls": 447,
+   "strong_calls": 54,
+   "mistake_alerts": 0,
+   "cost_usd": 0.254769614
+  }
+ ],
+ "mean_step_acc_derived": 0.40269049554098146,
+ "mean_object_consistency": 0.6916962965950797,
+ "mean_object_chance": 0.24142744536182964,
+ "spend_usd": 0.8336184680000016,
+ "spend_usd_non_openai": 0.13776646799999992
+}

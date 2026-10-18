@@ -757,7 +757,50 @@ def claims(m: dict) -> str:
             out.append(f"- \"From video alone after 30 seconds, it named the recipe on {fr['title_yes']} of "
                        f"{fr['n_drafted']} recordings ({fr['title_partial']} more partly), so for unknown tasks the product "
                        f"should ask what you're making rather than guess.\" (`results/open_set/open_set.json`)")
+    lc = _jload("scaling/learning_curve.json")
+    if lc:
+        mean = lambda a: sum(a) / len(a)
+        src = "(`results/scaling/learning_curve.json`)"
+        if lc.get("probes"):
+            P = lc["probes"]
+            full = [t for t, n in P["n_train_avail"].items() if n == max(P["n_train_avail"].values())]
+            by: dict = {}
+            for r in P["rows"]:
+                if r["task"] in full:
+                    by.setdefault(r["k"], []).append(r["acc"])
+            k0, k1 = min(by), max(by)
+            out.append(f"- \"Our step models keep improving with more data. On the {len(full)} procedures with {k1} "
+                       f"training recordings, held-out step accuracy went from {mean(by[k0]) * 100:.0f}% with {k0} "
+                       f"recording to {mean(by[k1]) * 100:.0f}% with {k1}, and it was still rising.\" {src}")
+        if lc.get("student"):
+            St = lc["student"]
+            by = {}
+            for r in St["rows"]:
+                by.setdefault(r["n_recordings"], []).append(r["acc_vs_gt"])
+            n0, n1 = min(by), max(by)
+            out.append(f"- \"The local student model also improves with data: accuracy on {St['n_test_checks']} held-out "
+                       f"checks went from {mean(by[n0]) * 100:.0f}% trained on {n0} recordings to "
+                       f"{mean(by[n1]) * 100:.0f}% on {n1}. The frontier model it learns from scores "
+                       f"{St['teacher_acc_vs_gt'] * 100:.0f}%.\" {src}")
+        if lc.get("detector"):
+            by = {}
+            for r in lc["detector"]["rows"]:
+                by.setdefault(r["n_recordings"], []).append(r)
+            n0, n1 = min(by), max(by)
+            f1 = lambda n, k: mean([r[k]["f1"] for r in by[n]])
+            out.append(f"- \"The step-change detector's F1 (±5 s) on held-out videos went from "
+                       f"{f1(n0, 'heldout_videos_tol5s'):.2f} trained on {n0} recordings to "
+                       f"{f1(n1, 'heldout_videos_tol5s'):.2f} on {n1}; on procedure types it never saw, from "
+                       f"{f1(n0, 'heldout_procedure_types_tol5s'):.2f} to {f1(n1, 'heldout_procedure_types_tol5s'):.2f}.\" {src}")
     out.append("\n## Do NOT claim (not measured or not true yet)\n")
+    if lc:
+        out.append("- That the models get 'exponentially' better with data. The learning curves show steady gains per "
+                   "doubling of training data. Also don't say the full engine got better from them: the engine's own "
+                   "step models used 3 recordings per procedure, and it hasn't been re-run with more (results/scaling/).")
+        if lc.get("detector_partial") and not lc.get("detector"):
+            out.append("- That the step-change detector improves with more data. Its learning-curve run was interrupted, "
+                       "and the runs that finished were noisy with no clear trend from 6 to 24 recordings "
+                       "(results/scaling/learning_curve.json, detector_partial).")
     va = (live["async"][1].get("answer_timing") or {}).get("landed_s", {}).get("verdict") if "async" in live else None
     live_dont = ("That live mode was tested with a webcam. It was tested on a recorded clip replayed in real time (no "
                  "camera was available to this build). "

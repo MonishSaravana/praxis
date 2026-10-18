@@ -1,0 +1,124 @@
+{
+ "protocol": "Could another model replace Jev as the fast tier? (TRAIN split only.)\n\nJev answers two questions for the tracker on every engine run:\n  completion  \"is step X done?\"            -> the 100 labeled train checks of the framing ablation (span framing);\n                                              Jev's answers are already logged in data/verdicts/framing_span_jev.jsonl\n  which step  \"which of these steps now?\"  -> real questions Jev answered in the train reference run\n                                              (runs/mt_train_sweep_reference_single_task), with the identical frames\n                                              re-decoded and the annotation at that moment as ground truth\nA challenger answers the same items with the same prompt and schema; only the model changes.",
+ "completion": {
+  "jev (logged)": {
+   "n": 100,
+   "accuracy": 0.58,
+   "auroc": 0.6703612479474549,
+   "latency_ms_p50": 151.69316646642983,
+   "latency_ms_p95": 266.5014461439568,
+   "cost_usd_per_check": 0.00010698576000000002,
+   "model": "jev-1.14.0"
+  },
+  "openai:gpt-6-luna@none": {
+   "n": 100,
+   "accuracy": 0.57,
+   "auroc": 0.5878489326765188,
+   "latency_ms_p50": 1438.2959165377542,
+   "latency_ms_p95": 2096.8946394801605,
+   "cost_usd_per_check": 0.000190264,
+   "model": "gpt-6-luna"
+  },
+  "openai:gpt-6-luna": {
+   "n": 100,
+   "accuracy": 0.64,
+   "auroc": 0.6284893267651888,
+   "latency_ms_p50": 2349.0869164816104,
+   "latency_ms_p95": 4358.205741993152,
+   "cost_usd_per_check": 0.000227634,
+   "model": "gpt-6-luna"
+  },
+  "openai:gpt-6-sol@none": {
+   "n": 100,
+   "accuracy": 0.71,
+   "auroc": 0.8011083743842364,
+   "latency_ms_p50": 1463.378083484713,
+   "latency_ms_p95": 2194.5111848588563,
+   "cost_usd_per_check": 0.00377088,
+   "model": "gpt-6-sol"
+  },
+  "openai:gpt-6-sol": {
+   "n": 100,
+   "accuracy": 0.72,
+   "auroc": 0.7824302134646961,
+   "latency_ms_p50": 2194.449853966944,
+   "latency_ms_p95": 4053.154521092073,
+   "cost_usd_per_check": 0.00431408,
+   "model": "gpt-6-sol"
+  },
+  "openai:gpt-6.1-sol": {
+   "n": 100,
+   "accuracy": 0.85,
+   "auroc": 0.866584564860427,
+   "latency_ms_p50": 2670.4498545150273,
+   "latency_ms_p95": 5133.754968695574,
+   "cost_usd_per_check": 0.003925479999999999,
+   "model": "gpt-6.1-sol"
+  }
+ },
+ "spend_usd": 0.9420391999999994,
+ "which_step": {
+  "n_items": 116,
+  "candidate_recall": 0.6982758620689655,
+  "jev (logged)": {
+   "n": 116,
+   "errors": 0,
+   "accuracy": 0.3275862068965517,
+   "accuracy_when_gt_offered": 0.4691358024691358,
+   "none_rate": 0.646551724137931,
+   "latency_ms_p50": 143.0135000264272,
+   "latency_ms_p95": 206.31365620647557,
+   "cost_usd_per_call": 0.00010376860344827589
+  },
+  "openai:gpt-6-luna@none": {
+   "n": 116,
+   "errors": 0,
+   "accuracy": 0.29310344827586204,
+   "accuracy_when_gt_offered": 0.41975308641975306,
+   "none_rate": 0.6982758620689655,
+   "latency_ms_p50": 1334.1814159648493,
+   "latency_ms_p95": 3316.985979239689,
+   "cost_usd_per_call": 4.8387068965517246e-05
+  },
+  "openai:gpt-6-luna": {
+   "n": 116,
+   "errors": 0,
+   "accuracy": 0.3275862068965517,
+   "accuracy_when_gt_offered": 0.4691358024691358,
+   "none_rate": 0.6206896551724138,
+   "latency_ms_p50": 2329.2224585311487,
+   "latency_ms_p95": 8581.677593727363,
+   "cost_usd_per_call": 0.00015748534482758618
+  },
+  "openai:gpt-6-sol@none": {
+   "n": 116,
+   "errors": 0,
+   "accuracy": 0.3017241379310345,
+   "accuracy_when_gt_offered": 0.43209876543209874,
+   "none_rate": 0.646551724137931,
+   "latency_ms_p50": 1461.0108960187063,
+   "latency_ms_p95": 2752.6906770071946,
+   "cost_usd_per_call": 0.002425568965517241
+  },
+  "openai:gpt-6-sol": {
+   "n": 116,
+   "errors": 0,
+   "accuracy": 0.3706896551724138,
+   "accuracy_when_gt_offered": 0.5308641975308642,
+   "none_rate": 0.49137931034482757,
+   "latency_ms_p50": 1906.9429789669812,
+   "latency_ms_p95": 3064.655447960831,
+   "cost_usd_per_call": 0.0028696206896551726
+  },
+  "openai:gpt-6.1-sol": {
+   "n": 116,
+   "errors": 0,
+   "accuracy": 0.4051724137931034,
+   "accuracy_when_gt_offered": 0.5802469135802469,
+   "none_rate": 0.5862068965517241,
+   "latency_ms_p50": 2619.123437500093,
+   "latency_ms_p95": 5132.680229056859,
+   "cost_usd_per_call": 0.002619965517241379
+  }
+ }
+}

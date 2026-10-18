@@ -25,9 +25,13 @@ Every sentence below comes from a file under `results/`, linked after it. This f
 - "Model calls run in the background, so the live loop never waits for the network. On the same recording, the worst tick lag went from 4.4 s with calls inline to 0.8 s, and dropped frames from 28 to 3. While the slowest request (a Jev completion check escalated to Opus, 4.4 s) was out, the loop ran 4 more ticks." (`results/live/live_replay_async.json`, `results/live/live_replay_10_18_0.json`)
 - "For recipes it had never seen, Praxis didn't stay silent. When the person said what they were making, it drafted a step-by-step plan in about 16 seconds (on 7 of 8 recordings). The drafts covered 64% of the recipe's steps in the dataset's own task graph on average, and Praxis tracked the person's step with them 36% of the time, with no training video." (`results/open_set/open_set.json`)
 - "From video alone after 30 seconds, it named the recipe on 0 of 7 recordings (2 more partly), so for unknown tasks the product should ask what you're making rather than guess." (`results/open_set/open_set.json`)
+- "Our step models keep improving with more data. On the 3 procedures with 9 training recordings, held-out step accuracy went from 31% with 1 recording to 51% with 9, and it was still rising." (`results/scaling/learning_curve.json`)
+- "The local student model also improves with data: accuracy on 469 held-out checks went from 63% trained on 4 recordings to 72% on 30. The frontier model it learns from scores 80%." (`results/scaling/learning_curve.json`)
 
 ## Do NOT claim (not measured or not true yet)
 
+- That the models get 'exponentially' better with data. The learning curves show steady gains per doubling of training data. Also don't say the full engine got better from them: the engine's own step models used 3 recordings per procedure, and it hasn't been re-run with more (results/scaling/).
+- That the step-change detector improves with more data. Its learning-curve run was interrupted, and the runs that finished were noisy with no clear trend from 6 to 24 recordings (results/scaling/learning_curve.json, detector_partial).
 - Praxis runs on smart glasses. It has not been tested on glasses; the glasses adapter is a documented stub (docs/GLASSES.md). Say instead: 'it runs live on a video stream in real time; glasses are one more input adapter.'
 - Any result on toy-car or drone assembly. The IndustReal assembly clips have no ground truth here (labels were unreachable this weekend); they are qualitative demos only.
 - Any user study, customer, pilot, or 'helps people learn faster'. Adaptive detail is an association on public data, and on CaptainCook4D it was NOT associated with annotated errors (see RESULTS.md).

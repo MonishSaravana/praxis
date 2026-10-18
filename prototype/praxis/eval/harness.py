@@ -25,7 +25,7 @@ MISTAKE_TOL_AFTER = 10.0     # ... or follow its annotated end by this much
 
 
 # ------------------------------------------------------------------------------------------- stack
-def load_stack(detector: str = "learned", evidence: str = "probe") -> dict:
+def load_stack(detector: str = "learned", evidence: str = "probe", offtask_window: int | None = None) -> dict:
     from ..evidence import ProbeEvidence, ZeroShotEvidence
     from ..tasks.compiler import load_library
     from ..tasks.recognizer import TaskRecognizer
@@ -52,7 +52,11 @@ def load_stack(detector: str = "learned", evidence: str = "probe") -> dict:
     if p.exists():
         r = json.loads(p.read_text())["train"]   # thresholds tuned on held-out train recordings
         thr = r["thr"] if detector == "learned" else r["heuristic_thr"]
-    return {"library": lib, "evidence": ev, "recognizer": rec, "detector": det, "boundary_thr": thr}
+    # multi-task: landmark off-task model for the tracker's away states (experiments.fit_offtask, train split)
+    from ..landmarks import OffTaskModel
+    op = CKPT / (f"offtask_landmarks_w{offtask_window}.json" if offtask_window else "offtask_landmarks.json")
+    off = OffTaskModel.load(op) if op.exists() else None
+    return {"library": lib, "evidence": ev, "recognizer": rec, "detector": det, "boundary_thr": thr, "offtask": off}
 
 
 def decode_frames(clip: Clip, fps: float = 4.0, max_side: int = 640) -> list[np.ndarray]:
@@ -63,7 +67,7 @@ def decode_frames(clip: Clip, fps: float = 4.0, max_side: int = 640) -> list[np.
 def run_clip(clip: Clip, stack: dict, run_name: str, ecfg: EngineConfig, verifier=None, escalation=None,
              calibrator=None, dev_calibrator=None, oracle_task: bool = False, join_at: float | None = None,
              user=None, frames: list[np.ndarray] | None = None, point_tracker=None, calibrators: dict | None = None,
-             localizer=None, drafter=None) -> Path:
+             localizer=None, drafter=None, task_checker=None) -> Path:
     feats, _ = load_features(clip.clip_id)
     if len(feats.t) and feats.t[-1] > clip.duration + 0.5:      # clip shorter than its feature file (e.g. truncated)
         m = feats.t <= clip.duration
@@ -93,7 +97,8 @@ def run_clip(clip: Clip, stack: dict, run_name: str, ecfg: EngineConfig, verifie
             rec.reset()
         eng = Engine(ecfg, stack["library"], stack["evidence"], None if oracle_task else rec, stack["detector"],
                      verifier, escalation, calibrator, dev_calibrator, log, task_id=clip.task_id if oracle_task else None,
-                     user=user, point_tracker=point_tracker, calibrators=calibrators, localizer=localizer, drafter=drafter)
+                     user=user, point_tracker=point_tracker, calibrators=calibrators, localizer=localizer, drafter=drafter,
+                     offtask=stack.get("offtask"), task_checker=task_checker)
         info = replay(eng, feats, scores, frames)
         log.write("summary", float(feats.t[-1]) if len(feats.t) else 0.0, **info)
     return out
@@ -116,6 +121,18 @@ def score_clip(clip: Clip, log_path: Path, join_at: float = 0.0) -> dict:
                  "recognized_task": tasks[0]["task_id"] if tasks else None, "t_recognize": t_rec,
                  "task_correct": (tasks[0]["task_id"] == clip.task_id) if tasks else False}
     res["step_acc"] = float(((gt == pred) & inside).sum() / max(1, inside.sum()))
+    # multi-task: which task the engine was on over time (first announcement above stays task top-1)
+    cur = current_task(recs, times)
+    changes = task_changes(recs)
+    res["task_final"] = changes[-1][1] if changes else None
+    res["task_final_correct"] = res["task_final"] == clip.task_id
+    res["correct_task_share"] = float((cur[after] == clip.task_id).mean()) if after.any() else 0.0
+    res["n_task_changes"] = max(0, len([c for c in changes if c[1]]) - 1)
+    res["wrong_switches"] = sum(1 for (t0, a), (t1, b) in zip(changes, changes[1:]) if a == clip.task_id and b != clip.task_id)
+    res["recovered_switches"] = sum(1 for (t0, a), (t1, b) in zip(changes, changes[1:]) if a != clip.task_id and b == clip.task_id)
+    rc = [r for r in by_kind(recs, "task_check") if r.get("reason") and not r.get("error")]
+    res["task_rechecks"] = len(rc)
+    res["leave_warnings"] = sum(1 for a in by_kind(recs, "action") if a["action"] == "leave_warning")
     m = inside & after
     res["step_acc_after_recognition"] = float(((gt == pred) & m).sum() / max(1, m.sum())) if m.any() else None
     res["step_acc_incl_between"] = float((gt == pred).mean()) if len(gt) else None
@@ -169,6 +186,40 @@ def score_clip(clip: Clip, log_path: Path, join_at: float = 0.0) -> dict:
     return res
 
 
+def task_changes(recs: list[dict]) -> list[tuple[float, str | None]]:
+    """When the engine's current task changed, from the run log: a new task starts (`task`), a paused / retracted /
+    done-enough task becomes current again (`task_state` to active, except coming back from an interruption, which
+    never left), or the current task ends (`task_state` done_enough while current)."""
+    out: list[tuple[float, str | None]] = []
+    cur = None
+    for r in recs:
+        new = cur
+        if r["kind"] == "task":
+            new = r["task_id"]
+        elif r["kind"] == "task_state":
+            if r["to"] == "active" and (r.get("evidence") or {}).get("how") != "came_back":
+                new = r["task_id"]
+            elif r["to"] == "done_enough" and r["task_id"] == cur:
+                new = None
+        if new != cur:
+            out.append((float(r["t"]), new))
+            cur = new
+    return out
+
+
+def current_task(recs: list[dict], times: np.ndarray) -> np.ndarray:
+    ch = task_changes(recs)
+    out = np.empty(len(times), dtype=object)
+    out[:] = None
+    for i, t in enumerate(times):
+        for tc, task in ch:
+            if tc <= t:
+                out[i] = task
+            else:
+                break
+    return out
+
+
 def aggregate(rows: list[dict]) -> dict:
     def mean(k):
         xs = [r[k] for r in rows if r.get(k) is not None]
@@ -203,7 +254,15 @@ def aggregate(rows: list[dict]) -> dict:
         "cost_usd_per_video_min": sum(r["cost_usd"] for r in rows) / max(1e-6, minutes),
         "view_requests": sum(r["n_view_requests"] for r in rows),
         "hints": sum(r["n_hints"] for r in rows),
+        "zero_step_acc_clips": sum(1 for r in rows if r["step_acc"] == 0),
     }
+    if rows and "task_final_correct" in rows[0]:          # multi-task fields (logs scored by this version)
+        out.update({"task_final_correct": float(np.mean([r["task_final_correct"] for r in rows])),
+                    "correct_task_share": mean("correct_task_share"),
+                    "wrong_switches": sum(r["wrong_switches"] for r in rows),
+                    "recovered_switches": sum(r["recovered_switches"] for r in rows),
+                    "task_rechecks": sum(r["task_rechecks"] for r in rows),
+                    "leave_warnings": sum(r["leave_warnings"] for r in rows)})
     return out
 
 

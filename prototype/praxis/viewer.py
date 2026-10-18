@@ -80,6 +80,17 @@ v.addEventListener('timeupdate', draw); v.addEventListener('seeked', draw); draw
 </script></body></html>"""
 
 
+def recipe(task_id: str) -> str:
+    return task_id.replace("cc4d_", "")
+
+
+def wrong_recipe_note(row: dict) -> str:
+    """Why a clip of a task-not-given run scores 0%: the engine committed to the wrong recipe (or none) and never revises."""
+    if not row or row.get("task_correct", True):
+        return ""
+    return f"wrong recipe (guessed {recipe(row['recognized_task'])})" if row.get("recognized_task") else "no recipe recognized"
+
+
 def page(run: str, clip: Clip, metrics_row: dict | None, out_dir: Path) -> Path:
     recs = read_log(RUNS / run / f"{clip.clip_id}.jsonl")
     g = load_library()[clip.task_id]
@@ -96,8 +107,16 @@ def page(run: str, clip: Clip, metrics_row: dict | None, out_dir: Path) -> Path:
             events.append({"t": r["t"], "k": "task", "text": f"L3b recognized: {r['title']}"})
     events.sort(key=lambda e: e["t"])
     mr = metrics_row or {}
+    if not mr:
+        recognized = "n/a"
+    elif mr.get("recognized_task") is None:
+        recognized = "none"
+    else:
+        recognized = f"{recipe(mr['recognized_task'])} at {mr.get('t_recognize')} s"
+        if not mr.get("task_correct"):
+            recognized += f" (wrong recipe: the clip is {recipe(clip.task_id)})"
     metrics = {"step accuracy": f"{100 * mr.get('step_acc', 0):.0f}%" if mr else "n/a",
-               "task recognized": f"{mr.get('recognized_task')} at {mr.get('t_recognize')} s" if mr else "n/a",
+               "task recognized": recognized,
                "mistake alerts (TP/FP/FN)": f"{mr['mistakes']['tp']}/{mr['mistakes']['fp']}/{mr['mistakes']['fn']}" if mr else "n/a",
                "verifier calls": str(mr.get("verifier_calls", "n/a")), "cost": f"${mr.get('cost_usd', 0):.4f}" if mr else "n/a"}
     data = {"start": clip.start, "n_steps": len(g.nodes), "names": {n.id: n.name for n in g.nodes}, "beliefs": beliefs,
@@ -123,13 +142,20 @@ def main(run: str = "fused") -> Path:
         if (RUNS / run / f"{c.clip_id}.jsonl").exists():
             f = page(run, c, rows.get(c.clip_id), out_dir)
             r = rows.get(c.clip_id, {})
+            note = wrong_recipe_note(r)
             links.append(f"<tr><td><a href='{f.name}'>{c.clip_id}</a>{' (dev clip)' if c.clip_id in dev else ''}</td>"
-                         f"<td>{c.task_id.replace('cc4d_', '')}</td>"
-                         f"<td>{100 * r.get('step_acc', 0):.0f}%</td><td>{r.get('mistakes', {}).get('tp', '')}</td></tr>")
+                         f"<td>{recipe(c.task_id)}</td>"
+                         f"<td>{100 * r.get('step_acc', 0):.0f}%{f' · {html.escape(note)}' if note else ''}</td>"
+                         f"<td>{r.get('mistakes', {}).get('tp', '')}</td></tr>")
+    legend = ("Step acc. is the share of moments inside an annotated step where Praxis named the step the person was on.")
+    if any(wrong_recipe_note(r) for r in rows.values()):
+        legend += (" In this run Praxis is not told the recipe and must recognize it. Once it picks a recipe it does not "
+                   "reconsider yet, so a clip where it picked the wrong one scores 0%.")
     idx = out_dir / "index.html"
     idx.write_text("<!doctype html><meta charset='utf-8'><title>Praxis viewer</title><body style='font:14px -apple-system,sans-serif;"
                    "margin:24px'><h2>Praxis viewer · run " + html.escape(run) + "</h2><p>AI guidance for the physical world · "
-                   "real model output</p><table cellpadding=4><tr><th>clip</th><th>procedure</th><th>step acc.</th><th>mistake alerts near an annotated error (time-window)</th></tr>"
+                   "real model output</p><p style='max-width:760px;color:#555'>" + html.escape(legend) + "</p>"
+                   "<table cellpadding=4><tr><th>clip</th><th>procedure</th><th>step acc.</th><th>mistake alerts near an annotated error (time-window)</th></tr>"
                    + "".join(links) + "</table></body>")
     return idx
 

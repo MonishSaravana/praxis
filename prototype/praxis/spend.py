@@ -76,6 +76,24 @@ def main() -> dict:
         items[f"live mode: {f.stem}"] = json.loads(f.read_text()).get("spend_usd", 0.0)
     for f in sorted((RESULTS / "live" / "checks").glob("*.json")):     # replay checks (live calls on cache misses)
         items[f"live mode check: {f.stem}"] = json.loads(f.read_text()).get("spend_usd", 0.0)
+    for f in sorted((RESULTS / "multitask").glob("*.json")):          # multi-task runs (new calls only)
+        r = json.loads(f.read_text())
+        if "spend_usd" in r and "calls" in r:     # one engine run each; sweep summaries repeat their runs' spend
+            items[f"multi-task run: {f.stem}"] = r["spend_usd"]
+    for f in sorted((RESULTS / "l3b").glob("*bakeoff*.json")):         # model tests on the "which task?" question
+        if "openai" not in f.stem:                                      # OpenAI calls are counted from their caches
+            items[f"model test: {f.stem}"] = json.loads(f.read_text()).get("spend_usd", 0.0)
+    e = DATA / "enigma51" / "compile_summary.json"                       # ENIGMA-51 procedures -> task graphs (Opus)
+    if e.exists():
+        items["ENIGMA-51 graph compile (Opus)"] = json.loads(e.read_text()).get("spend_usd", 0.0)
+    for f in sorted((RESULTS / "enigma51").glob("*.json")):              # ENIGMA-51 engine runs (non-OpenAI calls)
+        r = json.loads(f.read_text())
+        if "spend_usd_non_openai" in r:
+            items[f"ENIGMA-51 run: {f.stem}"] = r["spend_usd_non_openai"]
+    from .paths import CACHE as _C                                      # OpenAI calls: each paid once, cost cached
+    for d in sorted((_C / "api").glob("gpt-*")):
+        items[f"OpenAI calls: {d.name}"] = sum(json.loads(f.read_text()).get("meta", {}).get("cost_usd", 0.0)
+                                               for f in d.glob("*.json"))
     m2 = RESULTS / "m2" / "two_clip_test.json"
     if m2.exists():
         items["M2 two-clip test"] = json.loads(m2.read_text()).get("spend", 0.0)

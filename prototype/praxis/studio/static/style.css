@@ -102,6 +102,14 @@ button.primary { background: var(--ink); color: #fff; border-color: var(--ink); 
 .hud .badge { position: absolute; left: 1.4cqw; bottom: 1.1cqw; font-size: 1.1cqw; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, .7); }
 
 /* ---------------- engineer panel ---------------- */
+.hud .paused { position: absolute; top: 5.2cqw; right: 2.8cqw; display: flex; flex-direction: column; align-items: flex-end; gap: .5cqw; }
+.hud .paused div { padding: .35cqw 1cqw; border-radius: 1.2cqw; font-size: 1.25cqw; color: var(--sub); background: rgba(255, 255, 255, .55);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.hud .paused div { display: flex; align-items: center; gap: .6cqw; }
+.hud .paused button { pointer-events: auto; font-size: 1.15cqw; padding: .25cqw .8cqw; border-radius: 1cqw; border: 1px solid #d2d4d8;
+  background: rgba(255, 255, 255, .85); color: var(--ink); cursor: pointer; }
+.hud .card.leave_warning .accent { background: var(--amber); }
+.hud .card.switch_task .accent, .hud .card.retract_task .accent { background: var(--blue); }
 .engineer { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; }
 .engineer h3:first-child { margin-top: 0; }
 .brow { display: flex; align-items: center; gap: 8px; font-size: 12px; margin: 2px 0; }

@@ -1,0 +1,1512 @@
+{
+  "student": {
+    "desc": "L7 student retrained on checks from random subsets of train recordings; scored on the same held-out eval checks as results/l7/distill.json",
+    "n_train_recordings": 30,
+    "n_train_checks": 596,
+    "n_test_checks": 469,
+    "teacher_acc_vs_gt": 0.7974413646055437,
+    "teacher_auroc": 0.8377952755905511,
+    "rows": [
+      {
+        "n_recordings": 4,
+        "n_checks": 81,
+        "seed": 0,
+        "acc_vs_gt": 0.5714285714285714,
+        "auroc": 0.6169199780260025,
+        "agreement": 0.6289978678038379
+      },
+      {
+        "n_recordings": 4,
+        "n_checks": 81,
+        "seed": 1,
+        "acc_vs_gt": 0.6268656716417911,
+        "auroc": 0.6696392602087531,
+        "agreement": 0.6247334754797441
+      },
+      {
+        "n_recordings": 4,
+        "n_checks": 78,
+        "seed": 2,
+        "acc_vs_gt": 0.6545842217484008,
+        "auroc": 0.6888115729719833,
+        "agreement": 0.6226012793176973
+      },
+      {
+        "n_recordings": 4,
+        "n_checks": 73,
+        "seed": 3,
+        "acc_vs_gt": 0.6545842217484008,
+        "auroc": 0.703479216260758,
+        "agreement": 0.6311300639658849
+      },
+      {
+        "n_recordings": 4,
+        "n_checks": 80,
+        "seed": 4,
+        "acc_vs_gt": 0.6226012793176973,
+        "auroc": 0.6874198864676799,
+        "agreement": 0.5948827292110874
+      },
+      {
+        "n_recordings": 8,
+        "n_checks": 155,
+        "seed": 0,
+        "acc_vs_gt": 0.6311300639658849,
+        "auroc": 0.6729536714887383,
+        "agreement": 0.6631130063965884
+      },
+      {
+        "n_recordings": 8,
+        "n_checks": 155,
+        "seed": 1,
+        "acc_vs_gt": 0.650319829424307,
+        "auroc": 0.6831715802966489,
+        "agreement": 0.6481876332622601
+      },
+      {
+        "n_recordings": 8,
+        "n_checks": 172,
+        "seed": 2,
+        "acc_vs_gt": 0.6204690831556503,
+        "auroc": 0.7198132210217909,
+        "agreement": 0.5970149253731343
+      },
+      {
+        "n_recordings": 8,
+        "n_checks": 145,
+        "seed": 3,
+        "acc_vs_gt": 0.6908315565031983,
+        "auroc": 0.746346822926204,
+        "agreement": 0.6588486140724946
+      },
+      {
+        "n_recordings": 8,
+        "n_checks": 144,
+        "seed": 4,
+        "acc_vs_gt": 0.6311300639658849,
+        "auroc": 0.7267899652078373,
+        "agreement": 0.6417910447761194
+      },
+      {
+        "n_recordings": 15,
+        "n_checks": 283,
+        "seed": 0,
+        "acc_vs_gt": 0.67590618336887,
+        "auroc": 0.7430873466398096,
+        "agreement": 0.6609808102345416
+      },
+      {
+        "n_recordings": 15,
+        "n_checks": 286,
+        "seed": 1,
+        "acc_vs_gt": 0.6652452025586354,
+        "auroc": 0.7360556674601721,
+        "agreement": 0.650319829424307
+      },
+      {
+        "n_recordings": 15,
+        "n_checks": 296,
+        "seed": 2,
+        "acc_vs_gt": 0.6908315565031983,
+        "auroc": 0.7509796740523713,
+        "agreement": 0.6460554371002132
+      },
+      {
+        "n_recordings": 15,
+        "n_checks": 295,
+        "seed": 3,
+        "acc_vs_gt": 0.7142857142857143,
+        "auroc": 0.7867057315509979,
+        "agreement": 0.673773987206823
+      },
+      {
+        "n_recordings": 15,
+        "n_checks": 294,
+        "seed": 4,
+        "acc_vs_gt": 0.6716417910447762,
+        "auroc": 0.7492034425929317,
+        "agreement": 0.6609808102345416
+      },
+      {
+        "n_recordings": 22,
+        "n_checks": 432,
+        "seed": 0,
+        "acc_vs_gt": 0.720682302771855,
+        "auroc": 0.774198864676799,
+        "agreement": 0.6801705756929638
+      },
+      {
+        "n_recordings": 22,
+        "n_checks": 434,
+        "seed": 1,
+        "acc_vs_gt": 0.7014925373134329,
+        "auroc": 0.7652444607214797,
+        "agreement": 0.6908315565031983
+      },
+      {
+        "n_recordings": 22,
+        "n_checks": 440,
+        "seed": 2,
+        "acc_vs_gt": 0.697228144989339,
+        "auroc": 0.76766160043948,
+        "agreement": 0.6780383795309168
+      },
+      {
+        "n_recordings": 22,
+        "n_checks": 436,
+        "seed": 3,
+        "acc_vs_gt": 0.7292110874200426,
+        "auroc": 0.7927119575169383,
+        "agreement": 0.6844349680170576
+      },
+      {
+        "n_recordings": 22,
+        "n_checks": 452,
+        "seed": 4,
+        "acc_vs_gt": 0.7100213219616205,
+        "auroc": 0.7837941768906793,
+        "agreement": 0.6950959488272921
+      },
+      {
+        "n_recordings": 30,
+        "n_checks": 596,
+        "seed": 0,
+        "acc_vs_gt": 0.7249466950959488,
+        "auroc": 0.7832265152902398,
+        "agreement": 0.6844349680170576
+      }
+    ]
+  },
+  "probes": {
+    "desc": "held-out frame-level step accuracy of the per-procedure linear probe (SigLIP2 + V-JEPA 2) vs number of train recordings of that procedure; random subsets, 5 seeds; eval clips only",
+    "n_train_avail": {
+      "cc4d_tomatomozzarellasalad": 9,
+      "cc4d_spicedhotchocolate": 9,
+      "cc4d_breakfastburritos": 9,
+      "cc4d_microwaveeggsandwich": 3,
+      "cc4d_pinwheels": 3,
+      "cc4d_microwavemugpizza": 3,
+      "cc4d_herbomeletwithfriedtomatoes": 3,
+      "cc4d_cucumberraita": 3
+    },
+    "rows": [
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 1,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.3388991960420532
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 1,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.32220160791589364
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 1,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.3623995052566481
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 1,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.32220160791589364
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 1,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.39517625231910947
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 2,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.41496598639455784
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 2,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.4458874458874459
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 2,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.37971552257266544
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 2,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.4458874458874459
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 2,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.49536178107606677
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 3,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.4427952999381571
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 3,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.49288806431663573
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 3,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.4230055658627087
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 3,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.45640074211502785
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 3,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.4996907854050711
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 4,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.44959802102659246
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 4,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.49907235621521334
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 4,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.41125541125541126
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 4,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.48484848484848486
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 4,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.48855905998763144
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 5,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.4601113172541744
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 5,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.4972170686456401
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 5,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.4137291280148423
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 5,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.4972170686456401
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 5,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.4941249226963513
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 6,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.46320346320346323
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 6,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.5071119356833642
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 6,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.4514533085961657
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 6,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.5095856524427953
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 6,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.48917748917748916
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 7,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.45701917130488556
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 7,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.4972170686456401
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 7,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.45701917130488556
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 7,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.48917748917748916
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 7,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.5027829313543599
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 8,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.49226963512677796
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 8,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.5021645021645021
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 8,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.49226963512677796
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 8,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.5003092145949288
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 8,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.505256648113791
+      },
+      {
+        "task": "cc4d_tomatomozzarellasalad",
+        "k": 9,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.5071119356833642
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 1,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.30088766452402815
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 1,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.16804407713498623
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 1,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.3189470462197735
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 1,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.16804407713498623
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 1,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.3859810223446587
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 2,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.3021120293847567
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 2,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.4175084175084175
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 2,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.34741352923171104
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 2,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.4175084175084175
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 2,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.47505356596265685
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 3,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.3403734312825222
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 3,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.4190388735843281
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 3,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.4239363330272421
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 3,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.3884297520661157
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 3,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.47076828895010714
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 4,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.3666972757881849
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 4,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.3590449954086318
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 4,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.40526476890113255
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 4,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.4386287113559841
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 4,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.48484848484848486
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 5,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.41689623507805323
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 5,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.39516375880012244
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 5,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.5099479644934191
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 5,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.3960820324456688
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 5,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.5035200489745945
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 6,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.4689317416590144
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 6,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.38506274869911233
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 6,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.5041322314049587
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 6,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.41628405264768903
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 6,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.5038261401897766
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 7,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.46219773492500765
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 7,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.47474747474747475
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 7,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.46189164370982555
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 7,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.3997551270278543
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 7,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.507499234771962
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 8,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.475359657177839
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 8,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.48515457606366696
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 8,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.475359657177839
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 8,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.46005509641873277
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 8,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.4866850321395776
+      },
+      {
+        "task": "cc4d_spicedhotchocolate",
+        "k": 9,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.4970921334557698
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 1,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.33036263060848187
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 1,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.25414874001229254
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 1,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.3251382913337431
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 1,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.25414874001229254
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 1,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.35464044253226795
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 2,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.2618315918869084
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 2,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.36877688998156116
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 2,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.38537185003073143
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 2,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.36877688998156116
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 2,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.4164105716041795
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 3,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.4231714812538414
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 3,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.4406883835279656
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 3,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.4486785494775661
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 3,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.4204056545789797
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 3,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.42593730792870316
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 4,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.46527350952673635
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 4,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.4326982175783651
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 4,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.5015365703749232
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 4,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.4566687154271666
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 4,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.4222495390288875
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 5,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.45820528580208975
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 5,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.4643515673017824
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 5,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.5036877688998156
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 5,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.46527350952673635
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 5,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.4400737553779963
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 6,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.5107559926244623
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 6,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.48770743700061464
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 6,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.5187461585740627
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 6,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.4830977258758451
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 6,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.4658881376767056
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 7,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.5273509526736324
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 7,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.493239090350338
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 7,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.5261216963736939
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 7,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.49877074370006147
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 7,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.5021511985248924
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 8,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.5227412415488629
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 8,
+        "seed": 1,
+        "n_train_avail": 9,
+        "acc": 0.49078057775046097
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 8,
+        "seed": 2,
+        "n_train_avail": 9,
+        "acc": 0.5273509526736324
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 8,
+        "seed": 3,
+        "n_train_avail": 9,
+        "acc": 0.5153657037492317
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 8,
+        "seed": 4,
+        "n_train_avail": 9,
+        "acc": 0.5233558696988322
+      },
+      {
+        "task": "cc4d_breakfastburritos",
+        "k": 9,
+        "seed": 0,
+        "n_train_avail": 9,
+        "acc": 0.5156730178242164
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 1,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.25711633663366334
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 1,
+        "seed": 1,
+        "n_train_avail": 3,
+        "acc": 0.27970297029702973
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 1,
+        "seed": 2,
+        "n_train_avail": 3,
+        "acc": 0.25711633663366334
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 1,
+        "seed": 3,
+        "n_train_avail": 3,
+        "acc": 0.25711633663366334
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 1,
+        "seed": 4,
+        "n_train_avail": 3,
+        "acc": 0.27970297029702973
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 2,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.3344678217821782
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 2,
+        "seed": 1,
+        "n_train_avail": 3,
+        "acc": 0.3468440594059406
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 2,
+        "seed": 2,
+        "n_train_avail": 3,
+        "acc": 0.3344678217821782
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 2,
+        "seed": 3,
+        "n_train_avail": 3,
+        "acc": 0.3217821782178218
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 2,
+        "seed": 4,
+        "n_train_avail": 3,
+        "acc": 0.3468440594059406
+      },
+      {
+        "task": "cc4d_microwaveeggsandwich",
+        "k": 3,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.3582920792079208
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 1,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.24685591088753145
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 1,
+        "seed": 1,
+        "n_train_avail": 3,
+        "acc": 0.37477542220625226
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 1,
+        "seed": 2,
+        "n_train_avail": 3,
+        "acc": 0.24685591088753145
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 1,
+        "seed": 3,
+        "n_train_avail": 3,
+        "acc": 0.24685591088753145
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 1,
+        "seed": 4,
+        "n_train_avail": 3,
+        "acc": 0.37477542220625226
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 2,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.34315486884656843
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 2,
+        "seed": 1,
+        "n_train_avail": 3,
+        "acc": 0.3794466403162055
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 2,
+        "seed": 2,
+        "n_train_avail": 3,
+        "acc": 0.34315486884656843
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 2,
+        "seed": 3,
+        "n_train_avail": 3,
+        "acc": 0.28350700682716495
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 2,
+        "seed": 4,
+        "n_train_avail": 3,
+        "acc": 0.3794466403162055
+      },
+      {
+        "task": "cc4d_pinwheels",
+        "k": 3,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.3632770391663672
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 1,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.24546827794561935
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 1,
+        "seed": 1,
+        "n_train_avail": 3,
+        "acc": 0.118202416918429
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 1,
+        "seed": 2,
+        "n_train_avail": 3,
+        "acc": 0.24546827794561935
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 1,
+        "seed": 3,
+        "n_train_avail": 3,
+        "acc": 0.24546827794561935
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 1,
+        "seed": 4,
+        "n_train_avail": 3,
+        "acc": 0.118202416918429
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 2,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.25075528700906347
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 2,
+        "seed": 1,
+        "n_train_avail": 3,
+        "acc": 0.21601208459214502
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 2,
+        "seed": 2,
+        "n_train_avail": 3,
+        "acc": 0.25075528700906347
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 2,
+        "seed": 3,
+        "n_train_avail": 3,
+        "acc": 0.31797583081570996
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 2,
+        "seed": 4,
+        "n_train_avail": 3,
+        "acc": 0.21601208459214502
+      },
+      {
+        "task": "cc4d_microwavemugpizza",
+        "k": 3,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.30589123867069484
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 1,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.35176991150442477
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 1,
+        "seed": 1,
+        "n_train_avail": 3,
+        "acc": 0.2374631268436578
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 1,
+        "seed": 2,
+        "n_train_avail": 3,
+        "acc": 0.35176991150442477
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 1,
+        "seed": 3,
+        "n_train_avail": 3,
+        "acc": 0.35176991150442477
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 1,
+        "seed": 4,
+        "n_train_avail": 3,
+        "acc": 0.2374631268436578
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 2,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.3226401179941003
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 2,
+        "seed": 1,
+        "n_train_avail": 3,
+        "acc": 0.47123893805309736
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 2,
+        "seed": 2,
+        "n_train_avail": 3,
+        "acc": 0.3226401179941003
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 2,
+        "seed": 3,
+        "n_train_avail": 3,
+        "acc": 0.46533923303834807
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 2,
+        "seed": 4,
+        "n_train_avail": 3,
+        "acc": 0.47123893805309736
+      },
+      {
+        "task": "cc4d_herbomeletwithfriedtomatoes",
+        "k": 3,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.5224926253687315
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 1,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.31203931203931207
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 1,
+        "seed": 1,
+        "n_train_avail": 3,
+        "acc": 0.3745173745173745
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 1,
+        "seed": 2,
+        "n_train_avail": 3,
+        "acc": 0.31203931203931207
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 1,
+        "seed": 3,
+        "n_train_avail": 3,
+        "acc": 0.31203931203931207
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 1,
+        "seed": 4,
+        "n_train_avail": 3,
+        "acc": 0.3745173745173745
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 2,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.4117234117234117
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 2,
+        "seed": 1,
+        "n_train_avail": 3,
+        "acc": 0.37662337662337664
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 2,
+        "seed": 2,
+        "n_train_avail": 3,
+        "acc": 0.4117234117234117
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 2,
+        "seed": 3,
+        "n_train_avail": 3,
+        "acc": 0.3875043875043875
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 2,
+        "seed": 4,
+        "n_train_avail": 3,
+        "acc": 0.37662337662337664
+      },
+      {
+        "task": "cc4d_cucumberraita",
+        "k": 3,
+        "seed": 0,
+        "n_train_avail": 3,
+        "acc": 0.42646542646542646
+      }
+    ]
+  },
+  "detector_partial": {
+    "desc": "L2 detector learning curve, INTERRUPTED (session ended) after 11 of 18 runs; values copied from the run log (F1 at \u00b15 s, rounded to 3 dp). Noisy across seeds with no clear trend at 6-24 recordings; not used for any claim.",
+    "rows": [
+      {
+        "n_recordings": 6,
+        "seed": 0,
+        "heldout_videos_f1_tol5s": 0.296,
+        "heldout_procedure_types_f1_tol5s": 0.164
+      },
+      {
+        "n_recordings": 6,
+        "seed": 1,
+        "heldout_videos_f1_tol5s": 0.314,
+        "heldout_procedure_types_f1_tol5s": 0.307
+      },
+      {
+        "n_recordings": 6,
+        "seed": 2,
+        "heldout_videos_f1_tol5s": 0.384,
+        "heldout_procedure_types_f1_tol5s": 0.316
+      },
+      {
+        "n_recordings": 12,
+        "seed": 0,
+        "heldout_videos_f1_tol5s": 0.347,
+        "heldout_procedure_types_f1_tol5s": 0.261
+      },
+      {
+        "n_recordings": 12,
+        "seed": 1,
+        "heldout_videos_f1_tol5s": 0.262,
+        "heldout_procedure_types_f1_tol5s": 0.314
+      },
+      {
+        "n_recordings": 12,
+        "seed": 2,
+        "heldout_videos_f1_tol5s": 0.298,
+        "heldout_procedure_types_f1_tol5s": 0.245
+      },
+      {
+        "n_recordings": 18,
+        "seed": 0,
+        "heldout_videos_f1_tol5s": 0.363,
+        "heldout_procedure_types_f1_tol5s": 0.325
+      },
+      {
+        "n_recordings": 18,
+        "seed": 1,
+        "heldout_videos_f1_tol5s": 0.432,
+        "heldout_procedure_types_f1_tol5s": 0.324
+      },
+      {
+        "n_recordings": 18,
+        "seed": 2,
+        "heldout_videos_f1_tol5s": 0.294,
+        "heldout_procedure_types_f1_tol5s": 0.11
+      },
+      {
+        "n_recordings": 24,
+        "seed": 0,
+        "heldout_videos_f1_tol5s": 0.36,
+        "heldout_procedure_types_f1_tol5s": 0.281
+      },
+      {
+        "n_recordings": 24,
+        "seed": 1,
+        "heldout_videos_f1_tol5s": 0.343,
+        "heldout_procedure_types_f1_tol5s": 0.305
+      }
+    ]
+  }
+}

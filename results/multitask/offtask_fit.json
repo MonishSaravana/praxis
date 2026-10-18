@@ -1,0 +1,46 @@
+{
+  "protocol": "train-split recordings (24), first 600s, per second, each paired with every CaptainCook4D library task; grouped 5-fold CV by recording",
+  "windows": {
+    "10": {
+      "cv_auc_on_vs_off": 0.8418415467863706,
+      "recipe_top1_per_second": 0.5174275138803208,
+      "n_rows": 103744,
+      "coef": [
+        62.12177271387965,
+        50.343659593318904
+      ],
+      "intercept": 0.04151344451064537
+    },
+    "20": {
+      "cv_auc_on_vs_off": 0.871259507339473,
+      "recipe_top1_per_second": 0.5768044417026527,
+      "n_rows": 103744,
+      "coef": [
+        69.61491272030692,
+        55.89009082856796
+      ],
+      "intercept": -0.002817374520993836
+    },
+    "30": {
+      "cv_auc_on_vs_off": 0.8879711453706413,
+      "recipe_top1_per_second": 0.6038710672424429,
+      "n_rows": 103744,
+      "coef": [
+        76.19677917227952,
+        58.34478339271283
+      ],
+      "intercept": -0.015192296631718637
+    },
+    "60": {
+      "cv_auc_on_vs_off": 0.9139743076924456,
+      "recipe_top1_per_second": 0.6529919802590993,
+      "n_rows": 103744,
+      "coef": [
+        86.05336367360792,
+        60.54973586104799
+      ],
+      "intercept": -0.036896893129675847
+    }
+  },
+  "chosen_window_s": 60.0
+}

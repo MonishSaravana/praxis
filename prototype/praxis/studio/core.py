@@ -62,9 +62,10 @@ class StudioCore:
         """The evaluated live configuration (tuned tracker, policy thresholds, commit rule, L2 threshold) with the
         async slow path on."""
         from ..engine import EngineConfig
-        from ..eval.run_all import commit_p, tuned_policy, tuned_tracker
+        from ..eval.run_all import apply_overrides, commit_p, multitask_overrides, tuned_policy, tuned_tracker
         cfg = EngineConfig(tracker=tuned_tracker(), policy=tuned_policy(), commit_on_switch_p=commit_p(),
                            boundary_thr=self.stack["boundary_thr"], async_slow_path=True)
+        apply_overrides(cfg, multitask_overrides())     # multi-task on once thresholds are chosen on the train split
         for k, v in overrides.items():
             setattr(cfg, k, v)
         return cfg

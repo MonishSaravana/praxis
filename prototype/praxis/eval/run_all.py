@@ -29,6 +29,11 @@ VARIANTS = {
     "fused_distilled": (dict(), "distilled", "claude_strong", "learned", True, "jev"),
     "fused_distilled_alone": (dict(), "distilled", "claude_strong", "learned", True),
     "fused_no_escalation": (dict(escalate=False), "jev", None, "learned", True),
+    # multi-task (docs/MULTITASK.md): the configuration chosen on the train split (results/multitask/chosen.json).
+    # Automatic: task set + re-checks + switching. Task given: only the tracker's away states (no switching), to check
+    # that they don't hurt the task-given run.
+    "fused_mt": (dict(__multitask__="auto"), "jev", "claude_strong", "learned", False),
+    "fused_oracle_mt": (dict(__multitask__="given"), "jev", "claude_strong", "learned", True),
 }
 
 
@@ -63,22 +68,34 @@ def commit_p() -> float:
     return json.loads(p.read_text())["best"]["commit_on_switch_p"] if p.exists() else 0.7
 
 
+def multitask_overrides() -> dict:
+    """The multi-task configuration chosen on the train split (results/multitask/chosen.json): tracker away states,
+    poor-fit trigger and switch thresholds. Empty until chosen, so the engine stays single-task."""
+    p = RESULTS / "multitask" / "chosen.json"
+    return dict(json.loads(p.read_text())["overrides"]) if p.exists() else {}
+
+
+def apply_overrides(cfg: EngineConfig, overrides: dict) -> EngineConfig:
+    for k, v in overrides.items():
+        if k.startswith("policy."):
+            setattr(cfg.policy, k.split(".", 1)[1], v)
+        elif k.startswith("tracker."):
+            setattr(cfg.tracker, k.split(".", 1)[1], v)
+        else:
+            setattr(cfg, k, tuple(v) if k == "recheck_backoff" else v)
+    return cfg
+
+
 def engine_config(overrides: dict) -> EngineConfig:
     stack_thr = harness.load_stack()["boundary_thr"]
     base = EngineConfig(tracker=tuned_tracker(), policy=tuned_policy(), commit_on_switch_p=commit_p(), boundary_thr=stack_thr)
-    for k, v in overrides.items():
-        if k.startswith("policy."):
-            setattr(base.policy, k.split(".", 1)[1], v)
-        elif k.startswith("tracker."):
-            setattr(base.tracker, k.split(".", 1)[1], v)
-        else:
-            setattr(base, k, v)
-    return base
+    return apply_overrides(base, overrides)
 
 
 def calibrators(kind: str | None):
     if not kind:
         return None, None
+    kind = kind.replace(":", "_").split("@")[0]          # openai:gpt-6.1-sol -> cal_openai_gpt-6.1-sol.pkl
     p, q = CKPT / f"cal_{kind}.pkl", CKPT / f"devcal_{kind}.pkl"
     return (Calibrator.load(p) if p.exists() else None, Calibrator.load(q) if q.exists() else None)
 
@@ -97,7 +114,14 @@ def run_variant(name: str, limit: int = 0, only: list[str] | None = None, worker
     from ..experiments import _budget, make_verifier
     over, vk, ek, det, oracle, *rest = VARIANTS[name]
     lk = rest[0] if rest else None
-    stack = harness.load_stack(detector=det)
+    mode = over.get("__multitask__")
+    if mode:
+        mt = multitask_overrides()
+        if not mt:
+            raise RuntimeError("no multi-task configuration chosen yet (results/multitask/chosen.json)")
+        over = {**mt, "multi_task": True, "switching": mode == "auto"}     # task given: no switching
+    win = over.pop("offtask_window", None)
+    stack = harness.load_stack(detector=det, offtask_window=win)
     ecfg = engine_config(over)
     if det == "heuristic":
         ecfg.boundary_thr = stack["boundary_thr"]

@@ -1,0 +1,462 @@
+{
+ "protocol": "train split, 3 folds by recording, automatic, Jev fast tier only (no Opus escalation), 24 single-task recordings (first 300 s) + 22 SYNTHETIC train splices",
+ "base": {
+  "multi_task": true,
+  "offtask_window": 20,
+  "tracker.away_mode": "decoupled",
+  "tracker.away_enter": 0.005,
+  "tracker.away_return": 0.05,
+  "tracker.away_weight": 0.3
+ },
+ "configs": {
+  "reference_single_task": {
+   "overrides": {
+    "multi_task": false
+   },
+   "step_acc_weighted": 0.35769091544886683,
+   "single_step_acc": 0.4328942126809356,
+   "single_wrong_switches": 0,
+   "single_task_top1": 0.8333333333333334,
+   "single_task_final_correct": 0.8333333333333334,
+   "splices": {
+    "n": 22,
+    "minutes": 171.0,
+    "step_acc": 0.3049166717772395,
+    "correct_task_share": 0.49539705705798737,
+    "switch_latency_s": {
+     "n": 0,
+     "p50": null,
+     "p90": null
+    },
+    "switches_detected": 0,
+    "missed_switches": 18,
+    "wrong_switches": 0,
+    "wrong_switches_per_hour": 0.0,
+    "task_checks": 221,
+    "verifier_calls": 2083,
+    "cost_usd": 0.220381182,
+    "resume": {
+     "n": 10,
+     "left_a": 0,
+     "resumed": 0,
+     "a_current_60s_after_return": 9,
+     "step_exact": 2,
+     "step_within1": 2,
+     "resume_latency_s_p50": null
+    },
+    "interrupt": {
+     "n": 6,
+     "switched_to_a_library_task": 0,
+     "a_current_60s_after_return": 5,
+     "step_exact": 0,
+     "step_within1": 0,
+     "interruption_pauses": 0,
+     "leave_warnings": 0
+    }
+   },
+   "calls": 3037,
+   "spend_usd": 0.31990769999999985
+  },
+  "default_W20_thr0.4": {
+   "overrides": {
+    "multi_task": true,
+    "offtask_window": 20,
+    "tracker.away_mode": "decoupled",
+    "tracker.away_enter": 0.005,
+    "tracker.away_return": 0.05,
+    "tracker.away_weight": 0.3,
+    "fit_window_s": 20.0,
+    "fit_thr": 0.4
+   },
+   "step_acc_weighted": 0.4131022425865813,
+   "single_step_acc": 0.45001313024602885,
+   "single_wrong_switches": 2,
+   "single_task_top1": 0.8333333333333334,
+   "single_task_final_correct": 0.9166666666666666,
+   "splices": {
+    "n": 22,
+    "minutes": 171.0,
+    "step_acc": 0.38719986528170586,
+    "correct_task_share": 0.56542213802499,
+    "switch_latency_s": {
+     "n": 19,
+     "p50": 81.1309,
+     "p90": 127.74398
+    },
+    "switches_detected": 19,
+    "missed_switches": 6,
+    "wrong_switches": 7,
+    "wrong_switches_per_hour": 2.456140350877193,
+    "task_checks": 393,
+    "verifier_calls": 1632,
+    "cost_usd": 0.174558174,
+    "resume": {
+     "n": 10,
+     "left_a": 8,
+     "resumed": 6,
+     "a_current_60s_after_return": 6,
+     "step_exact": 2,
+     "step_within1": 3,
+     "resume_latency_s_p50": 34.33069999999998
+    },
+    "interrupt": {
+     "n": 6,
+     "switched_to_a_library_task": 3,
+     "a_current_60s_after_return": 5,
+     "step_exact": 3,
+     "step_within1": 3,
+     "interruption_pauses": 7,
+     "leave_warnings": 2
+    }
+   },
+   "calls": 2110,
+   "spend_usd": 0.22215895800000035
+  },
+  "default_W20_thr0.7": {
+   "overrides": {
+    "multi_task": true,
+    "offtask_window": 20,
+    "tracker.away_mode": "decoupled",
+    "tracker.away_enter": 0.005,
+    "tracker.away_return": 0.05,
+    "tracker.away_weight": 0.3,
+    "fit_window_s": 20.0,
+    "fit_thr": 0.7
+   },
+   "step_acc_weighted": 0.424632293534351,
+   "single_step_acc": 0.4780568333391306,
+   "single_wrong_switches": 1,
+   "single_task_top1": 0.8333333333333334,
+   "single_task_final_correct": 0.9583333333333334,
+   "splices": {
+    "n": 22,
+    "minutes": 171.0,
+    "step_acc": 0.38714138840818985,
+    "correct_task_share": 0.5633973657863124,
+    "switch_latency_s": {
+     "n": 17,
+     "p50": 69.16950000000003,
+     "p90": 138.19186
+    },
+    "switches_detected": 17,
+    "missed_switches": 7,
+    "wrong_switches": 6,
+    "wrong_switches_per_hour": 2.1052631578947367,
+    "task_checks": 354,
+    "verifier_calls": 1633,
+    "cost_usd": 0.174426294,
+    "resume": {
+     "n": 10,
+     "left_a": 6,
+     "resumed": 5,
+     "a_current_60s_after_return": 6,
+     "step_exact": 1,
+     "step_within1": 2,
+     "resume_latency_s_p50": 35.205899999999986
+    },
+    "interrupt": {
+     "n": 6,
+     "switched_to_a_library_task": 4,
+     "a_current_60s_after_return": 4,
+     "step_exact": 1,
+     "step_within1": 1,
+     "interruption_pauses": 8,
+     "leave_warnings": 2
+    }
+   },
+   "calls": 2106,
+   "spend_usd": 0.2214606239999997
+  },
+  "no_lm_agree_W20_thr0.7": {
+   "overrides": {
+    "multi_task": true,
+    "offtask_window": 20,
+    "tracker.away_mode": "decoupled",
+    "tracker.away_enter": 0.005,
+    "tracker.away_return": 0.05,
+    "tracker.away_weight": 0.3,
+    "fit_window_s": 20.0,
+    "fit_thr": 0.7,
+    "switch_lm_agree": false
+   },
+   "step_acc_weighted": 0.43192590911343093,
+   "single_step_acc": 0.4780568333391306,
+   "single_wrong_switches": 1,
+   "single_task_top1": 0.8333333333333334,
+   "single_task_final_correct": 0.9583333333333334,
+   "splices": {
+    "n": 22,
+    "minutes": 171.0,
+    "step_acc": 0.39955333070943105,
+    "correct_task_share": 0.574723081227712,
+    "switch_latency_s": {
+     "n": 19,
+     "p50": 68.1916,
+     "p90": 135.54397999999998
+    },
+    "switches_detected": 19,
+    "missed_switches": 6,
+    "wrong_switches": 6,
+    "wrong_switches_per_hour": 2.1052631578947367,
+    "task_checks": 360,
+    "verifier_calls": 1660,
+    "cost_usd": 0.17727330600000002,
+    "resume": {
+     "n": 10,
+     "left_a": 7,
+     "resumed": 6,
+     "a_current_60s_after_return": 6,
+     "step_exact": 1,
+     "step_within1": 2,
+     "resume_latency_s_p50": 30.355099999999993
+    },
+    "interrupt": {
+     "n": 6,
+     "switched_to_a_library_task": 4,
+     "a_current_60s_after_return": 4,
+     "step_exact": 1,
+     "step_within1": 1,
+     "interruption_pauses": 8,
+     "leave_warnings": 2
+    }
+   },
+   "calls": 1925,
+   "spend_usd": 0.2007746999999997,
+   "budget_cut": false
+  },
+  "strict_p0.8_W20_thr0.7": {
+   "overrides": {
+    "multi_task": true,
+    "offtask_window": 20,
+    "tracker.away_mode": "decoupled",
+    "tracker.away_enter": 0.005,
+    "tracker.away_return": 0.05,
+    "tracker.away_weight": 0.3,
+    "fit_window_s": 20.0,
+    "fit_thr": 0.7,
+    "switch_p": 0.8
+   },
+   "step_acc_weighted": 0.4215053010811914,
+   "single_step_acc": 0.46537098667899857,
+   "single_wrong_switches": 0,
+   "single_task_top1": 0.8333333333333334,
+   "single_task_final_correct": 0.9583333333333334,
+   "splices": {
+    "n": 22,
+    "minutes": 171.0,
+    "step_acc": 0.39072236381957226,
+    "correct_task_share": 0.5578967006894625,
+    "switch_latency_s": {
+     "n": 16,
+     "p50": 73.29500000000002,
+     "p90": 132.60660000000001
+    },
+    "switches_detected": 16,
+    "missed_switches": 8,
+    "wrong_switches": 3,
+    "wrong_switches_per_hour": 1.0526315789473684,
+    "task_checks": 365,
+    "verifier_calls": 1630,
+    "cost_usd": 0.17437455000000002,
+    "resume": {
+     "n": 10,
+     "left_a": 6,
+     "resumed": 5,
+     "a_current_60s_after_return": 6,
+     "step_exact": 1,
+     "step_within1": 2,
+     "resume_latency_s_p50": 35.205899999999986
+    },
+    "interrupt": {
+     "n": 6,
+     "switched_to_a_library_task": 1,
+     "a_current_60s_after_return": 5,
+     "step_exact": 1,
+     "step_within1": 1,
+     "interruption_pauses": 9,
+     "leave_warnings": 3
+    }
+   },
+   "calls": 1929,
+   "spend_usd": 0.20162150399999973,
+   "budget_cut": false
+  },
+  "two_confirmations_W20_thr0.7": {
+   "overrides": {
+    "multi_task": true,
+    "offtask_window": 20,
+    "tracker.away_mode": "decoupled",
+    "tracker.away_enter": 0.005,
+    "tracker.away_return": 0.05,
+    "tracker.away_weight": 0.3,
+    "fit_window_s": 20.0,
+    "fit_thr": 0.7,
+    "switch_confirmations": 2
+   },
+   "step_acc_weighted": 0.39779149434832856,
+   "single_step_acc": 0.45892289081809134,
+   "single_wrong_switches": 1,
+   "single_task_top1": 0.8333333333333334,
+   "single_task_final_correct": 0.9166666666666666,
+   "splices": {
+    "n": 22,
+    "minutes": 171.0,
+    "step_acc": 0.35489226875551255,
+    "correct_task_share": 0.5164557529263981,
+    "switch_latency_s": {
+     "n": 11,
+     "p50": 74.27340000000001,
+     "p90": 130.2352
+    },
+    "switches_detected": 11,
+    "missed_switches": 11,
+    "wrong_switches": 4,
+    "wrong_switches_per_hour": 1.4035087719298245,
+    "task_checks": 376,
+    "verifier_calls": 1661,
+    "cost_usd": 0.17772337800000002,
+    "resume": {
+     "n": 10,
+     "left_a": 4,
+     "resumed": 3,
+     "a_current_60s_after_return": 7,
+     "step_exact": 1,
+     "step_within1": 3,
+     "resume_latency_s_p50": 56.350900000000024
+    },
+    "interrupt": {
+     "n": 6,
+     "switched_to_a_library_task": 3,
+     "a_current_60s_after_return": 3,
+     "step_exact": 1,
+     "step_within1": 1,
+     "interruption_pauses": 8,
+     "leave_warnings": 2
+    }
+   },
+   "calls": 1940,
+   "spend_usd": 0.20267704799999955,
+   "budget_cut": false
+  },
+  "resume_bias_x3_W20_thr0.7": {
+   "overrides": {
+    "multi_task": true,
+    "offtask_window": 20,
+    "tracker.away_mode": "decoupled",
+    "tracker.away_enter": 0.005,
+    "tracker.away_return": 0.05,
+    "tracker.away_weight": 0.3,
+    "fit_window_s": 20.0,
+    "fit_thr": 0.7,
+    "resume_bias": 1.0986122886681098
+   },
+   "step_acc_weighted": 0.42691590513532346,
+   "single_step_acc": 0.48449065686854237,
+   "single_wrong_switches": 1,
+   "single_task_top1": 0.8333333333333334,
+   "single_task_final_correct": 0.9583333333333334,
+   "splices": {
+    "n": 22,
+    "minutes": 171.0,
+    "step_acc": 0.38651257058569616,
+    "correct_task_share": 0.5619567713515562,
+    "switch_latency_s": {
+     "n": 17,
+     "p50": 72.76420000000002,
+     "p90": 138.19186
+    },
+    "switches_detected": 17,
+    "missed_switches": 7,
+    "wrong_switches": 6,
+    "wrong_switches_per_hour": 2.1052631578947367,
+    "task_checks": 353,
+    "verifier_calls": 1641,
+    "cost_usd": 0.17530086,
+    "resume": {
+     "n": 10,
+     "left_a": 6,
+     "resumed": 5,
+     "a_current_60s_after_return": 6,
+     "step_exact": 1,
+     "step_within1": 2,
+     "resume_latency_s_p50": 35.205899999999986
+    },
+    "interrupt": {
+     "n": 6,
+     "switched_to_a_library_task": 4,
+     "a_current_60s_after_return": 4,
+     "step_exact": 1,
+     "step_within1": 1,
+     "interruption_pauses": 9,
+     "leave_warnings": 2
+    }
+   },
+   "calls": 1901,
+   "spend_usd": 0.19827947999999976,
+   "budget_cut": false
+  },
+  "earlier_commit_W20_thr0.7": {
+   "overrides": {
+    "multi_task": true,
+    "offtask_window": 20,
+    "tracker.away_mode": "decoupled",
+    "tracker.away_enter": 0.005,
+    "tracker.away_return": 0.05,
+    "tracker.away_weight": 0.3,
+    "fit_window_s": 20.0,
+    "fit_thr": 0.7,
+    "recognize_thr": 0.8,
+    "recognize_hold_s": 1.0
+   },
+   "step_acc_weighted": 0.4379439323235659,
+   "single_step_acc": 0.5082507425634043,
+   "single_wrong_switches": 1,
+   "single_task_top1": 0.8333333333333334,
+   "single_task_final_correct": 0.9583333333333334,
+   "splices": {
+    "n": 22,
+    "minutes": 171.0,
+    "step_acc": 0.3886058198745564,
+    "correct_task_share": 0.564232090327214,
+    "switch_latency_s": {
+     "n": 17,
+     "p50": 69.16950000000003,
+     "p90": 138.19186
+    },
+    "switches_detected": 17,
+    "missed_switches": 6,
+    "wrong_switches": 5,
+    "wrong_switches_per_hour": 1.7543859649122806,
+    "task_checks": 347,
+    "verifier_calls": 1634,
+    "cost_usd": 0.174478332,
+    "resume": {
+     "n": 10,
+     "left_a": 6,
+     "resumed": 5,
+     "a_current_60s_after_return": 6,
+     "step_exact": 1,
+     "step_within1": 2,
+     "resume_latency_s_p50": 35.205899999999986
+    },
+    "interrupt": {
+     "n": 6,
+     "switched_to_a_library_task": 3,
+     "a_current_60s_after_return": 4,
+     "step_exact": 2,
+     "step_within1": 2,
+     "interruption_pauses": 8,
+     "leave_warnings": 2
+    }
+   },
+   "calls": 1917,
+   "spend_usd": 0.2001037499999997,
+   "budget_cut": false
+  }
+ },
+ "stage_a_choice": "default_W20_thr0.7",
+ "chosen": "strict_p0.8_W20_thr0.7",
+ "reference_single_step_acc": 0.4328942126809356,
+ "spend_usd": 1.7669837639999983,
+ "stage_a_note": "no stage-A config qualified; stage B ran on the one with fewer single-task wrong switches (rule amended before the second stage-A result was seen)"
+}

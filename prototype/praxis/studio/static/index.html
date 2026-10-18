@@ -9,7 +9,7 @@
 <body>
 <header>
   <div class="brand"><b>Praxis</b> Studio <span class="tag">Instructions that can finally see how you're doing.</span></div>
-  <nav><a href="#/live" class="on">Live</a><a href="#/sessions">Sessions</a></nav>
+  <nav><a href="#/live" class="on">Live</a><a href="#/sessions">Sessions</a><a href="/admin" class="org-only">Company admin</a></nav>
   <div class="pills">
     <span id="p-conn" class="pill-s off">Not connected</span>
     <span id="p-jev" class="pill-s off">Jev</span>
@@ -29,7 +29,7 @@
       <button id="f-missed" class="flag missed">It missed something <kbd>M</kbd></button>
       <button id="stop" class="stop">Stop</button>
     </div>
-    <form id="retask" class="retask hidden"><input id="retask-text" placeholder="Wrong task? Say what you're doing, e.g. &quot;making pinwheels&quot;"><button>Change task</button></form>
+    <form id="retask" class="retask hidden"><input id="retask-text" placeholder="Wrong task? Say what you're doing, e.g. &quot;making pinwheels&quot; (or &quot;I'm done&quot; to a paused task)"><button>Change task</button></form>
     <div id="flag-box" class="flag-box hidden">
       <form id="flag-form"><b id="flag-kind"></b>
         <input id="flag-note" maxlength="300" placeholder="Optional one-line note. Enter saves, Esc skips the note.">
@@ -45,6 +45,7 @@
 
   <aside class="right">
     <div id="panel-setup" class="panel">
+      <div id="org-setup"></div>
       <h2>1 · Input</h2>
       <label class="opt"><input type="radio" name="input" value="camera" id="in-camera" checked> Camera</label>
       <label class="opt"><input type="radio" name="input" value="upload" id="in-upload"> Upload a video</label>
@@ -87,6 +88,7 @@
     </div>
 
     <div id="panel-run" class="panel hidden">
+      <div id="org-run"></div>
       <div id="engineer" class="engineer hidden"></div>
       <p class="muted small">Flag a moment with <kbd>W</kbd> (that's wrong) or <kbd>M</kbd> (it missed something). Everything on the video is live engine output.</p>
     </div>
@@ -118,5 +120,7 @@
 </main>
 
 <script type="module" src="/static/app.js"></script>
+<style>body[data-static] .org-only { display: none !important; }</style>
+<script type="module">if (document.body.dataset.static !== "1") import("/static/org.js");  // company profiles (live Studio only)</script>
 </body>
 </html>

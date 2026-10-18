@@ -123,7 +123,9 @@ def compile_procedure(task_id: str, domain: str, source_text: str, steps: list[d
     nodes.sort(key=lambda n: order[n.id])          # node order == given step order (probes rely on it)
     missing = given - {n.id for n in nodes}
     if missing:
-        raise RuntimeError(f"compiler dropped steps {missing}")
+        err = RuntimeError(f"compiler dropped steps {missing}")
+        err.usage, err.cost_usd, err.raw = u, usd, data      # callers can record the spend and inspect the output
+        raise err
     if ordering:   # enforce known constraints exactly (the compiler only enriches)
         succ = {n.id: set() for n in nodes}
         for a, b in ordering:

@@ -24,6 +24,18 @@ graph, filtered forward online.
     READ OUT  P(k) = sum_d alpha(k, d),  normalized entropy H/log K  (-> verify / ask for a view),
               MAP step, expected time-on-step E[d | k] (-> hesitation detection in L6).
 
+    AWAY      (optional, TrackerConfig.away_enter > 0) a second copy of every (k, d): "away from this task while at
+              step k with dwell d" (an interruption, another task, or not this task at all). On-task (k, d) -> away
+              (k, d) with prob away_enter per tick, back with prob away_return; while away the dwell clock stops.
+              P(k) counts both copies (where you are in the task); P(away) is read out separately. Off-task evidence
+              (observe_away, "none of these" answers) moves mass between the copies; step evidence leaves the on/away
+              split alone (away states get its marginal likelihood). With away_enter = 0 the tracker is unchanged.
+              away_mode="factored" approximates this with a separate on/away belief P(away) (a two-state HMM): each
+              tick the step filter advances with weight 1 - P(away) (the dwell clock slows to a stop while away) and
+              step evidence is tempered by 1 - P(away).
+              away_mode="decoupled" keeps the same separate P(away) but leaves the step filter alone, except that the
+              engine freezes it (no dwell, no step evidence) once an interruption is confirmed (`frozen`).
+
 Why it works: each signal alone is weak (frames are ambiguous, boundaries are noisy, the verifier is
 slow and occasionally wrong). The graph says what can come next, the duration prior says when, and
 Bayes' rule weighs each piece of evidence by how reliable it is. Uncertainty is explicit, so the
@@ -51,6 +63,12 @@ class TrackerConfig:
     skip_prob: float = 0.03         # mass for jumping to any other open node (out-of-order work, missed steps)
     default_mean_s: float = 30.0    # duration prior when a node has none
     default_cv: float = 0.8
+    away_enter: float = 0.0         # P(on-task -> away) per tick; 0 = no away states (the single-task tracker)
+    away_return: float = 0.1        # P(away -> back on the same step) per tick
+    away_weight: float = 1.0        # temperature on off-task evidence (observe_away)
+    away_step_evidence: bool = False  # True: away states get step evidence too (position keeps updating while away);
+                                      # False: they get its marginal likelihood (the on/away split is untouched)
+    away_mode: str = "joint"        # joint | factored | decoupled (see above)
 
 
 @dataclass
@@ -63,6 +81,8 @@ class Belief:
     map_p: float
     time_on_step: float             # E[d | MAP node], seconds
     completed: list[str] = field(default_factory=list)
+    p_away: float = 0.0             # P(away from this task right now); 0 without away states
+    map_p_on: float | None = None   # P(MAP step | on task): away mass left at an earlier step doesn't dilute it
 
     def top(self, n: int = 3) -> list[tuple[str, float]]:
         idx = np.argsort(-self.p)[:n]
@@ -71,7 +91,8 @@ class Belief:
     def as_dict(self) -> dict:
         return {"t": self.t, "p": {i: round(float(v), 4) for i, v in zip(self.ids, self.p)},
                 "entropy": round(self.entropy, 4), "map": self.map_id, "map_p": round(self.map_p, 4),
-                "time_on_step": round(self.time_on_step, 2), "completed": list(self.completed)}
+                "time_on_step": round(self.time_on_step, 2), "completed": list(self.completed),
+                "p_away": round(self.p_away, 4)}
 
 
 class StateTracker:
@@ -88,6 +109,9 @@ class StateTracker:
         self.join_mid_task = join_mid_task
         self.t = 0.0
         self.alpha = np.zeros((self.K, self.D))
+        self.away = np.zeros((self.K, self.D))          # mass "away while at (k, d)"; stays 0 unless away_enter > 0
+        self.pa = 0.0                                   # factored / decoupled mode: P(away)
+        self.frozen = False                             # decoupled: interruption confirmed, the step clock stops
         if join_mid_task:
             # Joined partway through: any step could be active and we don't know for how long.
             self.alpha[:-1, : min(self.D, 30)] = 1.0
@@ -138,8 +162,42 @@ class StateTracker:
         return A
 
     # ---------------------------------------------------------------- filter
+    @property
+    def factored(self) -> bool:
+        return self.cfg.away_mode == "factored" and self.cfg.away_enter > 0
+
+    @property
+    def separate(self) -> bool:
+        """P(away) is a separate two-state belief (factored or decoupled)."""
+        return self.cfg.away_mode in ("factored", "decoupled") and self.cfg.away_enter > 0
+
     def predict(self) -> None:
+        if self.separate and not self.factored:         # decoupled
+            e, r = self.cfg.away_enter, self.cfg.away_return
+            self.pa = self.pa * (1 - r) + (1 - self.pa) * e
+            if self.frozen:
+                self.t += self.cfg.dt
+            else:
+                self._predict_steps()
+            return
+        if self.factored:
+            e, r = self.cfg.away_enter, self.cfg.away_return
+            self.pa = self.pa * (1 - r) + (1 - self.pa) * e
+            keep = self.alpha.copy()
+            self._predict_steps()
+            self.alpha = (1 - self.pa) * self.alpha + self.pa * keep      # away: the step clock stands still
+            return
+        self._predict_steps()
+
+    def _predict_steps(self) -> None:
         a, H = self.alpha, self.H
+        e, r = self.cfg.away_enter, self.cfg.away_return
+        if self.cfg.away_mode == "joint" and (e > 0 or self.away.any()):
+            go = a * e
+            go[-1] = 0.0                               # nobody is "away" from a finished task
+            back = self.away * r
+            a = a - go + back
+            self.away = self.away - back + go          # away mass keeps its (k, d): the dwell clock stops
         leave = (a * H).sum(1)                         # mass finishing each node this tick
         stay = a * (1 - H)
         new = np.zeros_like(a)
@@ -181,7 +239,8 @@ class StateTracker:
 
     def observe_step_choice(self, probs: dict[str, float], weight: float = 1.0, floor: float = 0.05) -> None:
         """Verifier answer to 'which of these steps is happening?' as a likelihood over the candidates.
-        Steps not offered as options keep a neutral likelihood (the question said nothing about them)."""
+        Steps not offered as options keep a neutral likelihood (the question said nothing about them).
+        With away states, "none of these" also counts for being away from the task."""
         offered = [k for k in probs if k in self.idx]
         if not offered:
             return
@@ -189,10 +248,60 @@ class StateTracker:
         L = np.full(self.K, max(none_p, floor))
         for k in offered:
             L[self.idx[k]] = max(probs[k], floor)
-        self._update((L ** weight)[:, None])
+        self._update((L ** weight)[:, None], away_L=max(none_p, floor) ** weight)
 
-    def _update(self, L: np.ndarray) -> None:
+    def observe_away(self, p_off: float, weight: float | None = None) -> None:
+        """Off-task evidence: P(the person is not doing this task right now), e.g. from landmarks."""
+        if self.cfg.away_enter <= 0 and not self.away.any():
+            return
+        w = self.cfg.away_weight if weight is None else weight
+        p = float(np.clip(p_off, 0.02, 0.98))
+        if self.separate:
+            a, b = self.pa * p ** w, (1 - self.pa) * (1 - p) ** w
+            self.pa = a / (a + b) if a + b > 0 else self.pa
+            return
+        self._update(np.full((1, 1), (1 - p) ** w), away_L=p ** w)
+
+    def _update(self, L: np.ndarray, away_L: float | None = None) -> None:
+        """Multiply in an observation. L applies to on-task states. Away states get away_L, or, for evidence about
+        which step (which says nothing about being away), its marginal likelihood under the current on-task belief,
+        so the on/away split is unchanged."""
+        if self.separate and not self.factored:         # decoupled: step evidence as usual (none while frozen)
+            if away_L is not None:
+                s = self.alpha.sum()
+                on_L = float((self.alpha * L).sum() / s) if s > 1e-12 else 1.0
+                a, b = self.pa * away_L, (1 - self.pa) * on_L
+                self.pa = a / (a + b) if a + b > 0 else self.pa
+            if self.frozen:
+                return
+            a = self.alpha * L
+            z = a.sum()
+            self.alpha = a / z if z > 0 and np.isfinite(z) else self.alpha
+            return
+        if self.factored:
+            if away_L is not None:                      # evidence about being away ("none of these"): update P(away)
+                s = self.alpha.sum()
+                on_L = float((self.alpha * L).sum() / s) if s > 1e-12 else 1.0
+                a, b = self.pa * away_L, (1 - self.pa) * on_L
+                self.pa = a / (a + b) if a + b > 0 else self.pa
+            L = L ** (1 - self.pa)                      # step evidence counts less while probably away
+            a = self.alpha * L
+            z = a.sum()
+            self.alpha = a / z if z > 0 and np.isfinite(z) else self.alpha
+            return
         a = self.alpha * L
+        if self.away.any():
+            if away_L is None and self.cfg.away_step_evidence:
+                w = self.away * L
+            else:
+                if away_L is None:
+                    s = self.alpha.sum()
+                    away_L = float(a.sum() / s) if s > 1e-12 else 1.0
+                w = self.away * away_L
+            z = a.sum() + w.sum()
+            if z > 0 and np.isfinite(z):
+                self.alpha, self.away = a / z, w / z
+            return
         z = a.sum()
         self.alpha = a / z if z > 0 and np.isfinite(z) else self.alpha
 
@@ -204,13 +313,23 @@ class StateTracker:
         self.completed.add(node_id)
         k = self.idx[node_id]
         moved = self.alpha[k].sum()
+        moved_away = self.away[k].sum()
         self.alpha[k] = 0.0
+        self.away[k] = 0.0
         nxt = self.transitions()[k]
         self.alpha[:, 0] += moved * nxt
+        self.away[:, 0] += moved_away * nxt
+        self.away[-1] = 0.0
         # nodes that are now impossible (completed) keep zero mass
         for c in self.completed:
             self.alpha[self.idx[c]] = 0.0
-        self.alpha /= self.alpha.sum()
+            self.away[self.idx[c]] = 0.0
+        self._normalize()
+
+    def _normalize(self) -> None:
+        z = self.alpha.sum() + self.away.sum()
+        self.alpha /= z
+        self.away /= z
 
     def assume_done_before(self, node_id: str) -> None:
         """Joining mid-task: once localized at `node_id`, treat its graph ancestors as completed."""
@@ -224,18 +343,39 @@ class StateTracker:
             stack += self.pred.get(n, [])
         for c in self.completed:
             self.alpha[self.idx[c]] = 0.0
-        self.alpha /= self.alpha.sum()
+            self.away[self.idx[c]] = 0.0
+        self._normalize()
+
+    def come_back(self) -> None:
+        """The person is (confirmed) on this task again: away mass returns to its step, P(away) = 0."""
+        self.alpha = self.alpha + self.away
+        self.away = np.zeros_like(self.away)
+        self.pa = 0.0
+        self.frozen = False
+
+    # ---------------------------------------------------------------- state (engine snapshots, task pause/resume)
+    def state(self) -> tuple:
+        return self.alpha.copy(), self.away.copy(), set(self.completed), self.t, self.pa, self.frozen
+
+    def set_state(self, s: tuple) -> None:
+        self.alpha, self.away, self.completed, self.t = s[0].copy(), s[1].copy(), set(s[2]), s[3]
+        self.pa = s[4] if len(s) > 4 else 0.0
+        self.frozen = s[5] if len(s) > 5 else False
 
     # ---------------------------------------------------------------- read out
     def belief(self) -> Belief:
-        p = self.alpha.sum(1)
+        both = self.alpha + self.away if self.away.any() else self.alpha
+        p = both.sum(1)
         nz = p[p > 0]
         ent = float(-(nz * np.log(nz)).sum() / np.log(max(2, self.K - len(self.completed))))
         k = int(p.argmax())
-        dwell = self.alpha[k] / max(self.alpha[k].sum(), 1e-12)
+        dwell = both[k] / max(both[k].sum(), 1e-12)
         tos = float((dwell * (np.arange(self.D) + 0.5) * self.cfg.dt).sum())
+        on = self.alpha.sum(1)
         return Belief(t=self.t, p=p, ids=self.ids, entropy=min(1.0, ent), map_id=self.ids[k],
-                      map_p=float(p[k]), time_on_step=tos, completed=sorted(self.completed))
+                      map_p=float(p[k]), time_on_step=tos, completed=sorted(self.completed),
+                      p_away=float(self.pa if self.separate else self.away.sum()),
+                      map_p_on=float(on[k] / max(on.sum(), 1e-12)) if self.away.any() else float(p[k]))
 
     def expected_duration(self, node_id: str) -> float:
         dur = self.g.node(node_id).duration if node_id != DONE else None

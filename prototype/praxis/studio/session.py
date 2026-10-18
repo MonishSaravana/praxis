@@ -107,8 +107,10 @@ class StudioSession:
                            "verifier": self.models["fast"], "escalation": self.models["escalation"],
                            "cost_cap_usd": self.cap, "label": "Praxis prototype v0 · real model output"},
                           listener=self._on_line)
+        from ..landmarks import TextCache
         self.eng = Engine(core.engine_config(escalate=self.use_opus), self.stack["library"], self.stack["evidence"],
-                          self.stack["recognizer"], self.stack["detector"], ver, esc, log=self.log, calibrators=cals)
+                          self.stack["recognizer"], self.stack["detector"], ver, esc, log=self.log, calibrators=cals,
+                          offtask=self.stack.get("offtask"), texts=TextCache(core.texts().texts))
         self.runner = LiveRunner(self.stack, self.eng, core.encoders())
         self.rec = Recorder(self.dir / "camera.mp4")
         self._apply_task_choice()
@@ -158,6 +160,10 @@ class StudioSession:
         self.cmds.put(("describe", text))
         self.wake.set()
 
+    def task_answer(self, task_id: str, answer: str) -> None:
+        self.cmds.put(("answer", task_id, answer, "tap"))
+        self.wake.set()
+
     # ---------------------------------------------------------------- the session thread
     def _loop(self) -> None:
         next_slot = 0.0
@@ -205,7 +211,27 @@ class StudioSession:
             self.flags.append(f)
             self.log.write("flag", t, flag=kind, note=f["note"])
         elif cmd[0] == "describe":
-            self._describe(cmd[1], t=self.t_last)
+            ans = self._typed_answer(cmd[1])
+            if ans:                                     # "I'm done" / "coming back" to a pending "Coming back to ...?"
+                self.eng.answer_resume(self.t_last, ans[0], ans[1], via="typed")
+            else:
+                self._describe(cmd[1], t=self.t_last)
+        elif cmd[0] == "answer":
+            self.eng.answer_resume(self.t_last, cmd[1], cmd[2], via=cmd[3])
+
+    def _typed_answer(self, text: str) -> tuple[str, str] | None:
+        """A short typed reply to the latest unanswered "Coming back to ...?" (multi-task)."""
+        asked = [sl for sl in getattr(self.eng, "tasks", {}).values()
+                 if sl.status == "paused" and sl.asked_at is not None and sl.answer is None]
+        if not asked or len(text.split()) > 6:
+            return None
+        sl = max(asked, key=lambda x: x.asked_at)
+        t = text.lower()
+        if re.search(r"\b(done|finished|not coming back|no|nope|skip it|that's it)\b", t):
+            return sl.task_id, "done"
+        if re.search(r"\b(coming back|back later|later|yes|yeah|yep|will finish|not done)\b", t):
+            return sl.task_id, "coming_back"
+        return None
 
     def _maybe_ask(self) -> None:
         """Auto mode with an unknown task: ask what the person is doing instead of guessing (video-only drafts named
@@ -248,6 +274,13 @@ class StudioSession:
             if g is not None:
                 self.send({"type": "graph", "task_id": g.task_id, "title": g.title, "draft": g.draft,
                            "nodes": [{"id": n.id, "name": n.name} for n in g.nodes]})
+        if k == "task_state" and r.get("to") == "active" and (r.get("evidence") or {}).get("how") != "came_back":
+            g = self.eng.lib.get(r["task_id"])            # multi-task: a paused task is current again
+            if g is not None:
+                self.task_info = {"task_id": r["task_id"], "title": g.title, "t": r["t"], "draft": bool(g.draft),
+                                  "oracle": False, "how": "resumed"}
+                self.send({"type": "graph", "task_id": g.task_id, "title": g.title, "draft": g.draft,
+                           "nodes": [{"id": n.id, "name": n.name} for n in g.nodes]})
         if k == "action" and r.get("action") == "announce_task" and self.task_info is not None:
             self.task_info["how"] = (r.get("detail") or {}).get("how") or ("drafted" if self.task_info["draft"] else "recognized")
         self.send({"type": "rec", "r": {kk: v for kk, v in r.items() if kk not in HEAVY}})
@@ -270,6 +303,7 @@ class StudioSession:
         self.wake.set()
         self.thread.join(timeout=30)
         self.runner.finish(self.t_last, timeout_s=8.0)
+        self.eng.finish(self.t_last)                    # tasks still paused are closed as done enough (session end)
         self.log.write("summary", self.t_last, wall_s=round(time.time() - self.t_start, 2),
                        frames_in=self.stats["frames_in"], frames_engine=self.stats["frames_engine"],
                        replaced_before_processing=self.stats["replaced_before_processing"],
