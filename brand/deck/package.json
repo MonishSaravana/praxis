@@ -1,0 +1,7 @@
+{
+  "name": "praxis-deck",
+  "private": true,
+  "description": "Builds brand/deck/praxis-deck.pptx",
+  "scripts": { "build": "node build-deck.js praxis-deck.pptx" },
+  "dependencies": { "pptxgenjs": "3.12.0" }
+}
