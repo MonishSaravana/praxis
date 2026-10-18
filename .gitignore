@@ -34,3 +34,9 @@ renders/_work/
 
 # outreach contact lists (personal/business contact info; never committed)
 /outreach/
+
+# Office lock files (~$Deck.pptx) created while a file is open
+~$*
+
+# provisional patent draft: confidential until the filing receipt exists
+/patent/
