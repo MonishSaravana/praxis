@@ -294,3 +294,19 @@ def test_repeated_strong_answers_override_the_per_step_bar():
     assert eng.task_id == "b"
     dec = [r["decision"] for r in recs(eng, "task_check")]
     assert dec[:2] == ["hold_confidence", "switch"]
+
+
+def test_recognition_gate_min_time_and_agreeing_answers(tmp_path):
+    from praxis.tasks.recognizer import Recognition
+    eng, ver = make(tmp_path, "gate")
+    r = Recognition(t=4.0, task_id="b", posterior={"a": 0.05, "b": 0.95}, recognized=True)
+    eng._last_task_probs, eng._last_choice, eng._choice_streak = {"b": 0.9}, "b", 1
+    assert eng._gate(r).recognized                                   # defaults: unchanged behavior
+    eng.cfg.recognize_agree, eng.cfg.recognize_min_s = 2, 10.0
+    assert not eng._gate(r).recognized                               # one answer, and before 10 s
+    eng._choice_streak = 2
+    assert not eng._gate(r).recognized                               # two answers, still before 10 s
+    r.t = 10.0
+    assert eng._gate(r).recognized
+    eng._last_choice = "a"
+    assert not eng._gate(r).recognized                               # the answers named another task

@@ -182,7 +182,7 @@ def build(spec: dict, clips: dict[str, Clip], decode: bool = True):
 
 
 def run_splice(spec: dict, stack: dict, run_name: str, ecfg, verifier=None, escalation=None, calibrators=None,
-               localizer=None, clips=None, frames=None, oracle_first: bool = False) -> Path:
+               localizer=None, clips=None, frames=None, oracle_first: bool = False, task_checker=None) -> Path:
     """oracle_first: the first part's task is given (no recognizer; used by the free away-state sweep)."""
     clips = clips or _clips()
     feats, fr, gt = build(spec, clips, decode=frames is None)
@@ -191,14 +191,15 @@ def run_splice(spec: dict, stack: dict, run_name: str, ecfg, verifier=None, esca
     out = RUNS / run_name / f"{spec['id']}.jsonl"
     meta = {"splice": spec, "label": "SYNTHETIC multi-task sequence (spliced CaptainCook4D recordings)", "run": run_name,
             "engine": {k: (v if isinstance(v, (int, float, str, bool, type(None))) else str(v)) for k, v in vars(ecfg).items()},
-            "verifier": getattr(verifier, "model", None), "escalation": getattr(escalation, "model", None)}
+            "verifier": getattr(verifier, "model", None), "escalation": getattr(escalation, "model", None),
+            "task_checker": getattr(task_checker, "model", None)}
     with RunLog(out, meta) as log:
         rec = None if oracle_first else stack["recognizer"]
         if rec is not None:
             rec.reset()
         eng = Engine(ecfg, stack["library"], stack["evidence"], rec, stack["detector"], verifier, escalation,
                      log=log, calibrators=calibrators, localizer=localizer, offtask=stack.get("offtask"),
-                     task_id=spec["parts"][0]["task_id"] if oracle_first else None)
+                     task_id=spec["parts"][0]["task_id"] if oracle_first else None, task_checker=task_checker)
         info = replay(eng, feats, scores, frames)
         log.write("summary", float(feats.t[-1]) if len(feats.t) else 0.0, **info)
     return out
@@ -522,10 +523,14 @@ def free_away_sweep(grid: dict | None = None, max_s: float = 300.0, workers: int
 # ------------------------------------------------------------------------------------------- paid runs
 def run_set(split: str, name: str, overrides: dict, budget_usd: float, escalate: bool = True, workers: int = 3,
             singles: bool = True, splices: bool = True, only: list[str] | None = None, tag: str = "",
-            version: str = "v1") -> dict:
+            version: str = "v1", strong: str = "claude_strong", task_checker: str | None = None,
+            budget_openai_usd: float = 0.0) -> dict:
     """Run the automatic multi-task engine over a split's splices (and, on train, the single-task recordings too),
     with model calls capped by a hard Budget. train: 3-fold stacks; eval: the normal stack. Writes
-    results/multitask/<name><tag>.json. `overrides` are engine overrides (offtask_window picks the landmark model)."""
+    results/multitask/<name><tag>.json. `overrides` are engine overrides (offtask_window picks the landmark model).
+    strong: the strong tier (escalations); task_checker: who answers "which task?" (default: the fast tier). OpenAI
+    models draw on their own cap (budget_openai_usd); spend_usd records the other calls only (OpenAI calls are tracked
+    from their response cache)."""
     from concurrent.futures import ThreadPoolExecutor
     from ..experiments import _budget, make_verifier
     from . import harness
@@ -535,9 +540,12 @@ def run_set(split: str, name: str, overrides: dict, budget_usd: float, escalate:
     base = harness.load_stack(offtask_window=win)
     ecfg = engine_config({**over, "escalate": escalate})
     budget = _budget(max_calls=20000, max_usd=budget_usd)
+    obudget = _budget(max_calls=20000, max_usd=budget_openai_usd)
+    pick = lambda kind: obudget if kind.startswith("openai:") else budget      # noqa: E731
     ver = make_verifier("jev", budget)
-    esc = make_verifier("claude_strong", budget) if escalate else None
-    cals = {"primary": calibrators("jev"), "escalation": calibrators("claude_strong" if escalate else None)}
+    esc = make_verifier(strong, pick(strong), role="strong") if escalate else None
+    tc = make_verifier(task_checker, pick(task_checker)) if task_checker else None
+    cals = {"primary": calibrators("jev"), "escalation": calibrators(strong if escalate else None)}
     clips = _clips()
     stacks = {f: fold_stack(base, f, version) for f in range(3)} if split == "train" else {0: base}
     for st in stacks.values():
@@ -557,8 +565,9 @@ def run_set(split: str, name: str, overrides: dict, budget_usd: float, escalate:
         st = dict(stacks[f])
         st["recognizer"] = copy.deepcopy(stacks[f]["recognizer"])
         if kind == "splice":
-            return kind, score_splice(x, run_splice(x, st, run, ecfg, ver, esc, cals, clips=clips))
-        return kind, harness.score_clip(x, harness.run_clip(x, st, run, ecfg, ver, esc, calibrators=cals))
+            return kind, score_splice(x, run_splice(x, st, run, ecfg, ver, esc, cals, clips=clips, task_checker=tc))
+        return kind, harness.score_clip(x, harness.run_clip(x, st, run, ecfg, ver, esc, calibrators=cals,
+                                                            task_checker=tc))
     with ThreadPoolExecutor(workers) as ex:
         out = list(ex.map(one, items))
     sp_rows = [r for k, r in out if k == "splice"]
@@ -569,7 +578,8 @@ def run_set(split: str, name: str, overrides: dict, budget_usd: float, escalate:
            "single_task": {"aggregate": harness.aggregate(cl_rows), "rows": cl_rows,
                            "wrong_switches": sum(r["wrong_switches"] for r in cl_rows),
                            "task_final_correct": float(np.mean([r["task_final_correct"] for r in cl_rows]))} if cl_rows else None,
-           "spend_usd": budget.usd, "calls": budget.calls}
+           "strong": strong if escalate else None, "task_checker": task_checker or "jev",
+           "spend_usd": budget.usd, "calls": budget.calls, "spend_usd_openai": obudget.usd, "calls_openai": obudget.calls}
     (RESULTS / "multitask").mkdir(parents=True, exist_ok=True)
     (RESULTS / "multitask" / f"{name}{tag}.json").write_text(json.dumps(res, indent=1, default=float))
     return res
@@ -793,3 +803,131 @@ def learning_curve(max_s: float = 300.0, workers: int = 4) -> dict:
     (RESULTS / "multitask" / "learning_curve.json").write_text(json.dumps(res, indent=1, default=float))
     print({k: v for k, v in res.items() if k != "per_recording"}, flush=True)
     return res
+
+
+# ------------------------------------------------------------------------------------------- combined train test
+COMBINED_PROTOCOL = """TRAIN split only (the 24 v1 recordings, first 300 s, automatic; the 22 v1 train splices), 3-fold stacks
+(v1), the chosen multi-task configuration (results/multitask/chosen.json) on the current engine (switch-bar cap + streak
+override, first instruction at start, instruction follows the belief). Written before any of these runs:
+  A0  engine as it is now, Jev for everything, no strong tier
+  A1  A0 + step list fix (also offer the local model's top 2 steps and the next open steps when asking "which step?")
+  A2  A0 + rewind a left task's tracker to when P(away) rose
+  keep the step list fix if mean(single-task step_acc, splice step_acc) rises by >= 0.005 and wrong switches (splices +
+    single-task) do not increase; keep rewind if resume step within one (resume + interrupt splices, of 16) rises, mean
+    step_acc drops by <= 0.01 and wrong switches do not increase
+  B0  A0 + the kept fixes + gpt-6.1-sol answers "which task?" (recognition and re-checks), no strong tier
+  B1  B0 + gpt-6.1-sol as the strong tier (escalated step checks, calibrated on the train checks)
+Comparisons: A1/A2 vs A0 (engine fixes), B0 vs best A (Sol deciding the task), B1 vs B0 (Sol strong tier)."""
+
+
+def candidate_recall(run: str, version: str = "v1") -> dict:
+    """Share of the fast tier's "which step?" questions on the single-task recordings whose options held the annotated
+    step (or the step being moved to, between steps)."""
+    from ..tasks.compiler import load_library
+    lib = load_library()
+    hit = n = 0
+    for c, _ in train_recordings(lib, version):
+        p = RUNS / run / f"{c.clip_id}.jsonl"
+        if not p.exists():
+            continue
+        for r in by_kind(read_log(p), "step_choice"):
+            if r.get("error"):
+                continue
+            gt = M.frame_labels([(s.start, s.end, s.step) for s in c.segments], np.array([r["t"]]), between="next")[0]
+            n += 1
+            hit += gt in r.get("options", [])
+    return {"n": n, "recall": hit / n if n else None}
+
+
+def _summ(res: dict, run: str) -> dict:
+    sp, st = res["splices"]["aggregate"], res["single_task"]["aggregate"]
+    r16 = [x for x in res["splices"]["rows"] if x["kind"] in ("resume", "interrupt")]
+    return {"single_step_acc": st["step_acc"], "single_task_top1": st["task_top1"],
+            "single_task_final_correct": res["single_task"]["task_final_correct"],
+            "single_wrong_switches": res["single_task"]["wrong_switches"], "single_alerts_per_min": st["alerts_per_min"],
+            "single_false_alarms_per_min": st["false_alarms_per_min"],
+            "splice_step_acc": sp["step_acc"], "splice_correct_task_share": sp["correct_task_share"],
+            "splice_wrong_switches": sp["wrong_switches"], "splice_missed_switches": sp["missed_switches"],
+            "switch_latency_p50_s": sp["switch_latency_s"]["p50"],
+            "resume_within1_of16": sum(bool(x.get("resume_step_within1")) for x in r16),
+            "resume_exact_of16": sum(bool(x.get("resume_step_exact")) for x in r16),
+            "resumed_of10": sp.get("resume", {}).get("resumed"),
+            "interrupt_switched_to_library_of6": sp.get("interrupt", {}).get("switched_to_a_library_task"),
+            "candidate_recall_single": candidate_recall(run)["recall"],
+            "spend_main_usd": res["spend_usd"], "spend_openai_usd": res.get("spend_usd_openai", 0.0)}
+
+
+def combined_train_test(workers: int = 4, caps: dict | None = None) -> dict:
+    from .run_all import multitask_overrides
+    caps = caps or {"A": 0.60, "B_main": 0.60, "B0_openai": 2.50, "B1_openai": 3.50}
+    base = multitask_overrides()
+    fixes = {"A1": {"step_choice_local": 2, "step_choice_next": True}, "A2": {"rewind_on_leave": True}}
+    out = {"protocol": COMBINED_PROTOCOL, "base_overrides": base, "fixes": fixes, "caps": caps, "runs": {}}
+    save = lambda: (RESULTS / "multitask" / "combined_train.json").write_text(json.dumps(out, indent=1, default=float))  # noqa: E731
+    for k, extra in [("A0", {}), *fixes.items()]:
+        res = run_set("train", f"combined_{k}", {**base, **extra}, caps["A"], escalate=False, workers=workers)
+        out["runs"][k] = _summ(res, f"mt_combined_{k}")
+        save()
+        print(k, out["runs"][k], flush=True)
+    a0, a1, a2 = (out["runs"][k] for k in ("A0", "A1", "A2"))
+    m = lambda r: (r["single_step_acc"] + r["splice_step_acc"]) / 2                   # noqa: E731
+    ws = lambda r: r["single_wrong_switches"] + r["splice_wrong_switches"]           # noqa: E731
+    keep = {"step_list": m(a1) - m(a0) >= 0.005 and ws(a1) <= ws(a0),
+            "rewind": a2["resume_within1_of16"] > a0["resume_within1_of16"] and m(a2) >= m(a0) - 0.01 and ws(a2) <= ws(a0)}
+    out["kept"] = keep
+    best = {**base, **(fixes["A1"] if keep["step_list"] else {}), **(fixes["A2"] if keep["rewind"] else {})}
+    out["best_overrides"] = best
+    save()
+    sol = "openai:gpt-6.1-sol"
+    res = run_set("train", "combined_B0", best, caps["B_main"], escalate=False, workers=workers, task_checker=sol,
+                  budget_openai_usd=caps["B0_openai"])
+    out["runs"]["B0"] = _summ(res, "mt_combined_B0")
+    save()
+    print("B0", out["runs"]["B0"], flush=True)
+    res = run_set("train", "combined_B1", best, caps["B_main"], escalate=True, workers=workers, strong=sol,
+                  task_checker=sol, budget_openai_usd=caps["B1_openai"])
+    out["runs"]["B1"] = _summ(res, "mt_combined_B1")
+    out["spend_main_total_usd"] = sum(r["spend_main_usd"] for r in out["runs"].values())
+    out["spend_openai_total_usd"] = sum(r["spend_openai_usd"] for r in out["runs"].values())
+    save()
+    print("B1", out["runs"]["B1"], flush=True)
+    return out
+
+
+SOL_FIX_PROTOCOL = """TRAIN split, same items, stacks and engine as the combined test (section 13); founder-approved
+2026-10-18. Sol (gpt-6.1-sol) answers "which task?", no strong tier (as B0), plus the early-guess fix: no first task
+before 10 s, and only after two typed answers in a row named it.
+  C1  switch bar 0.8 (as chosen on Jev's answers)
+  C2  switch bar 0.9
+Written before the runs: choose the C with the fewest wrong switches (single-task + splices) among those whose mean
+step accuracy (single-task, splices) is within 1 point of B0's; ties -> the higher right-task share on the splices.
+Sol becomes the default task decider only if the chosen C has a higher mean step accuracy than A0 (Jev) and at most
+one more wrong switch than A0 (3)."""
+
+
+def sol_fix_test(workers: int = 4, caps: dict | None = None) -> dict:
+    caps = caps or {"main": 0.40, "openai": 1.10}            # per run; two runs = $3.00 at most
+    p = RESULTS / "multitask" / "combined_train.json"
+    comb = json.loads(p.read_text())
+    base = {**comb["best_overrides"], "recognize_min_s": 10.0, "recognize_agree": 2}
+    out = {"protocol": SOL_FIX_PROTOCOL, "base_overrides": base, "caps_per_run": caps, "runs": {}}
+    save = lambda: (RESULTS / "multitask" / "sol_fix_train.json").write_text(json.dumps(out, indent=1, default=float))  # noqa: E731
+    for k, bar in (("C1", 0.8), ("C2", 0.9)):
+        res = run_set("train", f"solfix_{k}", {**base, "switch_p": bar}, caps["main"], escalate=False, workers=workers,
+                      task_checker="openai:gpt-6.1-sol", budget_openai_usd=caps["openai"])
+        out["runs"][k] = _summ(res, f"mt_solfix_{k}")
+        save()
+        print(k, out["runs"][k], flush=True)
+    m = lambda r: (r["single_step_acc"] + r["splice_step_acc"]) / 2                   # noqa: E731
+    ws = lambda r: r["single_wrong_switches"] + r["splice_wrong_switches"]           # noqa: E731
+    a0, b0 = comb["runs"]["A0"], comb["runs"]["B0"]
+    ok = [k for k, r in out["runs"].items() if m(r) >= m(b0) - 0.01]
+    chosen = min(ok, key=lambda k: (ws(out["runs"][k]), -out["runs"][k]["splice_correct_task_share"])) if ok else None
+    out["chosen"] = chosen
+    out["sol_default"] = bool(chosen and m(out["runs"][chosen]) > m(a0) and ws(out["runs"][chosen]) <= ws(a0) + 1)
+    out["reference"] = {"A0": a0, "B0": b0}
+    out["spend_main_total_usd"] = sum(r["spend_main_usd"] for r in out["runs"].values())
+    out["spend_openai_total_usd"] = sum(r["spend_openai_usd"] for r in out["runs"].values())
+    save()
+    print("chosen", chosen, "sol_default", out["sol_default"], flush=True)
+    return out

@@ -121,6 +121,8 @@ class EngineConfig:
     follow_ticks: int = 3                # 0 = off
     recognize_thr: float | None = None   # optional earlier first commit (a wrong guess can now be undone): recognizer
     recognize_hold_s: float | None = None  # posterior threshold / hold time; None = the recognizer's own (0.9 / 2 s)
+    recognize_min_s: float = 0.0          # no first task before this time (the first typed check comes at 4 s)
+    recognize_agree: int = 1              # typed "which task?" answers in a row that must name the task first
     tracker: TrackerConfig = field(default_factory=TrackerConfig)
     policy: PolicyConfig = field(default_factory=PolicyConfig)
 
@@ -850,9 +852,16 @@ class Engine:
         return r
 
     def _gate(self, r):
-        """Announce only what the latest verifier task check also supports."""
-        if r.recognized and self.tc is not None and hasattr(self.tc, "choose_task") and \
-                self._last_task_probs.get(r.task_id, 0.0) < 0.5:
+        """Announce only what the latest verifier task check also supports; optionally not before recognize_min_s and
+        only after recognize_agree typed answers in a row named the task (a confident checker guessing from the first
+        frames)."""
+        if r.recognized and self.tc is not None and hasattr(self.tc, "choose_task"):
+            if self._last_task_probs.get(r.task_id, 0.0) < 0.5:
+                r = replace(r, recognized=False)
+            elif self.cfg.recognize_agree > 1 and not (self._last_choice == r.task_id
+                                                       and self._choice_streak >= self.cfg.recognize_agree):
+                r = replace(r, recognized=False)
+        if r.recognized and r.t < self.cfg.recognize_min_s:
             r = replace(r, recognized=False)
         return r
 
@@ -1273,7 +1282,7 @@ def task_short(g: TaskGraph) -> str:
 
 
 def _lower_first(s: str) -> str:
-    s = (s or "").strip()
+    s = (s or "").strip().rstrip(".")           # callers end the sentence themselves
     return s[:1].lower() + s[1:] if s and not s[:2].isupper() else s
 
 

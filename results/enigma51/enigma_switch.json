@@ -1,0 +1,502 @@
+{
+ "label": "SYNTHETIC multi-task sessions (spliced ENIGMA-51 repair videos); PROXY step labels (derived from object interactions), not human step labels",
+ "protocol": "SYNTHETIC multi-task sessions on REPAIR footage (ENIGMA-51, first-person electrical-board repair), scored with\nDERIVED step labels (data/enigma51.py: object interactions aligned to the steps, not human step labels). Every result\nfrom this module is labeled SYNTHETIC + PROXY.\n\nEach session starts on job A's procedure, given the way a work order would set it; switching is automatic.\n  resume     A to a step end -> 150 s of the start of another board-repair job B -> 300 s more of A\n  interrupt  A to a step end -> 90 s of a cooking recipe that is not in the library -> 300 s more of A\nThe cut is the first derived step end at or after 360 s (+0.5 s), so \"resumed at the right step\" has an\nanswer: the derived step at the cut. Pairs are fixed: 141->107 (same board, other screwdriver), 107->144 (other board,\nsame screwdriver), 144->53 (same board, other screwdriver), 53->141 (other board).\n\nThe splices cut hard (the camera jumps); real switches are gradual, so latencies here are not real-life latencies.\nLibrary: the four repair procedures plus the cooking library (as in Studio, where every compiled task sits together).\nEngine: the multi-task configuration chosen on the cooking train split (results/multitask/chosen.json) and the\ncurrent defaults (switch-bar cap + streak override, first instruction at start, instruction follows the belief);\nJev fast tier, gpt-6.1-sol answers \"which task?\", no strong-tier step checks. No user answers in replay.",
+ "free": false,
+ "aggregate": {
+  "n": 8,
+  "minutes": 107.64233333333334,
+  "step_acc": 0.37510756626036545,
+  "step_acc_job_a": 0.40307988078736534,
+  "correct_task_share": 0.8322930423351282,
+  "wrong_switches": 4,
+  "wrong_switches_per_hour": 2.2296060719605357,
+  "task_checks": 22,
+  "cost_usd": 0.287017116,
+  "resume": {
+   "n": 4,
+   "switch_detected": 0,
+   "switch_latency_s": [],
+   "resumed": 0,
+   "a_current_60s_after_return": 4,
+   "resume_step_exact": 1,
+   "resume_step_within1": 3,
+   "resume_line_step_exact": 0,
+   "resume_line_step_within1": 0,
+   "coming_back_asked": 0,
+   "wrong_switches": 0
+  },
+  "interrupt": {
+   "n": 4,
+   "switched_to_a_library_task": 2,
+   "paused_as_interruption": 2,
+   "a_current_60s_after_return": 2,
+   "resume_step_exact": 1,
+   "resume_step_within1": 1,
+   "coming_back_asked": 4
+  }
+ },
+ "rows": [
+  {
+   "id": "enigma_resume_141_107",
+   "kind": "resume",
+   "minutes": 14.1595,
+   "task_a": "enigma_hv_manual",
+   "middle": "enigma_hv_electric",
+   "step_acc": 0.25920471281296026,
+   "step_acc_job_a": 0.2962962962962963,
+   "step_acc_job_a_first_part": 0.30112721417069244,
+   "correct_task_share": 0.8234255444379046,
+   "task_changes": [],
+   "switches": 0,
+   "wrong_switches": 0,
+   "wrong_switches_detail": [],
+   "switch_detected": false,
+   "switch_latency_s": null,
+   "left_a": false,
+   "a_current_60s_after_return": true,
+   "resumed": false,
+   "resume_latency_s": null,
+   "return_step_gt": "s14",
+   "resume_step": "s14",
+   "resume_step_exact": true,
+   "resume_step_within1": true,
+   "step_gt_at_resume": "s14",
+   "resume_step_exact_at_resume": true,
+   "resume_step_within1_at_resume": true,
+   "resume_line": null,
+   "resume_line_step": null,
+   "resume_line_step_exact": null,
+   "resume_line_step_within1": null,
+   "coming_back_asked": [],
+   "switch_lines": [],
+   "task_checks": 0,
+   "task_check_errors": 0,
+   "task_checks_by_part": [
+    0,
+    0,
+    0
+   ],
+   "verifier_calls": 305,
+   "cost_usd": 0.031097640000000003
+  },
+  {
+   "id": "enigma_interrupt_141",
+   "kind": "interrupt",
+   "minutes": 13.1595,
+   "task_a": "enigma_hv_manual",
+   "middle": "__other__",
+   "step_acc": 0.16835016835016836,
+   "step_acc_job_a": 0.16835016835016836,
+   "step_acc_job_a_first_part": 0.30112721417069244,
+   "correct_task_share": 0.81915654038599,
+   "task_changes": [
+    [
+     478.2,
+     "cc4d_cucumberraita"
+    ],
+    [
+     616.2,
+     "enigma_hv_manual"
+    ]
+   ],
+   "switches": 2,
+   "wrong_switches": 1,
+   "wrong_switches_detail": [
+    [
+     478.2,
+     "cc4d_cucumberraita",
+     "__other__"
+    ]
+   ],
+   "interruption_paused": false,
+   "interruption_pause_latency_s": null,
+   "interruption_pauses_outside": 0,
+   "left_a": true,
+   "a_current_60s_after_return": false,
+   "resumed": true,
+   "resume_latency_s": 126.7,
+   "return_step_gt": "s14",
+   "resume_step": "s14",
+   "resume_step_exact": true,
+   "resume_step_within1": true,
+   "step_gt_at_resume": "s14",
+   "resume_step_exact_at_resume": true,
+   "resume_step_within1_at_resume": true,
+   "resume_line": "Back to the high-voltage board repair and test. Next: each pin 5 s, front side..",
+   "resume_line_step": "s10",
+   "resume_line_step_exact": false,
+   "resume_line_step_within1": false,
+   "coming_back_asked": [
+    [
+     478.2,
+     "enigma_hv_manual",
+     "__other__"
+    ]
+   ],
+   "switch_lines": [
+    [
+     478.2,
+     "switch_task",
+     "Looks like you've moved on to making cucumber raita. I paused the high-voltage board repair and test at: each pin 5 s, front side.. Coming back to the high-voltage board repair and test?"
+    ],
+    [
+     616.2,
+     "resume_task",
+     "Back to the high-voltage board repair and test. Next: each pin 5 s, front side.."
+    ]
+   ],
+   "task_checks": 9,
+   "task_check_errors": 0,
+   "task_checks_by_part": [
+    0,
+    3,
+    6
+   ],
+   "verifier_calls": 251,
+   "cost_usd": 0.063770034
+  },
+  {
+   "id": "enigma_resume_107_144",
+   "kind": "resume",
+   "minutes": 14.291166666666667,
+   "task_a": "enigma_hv_electric",
+   "middle": "enigma_lv_electric",
+   "step_acc": 0.4175257731958763,
+   "step_acc_job_a": 0.46399345335515546,
+   "step_acc_job_a_first_part": 0.19941348973607037,
+   "correct_task_share": 0.8249708284714119,
+   "task_changes": [],
+   "switches": 0,
+   "wrong_switches": 0,
+   "wrong_switches_detail": [],
+   "switch_detected": false,
+   "switch_latency_s": null,
+   "left_a": false,
+   "a_current_60s_after_return": true,
+   "resumed": false,
+   "resume_latency_s": null,
+   "return_step_gt": "s8",
+   "resume_step": "s7",
+   "resume_step_exact": false,
+   "resume_step_within1": true,
+   "step_gt_at_resume": "s8",
+   "resume_step_exact_at_resume": false,
+   "resume_step_within1_at_resume": true,
+   "resume_line": null,
+   "resume_line_step": null,
+   "resume_line_step_exact": null,
+   "resume_line_step_within1": null,
+   "coming_back_asked": [],
+   "switch_lines": [],
+   "task_checks": 0,
+   "task_check_errors": 0,
+   "task_checks_by_part": [
+    0,
+    0,
+    0
+   ],
+   "verifier_calls": 267,
+   "cost_usd": 0.027461784
+  },
+  {
+   "id": "enigma_interrupt_107",
+   "kind": "interrupt",
+   "minutes": 13.291166666666667,
+   "task_a": "enigma_hv_electric",
+   "middle": "__other__",
+   "step_acc": 0.4607201309328969,
+   "step_acc_job_a": 0.4607201309328969,
+   "step_acc_job_a_first_part": 0.19941348973607037,
+   "correct_task_share": 1.0,
+   "task_changes": [],
+   "switches": 0,
+   "wrong_switches": 0,
+   "wrong_switches_detail": [],
+   "interruption_paused": true,
+   "interruption_pause_latency_s": 74.5,
+   "interruption_pauses_outside": 0,
+   "left_a": false,
+   "a_current_60s_after_return": true,
+   "resumed": false,
+   "resume_latency_s": null,
+   "return_step_gt": "s8",
+   "resume_step": "s6",
+   "resume_step_exact": false,
+   "resume_step_within1": false,
+   "step_gt_at_resume": "s8",
+   "resume_step_exact_at_resume": false,
+   "resume_step_within1_at_resume": false,
+   "resume_line": "Back to the high voltage board repair. Next: click battery into screwdriver..",
+   "resume_line_step": "s6",
+   "resume_line_step_exact": false,
+   "resume_line_step_within1": false,
+   "coming_back_asked": [
+    [
+     482.0,
+     "enigma_hv_electric",
+     "__other__"
+    ]
+   ],
+   "switch_lines": [
+    [
+     482.0,
+     "leave_warning",
+     "Before you go, 18 steps are left on the high voltage board repair. Next: click battery into screwdriver.. Coming back to the high voltage board repair?"
+    ],
+    [
+     507.0,
+     "resume_task",
+     "Back to the high voltage board repair. Next: click battery into screwdriver.."
+    ]
+   ],
+   "task_checks": 2,
+   "task_check_errors": 0,
+   "task_checks_by_part": [
+    0,
+    1,
+    1
+   ],
+   "verifier_calls": 227,
+   "cost_usd": 0.030980778
+  },
+  {
+   "id": "enigma_resume_144_53",
+   "kind": "resume",
+   "minutes": 13.602166666666667,
+   "task_a": "enigma_lv_electric",
+   "middle": "enigma_lv_manual",
+   "step_acc": 0.41368078175895767,
+   "step_acc_job_a": 0.48987463837994216,
+   "step_acc_job_a_first_part": 0.400355871886121,
+   "correct_task_share": 0.8161764705882353,
+   "task_changes": [],
+   "switches": 0,
+   "wrong_switches": 0,
+   "wrong_switches_detail": [],
+   "switch_detected": false,
+   "switch_latency_s": null,
+   "left_a": false,
+   "a_current_60s_after_return": true,
+   "resumed": false,
+   "resume_latency_s": null,
+   "return_step_gt": "s10",
+   "resume_step": "s6",
+   "resume_step_exact": false,
+   "resume_step_within1": false,
+   "step_gt_at_resume": "s10",
+   "resume_step_exact_at_resume": false,
+   "resume_step_within1_at_resume": false,
+   "resume_line": null,
+   "resume_line_step": null,
+   "resume_line_step_exact": null,
+   "resume_line_step_within1": null,
+   "coming_back_asked": [],
+   "switch_lines": [],
+   "task_checks": 0,
+   "task_check_errors": 0,
+   "task_checks_by_part": [
+    0,
+    0,
+    0
+   ],
+   "verifier_calls": 207,
+   "cost_usd": 0.021200886000000002
+  },
+  {
+   "id": "enigma_interrupt_144",
+   "kind": "interrupt",
+   "minutes": 12.602166666666667,
+   "task_a": "enigma_lv_electric",
+   "middle": "__other__",
+   "step_acc": 0.5255544840887174,
+   "step_acc_job_a": 0.5255544840887174,
+   "step_acc_job_a_first_part": 0.400355871886121,
+   "correct_task_share": 1.0,
+   "task_changes": [],
+   "switches": 0,
+   "wrong_switches": 0,
+   "wrong_switches_detail": [],
+   "interruption_paused": true,
+   "interruption_pause_latency_s": 36.9,
+   "interruption_pauses_outside": 0,
+   "left_a": false,
+   "a_current_60s_after_return": true,
+   "resumed": false,
+   "resume_latency_s": null,
+   "return_step_gt": "s10",
+   "resume_step": "s8",
+   "resume_step_exact": false,
+   "resume_step_within1": false,
+   "step_gt_at_resume": "s10",
+   "resume_step_exact_at_resume": false,
+   "resume_step_within1_at_resume": false,
+   "resume_line": "Back to the low voltage board repair. Next: off, knobs zero, unplug..",
+   "resume_line_step": "s8",
+   "resume_line_step_exact": false,
+   "resume_line_step_within1": false,
+   "coming_back_asked": [
+    [
+     403.0,
+     "enigma_lv_electric",
+     "__other__"
+    ]
+   ],
+   "switch_lines": [
+    [
+     403.0,
+     "leave_warning",
+     "Before you go, 18 steps are left on the low voltage board repair. Next: off, knobs zero, unplug.. Coming back to the low voltage board repair?"
+    ],
+    [
+     464.0,
+     "resume_task",
+     "Back to the low voltage board repair. Next: off, knobs zero, unplug.."
+    ]
+   ],
+   "task_checks": 4,
+   "task_check_errors": 0,
+   "task_checks_by_part": [
+    0,
+    3,
+    1
+   ],
+   "verifier_calls": 172,
+   "cost_usd": 0.033870502
+  },
+  {
+   "id": "enigma_resume_53_141",
+   "kind": "resume",
+   "minutes": 13.768333333333334,
+   "task_a": "enigma_lv_manual",
+   "middle": "enigma_hv_manual",
+   "step_acc": 0.41720896601590746,
+   "step_acc_job_a": 0.48123436196830693,
+   "step_acc_job_a_first_part": 0.6475279106858054,
+   "correct_task_share": 0.8184019370460048,
+   "task_changes": [],
+   "switches": 0,
+   "wrong_switches": 0,
+   "wrong_switches_detail": [],
+   "switch_detected": false,
+   "switch_latency_s": null,
+   "left_a": false,
+   "a_current_60s_after_return": true,
+   "resumed": false,
+   "resume_latency_s": null,
+   "return_step_gt": "s8",
+   "resume_step": "s9",
+   "resume_step_exact": false,
+   "resume_step_within1": true,
+   "step_gt_at_resume": "s8",
+   "resume_step_exact_at_resume": false,
+   "resume_step_within1_at_resume": true,
+   "resume_line": null,
+   "resume_line_step": null,
+   "resume_line_step_exact": null,
+   "resume_line_step_within1": null,
+   "coming_back_asked": [],
+   "switch_lines": [],
+   "task_checks": 0,
+   "task_check_errors": 0,
+   "task_checks_by_part": [
+    0,
+    0,
+    0
+   ],
+   "verifier_calls": 250,
+   "cost_usd": 0.026104302000000003
+  },
+  {
+   "id": "enigma_interrupt_53",
+   "kind": "interrupt",
+   "minutes": 12.768333333333334,
+   "task_a": "enigma_lv_manual",
+   "middle": "__other__",
+   "step_acc": 0.3386155129274395,
+   "step_acc_job_a": 0.3386155129274395,
+   "step_acc_job_a_first_part": 0.6475279106858054,
+   "correct_task_share": 0.5562130177514792,
+   "task_changes": [
+    [
+     434.7,
+     "cc4d_spicedhotchocolate"
+    ],
+    [
+     458.8,
+     "cc4d_microwavemugpizza"
+    ],
+    [
+     566.9,
+     "enigma_hv_electric"
+    ]
+   ],
+   "switches": 3,
+   "wrong_switches": 3,
+   "wrong_switches_detail": [
+    [
+     434.7,
+     "cc4d_spicedhotchocolate",
+     "__other__"
+    ],
+    [
+     458.8,
+     "cc4d_microwavemugpizza",
+     "__other__"
+    ],
+    [
+     566.9,
+     "enigma_hv_electric",
+     "enigma_lv_manual"
+    ]
+   ],
+   "interruption_paused": false,
+   "interruption_pause_latency_s": null,
+   "interruption_pauses_outside": 0,
+   "left_a": true,
+   "a_current_60s_after_return": false,
+   "resumed": false,
+   "resume_latency_s": null,
+   "return_step_gt": "s8",
+   "resume_line": null,
+   "resume_line_step": null,
+   "resume_line_step_exact": null,
+   "resume_line_step_within1": null,
+   "coming_back_asked": [
+    [
+     434.7,
+     "enigma_lv_manual",
+     "__other__"
+    ]
+   ],
+   "switch_lines": [
+    [
+     434.7,
+     "switch_task",
+     "Looks like you've moved on to making spiced hot chocolate. I paused the low-voltage board repair with screwdriver, soldering iron and oscilloscope at: unmount, 4 back screws, display off.. Coming back to the low-voltage board repair with screwdriver, soldering iron and oscilloscope?"
+    ],
+    [
+     458.8,
+     "retract_task",
+     "My mistake, this looks like making microwave mug pizza, not the spiced hot chocolate."
+    ],
+    [
+     566.9,
+     "retract_task",
+     "My mistake, this looks like servicing high voltage board repair, not the microwave mug pizza."
+    ]
+   ],
+   "task_checks": 7,
+   "task_check_errors": 0,
+   "task_checks_by_part": [
+    0,
+    2,
+    5
+   ],
+   "verifier_calls": 205,
+   "cost_usd": 0.05253119
+  }
+ ],
+ "spend_usd": 0.26409431400000044,
+ "calls": 1666,
+ "spend_usd_non_openai": 0.16862231400000022
+}

@@ -317,3 +317,97 @@ Decided by the founder on 2026-10-17:
     the new task's frames until the switch was detected (median 69–81 s on the train splices). Option added:
     `rewind_on_leave` rolls the left task's tracker back to 10 s before its P(away) last rose above 0.5. It's tested
     as one more train config, not adopted untested.
+
+## 12. Repair footage: switching and resuming (SYNTHETIC sessions, PROXY step labels)
+
+`eval/enigma_switch.py`, `results/enigma51/enigma_switch.json`, 2026-10-18. Eight sessions spliced from the four
+ENIGMA-51 repair videos (107.6 video-minutes). The first job is given, as a work order would set it; switching is
+automatic. Library: the four repair procedures plus the cooking library. Chosen cooking configuration, unchanged; Jev
+fast tier, gpt-6.1-sol answers "which task?", no strong tier. Step labels are derived from object interactions, not
+human step labels. Cost $0.26 (Jev $0.17, Sol $0.09).
+
+- **Switch to another repair job (4 sessions: 2.5 min of a different board or screwdriver procedure): 0 of 4
+  noticed.** Praxis never asked "which task?". Its off-task signal comes from the parts and tools that the steps name,
+  and the four procedures share them: landmark margins between them were about 0.003, and P(away) stayed near 0.01.
+  Because job A never left, A was current again when its footage returned in all 4. Its step was within one of the
+  right step in 3 of 4 (exact in 1).
+- **Unrelated interruption (4 sessions: 90 s of a cooking recipe that is not in the library):**
+  - **2 of 4 handled as designed.** Paused 37 s and 75 s in, with "Coming back to the ... board repair?", and resumed
+    8–10 s after the repair footage returned. But the step named on resume was two behind: the belief was already
+    behind before the interruption.
+  - **2 of 4 became wrong switches.** Sol named a look-alike library recipe (0.94, 0.95). One recovered to the right
+    repair job about 2 minutes after the footage returned. The other ended on the wrong repair job.
+  - The spoken resume line used the paused state. In one case it named s10 while the belief moved to the right step
+    (s14) one tick later, and the screen followed 4 s after that.
+- **Sol tells the four repair jobs apart on 7 of 13 checks made during repair footage.** All 6 on one video were right;
+  on another, 1 of 5 was. Board type and screwdriver type are subtle in three keyframes.
+- **Step accuracy on job A: 40% (derived labels).**
+- **What it means:** on near-identical jobs, a silent switch goes unnoticed. The design needs one of:
+  - a job-distinguishing signal: landmarks that differ between procedures, compiled per task against the rest of the
+    library;
+  - a step-level fit signal: the fast tier's "which step?" answering "none" or out of order;
+  - the switch said or scanned: "switching to the low-voltage board", which is the voice path.
+
+## 13. Combined training-video test (TRAIN split only, paid, 2026-10-18)
+
+`eval/multitask.combined_train_test`, `results/multitask/combined_train.json` (+ one file per run). The 24 v1 train
+recordings (first 300 s, automatic) plus the 22 v1 train splices, 3-fold v1 stacks, chosen configuration on the current
+engine. The keep rules for the two engine fixes were written before the runs (protocol in the file). B2 was added after
+seeing B0 and B1, to separate Sol's two roles. Cost $4.88 (main $1.45, OpenAI $3.42) against a $10 approval.
+
+| | A0 now | A1 step list | A2 rewind | B0 Sol: task | B1 Sol: task + strong | B2 Sol: strong |
+|---|---|---|---|---|---|---|
+| Step accuracy, single-task | 46.5% | 46.7% | 46.5% | **50.3%** | 49.3% | 46.3% |
+| Step accuracy, splices | 39.2% | 37.5% | 38.9% | **48.4%** | 45.7% | 37.1% |
+| Right task, splices (share of time) | 55.8% | 56.2% | 55.8% | 67.1% | **67.5%** | 57.4% |
+| First guess right, single-task | **20/24** | **20/24** | **20/24** | 15/24 | 15/24 | **20/24** |
+| Wrong switches (single + splices) | **3** | 4 | **3** | 8 | 9 | 4 |
+| Missed switches, splices | 7 | 10 | 7 | **5** | **5** | 8 |
+| Switch latency, median | 77 s | 78 s | 77 s | 47 s | **42 s** | 75 s |
+| Resumed, of 10 | 5 | 3 | 5 | **8** | 7 | 4 |
+| Resume step within one, of 16 | 4 | 4 | 4 | 3 | **7** | 4 |
+| Interruptions taken as a library task, of 6 | **1** | **1** | **1** | 3 | 4 | **1** |
+| False alarms per min (single-task) | 0.033 | 0.033 | 0.033 | 0.033 | **0.008** | 0.042 |
+
+- **Step list fix (A1): not kept.** The right step was offered more often (candidate recall 58% → 65%), but splice step
+  accuracy fell 1.7 points and there was one more wrong switch.
+- **Rewind (A2): not kept.** Resume within one did not rise (4 → 4).
+- **Sol deciding which task (B0): better switching and step accuracy, but it guesses too early.** It named a recipe at the
+  very first check (4 s) on 5 of 24 recordings, wrongly on 4 (Jev: 1, right). Mean time to the first task went from 66 s to 31 s, and the
+  first guess was right on 15 of 24, against 20 with Jev, which answers "none" more often. The switch bar (0.8) was
+  chosen on Jev's answers, and Sol's confident answers pass it more often: wrong switches went from 3 to 8.
+- **Sol as the strong tier: no gain on its own (B2 vs A0).** B1's fewer false alarms (1 vs 4 in 120 min) and better
+  resumes (7 vs 3 of 16) are small counts, and B2 does not reproduce them, so they are not claimed.
+- **More training video (free learning curve, `results/multitask/learning_curve.json`):** task given, local layers
+  only. Step probes trained on about 47 recordings instead of 16 raised step accuracy on the same 24 recordings from
+  54.5% to 61.1% (16 better, 8 worse). With the motion-window features dropped it was 58.3%.
+
+### 13.1 Sol early-guess fix (TRAIN split, paid, 2026-10-18)
+
+`eval/multitask.sol_fix_test`, `results/multitask/sol_fix_train.json`. Sol answers "which task?" with two new engine
+options: no first task before 10 s (`recognize_min_s`), and only after two typed answers in a row named it
+(`recognize_agree`). No strong tier. Cost $0.92 (main $0.49, OpenAI $0.43; most of C2's Sol answers were cached).
+
+| | A0 Jev | B0 Sol | C1 Sol + fix, bar 0.8 | C2 Sol + fix, bar 0.9 |
+|---|---|---|---|---|
+| Step accuracy, single-task / splices | 46.5% / 39.2% | **50.3% / 48.4%** | 47.2% / 42.3% | 47.4% / 42.3% |
+| First guess right, of 24 | **20** | 15 | 19 | 19 |
+| Wrong switches (single + splices) | 3 | 8 | 5 | **2** |
+| Missed switches; switch latency median | 7; 77 s | **5; 47 s** | **5; 47 s** | 5; 56 s |
+| Right task on splices (share of time) | 55.8% | **67.1%** | 66.3% | 65.9% |
+| Resumed, of 10; resume step exact, of 16 | 5; 2 | **8**; 3 | **8; 4** | **8; 4** |
+| Interruptions taken as a library task, of 6 | **1** | 3 | 3 | **1** |
+| False alarms per min (single-task) | **0.033** | **0.033** | 0.050 | 0.050 |
+
+- **By the rule written before the runs, neither C qualifies.** Both lost more than 1 point of mean step accuracy
+  against B0: 44.7% (C1) and 44.8% (C2), against 49.4%. So Sol is not made the default task decider by that rule.
+- **The fix does what it was for:** first guesses right 19 of 24 (B0: 15), and with the 0.9 bar wrong switches drop
+  to 2 (B0: 8). B0's higher step accuracy came from starting earlier: mean time to the first task 31 s, against 46 s.
+- **Against Jev (A0), C2 is better on every measure but one:**
+  - better: mean step accuracy 44.8% vs 42.9%, wrong switches 2 vs 3, missed switches 5 vs 7, right-task share 66% vs
+    56%, resumed 8 vs 5 of 10, resume step exact 4 vs 2 of 16;
+  - the same: interruptions taken as a library task, 1 vs 1;
+  - worse: false alarms, 6 vs 4 in 120 minutes.
+
+  Adopting C2 for the final held-out test is the founder's decision on train results. It is not the outcome of the
+  pre-set rule, and it would be reported that way.
