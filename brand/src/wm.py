@@ -21,7 +21,7 @@ def glyph_name(f, ch):
 
 def text_path(name, text, size, tracking=0, pairs=None, x0=0, baseline=0, **axes):
     """Return (svg path d, advance width, info) with text set at `size` px; tracking in em/1000."""
-    f = font(name, **tuple(sorted(axes.items())) and axes)
+    f = font(name, **axes)
     gs = f.getGlyphSet(); upm = f['head'].unitsPerEm; s = size / upm
     pen = SVGPathPen(gs); x = 0; boxes = []
     for i, ch in enumerate(text):
