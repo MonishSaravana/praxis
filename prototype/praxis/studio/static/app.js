@@ -31,6 +31,10 @@ async function boot() {
     `<option value="${c.clip_id}">${esc(c.clip_id)} · ${esc(c.task_id.replace("cc4d_", ""))}${c.split === "heldout_type" ? " (not in library)" : ""}</option>`).join("");
   S.hud = new Hud($("#stage"), S.status.label + " · Praxis Studio");
   S.hud.onAsk = (text) => describe(text);
+  S.hud.onTaskAnswer = (task_id, answer) => {            // paused-task chip: "Coming back" / "I'm done"
+    send({ type: "task_answer", task_id, answer });
+    logLine({ t: sessionTime(), action: "you", text: answer === "done" ? "I'm done with that task" : "Coming back to it" });
+  };
   S.eng = new EngineerPanel($("#engineer"));
   if (STATIC) { window.addEventListener("hashchange", route); route(); return; }
   if (params.get("clip")) { $("#in-clip").checked = true; $("#clip").value = params.get("clip"); }
@@ -179,6 +183,7 @@ async function start() {
     type: "start", input: S.input, task_mode: task, escalation: $("#opus").checked,
     cost_cap: parseFloat($("#cap").value) || 1.0, speech: $("#speech").checked,
   };
+  Object.assign(cfg, window.praxisOrg?.startFields?.() || {});      // company profile (org.js), if one is selected
   if (S.input === "camera") cfg.source_label = $("#cam").selectedOptions[0]?.textContent || "camera";
   else if (S.input === "upload") cfg.source_label = $("#file").files[0]?.name || "upload";
   else cfg.source_label = `test clip ${$("#clip").value}`;
@@ -250,6 +255,7 @@ function drawNow() {
 }
 
 function onMessage(m) {
+  window.praxisOrg?.onMessage?.(m);                                  // company profile panel (org.js)
   if (m.type === "started") {
     setPill("#p-cost", `$0.000 / $${money(m.cost_cap_usd)}`, "ok");
     setPill("#p-opus", m.models.escalation ? "Opus on" : "Opus off", m.models.escalation ? "ok" : "off");

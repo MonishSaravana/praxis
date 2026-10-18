@@ -1,0 +1,29 @@
+{
+ "label": "ENIGMA-51 PROXY metrics (derived step segments; object consistency) - not human step labels",
+ "strong": "openai:gpt-6.1-sol",
+ "rows": [
+  {
+   "video": "141",
+   "task_id": "enigma_hv_manual",
+   "minutes": 16.678333333333335,
+   "n_steps": 19,
+   "derived_segments": 11,
+   "step_acc_derived": 0.49147381242387334,
+   "object_consistency": {
+    "n": 276,
+    "consistency": 0.572463768115942,
+    "chance": 0.1664759725400456
+   },
+   "commits": 7,
+   "verifier_calls": 330,
+   "strong_calls": 32,
+   "mistake_alerts": 3,
+   "cost_usd": 0.15886887
+  }
+ ],
+ "mean_step_acc_derived": 0.49147381242387334,
+ "mean_object_consistency": 0.572463768115942,
+ "mean_object_chance": 0.1664759725400456,
+ "spend_usd": 0.15886887000000002,
+ "spend_usd_non_openai": 0.03027086999999996
+}

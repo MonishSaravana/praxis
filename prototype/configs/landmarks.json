@@ -1,0 +1,5 @@
+{
+  "_doc": "Landmarks (praxis/landmarks.py). Task landmarks come from each graph's node `parts`; `anchors` adds a few per task (none needed for the current library). `non_task` are things that never belong to a task: with high P(away) they mean an interruption, not that the task ended. Non-task landmarks are unmeasured on CaptainCook4D (none appear there).",
+  "anchors": {},
+  "non_task": ["a baby", "a crib", "a door", "a phone held in a hand", "a person talking to the camera", "a dog", "a television screen", "the inside of a van", "a laptop screen"]
+}

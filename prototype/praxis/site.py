@@ -21,7 +21,9 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from .paths import RENDERS, RESULTS, ROOT
+from .paths import RENDERS, RESULTS, ROOT, RUNS
+from .runlog import read_log
+from .tasks.compiler import load_library
 
 SITE = ROOT / "site"
 DOMAIN = "praxis.monishsaravana.com"
@@ -121,16 +123,38 @@ def pct(x: float) -> str:
     return f"{round(100 * x)}%"
 
 
-def _clip_card(r: dict) -> str:
+LISTED_MISTAKE = ("This mistake is on the recipe's mistake list, compiled before the test from the recipe and errors "
+                  "annotated in other people's training recordings. The spoken fix is the one written for it.")
+
+
+def _listed_mistake(r: dict) -> bool:
+    """True when the alert behind a render matched a mistake in the recipe's compiled library (read from its run log)."""
+    log = RUNS / r["run"] / f"{r['clip']}.jsonl"
+    if not log.exists():
+        return False
+    ids = {mk.id for n in load_library()[r["task_id"]].nodes for mk in n.mistakes}
+    alert = next((x for x in read_log(log) if x["kind"] == "action" and x["action"] == "mistake" and abs(x["t"] - r["t"]) < 1e-3),
+                 None)
+    return alert is not None and (alert.get("detail") or {}).get("mistake_id") in ids
+
+
+def _clip_card(r: dict, main_run: str) -> str:
     user = next(f for f in r["files"] if f.endswith("_user.mp4"))
     eng = next((f for f in r["files"] if f.endswith("_engineer.mp4")), None)
     said = f'<p class="said">“{e(r["text"])}”</p>' if r.get("text") else ""
     gt = f'<p class="gt">Annotated error in the dataset: <b>{e("; ".join(r["gt"]))}</b></p>' if r.get("gt") else ""
+    notes = []
+    if r["kind"].startswith("caught_mistake") and _listed_mistake(r):
+        notes.append(LISTED_MISTAKE)
+    if r["run"] != main_run:
+        notes.append(f"Praxis was told the recipe for this clip (run {r['run']}); the other clips are from the run where it "
+                     f"recognizes the recipe itself.")
+    notes_html = "".join(f'<p class="gt">{e(n)}</p>' for n in notes)
     fail = " fail" if r["kind"].startswith("failure") else ""
     links = f' · <a href="/{e(eng)}">engineer view</a>' if eng else ""
     return f"""<article class="clip{fail}">
   <video src="/{e(user)}#t=0.1" controls muted playsinline preload="metadata"></video>
-  <div class="clip-body"><h3>{e(CLIP_TITLES.get(r["kind"], r["kind"]))}</h3>{said}{gt}
+  <div class="clip-body"><h3>{e(CLIP_TITLES.get(r["kind"], r["kind"]))}</h3>{said}{gt}{notes_html}
   <p class="meta">Clip {e(r["clip"])} · chosen by rule: {e(r["selection"])}{links}</p></div>
 </article>"""
 
@@ -150,15 +174,18 @@ def landing(m: dict, ridx: dict, n_viewer: int, sessions: list[dict], live: dict
     rendered = {r["kind"]: r for r in ridx["rendered"]}
     hero = rendered["caught_mistake"]
     hero_user = next(f for f in hero["files"] if f.endswith("_user.mp4"))
-    cards = "\n".join(_clip_card(rendered[k]) for k in CLIP_ORDER if k in rendered)
+    hero_note = " It was on the recipe's mistake list, built before the test from other people's recordings." \
+        if _listed_mistake(hero) else ""
+    cards = "\n".join(_clip_card(rendered[k], ridx["run"]) for k in CLIP_ORDER if k in rendered)
 
     def stat(big: str, label: str, sub: str, source: str) -> str:
         return (f'<div class="stat"><div class="big">{big}</div><div class="label">{label}</div>'
                 f'<div class="sub">{sub}</div><div class="src">{e(source)}</div></div>')
 
     stats = "".join([
-        stat(pct(o["step_acc"]), "step accuracy, task known",
-             f'A frontier model called every 5 s without state: {pct(b["step_acc"])}.', src["run_fused_oracle"]),
+        stat(pct(o["step_acc"]), "step accuracy, recipe given",
+             f'How often Praxis names the step you are on, when told the recipe. A frontier model given the step list '
+             f'every 5 s, with no memory: {pct(b["step_acc"])}.', src["run_fused_oracle"]),
         stat(f'${o["cost_usd_per_video_min"]:.3f}', "per minute of video",
              f'The stateless baseline costs ${b["cost_usd_per_video_min"]:.3f}. Most checks are fast typed questions.',
              src["run_fused_oracle"]),
@@ -205,7 +232,7 @@ def landing(m: dict, ridx: dict, n_viewer: int, sessions: list[dict], live: dict
   <figure class="hero-video">
     <video src="/{e(hero_user)}" autoplay muted loop playsinline preload="auto"></video>
     <figcaption>Engine output on held-out clip {e(hero["clip"])}. Praxis said “{e(hero["text"])}” The dataset's annotation
-    for that moment: “{e("; ".join(hero["gt"]))}”.</figcaption>
+    for that moment: “{e("; ".join(hero["gt"]))}”.{e(hero_note)}</figcaption>
   </figure>
 </div></section>
 
@@ -221,7 +248,9 @@ def landing(m: dict, ridx: dict, n_viewer: int, sessions: list[dict], live: dict
       <li><b>Mistakes.</b> Strictly judged, {sem["semantic_yes"]} of Praxis's {sem["n_alerts"]} mistake alerts named the actual
       annotated error; the stateless baseline managed {semb["semantic_yes"]} of {semb["n_alerts"]}. Both catch only a small share of
       the {sem["n_gt_mistakes"]} annotated errors. <span class="src">{e(src["semantic_fused_oracle"])}</span></li>
-      <li><b>Recognition.</b> {pct(1 - rec["top1"])} of clips were announced as the wrong recipe or not recognized. One is in the clips below.</li>
+      <li><b>Recognition.</b> {pct(1 - rec["top1"])} of clips were announced as the wrong recipe or not recognized. Once
+      Praxis picks a recipe it doesn't reconsider yet, so those clips score 0% step accuracy in the viewer. One is in the
+      clips below.</li>
       <li><b>Hardware.</b> Not tested on smart glasses yet. It runs live on a camera stream; glasses are one more input adapter.</li>
     </ul>
   </div>

@@ -1,0 +1,16 @@
+{
+  "overrides": {
+    "multi_task": true,
+    "offtask_window": 20,
+    "tracker.away_mode": "decoupled",
+    "tracker.away_enter": 0.005,
+    "tracker.away_return": 0.05,
+    "tracker.away_weight": 0.3,
+    "fit_window_s": 20.0,
+    "fit_thr": 0.7,
+    "switch_p": 0.8
+  },
+  "config": "strict_p0.8_W20_thr0.7",
+  "chosen_from": "results/multitask/train_switch_sweep.json",
+  "away_from": "results/multitask/free_away_sweep_decoupled.json"
+}

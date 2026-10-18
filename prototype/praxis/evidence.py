@@ -74,3 +74,13 @@ class ProbeEvidence:
     def load(path: Path) -> "ProbeEvidence":
         with open(path, "rb") as f:
             return pickle.load(f)
+
+
+class FrameProbeEvidence(ProbeEvidence):
+    """ProbeEvidence on the SigLIP2 frame embedding alone (no V-JEPA 2 window): on held-out frames the frame-only
+    probe scored 44.1% vs 42.1% for frame + window (results/l1/l1_quality_and_probes.json)."""
+    name = "probe_frame"
+
+    @staticmethod
+    def featurize(frame_emb: np.ndarray, window_emb: np.ndarray) -> np.ndarray:
+        return frame_emb

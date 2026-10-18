@@ -107,7 +107,7 @@ def _budget(max_calls=3000, max_usd=60.0):
     return Budget(max_calls, max_usd)
 
 
-def make_verifier(kind: str, budget=None):
+def make_verifier(kind: str, budget=None, role: str | None = None):
     budget = budget or _budget()
     if kind == "claude_fast":
         from .verify.claude import ClaudeVerifier
@@ -124,6 +124,10 @@ def make_verifier(kind: str, budget=None):
     if kind == "distilled":
         from .flywheel.distill import DistilledVerifier
         return DistilledVerifier()
+    if kind.startswith("openai:"):                      # openai:gpt-6-luna, or openai:gpt-6-luna@none (reasoning effort)
+        from .verify.openai_vlm import OpenAIVerifier
+        model, _, effort = kind.split(":", 1)[1].partition("@")
+        return OpenAIVerifier(model, budget, effort=effort or "low", role=role or "fast")
     raise ValueError(kind)
 
 
@@ -740,3 +744,101 @@ if __name__ == "__main__":
     t0 = time.time()
     {"l2": l2, "l2_eval": l2_eval_existing, "probes": probes, "tune": tune_tracker}[sys.argv[1]]()
     print("done in", round(time.time() - t0), "s")
+
+
+# ------------------------------------------------------------------------------------- multi-task (train only)
+def _lm_feature_rows(clips, lib, window_s: float, top_frac: float = 0.2, max_s: float = 600.0, texts=None):
+    """Per second of each train recording: landmark off-task features for every CaptainCook4D library task as the
+    hypothesised current task. y = 1 when it is the recording's own recipe (on-task)."""
+    from .landmarks import Landmarks
+    from .perception.extract import load_features
+    cands = sorted(t for t in lib if t.startswith("cc4d_"))
+    X, y, g, hit = [], [], [], []
+    for gi, c in enumerate(clips):
+        feats, _ = load_features(c.clip_id)
+        lm = Landmarks(lib, texts=texts, window_s=window_s, top_frac=top_frac, non_task=[])
+        tt = feats.t
+        for sec in range(1, int(min(tt[-1], max_s)) + 1):
+            sel = (tt > sec - 1) & (tt <= sec)
+            if not sel.any():
+                continue
+            lm.update(feats.frame[sel])
+            if sec < 5:
+                continue
+            s = lm.scores()
+            hit.append(max((k for k in s if k in cands), key=s.get) == c.task_id)
+            for t in cands:
+                X.append(lm.features(t))
+                y.append(int(t == c.task_id))
+                g.append(gi)
+    return np.array(X), np.array(y), np.array(g), float(np.mean(hit))
+
+
+def fit_offtask(windows=(10.0, 20.0, 30.0, 60.0), top_frac: float = 0.2, max_s: float = 600.0, folds: int = 5) -> dict:
+    """Off-task model for the tracker's away states, TRAIN split only, no model calls: P(not doing task T | landmark
+    features for T), logistic on two features, balanced classes. Window choice, fixed before looking: the smallest
+    window whose grouped-CV AUC is within 0.02 of the best."""
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.metrics import roc_auc_score
+    from .landmarks import OffTaskModel, TextCache
+    from .paths import CKPT
+    from .tasks.compiler import load_library
+    lib = load_library()
+    man = load_manifest()
+    clips = [Clip.from_json(c) for c in man["train"] if (FEATURES / f"{c['clip_id']}.npz").exists()
+             and c["task_id"] in lib]
+    texts = TextCache()
+    res = {"protocol": f"train-split recordings ({len(clips)}), first {max_s:.0f}s, per second, each paired with every "
+                       f"CaptainCook4D library task; grouped {folds}-fold CV by recording", "windows": {}}
+    best = {}
+    for w in windows:
+        X, y, g, acc = _lm_feature_rows(clips, lib, w, top_frac, max_s, texts)
+        p = np.zeros(len(y))
+        for k in range(folds):
+            te = (g % folds) == k
+            m = LogisticRegression(class_weight="balanced").fit(X[~te], y[~te])
+            p[te] = m.predict_proba(X[te])[:, 1]
+        auc = float(roc_auc_score(y, p))
+        m = LogisticRegression(class_weight="balanced").fit(X, y)
+        res["windows"][str(int(w))] = {"cv_auc_on_vs_off": auc, "recipe_top1_per_second": acc, "n_rows": int(len(y)),
+                                       "coef": m.coef_[0].tolist(), "intercept": float(m.intercept_[0])}
+        best[w] = (auc, m)
+        # every window's model is kept: the train-split engine sweep can trade detection latency against accuracy
+        OffTaskModel(m.coef_[0].tolist(), float(m.intercept_[0]), w, top_frac,
+                     {"cv_auc": auc, "split": "train", "n_recordings": len(clips)}).save(CKPT / f"offtask_landmarks_w{int(w)}.json")
+        print(f"window {w:.0f}s  AUC {auc:.3f}  recipe top-1 {acc:.3f}", flush=True)
+    top = max(a for a, _ in best.values())
+    w = min(k for k, (a, _) in best.items() if a >= top - 0.02)
+    auc, m = best[w]
+    res["chosen_window_s"] = w
+    OffTaskModel(m.coef_[0].tolist(), float(m.intercept_[0]), w, top_frac,
+                 {"cv_auc": auc, "split": "train", "n_recordings": len(clips)}).save(CKPT / "offtask_landmarks.json")
+    (RESULTS / "multitask").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "multitask" / "offtask_fit.json").write_text(json.dumps(res, indent=2))
+    return res
+
+
+def calibrate_openai(model: str = "gpt-6.1-sol", budget_usd: float = 3.5, workers: int = 6) -> dict:
+    """Answer all TRAIN checks with an OpenAI model (hard budget) and fit its calibrators like the other tiers
+    (eval/verifier_eval.fit_calibrators): data/verdicts/openai_<model>_train.jsonl -> checkpoints cal_/devcal_openai_<model>.pkl."""
+    from .eval.checks import load_checks, run_verifier_on_checks
+    from .eval.verifier_eval import fit_calibrators, load
+    from .tasks.compiler import load_library
+    from .verify.common import Budget
+    kind = f"openai_{model}"
+    checks = load_checks("train")
+    budget = Budget(len(checks) + 10, budget_usd)
+    rows = run_verifier_on_checks(make_verifier(f"openai:{model}", budget), checks, load_library(),
+                                  RESULTS.parent / "data" / "verdicts" / f"{kind}_train.jsonl", workers=workers, log_every=100)
+    ok = load(f"{kind}_train")
+    cals = fit_calibrators(kind)
+    from sklearn.metrics import roc_auc_score
+    from .verify.calibration import raw_p_complete
+    p = np.array([raw_p_complete(r["verdict"]["step_status"], r["verdict"]["confidence"]) for r in ok])
+    y = np.array([r["y_complete"] for r in ok])
+    res = {"model": model, "n": len(rows), "ok": len(ok), "accuracy": float(((p >= 0.5) == (y == 1)).mean()),
+           "auroc": float(roc_auc_score(y, p)), "calibrators": cals is not None, "spend_usd": budget.usd}
+    (RESULTS / "l5").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "l5" / f"calibration_{kind}.json").write_text(json.dumps(res, indent=2))
+    print(res, flush=True)
+    return res

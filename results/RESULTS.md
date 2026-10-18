@@ -294,7 +294,7 @@ No metric is computed from these clips. The official step labels were unreachabl
 
 ## Spend
 
-Tracked API spend for this build: **$98.46**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
+Tracked API spend for this build: **$109.23**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
 
 - hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total
 - 72 mistake-judge calls (Opus 5.5, effort low, one short text prompt each) made before the judge stored per-call cost

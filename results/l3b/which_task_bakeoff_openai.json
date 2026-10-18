@@ -1,0 +1,3823 @@
+{
+ "protocol": "120 moments inside annotated steps of train-split recordings; the engine's three keyframes and options (all library tasks + none)",
+ "n_items": 120,
+ "models": {
+  "openai:gpt-6-luna": {
+   "model": "gpt-6-luna",
+   "n": 120,
+   "errors": 0,
+   "accuracy": 0.43333333333333335,
+   "none_rate": 0.225,
+   "accuracy_when_answering": 0.5591397849462365,
+   "wrong_task_rate": 0.3416666666666667,
+   "mean_p_truth": 0.37251851851851847,
+   "latency_ms_p50": 2069.172353949398,
+   "cost_usd": 0.026118500000000003,
+   "top_confusions": [
+    [
+     [
+      "spicedhotchocolate",
+      "none"
+     ],
+     7
+    ],
+    [
+     [
+      "microwavemugpizza",
+      "spicedhotchocolate"
+     ],
+     6
+    ],
+    [
+     [
+      "cucumberraita",
+      "none"
+     ],
+     5
+    ],
+    [
+     [
+      "microwaveeggsandwich",
+      "none"
+     ],
+     5
+    ],
+    [
+     [
+      "tomatomozzarellasalad",
+      "herbomeletwithfriedtomatoes"
+     ],
+     5
+    ],
+    [
+     [
+      "breakfastburritos",
+      "pinwheels"
+     ],
+     3
+    ],
+    [
+     [
+      "breakfastburritos",
+      "none"
+     ],
+     3
+    ],
+    [
+     [
+      "cucumberraita",
+      "herbomeletwithfriedtomatoes"
+     ],
+     3
+    ]
+   ],
+   "rows": [
+    {
+     "id": "breakfastburritos_00",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.95,
+     "p_truth": 0.95,
+     "latency_ms": 3547.9119579540566,
+     "cost_usd": 0.00017170000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_01",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.84,
+     "p_truth": 0.84,
+     "latency_ms": 4792.707458022051,
+     "cost_usd": 0.00027620000000000005,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_02",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.0022222222222222244,
+     "latency_ms": 3184.767625061795,
+     "cost_usd": 0.00017070000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_03",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "none",
+     "p": 0.79,
+     "p_truth": 0.02333333333333333,
+     "latency_ms": 3421.9509169925004,
+     "cost_usd": 0.0002012,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_04",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.39,
+     "p_truth": 0.06777777777777777,
+     "latency_ms": 3857.6324169989675,
+     "cost_usd": 0.00029220000000000006,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_05",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_pinwheels",
+     "p": 0.88,
+     "p_truth": 0.013333333333333332,
+     "latency_ms": 2667.448083986528,
+     "cost_usd": 0.0002012,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_06",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.72,
+     "p_truth": 0.72,
+     "latency_ms": 1584.9179999204352,
+     "cost_usd": 0.00017170000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_07",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_pinwheels",
+     "p": 0.66,
+     "p_truth": 0.03777777777777777,
+     "latency_ms": 2196.0869169561192,
+     "cost_usd": 0.00022270000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_08",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.57,
+     "p_truth": 0.04777777777777778,
+     "latency_ms": 4837.6962499460205,
+     "cost_usd": 0.00033070000000000007,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_09",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1891.5394579526037,
+     "cost_usd": 0.00020170000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_10",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.87,
+     "p_truth": 0.87,
+     "latency_ms": 2146.1625000229105,
+     "cost_usd": 0.00021970000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_11",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.42,
+     "p_truth": 0.06444444444444446,
+     "latency_ms": 3462.2904169373214,
+     "cost_usd": 0.0002732,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_12",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "none",
+     "p": 0.83,
+     "p_truth": 0.018888888888888893,
+     "latency_ms": 1186.1777500016615,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_13",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "none",
+     "p": 0.86,
+     "p_truth": 0.015555555555555557,
+     "latency_ms": 1826.6594579908997,
+     "cost_usd": 0.00019370000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "breakfastburritos_14",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.68,
+     "p_truth": 0.68,
+     "latency_ms": 1211.4708749577403,
+     "cost_usd": 0.00017170000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_00",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.91,
+     "p_truth": 0.91,
+     "latency_ms": 2031.7732079420239,
+     "cost_usd": 0.0002132,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_01",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.87,
+     "p_truth": 0.87,
+     "latency_ms": 2228.36045792792,
+     "cost_usd": 0.00021920000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_02",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.46,
+     "p_truth": 0.060000000000000005,
+     "latency_ms": 2731.533500016667,
+     "cost_usd": 0.00023720000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_03",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.92,
+     "p_truth": 0.92,
+     "latency_ms": 2310.041416902095,
+     "cost_usd": 0.00021020000000000001,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_04",
+     "truth": "cc4d_cucumberraita",
+     "choice": "none",
+     "p": 0.94,
+     "p_truth": 0.006666666666666672,
+     "latency_ms": 1207.7791669871658,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_05",
+     "truth": "cc4d_cucumberraita",
+     "choice": "none",
+     "p": 0.93,
+     "p_truth": 0.007777777777777772,
+     "latency_ms": 1152.6902500772849,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_06",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 4715.226625092328,
+     "cost_usd": 0.0001887,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_07",
+     "truth": "cc4d_cucumberraita",
+     "choice": "none",
+     "p": 0.96,
+     "p_truth": 0.004444444444444449,
+     "latency_ms": 2997.747291927226,
+     "cost_usd": 0.0002552,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_08",
+     "truth": "cc4d_cucumberraita",
+     "choice": "none",
+     "p": 0.99,
+     "p_truth": 0.0011111111111111122,
+     "latency_ms": 1186.6013329708949,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_09",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.68,
+     "p_truth": 0.03555555555555555,
+     "latency_ms": 1985.4492500890046,
+     "cost_usd": 0.0002132,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_10",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.68,
+     "p_truth": 0.03555555555555555,
+     "latency_ms": 2351.491916924715,
+     "cost_usd": 0.00022720000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_11",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.78,
+     "p_truth": 0.024444444444444442,
+     "latency_ms": 1724.2468330077827,
+     "cost_usd": 0.00019170000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_12",
+     "truth": "cc4d_cucumberraita",
+     "choice": "none",
+     "p": 0.9,
+     "p_truth": 0.011111111111111108,
+     "latency_ms": 1056.1305419541895,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_13",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.85,
+     "p_truth": 0.85,
+     "latency_ms": 1415.847041993402,
+     "cost_usd": 0.00017120000000000001,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "cucumberraita_14",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.82,
+     "p_truth": 0.020000000000000004,
+     "latency_ms": 1824.5587500277907,
+     "cost_usd": 0.00019970000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_00",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.86,
+     "p_truth": 0.86,
+     "latency_ms": 1884.3115419149399,
+     "cost_usd": 0.00020970000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_01",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.92,
+     "p_truth": 0.92,
+     "latency_ms": 1961.5989590529352,
+     "cost_usd": 0.0001957,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_02",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.79,
+     "p_truth": 0.79,
+     "latency_ms": 1657.8400840517133,
+     "cost_usd": 0.00017370000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_03",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "none",
+     "p": 0.82,
+     "p_truth": 0.020000000000000004,
+     "latency_ms": 1171.970291994512,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_04",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.52,
+     "p_truth": 0.52,
+     "latency_ms": 1176.0204579913989,
+     "cost_usd": 0.00017370000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_05",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1465.57354205288,
+     "cost_usd": 0.00018720000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_06",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "none",
+     "p": 0.99,
+     "p_truth": 0.0011111111111111122,
+     "latency_ms": 1485.0144579540938,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_07",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1746.5166660258546,
+     "cost_usd": 0.00019620000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_08",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.91,
+     "p_truth": 0.91,
+     "latency_ms": 2087.1864159125835,
+     "cost_usd": 0.0001977,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_09",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.74,
+     "p_truth": 0.74,
+     "latency_ms": 1259.04899998568,
+     "cost_usd": 0.00017370000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_10",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.82,
+     "p_truth": 0.82,
+     "latency_ms": 1135.489167063497,
+     "cost_usd": 0.00017370000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_11",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.79,
+     "p_truth": 0.79,
+     "latency_ms": 1027.9943329514936,
+     "cost_usd": 0.00017370000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_12",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.36,
+     "p_truth": 0.07111111111111111,
+     "latency_ms": 4364.427082939073,
+     "cost_usd": 0.00032020000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_13",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1719.213958014734,
+     "cost_usd": 0.00019720000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_14",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.86,
+     "p_truth": 0.015555555555555557,
+     "latency_ms": 1669.267583056353,
+     "cost_usd": 0.00019820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_00",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.48,
+     "p_truth": 0.05777777777777778,
+     "latency_ms": 3296.7875000322238,
+     "cost_usd": 0.0002617,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_01",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.91,
+     "p_truth": 0.91,
+     "latency_ms": 2130.235124961473,
+     "cost_usd": 0.00020820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_02",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.43,
+     "p_truth": 0.06333333333333334,
+     "latency_ms": 4185.871999943629,
+     "cost_usd": 0.00030320000000000005,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_03",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "none",
+     "p": 0.97,
+     "p_truth": 0.003333333333333336,
+     "latency_ms": 1054.7669579973444,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_04",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.87,
+     "p_truth": 0.014444444444444446,
+     "latency_ms": 1968.390249996446,
+     "cost_usd": 0.0002077,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_05",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_pinwheels",
+     "p": 0.93,
+     "p_truth": 0.007777777777777772,
+     "latency_ms": 2690.4739170568064,
+     "cost_usd": 0.0002457,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_06",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.79,
+     "p_truth": 0.79,
+     "latency_ms": 1098.1822500471026,
+     "cost_usd": 0.00017270000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_07",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.34,
+     "p_truth": 0.07333333333333332,
+     "latency_ms": 4836.124000023119,
+     "cost_usd": 0.00033870000000000005,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_08",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.76,
+     "p_truth": 0.026666666666666665,
+     "latency_ms": 2849.146082997322,
+     "cost_usd": 0.00023820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_09",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_pinwheels",
+     "p": 0.78,
+     "p_truth": 0.024444444444444442,
+     "latency_ms": 2577.207374968566,
+     "cost_usd": 0.00021470000000000001,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_10",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "none",
+     "p": 0.98,
+     "p_truth": 0.0022222222222222244,
+     "latency_ms": 2268.1273749331012,
+     "cost_usd": 0.00020170000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_11",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "none",
+     "p": 0.99,
+     "p_truth": 0.0011111111111111122,
+     "latency_ms": 1017.8040839964524,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_12",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "none",
+     "p": 0.42,
+     "p_truth": 0.06444444444444446,
+     "latency_ms": 4025.000041932799,
+     "cost_usd": 0.00029020000000000006,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_13",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.63,
+     "p_truth": 0.04111111111111111,
+     "latency_ms": 3155.4721660213545,
+     "cost_usd": 0.00025720000000000007,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwaveeggsandwich_14",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "none",
+     "p": 0.57,
+     "p_truth": 0.04777777777777778,
+     "latency_ms": 4009.535374934785,
+     "cost_usd": 0.00030120000000000006,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_00",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.42,
+     "p_truth": 0.06444444444444446,
+     "latency_ms": 2645.4314169241115,
+     "cost_usd": 0.00024920000000000004,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_01",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.58,
+     "p_truth": 0.04666666666666667,
+     "latency_ms": 4689.068333944306,
+     "cost_usd": 0.00030220000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_02",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.77,
+     "p_truth": 0.025555555555555554,
+     "latency_ms": 1934.8529169801623,
+     "cost_usd": 0.00021420000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_03",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.84,
+     "p_truth": 0.84,
+     "latency_ms": 1600.7177499122918,
+     "cost_usd": 0.00017270000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_04",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.34,
+     "p_truth": 0.07333333333333332,
+     "latency_ms": 1157.6507500139996,
+     "cost_usd": 0.00017170000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_05",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "none",
+     "p": 0.98,
+     "p_truth": 0.0022222222222222244,
+     "latency_ms": 980.7714169146493,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_06",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.58,
+     "p_truth": 0.58,
+     "latency_ms": 2962.2539579868317,
+     "cost_usd": 0.00024270000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_07",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "none",
+     "p": 0.91,
+     "p_truth": 0.009999999999999997,
+     "latency_ms": 1436.262832954526,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_08",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.63,
+     "p_truth": 0.04111111111111111,
+     "latency_ms": 2696.398957981728,
+     "cost_usd": 0.0002347,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_09",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.74,
+     "p_truth": 0.02888888888888889,
+     "latency_ms": 1215.1924580102786,
+     "cost_usd": 0.00017170000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_10",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.81,
+     "p_truth": 0.021111111111111105,
+     "latency_ms": 1295.208957977593,
+     "cost_usd": 0.00017170000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_11",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.46,
+     "p_truth": 0.060000000000000005,
+     "latency_ms": 4692.3554999521,
+     "cost_usd": 0.00027170000000000004,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_12",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.84,
+     "p_truth": 0.84,
+     "latency_ms": 5806.372791994363,
+     "cost_usd": 0.00028620000000000007,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_13",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.56,
+     "p_truth": 0.048888888888888885,
+     "latency_ms": 5193.562166998163,
+     "cost_usd": 0.00028470000000000004,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "microwavemugpizza_14",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "none",
+     "p": 0.96,
+     "p_truth": 0.004444444444444449,
+     "latency_ms": 1803.1308749923483,
+     "cost_usd": 0.00018820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_00",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.57,
+     "p_truth": 0.57,
+     "latency_ms": 3426.848292001523,
+     "cost_usd": 0.0002642,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_01",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.88,
+     "p_truth": 0.88,
+     "latency_ms": 2265.1187089504674,
+     "cost_usd": 0.00020620000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_02",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.56,
+     "p_truth": 0.048888888888888885,
+     "latency_ms": 3575.7285410072654,
+     "cost_usd": 0.0002662,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_03",
+     "truth": "cc4d_pinwheels",
+     "choice": "none",
+     "p": 0.83,
+     "p_truth": 0.018888888888888893,
+     "latency_ms": 2866.7084170738235,
+     "cost_usd": 0.00024370000000000001,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_04",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.91,
+     "p_truth": 0.91,
+     "latency_ms": 2198.5427079489455,
+     "cost_usd": 0.00020270000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_05",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1553.3659580396488,
+     "cost_usd": 0.00018720000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_06",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.94,
+     "p_truth": 0.94,
+     "latency_ms": 1922.7241670014337,
+     "cost_usd": 0.00018820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_07",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1468.7201660126448,
+     "cost_usd": 0.00018520000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_08",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.87,
+     "p_truth": 0.014444444444444446,
+     "latency_ms": 3103.200540994294,
+     "cost_usd": 0.0002517,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_09",
+     "truth": "cc4d_pinwheels",
+     "choice": "none",
+     "p": 0.72,
+     "p_truth": 0.031111111111111114,
+     "latency_ms": 3742.265166947618,
+     "cost_usd": 0.00027920000000000006,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_10",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1457.2328750509769,
+     "cost_usd": 0.0001887,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_11",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1732.1286250371486,
+     "cost_usd": 0.00020070000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_12",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.78,
+     "p_truth": 0.78,
+     "latency_ms": 1964.0634580282494,
+     "cost_usd": 0.00020920000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_13",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1567.6916659576818,
+     "cost_usd": 0.00017070000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "pinwheels_14",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.73,
+     "p_truth": 0.73,
+     "latency_ms": 1595.9605000680313,
+     "cost_usd": 0.00017070000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_00",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.83,
+     "p_truth": 0.83,
+     "latency_ms": 3161.1235829768702,
+     "cost_usd": 0.0002477,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_01",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.86,
+     "p_truth": 0.015555555555555557,
+     "latency_ms": 1714.2267089802772,
+     "cost_usd": 0.00019720000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_02",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.77,
+     "p_truth": 0.025555555555555554,
+     "latency_ms": 4632.464541937225,
+     "cost_usd": 0.00033870000000000005,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_03",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.93,
+     "p_truth": 0.007777777777777772,
+     "latency_ms": 1282.3694589314982,
+     "cost_usd": 0.00016820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_04",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.69,
+     "p_truth": 0.03444444444444445,
+     "latency_ms": 3737.4764170963317,
+     "cost_usd": 0.00025370000000000004,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_05",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.72,
+     "p_truth": 0.72,
+     "latency_ms": 3256.7723330575973,
+     "cost_usd": 0.0002477,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_06",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.56,
+     "p_truth": 0.048888888888888885,
+     "latency_ms": 4377.804375020787,
+     "cost_usd": 0.0002732,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_07",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.31,
+     "p_truth": 0.31,
+     "latency_ms": 1556.7937919404358,
+     "cost_usd": 0.00017170000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_08",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.97,
+     "p_truth": 0.003333333333333336,
+     "latency_ms": 2098.449500044808,
+     "cost_usd": 0.0001797,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_09",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.81,
+     "p_truth": 0.81,
+     "latency_ms": 1709.2968339566141,
+     "cost_usd": 0.00020070000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_10",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.94,
+     "p_truth": 0.006666666666666672,
+     "latency_ms": 2813.322167028673,
+     "cost_usd": 0.0002057,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_11",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.82,
+     "p_truth": 0.020000000000000004,
+     "latency_ms": 1216.3480409653857,
+     "cost_usd": 0.00017270000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_12",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.99,
+     "p_truth": 0.0011111111111111122,
+     "latency_ms": 1438.4786249138415,
+     "cost_usd": 0.00017820000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_13",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.35,
+     "p_truth": 0.35,
+     "latency_ms": 5807.347416994162,
+     "cost_usd": 0.00036520000000000004,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "spicedhotchocolate_14",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.99,
+     "p_truth": 0.0011111111111111122,
+     "latency_ms": 1249.0007089218125,
+     "cost_usd": 0.0001797,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_00",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.87,
+     "p_truth": 0.014444444444444446,
+     "latency_ms": 1435.0397499511018,
+     "cost_usd": 0.00017370000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_01",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.93,
+     "p_truth": 0.93,
+     "latency_ms": 2051.158291986212,
+     "cost_usd": 0.00020620000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_02",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.79,
+     "p_truth": 0.79,
+     "latency_ms": 1724.0338750416413,
+     "cost_usd": 0.00017370000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_03",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.75,
+     "p_truth": 0.027777777777777776,
+     "latency_ms": 1149.8621250502765,
+     "cost_usd": 0.00017270000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_04",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.92,
+     "p_truth": 0.92,
+     "latency_ms": 1928.0002500163391,
+     "cost_usd": 0.00020020000000000001,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_05",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.87,
+     "p_truth": 0.014444444444444446,
+     "latency_ms": 2131.040500011295,
+     "cost_usd": 0.00022270000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_06",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.58,
+     "p_truth": 0.58,
+     "latency_ms": 2982.5227920664474,
+     "cost_usd": 0.00026770000000000006,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_07",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.79,
+     "p_truth": 0.79,
+     "latency_ms": 2800.2652500290424,
+     "cost_usd": 0.00025120000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_08",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.82,
+     "p_truth": 0.82,
+     "latency_ms": 1975.7662089541554,
+     "cost_usd": 0.0002112,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_09",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.69,
+     "p_truth": 0.03444444444444445,
+     "latency_ms": 2440.1177080580965,
+     "cost_usd": 0.00023970000000000003,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_10",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.83,
+     "p_truth": 0.018888888888888893,
+     "latency_ms": 2929.4179580174387,
+     "cost_usd": 0.0002517,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_11",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 2263.1695839809254,
+     "cost_usd": 0.00022070000000000002,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_12",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.73,
+     "p_truth": 0.73,
+     "latency_ms": 4137.197750038467,
+     "cost_usd": 0.00031620000000000004,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_13",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.78,
+     "p_truth": 0.78,
+     "latency_ms": 5048.828666913323,
+     "cost_usd": 0.00034320000000000005,
+     "model": "gpt-6-luna"
+    },
+    {
+     "id": "tomatomozzarellasalad_14",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.78,
+     "p_truth": 0.024444444444444442,
+     "latency_ms": 2758.507709018886,
+     "cost_usd": 0.00022470000000000001,
+     "model": "gpt-6-luna"
+    }
+   ]
+  },
+  "openai:gpt-6-sol": {
+   "model": "gpt-6-sol",
+   "n": 120,
+   "errors": 0,
+   "accuracy": 0.6083333333333333,
+   "none_rate": 0.041666666666666664,
+   "accuracy_when_answering": 0.6347826086956522,
+   "wrong_task_rate": 0.35,
+   "mean_p_truth": 0.5543796296296296,
+   "latency_ms_p50": 1987.5956459436566,
+   "cost_usd": 0.47104,
+   "top_confusions": [
+    [
+     [
+      "microwavemugpizza",
+      "spicedhotchocolate"
+     ],
+     5
+    ],
+    [
+     [
+      "pinwheels",
+      "breakfastburritos"
+     ],
+     3
+    ],
+    [
+     [
+      "spicedhotchocolate",
+      "none"
+     ],
+     3
+    ],
+    [
+     [
+      "spicedhotchocolate",
+      "microwavemugpizza"
+     ],
+     3
+    ],
+    [
+     [
+      "tomatomozzarellasalad",
+      "herbomeletwithfriedtomatoes"
+     ],
+     3
+    ],
+    [
+     [
+      "breakfastburritos",
+      "microwaveeggsandwich"
+     ],
+     2
+    ],
+    [
+     [
+      "breakfastburritos",
+      "pinwheels"
+     ],
+     2
+    ],
+    [
+     [
+      "breakfastburritos",
+      "herbomeletwithfriedtomatoes"
+     ],
+     2
+    ]
+   ],
+   "rows": [
+    {
+     "id": "breakfastburritos_00",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 3128.8743750192225,
+     "cost_usd": 0.003704,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_01",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 4363.448958029039,
+     "cost_usd": 0.003634,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_02",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 3603.0445829965174,
+     "cost_usd": 0.003794,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_03",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "none",
+     "p": 0.82,
+     "p_truth": 0.020000000000000004,
+     "latency_ms": 3008.9670000597835,
+     "cost_usd": 0.003714,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_04",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.62,
+     "p_truth": 0.042222222222222223,
+     "latency_ms": 4402.162167010829,
+     "cost_usd": 0.005434,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_05",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.0022222222222222244,
+     "latency_ms": 2566.5756659582257,
+     "cost_usd": 0.003414,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_06",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.68,
+     "p_truth": 0.68,
+     "latency_ms": 3415.0683330371976,
+     "cost_usd": 0.004404,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_07",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_pinwheels",
+     "p": 0.7,
+     "p_truth": 0.03333333333333334,
+     "latency_ms": 2073.9350829971954,
+     "cost_usd": 0.003974,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_08",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.94,
+     "p_truth": 0.006666666666666672,
+     "latency_ms": 1715.1217919308692,
+     "cost_usd": 0.003824,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_09",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1148.3589160488918,
+     "cost_usd": 0.003434,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_10",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.89,
+     "p_truth": 0.89,
+     "latency_ms": 2629.874416976236,
+     "cost_usd": 0.003964,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_11",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.87,
+     "p_truth": 0.014444444444444446,
+     "latency_ms": 2345.916834077798,
+     "cost_usd": 0.003654,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_12",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.37,
+     "p_truth": 0.07,
+     "latency_ms": 2283.4812910296023,
+     "cost_usd": 0.004064,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_13",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.66,
+     "p_truth": 0.03777777777777777,
+     "latency_ms": 3038.032792042941,
+     "cost_usd": 0.004414,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "breakfastburritos_14",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 2130.8320419630036,
+     "cost_usd": 0.003614,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_00",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 1683.6673329817131,
+     "cost_usd": 0.003714,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_01",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2462.4146660789847,
+     "cost_usd": 0.003574,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_02",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.39,
+     "p_truth": 0.06777777777777777,
+     "latency_ms": 2540.268832934089,
+     "cost_usd": 0.004224,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_03",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.88,
+     "p_truth": 0.013333333333333332,
+     "latency_ms": 2096.375875058584,
+     "cost_usd": 0.003984,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_04",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.63,
+     "p_truth": 0.04111111111111111,
+     "latency_ms": 2147.743833018467,
+     "cost_usd": 0.003924,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_05",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.82,
+     "p_truth": 0.020000000000000004,
+     "latency_ms": 2939.07504202798,
+     "cost_usd": 0.004634,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_06",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1398.3285420108587,
+     "cost_usd": 0.003594,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_07",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.42,
+     "p_truth": 0.42,
+     "latency_ms": 4162.645917036571,
+     "cost_usd": 0.005334,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_08",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.72,
+     "p_truth": 0.72,
+     "latency_ms": 2487.1758749941364,
+     "cost_usd": 0.004124,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_09",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.76,
+     "p_truth": 0.76,
+     "latency_ms": 2588.2140001049265,
+     "cost_usd": 0.004244,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_10",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.96,
+     "p_truth": 0.004444444444444449,
+     "latency_ms": 2163.471958017908,
+     "cost_usd": 0.003844,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_11",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.82,
+     "p_truth": 0.82,
+     "latency_ms": 2852.7172920294106,
+     "cost_usd": 0.004424,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_12",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.87,
+     "p_truth": 0.87,
+     "latency_ms": 2450.416125007905,
+     "cost_usd": 0.004044,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_13",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1771.0423750104383,
+     "cost_usd": 0.003604,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "cucumberraita_14",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.88,
+     "p_truth": 0.013333333333333332,
+     "latency_ms": 2176.0773330461234,
+     "cost_usd": 0.003974,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_00",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.87,
+     "p_truth": 0.87,
+     "latency_ms": 1893.9618750009686,
+     "cost_usd": 0.003814,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_01",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1441.0545410355553,
+     "cost_usd": 0.003474,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_02",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1270.353415980935,
+     "cost_usd": 0.003474,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_03",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.82,
+     "p_truth": 0.020000000000000004,
+     "latency_ms": 2028.6067909328267,
+     "cost_usd": 0.003804,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_04",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.91,
+     "p_truth": 0.91,
+     "latency_ms": 2145.7172910450026,
+     "cost_usd": 0.003764,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_05",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1395.162291941233,
+     "cost_usd": 0.003474,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_06",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.89,
+     "p_truth": 0.012222222222222221,
+     "latency_ms": 1991.693500080146,
+     "cost_usd": 0.003894,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_07",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1793.342582997866,
+     "cost_usd": 0.003714,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_08",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1492.6676669856533,
+     "cost_usd": 0.003704,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_09",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1178.4118340583518,
+     "cost_usd": 0.003474,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_10",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.85,
+     "p_truth": 0.85,
+     "latency_ms": 1853.228957974352,
+     "cost_usd": 0.003784,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_11",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1174.3045409675688,
+     "cost_usd": 0.003474,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_12",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.69,
+     "p_truth": 0.69,
+     "latency_ms": 1981.2375410692766,
+     "cost_usd": 0.003914,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_13",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1329.3035830138251,
+     "cost_usd": 0.003474,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_14",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.86,
+     "p_truth": 0.015555555555555557,
+     "latency_ms": 2811.8004170246422,
+     "cost_usd": 0.003924,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_00",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.91,
+     "p_truth": 0.91,
+     "latency_ms": 1801.5887920046225,
+     "cost_usd": 0.003824,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_01",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.82,
+     "p_truth": 0.020000000000000004,
+     "latency_ms": 2509.35629196465,
+     "cost_usd": 0.004104,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_02",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_pinwheels",
+     "p": 0.83,
+     "p_truth": 0.018888888888888893,
+     "latency_ms": 2113.153791986406,
+     "cost_usd": 0.003934,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_03",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.89,
+     "p_truth": 0.89,
+     "latency_ms": 1907.4869580799714,
+     "cost_usd": 0.003764,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_04",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.96,
+     "p_truth": 0.004444444444444449,
+     "latency_ms": 1375.7662500720471,
+     "cost_usd": 0.003674,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_05",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.91,
+     "p_truth": 0.91,
+     "latency_ms": 1985.481624957174,
+     "cost_usd": 0.003954,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_06",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.88,
+     "p_truth": 0.88,
+     "latency_ms": 1862.8010000102222,
+     "cost_usd": 0.003814,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_07",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.38,
+     "p_truth": 0.06888888888888889,
+     "latency_ms": 3647.246708977036,
+     "cost_usd": 0.005274,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_08",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.94,
+     "p_truth": 0.94,
+     "latency_ms": 1761.297499993816,
+     "cost_usd": 0.003964,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_09",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.84,
+     "p_truth": 0.84,
+     "latency_ms": 1957.8749170759693,
+     "cost_usd": 0.003844,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_10",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.32,
+     "p_truth": 0.07555555555555554,
+     "latency_ms": 2899.5296669891104,
+     "cost_usd": 0.004024,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_11",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.6,
+     "p_truth": 0.6,
+     "latency_ms": 2652.795415953733,
+     "cost_usd": 0.004504,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_12",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.61,
+     "p_truth": 0.043333333333333335,
+     "latency_ms": 2109.933500061743,
+     "cost_usd": 0.003934,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_13",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_pinwheels",
+     "p": 0.7,
+     "p_truth": 0.03333333333333334,
+     "latency_ms": 2184.748374973424,
+     "cost_usd": 0.004084,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_14",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.51,
+     "p_truth": 0.51,
+     "latency_ms": 3065.1177919935435,
+     "cost_usd": 0.004584,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_00",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.78,
+     "p_truth": 0.024444444444444442,
+     "latency_ms": 1989.709666930139,
+     "cost_usd": 0.003794,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_01",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 1951.350082992576,
+     "cost_usd": 0.003864,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_02",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1679.2397919343784,
+     "cost_usd": 0.003714,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_03",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 1551.6343329800293,
+     "cost_usd": 0.003634,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_04",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.79,
+     "p_truth": 0.02333333333333333,
+     "latency_ms": 3023.3511249534786,
+     "cost_usd": 0.004284,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_05",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.46,
+     "p_truth": 0.46,
+     "latency_ms": 1690.7857089536265,
+     "cost_usd": 0.003744,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_06",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.83,
+     "p_truth": 0.83,
+     "latency_ms": 1690.164832980372,
+     "cost_usd": 0.003834,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_07",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.68,
+     "p_truth": 0.03555555555555555,
+     "latency_ms": 4799.297459074296,
+     "cost_usd": 0.005994,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_08",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.83,
+     "p_truth": 0.018888888888888893,
+     "latency_ms": 3443.159124930389,
+     "cost_usd": 0.004854,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_09",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.83,
+     "p_truth": 0.018888888888888893,
+     "latency_ms": 2321.206416003406,
+     "cost_usd": 0.003854,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_10",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.95,
+     "p_truth": 0.00555555555555556,
+     "latency_ms": 2377.7297500055283,
+     "cost_usd": 0.003794,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_11",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.72,
+     "p_truth": 0.031111111111111114,
+     "latency_ms": 2320.601832936518,
+     "cost_usd": 0.004124,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_12",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1719.6700000204146,
+     "cost_usd": 0.003824,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_13",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1648.5437080264091,
+     "cost_usd": 0.003814,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "microwavemugpizza_14",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "none",
+     "p": 0.96,
+     "p_truth": 0.004444444444444449,
+     "latency_ms": 1492.042415891774,
+     "cost_usd": 0.003564,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_00",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.91,
+     "p_truth": 0.91,
+     "latency_ms": 1530.8874999172986,
+     "cost_usd": 0.003644,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_01",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1222.3892920883372,
+     "cost_usd": 0.003414,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_02",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.78,
+     "p_truth": 0.024444444444444442,
+     "latency_ms": 2100.9631670312956,
+     "cost_usd": 0.004164,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_03",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.58,
+     "p_truth": 0.04666666666666667,
+     "latency_ms": 1829.9243750516325,
+     "cost_usd": 0.004044,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_04",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1367.385832942091,
+     "cost_usd": 0.003584,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_05",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1175.699874991551,
+     "cost_usd": 0.003604,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_06",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1715.471167000942,
+     "cost_usd": 0.003594,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_07",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1097.6783339865506,
+     "cost_usd": 0.003414,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_08",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1671.3557499460876,
+     "cost_usd": 0.003624,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_09",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.91,
+     "p_truth": 0.009999999999999997,
+     "latency_ms": 2594.7869159281254,
+     "cost_usd": 0.003974,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_10",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1899.3161249672994,
+     "cost_usd": 0.003584,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_11",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2383.9923749910668,
+     "cost_usd": 0.003624,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_12",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 1594.0971670206636,
+     "cost_usd": 0.003584,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_13",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1292.5891660852358,
+     "cost_usd": 0.003414,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "pinwheels_14",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.87,
+     "p_truth": 0.014444444444444446,
+     "latency_ms": 1907.405124977231,
+     "cost_usd": 0.003984,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_00",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.78,
+     "p_truth": 0.78,
+     "latency_ms": 4091.500625014305,
+     "cost_usd": 0.005254,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_01",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.79,
+     "p_truth": 0.02333333333333333,
+     "latency_ms": 1410.0918340263888,
+     "cost_usd": 0.003604,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_02",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.94,
+     "p_truth": 0.94,
+     "latency_ms": 2066.488542011939,
+     "cost_usd": 0.003934,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_03",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.94,
+     "p_truth": 0.94,
+     "latency_ms": 1575.2864580135792,
+     "cost_usd": 0.003744,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_04",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.55,
+     "p_truth": 0.049999999999999996,
+     "latency_ms": 2592.2969999955967,
+     "cost_usd": 0.004314,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_05",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.78,
+     "p_truth": 0.024444444444444442,
+     "latency_ms": 2670.4742080764845,
+     "cost_usd": 0.004214,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_06",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.79,
+     "p_truth": 0.02333333333333333,
+     "latency_ms": 1812.4665829818696,
+     "cost_usd": 0.003714,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_07",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 2054.4060420943424,
+     "cost_usd": 0.003674,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_08",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.96,
+     "p_truth": 0.004444444444444449,
+     "latency_ms": 2123.2317079557106,
+     "cost_usd": 0.003654,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_09",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1807.4279580032453,
+     "cost_usd": 0.003674,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_10",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.37,
+     "p_truth": 0.37,
+     "latency_ms": 1844.6177080040798,
+     "cost_usd": 0.003974,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_11",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.98,
+     "p_truth": 0.0022222222222222244,
+     "latency_ms": 1389.4454999826849,
+     "cost_usd": 0.003664,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_12",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.98,
+     "p_truth": 0.0022222222222222244,
+     "latency_ms": 1300.7398749468848,
+     "cost_usd": 0.003524,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_13",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.82,
+     "p_truth": 0.82,
+     "latency_ms": 2613.7570419814438,
+     "cost_usd": 0.004304,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "spicedhotchocolate_14",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.47,
+     "p_truth": 0.47,
+     "latency_ms": 2583.3399589173496,
+     "cost_usd": 0.004364,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_00",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.87,
+     "p_truth": 0.014444444444444446,
+     "latency_ms": 1539.101667003706,
+     "cost_usd": 0.003794,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_01",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1623.333083000034,
+     "cost_usd": 0.003474,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_02",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1617.4042500788346,
+     "cost_usd": 0.003774,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_03",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.94,
+     "p_truth": 0.94,
+     "latency_ms": 1758.2638330059126,
+     "cost_usd": 0.003864,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_04",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1415.1483329478651,
+     "cost_usd": 0.003664,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_05",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.48,
+     "p_truth": 0.05777777777777778,
+     "latency_ms": 5197.253165999427,
+     "cost_usd": 0.006484,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_06",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.87,
+     "p_truth": 0.87,
+     "latency_ms": 1702.1766250254586,
+     "cost_usd": 0.003754,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_07",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1900.9351250715554,
+     "cost_usd": 0.003474,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_08",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1509.2041669413447,
+     "cost_usd": 0.003764,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_09",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1859.592791995965,
+     "cost_usd": 0.003744,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_10",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.8,
+     "p_truth": 0.022222222222222216,
+     "latency_ms": 2225.554292090237,
+     "cost_usd": 0.004024,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_11",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1174.7645830037072,
+     "cost_usd": 0.003474,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_12",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 2546.1108339950442,
+     "cost_usd": 0.003874,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_13",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2056.280458928086,
+     "cost_usd": 0.003724,
+     "model": "gpt-6-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_14",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.87,
+     "p_truth": 0.014444444444444446,
+     "latency_ms": 2108.926875051111,
+     "cost_usd": 0.003884,
+     "model": "gpt-6-sol"
+    }
+   ]
+  },
+  "openai:gpt-6.1-sol": {
+   "model": "gpt-6.1-sol",
+   "n": 120,
+   "errors": 0,
+   "accuracy": 0.725,
+   "none_rate": 0.08333333333333333,
+   "accuracy_when_answering": 0.7909090909090909,
+   "wrong_task_rate": 0.19166666666666668,
+   "mean_p_truth": 0.6804685185185185,
+   "latency_ms_p50": 2715.3907914762385,
+   "cost_usd": 0.44206,
+   "top_confusions": [
+    [
+     [
+      "spicedhotchocolate",
+      "none"
+     ],
+     4
+    ],
+    [
+     [
+      "breakfastburritos",
+      "microwaveeggsandwich"
+     ],
+     3
+    ],
+    [
+     [
+      "microwaveeggsandwich",
+      "breakfastburritos"
+     ],
+     3
+    ],
+    [
+     [
+      "pinwheels",
+      "breakfastburritos"
+     ],
+     3
+    ],
+    [
+     [
+      "cucumberraita",
+      "microwaveeggsandwich"
+     ],
+     2
+    ],
+    [
+     [
+      "herbomeletwithfriedtomatoes",
+      "microwaveeggsandwich"
+     ],
+     2
+    ],
+    [
+     [
+      "microwavemugpizza",
+      "breakfastburritos"
+     ],
+     2
+    ],
+    [
+     [
+      "microwavemugpizza",
+      "none"
+     ],
+     2
+    ]
+   ],
+   "rows": [
+    {
+     "id": "breakfastburritos_00",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 2784.7821669420227,
+     "cost_usd": 0.003434,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_01",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 2699.0162499714643,
+     "cost_usd": 0.003434,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_02",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2886.2238749861717,
+     "cost_usd": 0.003434,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_03",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "none",
+     "p": 0.76,
+     "p_truth": 0.026666666666666665,
+     "latency_ms": 3153.762167086825,
+     "cost_usd": 0.003494,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_04",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.79,
+     "p_truth": 0.02333333333333333,
+     "latency_ms": 3635.5824169004336,
+     "cost_usd": 0.004094,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_05",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1724.7573339845985,
+     "cost_usd": 0.003434,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_06",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.78,
+     "p_truth": 0.024444444444444442,
+     "latency_ms": 3721.302624908276,
+     "cost_usd": 0.004094,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_07",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.57,
+     "p_truth": 0.57,
+     "latency_ms": 3820.170958992094,
+     "cost_usd": 0.003984,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_08",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.86,
+     "p_truth": 0.86,
+     "latency_ms": 2346.7178749851882,
+     "cost_usd": 0.003714,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_09",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1889.7322920383886,
+     "cost_usd": 0.003434,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_10",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 2173.638749984093,
+     "cost_usd": 0.003434,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_11",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.72,
+     "p_truth": 0.031111111111111114,
+     "latency_ms": 3500.72041596286,
+     "cost_usd": 0.003874,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_12",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.35,
+     "p_truth": 0.35,
+     "latency_ms": 3530.3629159461707,
+     "cost_usd": 0.003874,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_13",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.68,
+     "p_truth": 0.03555555555555555,
+     "latency_ms": 3460.3216249961406,
+     "cost_usd": 0.003984,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "breakfastburritos_14",
+     "truth": "cc4d_breakfastburritos",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 2616.8337499257177,
+     "cost_usd": 0.003434,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_00",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2116.034833015874,
+     "cost_usd": 0.003424,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_01",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 3140.6858330592513,
+     "cost_usd": 0.003424,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_02",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.36,
+     "p_truth": 0.07111111111111111,
+     "latency_ms": 3449.3880420923233,
+     "cost_usd": 0.003944,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_03",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 2755.16195804812,
+     "cost_usd": 0.003774,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_04",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.57,
+     "p_truth": 0.04777777777777778,
+     "latency_ms": 2872.750833979808,
+     "cost_usd": 0.003794,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_05",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2056.6688750404865,
+     "cost_usd": 0.003424,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_06",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1988.8635840034112,
+     "cost_usd": 0.003424,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_07",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.48,
+     "p_truth": 0.48,
+     "latency_ms": 3740.7574580283836,
+     "cost_usd": 0.004084,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_08",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.86,
+     "p_truth": 0.015555555555555557,
+     "latency_ms": 2373.73020790983,
+     "cost_usd": 0.003824,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_09",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 2549.482374917716,
+     "cost_usd": 0.003624,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_10",
+     "truth": "cc4d_cucumberraita",
+     "choice": "none",
+     "p": 0.7,
+     "p_truth": 0.03333333333333334,
+     "latency_ms": 7557.597375009209,
+     "cost_usd": 0.004564,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_11",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.93,
+     "p_truth": 0.93,
+     "latency_ms": 3345.7729999208823,
+     "cost_usd": 0.003824,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_12",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.95,
+     "p_truth": 0.95,
+     "latency_ms": 2824.246292002499,
+     "cost_usd": 0.003634,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_13",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 2186.774250003509,
+     "cost_usd": 0.003424,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "cucumberraita_14",
+     "truth": "cc4d_cucumberraita",
+     "choice": "cc4d_cucumberraita",
+     "p": 0.88,
+     "p_truth": 0.88,
+     "latency_ms": 3419.664249988273,
+     "cost_usd": 0.004044,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_00",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1910.6145420810208,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_01",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1898.1818750035018,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_02",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1935.6614160351455,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_03",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.87,
+     "p_truth": 0.014444444444444446,
+     "latency_ms": 3657.772207981907,
+     "cost_usd": 0.003954,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_04",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.65,
+     "p_truth": 0.65,
+     "latency_ms": 4091.398041928187,
+     "cost_usd": 0.003994,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_05",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1858.5625829873607,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_06",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.77,
+     "p_truth": 0.77,
+     "latency_ms": 2849.2405000142753,
+     "cost_usd": 0.003854,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_07",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1796.3750419439748,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_08",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1712.9431660287082,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_09",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 2537.865416961722,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_10",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.94,
+     "p_truth": 0.94,
+     "latency_ms": 2584.6524159424007,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_11",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.998,
+     "p_truth": 0.998,
+     "latency_ms": 2066.1736669717357,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_12",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.58,
+     "p_truth": 0.58,
+     "latency_ms": 3938.2297080010176,
+     "cost_usd": 0.003894,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_13",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1874.7461669845507,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "herbomeletwithfriedtomatoes_14",
+     "truth": "cc4d_herbomeletwithfriedtomatoes",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.77,
+     "p_truth": 0.025555555555555554,
+     "latency_ms": 3136.635542032309,
+     "cost_usd": 0.003854,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_00",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2631.5372090321034,
+     "cost_usd": 0.003794,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_01",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1993.22254199069,
+     "cost_usd": 0.003454,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_02",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 2731.7653329810128,
+     "cost_usd": 0.003634,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_03",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.94,
+     "p_truth": 0.94,
+     "latency_ms": 2142.1932500088587,
+     "cost_usd": 0.003454,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_04",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 2230.9782919473946,
+     "cost_usd": 0.003664,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_05",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.94,
+     "p_truth": 0.94,
+     "latency_ms": 2459.8464999580756,
+     "cost_usd": 0.003654,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_06",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 2989.8746670223773,
+     "cost_usd": 0.003754,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_07",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.7,
+     "p_truth": 0.03333333333333334,
+     "latency_ms": 3932.6949999667704,
+     "cost_usd": 0.004104,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_08",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 2147.863541962579,
+     "cost_usd": 0.003454,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_09",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 2677.1166659891605,
+     "cost_usd": 0.003454,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_10",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "none",
+     "p": 0.76,
+     "p_truth": 0.026666666666666665,
+     "latency_ms": 2213.8707920676097,
+     "cost_usd": 0.003574,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_11",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.79,
+     "p_truth": 0.02333333333333333,
+     "latency_ms": 3655.8169160271063,
+     "cost_usd": 0.003884,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_12",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.34,
+     "p_truth": 0.07333333333333332,
+     "latency_ms": 4371.500583947636,
+     "cost_usd": 0.004234,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_13",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_microwaveeggsandwich",
+     "p": 0.48,
+     "p_truth": 0.48,
+     "latency_ms": 4838.833916932344,
+     "cost_usd": 0.004384,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwaveeggsandwich_14",
+     "truth": "cc4d_microwaveeggsandwich",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.44,
+     "p_truth": 0.06222222222222223,
+     "latency_ms": 4399.9518329510465,
+     "cost_usd": 0.004124,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_00",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.88,
+     "p_truth": 0.88,
+     "latency_ms": 3301.387459039688,
+     "cost_usd": 0.003854,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_01",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2024.127791984938,
+     "cost_usd": 0.003454,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_02",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 2229.962708079256,
+     "cost_usd": 0.003454,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_03",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.92,
+     "p_truth": 0.92,
+     "latency_ms": 3609.5542919356376,
+     "cost_usd": 0.003454,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_04",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.83,
+     "p_truth": 0.018888888888888893,
+     "latency_ms": 6181.162916938774,
+     "cost_usd": 0.004004,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_05",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "none",
+     "p": 0.77,
+     "p_truth": 0.025555555555555554,
+     "latency_ms": 2349.4322919286788,
+     "cost_usd": 0.003544,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_06",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 5782.964832964353,
+     "cost_usd": 0.003784,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_07",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 3443.271625088528,
+     "cost_usd": 0.003764,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_08",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.88,
+     "p_truth": 0.88,
+     "latency_ms": 7583.533625002019,
+     "cost_usd": 0.004314,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_09",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 5617.943875025958,
+     "cost_usd": 0.003754,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_10",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 4089.201750000939,
+     "cost_usd": 0.003654,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_11",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.86,
+     "p_truth": 0.015555555555555557,
+     "latency_ms": 3248.321459046565,
+     "cost_usd": 0.003854,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_12",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1711.2250829814002,
+     "cost_usd": 0.003454,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_13",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2467.014833004214,
+     "cost_usd": 0.003454,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "microwavemugpizza_14",
+     "truth": "cc4d_microwavemugpizza",
+     "choice": "none",
+     "p": 0.97,
+     "p_truth": 0.003333333333333336,
+     "latency_ms": 1680.0203340826556,
+     "cost_usd": 0.003364,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_00",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 2215.2655000099912,
+     "cost_usd": 0.003414,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_01",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2011.9890830246732,
+     "cost_usd": 0.003414,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_02",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.9,
+     "p_truth": 0.011111111111111108,
+     "latency_ms": 3106.011333060451,
+     "cost_usd": 0.003744,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_03",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.84,
+     "p_truth": 0.01777777777777778,
+     "latency_ms": 2840.9284580266103,
+     "cost_usd": 0.003724,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_04",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2361.336041940376,
+     "cost_usd": 0.003414,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_05",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1771.6601669089869,
+     "cost_usd": 0.003414,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_06",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1920.598625089042,
+     "cost_usd": 0.003414,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_07",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.998,
+     "p_truth": 0.998,
+     "latency_ms": 2072.6675000041723,
+     "cost_usd": 0.003414,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_08",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2797.035916009918,
+     "cost_usd": 0.003414,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_09",
+     "truth": "cc4d_pinwheels",
+     "choice": "none",
+     "p": 0.72,
+     "p_truth": 0.031111111111111114,
+     "latency_ms": 2938.392582931556,
+     "cost_usd": 0.003734,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_10",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1747.57420795504,
+     "cost_usd": 0.003414,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_11",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 1735.1924170507118,
+     "cost_usd": 0.003414,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_12",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 2237.0039579691365,
+     "cost_usd": 0.003624,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_13",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_pinwheels",
+     "p": 0.998,
+     "p_truth": 0.998,
+     "latency_ms": 1979.4909580377862,
+     "cost_usd": 0.003414,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "pinwheels_14",
+     "truth": "cc4d_pinwheels",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.71,
+     "p_truth": 0.03222222222222223,
+     "latency_ms": 6663.818374974653,
+     "cost_usd": 0.004744,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_00",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 3255.9742078883573,
+     "cost_usd": 0.003874,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_01",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.64,
+     "p_truth": 0.04,
+     "latency_ms": 2358.0477500800043,
+     "cost_usd": 0.003644,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_02",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 4327.993249986321,
+     "cost_usd": 0.003434,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_03",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.9,
+     "p_truth": 0.9,
+     "latency_ms": 5885.993166011758,
+     "cost_usd": 0.004284,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_04",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_breakfastburritos",
+     "p": 0.59,
+     "p_truth": 0.04555555555555556,
+     "latency_ms": 6033.615000080317,
+     "cost_usd": 0.004504,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_05",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.91,
+     "p_truth": 0.009999999999999997,
+     "latency_ms": 5604.090625070967,
+     "cost_usd": 0.004524,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_06",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.86,
+     "p_truth": 0.86,
+     "latency_ms": 5776.71966701746,
+     "cost_usd": 0.003784,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_07",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 1964.3412500154227,
+     "cost_usd": 0.003614,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_08",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.98,
+     "p_truth": 0.0022222222222222244,
+     "latency_ms": 1997.787666041404,
+     "cost_usd": 0.003364,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_09",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 2948.4882089309394,
+     "cost_usd": 0.003704,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_10",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_microwavemugpizza",
+     "p": 0.88,
+     "p_truth": 0.013333333333333332,
+     "latency_ms": 5483.6844590026885,
+     "cost_usd": 0.003754,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_11",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.95,
+     "p_truth": 0.95,
+     "latency_ms": 4742.314959061332,
+     "cost_usd": 0.004224,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_12",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.98,
+     "p_truth": 0.0022222222222222244,
+     "latency_ms": 1640.3079580049962,
+     "cost_usd": 0.003364,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_13",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "cc4d_spicedhotchocolate",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 2208.0566249787807,
+     "cost_usd": 0.003664,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "spicedhotchocolate_14",
+     "truth": "cc4d_spicedhotchocolate",
+     "choice": "none",
+     "p": 0.9,
+     "p_truth": 0.011111111111111108,
+     "latency_ms": 5065.778749994934,
+     "cost_usd": 0.003634,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_00",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.88,
+     "p_truth": 0.013333333333333332,
+     "latency_ms": 2252.3751669796184,
+     "cost_usd": 0.003764,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_01",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1849.6296670055017,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_02",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 1921.0147499106824,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_03",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 2936.3568330882117,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_04",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 2144.900667015463,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_05",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.91,
+     "p_truth": 0.91,
+     "latency_ms": 4197.030832991004,
+     "cost_usd": 0.003874,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_06",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.76,
+     "p_truth": 0.76,
+     "latency_ms": 2056.601917021908,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_07",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 2009.4949159538373,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_08",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.97,
+     "p_truth": 0.97,
+     "latency_ms": 2201.6088330419734,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_09",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 3783.4765419829637,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_10",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.78,
+     "p_truth": 0.78,
+     "latency_ms": 3644.5279580075294,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_11",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.99,
+     "p_truth": 0.99,
+     "latency_ms": 2264.381624991074,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_12",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.96,
+     "p_truth": 0.96,
+     "latency_ms": 2903.803125023842,
+     "cost_usd": 0.003724,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_13",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_tomatomozzarellasalad",
+     "p": 0.98,
+     "p_truth": 0.98,
+     "latency_ms": 1833.826499991119,
+     "cost_usd": 0.003474,
+     "model": "gpt-6.1-sol"
+    },
+    {
+     "id": "tomatomozzarellasalad_14",
+     "truth": "cc4d_tomatomozzarellasalad",
+     "choice": "cc4d_herbomeletwithfriedtomatoes",
+     "p": 0.9,
+     "p_truth": 0.011111111111111108,
+     "latency_ms": 3409.659416996874,
+     "cost_usd": 0.003954,
+     "model": "gpt-6.1-sol"
+    }
+   ]
+  }
+ },
+ "spend_usd": 0.9392185000000001
+}

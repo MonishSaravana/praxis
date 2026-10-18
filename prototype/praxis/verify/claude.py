@@ -146,6 +146,28 @@ class _ClaudeBase:
         return parsed, meta
 
 
+def verify_text(req: VerifyRequest) -> list[str]:
+    """The step-check question (shared by every verifier that uses this prompt, so they're asked the same thing)."""
+    node, g = req.node, req.graph
+    nxt = req.context.get("next_step")
+    lib = {m.id: m for m in node.mistakes}
+    text = [f"Task: {g.title}.",
+            f"Step being checked: {node.name}. Instruction: {node.instruction_novice}",
+            f"Expected end state: {node.end_state}",
+            f"Where to look: {node.view_hint or 'n/a'}"]
+    if req.checks:
+        text.append("Quality checks (yes = pass; failures are mistakes, not 'in progress'):\n" + "\n".join(f"- {c.question}" for c in req.checks))
+    if lib:
+        text.append("Mistake library:\n" + "\n".join(
+            f"- {m.id}: {m.description} Looks like: {m.visual_cue}" + (f" Early sign: {m.early_cue}" if m.early_cue else "")
+            for m in lib.values()))
+    if nxt:
+        text.append(f"Next step after this one: {nxt}")
+    if req.context.get("time_on_step") is not None:
+        text.append(f"Time on this step so far: {req.context['time_on_step']:.0f}s")
+    return text
+
+
 class ClaudeVerifier(_ClaudeBase):
     name = "claude"
 
@@ -154,23 +176,9 @@ class ClaudeVerifier(_ClaudeBase):
         self.role = role
 
     def verify(self, req: VerifyRequest) -> Verdict:
-        node, g = req.node, req.graph
-        nxt = req.context.get("next_step")
+        node = req.node
         lib = {m.id: m for m in node.mistakes}
-        text = [f"Task: {g.title}.",
-                f"Step being checked: {node.name}. Instruction: {node.instruction_novice}",
-                f"Expected end state: {node.end_state}",
-                f"Where to look: {node.view_hint or 'n/a'}"]
-        if req.checks:
-            text.append("Quality checks (yes = pass; failures are mistakes, not 'in progress'):\n" + "\n".join(f"- {c.question}" for c in req.checks))
-        if lib:
-            text.append("Mistake library:\n" + "\n".join(
-                f"- {m.id}: {m.description} Looks like: {m.visual_cue}" + (f" Early sign: {m.early_cue}" if m.early_cue else "")
-                for m in lib.values()))
-        if nxt:
-            text.append(f"Next step after this one: {nxt}")
-        if req.context.get("time_on_step") is not None:
-            text.append(f"Time on this step so far: {req.context['time_on_step']:.0f}s")
+        text = verify_text(req)
         img_blocks, raw = self._images(req)
         content = img_blocks + [{"type": "text", "text": "\n".join(text)}]
         key = ResponseCache.key(PROMPT_VERSION, self.model, self.effort, text, *raw)
@@ -237,3 +245,29 @@ def _choose_step(self: "ClaudeVerifier", frames, options: dict[str, str], task: 
 
 
 ClaudeVerifier.choose_step = _choose_step
+
+TASK_SYSTEM = """You recognize which procedure a person is doing from first-person video frames (oldest first; the last
+frame is "now"). Choose the one task from the list that the person is doing, or "none" if none of them fits or nothing
+task-related is happening. Give your probability for that choice. Judge only what is visible."""
+
+
+def _choose_task(self: "ClaudeVerifier", frames, options: dict[str, str]) -> dict:
+    """Typed "which task?" (the same question Jev answers in the engine); same return shape as jev.choose_task."""
+    from .schema import VerifyRequest as _VR
+    req = _VR(t=0.0, frames=frames, node=None, graph=None, checks=[], context={})  # type: ignore[arg-type]
+    img_blocks, raw = self._images(req)
+    ids = list(options)
+    text = "Tasks:\n" + "\n".join(f"- {k}: {v}" for k, v in options.items())
+    schema = {"type": "object", "additionalProperties": False, "required": ["task", "probability"],
+              "properties": {"task": {"type": "string", "enum": [*ids, "none"]}, "probability": {"type": "number"}}}
+    key = ResponseCache.key("choose_task-v1", self.model, self.effort, text, *raw)
+    out, meta = self._call(TASK_SYSTEM, img_blocks + [{"type": "text", "text": text}], schema, key)
+    p = float(min(1.0, max(0.0, out["probability"])))
+    rest = [k for k in [*ids, "none"] if k != out["task"]]
+    probs = {k: (1 - p) / max(1, len(rest)) for k in rest}
+    probs[out["task"]] = p
+    return {"probs": probs, "choice": out["task"], "latency_ms": meta["latency_ms"], "model": self.model,
+            "cost_usd": 0.0 if meta.get("cached") else meta["cost_usd"], "cached": bool(meta.get("cached"))}
+
+
+ClaudeVerifier.choose_task = _choose_task

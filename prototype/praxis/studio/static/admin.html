@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Praxis Company Admin</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/admin.css">
+</head>
+<body class="admin-body">
+<header>
+  <div class="brand"><b>Praxis</b> Studio <span class="tag">Company admin</span></div>
+  <nav><a href="/#/live">Live</a><a href="/#/sessions">Sessions</a><a href="/admin" class="on">Company admin</a></nav>
+  <div class="pills"><span class="pill-s off" title="Internal view. Technicians never see step graphs.">Internal view</span></div>
+</header>
+
+<div class="shell">
+  <aside class="side" aria-label="Company and sections">
+    <div class="org-switch">
+      <label for="org" class="side-label">Company</label>
+      <select id="org"></select>
+      <button id="new-org-open" class="btn ghost sm side-new" type="button">+ New company</button>
+      <form id="new-org" class="side-form hidden">
+        <input id="new-org-name" placeholder="Company name" autocomplete="off" maxlength="80">
+        <div class="row"><button class="btn primary sm">Create</button><button type="button" id="new-org-cancel" class="btn ghost sm">Cancel</button></div>
+      </form>
+    </div>
+    <div class="side-nav" id="side-nav" role="navigation" aria-label="Sections"></div>
+    <div class="side-foot">
+      <div class="spend">
+        <div class="spend-row"><span>Model spend</span><b id="spend-val">$0.00</b></div>
+        <div class="meter"><i id="spend-bar"></i></div>
+        <div class="spend-cap" id="spend-cap">of $5.00 cap</div>
+      </div>
+      <p class="side-note">Stored on this machine only. Documents are parsed and indexed locally; only a section you choose to compile, or five excerpts for a question, are sent to a model.</p>
+    </div>
+  </aside>
+
+  <main class="main" id="main" tabindex="-1">
+    <div class="page-loading"><div class="skel w40"></div><div class="skel w70"></div><div class="skel w100 tall"></div></div>
+  </main>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script type="module" src="/static/admin.js"></script>
+</body>
+</html>

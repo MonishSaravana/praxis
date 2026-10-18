@@ -1,15 +1,23 @@
 // User-view HUD and engineer panel, drawn only from run-log records (the same rules as praxis/render/hud.py).
 // The user view never shows the step graph: a progress pill, a short instruction chip, a check pulse, an amber
-// mistake card and a view-request card with an arrow. The engineer panel is a separate, optional view.
+// mistake card and a view-request card with an arrow. Multi-task sessions add one-line switch / resume / leave cards
+// and a small muted chip per paused task ("Burritos · paused at step 4"). The engineer panel is a separate view.
 
-export const CARD_DUR = { announce_task: 3.6, instruct: 4.0, hint: 6.5, mistake: 6.5, view_request: 5.5, done: 4.0, ask: 1e9 };
-const PRIORITY = { mistake: 3, view_request: 3, ask: 3, hint: 2, announce_task: 1, instruct: 1, done: 1 };
+export const CARD_DUR = { announce_task: 3.6, instruct: 4.0, hint: 6.5, mistake: 6.5, view_request: 5.5, done: 4.0, ask: 1e9,
+  switch_task: 4.5, retract_task: 4.5, resume_task: 4.5, leave_warning: 6.0 };
+const PRIORITY = { mistake: 3, view_request: 3, ask: 3, hint: 2, leave_warning: 2, announce_task: 1, instruct: 1, done: 1,
+  switch_task: 2, retract_task: 2, resume_task: 2 };   // a switch stays visible over the next instruction
 const HEAD = {
   announce_task: "Task recognized", instruct: null, hint: "Here's a closer walkthrough",
   mistake: "Something looks off", view_request: "I can't see that clearly", done: "Done", ask: "What are you working on?",
+  switch_task: "Switching tasks", retract_task: null, resume_task: null, leave_warning: null,
 };
-const SPEAK = new Set(["announce_task", "instruct", "mistake", "view_request", "hint", "done"]);
+const SPEAK = new Set(["announce_task", "instruct", "mistake", "view_request", "hint", "done", "switch_task", "retract_task",
+  "resume_task", "leave_warning"]);
+export const taskShort = (title) => String(title || "").replace(/\s*\(.*?\)/g, "").replace(/\bindustreal\b\s*/i, "")
+  .replace(/\s+assembly$/i, "").trim();
 
+const fmtS = (x) => `${Math.floor(x / 60)}:${String(Math.floor(x % 60)).padStart(2, "0")}`;
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
 // Everything the HUD needs, accumulated from records (live: as they arrive; replay: the whole log).
@@ -18,6 +26,7 @@ export class LogState {
   reset() {
     this.records = []; this.cards = []; this.commits = []; this.beliefs = []; this.fast = []; this.calls = [];
     this.actions = []; this.task = null; this.nSteps = null; this.recog = null; this.flags = []; this.tasks = []; this.recogs = [];
+    this.taskRecs = []; this.marks = []; this.asks = [];
   }
   add(r, shownAt = null) {
     this.records.push(r);
@@ -34,16 +43,48 @@ export class LogState {
     } else if (k === "commit") this.commits.push(r);
     else if (k === "belief") this.beliefs.push(r);
     else if (k === "fast") this.fast.push(r);
-    else if (k === "task") { this.task = r; this.nSteps = r.n_steps; this.tasks.push(r); }
+    else if (k === "task") { this.task = r; this.nSteps = r.n_steps; this.tasks.push(r); this.taskRecs.push(r); }
+    else if (k === "task_state") this.taskRecs.push(r);
+    else if (k === "landmarks") this.marks.push(r);
+    else if (k === "ask_resume" || k === "resume_answer") this.asks.push(r);
     else if (k === "recognizer") { this.recog = r; this.recogs.push(r); }
     else if (k === "flag") this.flags.push(r);
     if (k === "verdict" || k === "step_choice" || k === "task_check" || k === "task_draft") this.calls.push(r);
   }
   addAsk(t) { this.cards.push({ t, kind: "ask", text: "Tell me what you're doing and I'll make a plan for it.", detail: {}, head: HEAD.ask }); }
   clearAsk() { this.cards = this.cards.filter((c) => c.kind !== "ask"); }
-  taskAt(tau) { let t = null; for (const x of this.tasks) { if (x.t <= tau) t = x; } return t; }
+  // [current task, every task's latest state] at tau, from task / task_state records (coming back from an interruption
+  // keeps the same current task; a current task that becomes done enough leaves none)
+  taskSet(tau) {
+    let cur = null; const tasks = {};
+    for (const r of this.taskRecs) {
+      if (r.t > tau) continue;
+      if (r.kind === "task") { tasks[r.task_id] = { task_id: r.task_id, title: r.title, status: "active", step_index: 0, n_steps: r.n_steps, t: r.t }; cur = tasks[r.task_id]; }
+      else {
+        const x = (tasks[r.task_id] ??= { task_id: r.task_id, title: r.title });
+        Object.assign(x, { status: r.to, step_index: r.step_index ?? 0, n_steps: r.n_steps, t: r.t });
+        if (r.to === "active") cur = x; else if (r.to === "done_enough" && cur === x) cur = null;
+      }
+    }
+    return [cur, tasks];
+  }
+  taskAt(tau) {
+    if (!this.taskRecs.some((r) => r.kind === "task_state")) { let t = null; for (const x of this.tasks) { if (x.t <= tau) t = x; } return t; }
+    return this.taskSet(tau)[0];
+  }
+  // paused-task chips: {task_id, text, open} where open = "Coming back to ...?" was asked and not answered yet
+  paused(tau) {
+    const [, tasks] = this.taskSet(tau);
+    return Object.values(tasks).filter((x) => x.status === "paused").sort((a, b) => b.t - a.t).slice(0, 2).map((x) => {
+      const s = taskShort(x.title), ev = this.asks.filter((a) => a.task_id === x.task_id && a.t <= tau);
+      return { task_id: x.task_id, open: ev.length > 0 && ev.at(-1).kind === "ask_resume",
+        text: `${s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()} · paused at step ${Math.min(x.n_steps || 0, (x.step_index || 0) + 1)}` };
+    });
+  }
   progress(tau) {
-    const t0 = this.taskAt(tau)?.t ?? -1;
+    const task = this.taskAt(tau), b = this.belief(tau);
+    if (b && b.task_id && task && b.task_id === task.task_id) return (b.completed || []).length;
+    const t0 = task?.t ?? -1;
     return new Set(this.commits.filter((c) => c.t <= tau && c.t >= t0).map((c) => c.node)).size;
   }
   card(tau) {
@@ -55,8 +96,9 @@ export class LogState {
     return [c, Math.max(0, Math.min(1, age / 0.25, (dur - age) / 0.4))];
   }
   chip(tau, names) {
-    const ins = this.cards.filter((c) => c.kind === "instruct" && c.t <= tau);
-    if (!ins.length || this.actions.some((a) => a.action === "done" && a.t <= tau)) return null;
+    const ins = this.cards.filter((c) => (c.kind === "instruct" || (c.kind === "resume_task" && c.detail.chip)) && c.t <= tau);
+    const task = this.taskAt(tau), t0 = task?.t ?? -1;
+    if (!ins.length || task?.status === "paused" || this.actions.some((a) => a.action === "done" && a.t <= tau && a.t >= t0)) return null;
     const last = ins.at(-1);
     return last.detail.chip || (names && names[last.node]) || last.text;
   }
@@ -87,11 +129,17 @@ export class Hud {
       <div class="card hidden"><div class="accent"></div><div class="body"><div class="head"></div><div class="text"></div><ol class="subs"></ol>
         <form class="ask hidden"><input type="text" placeholder="e.g. making pour-over coffee" /><button>Make a plan</button></form></div><div class="arrow"></div></div>
       <div class="chip hidden"></div>
+      <div class="paused"></div>
       <div class="badge">${esc(badge)}</div>`;
     stage.appendChild(this.el);
     this.$ = (s) => this.el.querySelector(s);
     this.names = {};
     this.onAsk = null;
+    this.onTaskAnswer = null;          // live view: (task_id, "coming_back" | "done") from the paused-chip buttons
+    this.$(".paused").addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-a]");
+      if (b && this.onTaskAnswer) this.onTaskAnswer(b.dataset.task, b.dataset.a);
+    });
     this.$(".ask").addEventListener("submit", (e) => {
       e.preventDefault();
       const v = this.$(".ask input").value.trim();
@@ -112,6 +160,9 @@ export class Hud {
       pu.style.opacity = p > 0 ? p : 0;
       pu.style.transform = `scale(${1 + 0.9 * (1 - p)})`;
     } else pill.classList.add("hidden");
+    const pz = st.paused(tau).map((x) => `<div><span>${esc(x.text)}</span>${this.onTaskAnswer && x.open
+      ? `<button data-task="${esc(x.task_id)}" data-a="coming_back">Coming back</button><button data-task="${esc(x.task_id)}" data-a="done">I'm done</button>` : ""}</div>`).join("");
+    if (this.$(".paused").innerHTML !== pz) this.$(".paused").innerHTML = pz;
     const [c, a] = st.card(tau);
     const card = this.$(".card"), chip = this.$(".chip");
     if (c && a > 0.02) {
@@ -145,8 +196,9 @@ export class EngineerPanel {
   constructor(el) {
     this.el = el;
     el.innerHTML = `
+      <div class="tset"></div>
       <h3>L4 state tracker · P(step)</h3><div class="beliefs"></div><div class="bmeta mono"></div>
-      <h3>L2 event detector · P(step boundary)</h3><canvas class="trace" width="560" height="90"></canvas>
+      <h3>L2 event detector · P(step boundary) <span class="muted small">· <span style="color:#d97706">P(away)</span></span></h3><canvas class="trace" width="560" height="90"></canvas>
       <h3>L5 verifier calls</h3><div class="calls mono"></div>
       <h3>L6 policy decisions</h3><div class="acts mono"></div>`;
     this.$ = (s) => el.querySelector(s);
@@ -169,12 +221,23 @@ export class EngineerPanel {
         `<div class="brow"><span class="bn">${esc(k.replace("cc4d_", ""))}</span><span class="bb"><i style="width:${(100 * v).toFixed(1)}%"></i></span></div>`).join("");
       this.$(".bmeta").textContent = "";
     }
+    const [cur, tasks] = st.taskSet(tau), ts = Object.values(tasks);
+    const lm = st.marks.filter((x) => x.t <= tau).at(-1);
+    this.$(".tset").innerHTML = ts.length > 1 || lm ? `<h3>Task set</h3>` + ts.map((x) =>
+      `<div class="brow ${x === cur ? "map" : ""}"><span class="bn">${esc(taskShort(x.title))}</span><span class="mono small">${esc(x.status)} · ${x.step_index ?? 0}/${x.n_steps ?? "?"}${x.status !== "active" ? ` · ${fmtS(tau - x.t)}` : ""}</span></div>`).join("")
+      + (lm ? `<div class="bmeta mono">landmarks ${lm.top.map(([k, v]) => `${esc(taskShort(k.replace("cc4d_", "")))} ${v.toFixed(3)}`).join(" · ")}${lm.p_off != null ? ` · P(off) ${lm.p_off.toFixed(2)}` : ""}</div>` : "") : "";
     const cv = this.$(".trace"), g = cv.getContext("2d");
     g.clearRect(0, 0, cv.width, cv.height);
     const win = 60, f = st.fast.filter((x) => x.t <= tau && x.t > tau - win);
     g.strokeStyle = "#3b82f6"; g.lineWidth = 2; g.beginPath();
     f.forEach((x, i) => { const X = cv.width * (1 - (tau - x.t) / win), Y = cv.height - 6 - (cv.height - 12) * x.boundary; i ? g.lineTo(X, Y) : g.moveTo(X, Y); });
     g.stroke();
+    const bw = st.beliefs.filter((x) => x.t <= tau && x.t > tau - win && x.p_away != null);
+    if (bw.length) {
+      g.strokeStyle = "#d97706"; g.lineWidth = 1.5; g.beginPath();
+      bw.forEach((x, i) => { const X = cv.width * (1 - (tau - x.t) / win), Y = cv.height - 6 - (cv.height - 12) * x.p_away; i ? g.lineTo(X, Y) : g.moveTo(X, Y); });
+      g.stroke();
+    }
     g.fillStyle = "#f5a623";
     st.calls.filter((x) => x.t <= tau && x.t > tau - win).forEach((x) => g.fillRect(cv.width * (1 - (tau - x.t) / win) - 1, cv.height - 6, 2, 6));
     const calls = st.calls.filter((x) => x.t <= tau + 0.01).slice(-9).reverse();
@@ -185,7 +248,7 @@ export class EngineerPanel {
       let what = "";
       if (r.kind === "verdict") what = `${r.reason}: ${r.status} p=${(r.confidence ?? 0).toFixed(2)}`;
       else if (r.kind === "step_choice") what = `which step? ${esc(names[r.choice] || r.choice)}`;
-      else if (r.kind === "task_check") what = `which task? ${esc((r.choice || "").replace("cc4d_", ""))}`;
+      else if (r.kind === "task_check") what = `which task?${r.reason ? ` (${r.reason})` : ""} ${esc((r.choice || "").replace("cc4d_", ""))}${r.decision ? ` → ${r.decision}` : ""}`;
       else what = `draft: ${esc(r.title || "")}`;
       return `<div>${r.t.toFixed(1)}s ${esc(m)} ${lat} · ${what}</div>`;
     }).join("");

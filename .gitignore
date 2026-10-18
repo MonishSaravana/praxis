@@ -31,3 +31,6 @@ renders/_work/
 
 # static public site build (python -m praxis.site build; videos are symlinks)
 /site/
+
+# outreach contact lists (personal/business contact info; never committed)
+/outreach/

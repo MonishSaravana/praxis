@@ -2,6 +2,7 @@
 
 WebSocket /ws protocol
   browser -> server  text  {"type": "start", ...config} | {"type": "flag", "kind": "wrong"|"missed", "note", "t"}
+                           | {"type": "task_answer", "task_id", "answer": "coming_back"|"done"}
                            {"type": "describe", "text"} | {"type": "stop"} | {"type": "save"} | {"type": "discard"}
                      bytes 8-byte little-endian float64 session time + one JPEG frame
   server -> browser  {"type": "started"|"graph"|"rec"|"status"|"ask_task"|"stopped"|"saved"|"discarded"|"error", ...}
@@ -25,6 +26,8 @@ STATIC = Path(__file__).parent / "static"
 app = FastAPI(title="Praxis Studio")
 LABEL = "Praxis prototype v0 · real model output"
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
+from .org_api import router as org_router  # noqa: E402  company profiles, uploads, admin page (studio/org_api.py)
+app.include_router(org_router)
 CORE: StudioCore | None = None
 JOBS: dict = {}
 SESSION_FILES = {"camera.mp4", "hud_replay.mp4", "SUMMARY.md", "live.jsonl", "taskgraph.json", "flags.json",
@@ -164,7 +167,11 @@ async def ws_live(ws: WebSocket):
                     js = JOBS[cfg["job_id"]].status()
                     cfg["task_id"], cfg["compile_cost_usd"] = js["task_id"], js["cost_usd"]
                 try:
-                    sess = await loop.run_in_executor(None, lambda: StudioSession(core(), cfg, send))
+                    if cfg.get("org_id"):           # a company profile: its approved procedures, locked mode
+                        from .org_session import OrgStudioSession as Session
+                    else:
+                        Session = StudioSession
+                    sess = await loop.run_in_executor(None, lambda: Session(core(), cfg, send))
                     saved = False
                     send({"type": "started", "session": sess.id, "models": sess.models, "cost_cap_usd": sess.cap})
                 except Exception as e:  # noqa: BLE001
@@ -175,6 +182,8 @@ async def ws_live(ws: WebSocket):
                 sess.flag(msg.get("kind", "wrong"), msg.get("note", ""), float(msg.get("t", sess.t_last)))
             elif kind == "describe":
                 sess.describe((msg.get("text") or "").strip())
+            elif kind == "task_answer":                  # tap on a paused-task chip: "Coming back" / "I'm done"
+                sess.task_answer(str(msg.get("task_id") or ""), str(msg.get("answer") or ""))
             elif kind == "stop":
                 send(await loop.run_in_executor(None, sess.stop))
             elif kind == "save":

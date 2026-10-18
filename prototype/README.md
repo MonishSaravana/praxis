@@ -38,8 +38,6 @@ uv run python -m praxis.cli features --split train --per-task 3
 uv run python -m praxis.cli features --split eval
 uv run python -m praxis.cli features --split heldout_type --per-task 2
 uv run python -c "from praxis.paths import load_env; load_env(); from praxis.tasks.build_library import build; build()"   # L3 compile
-#   new procedures compile with Claude Opus 5.5 by default; the committed graphs were compiled with Fable 5.1
-#   (pass model="claude-fable-5-1" to reproduce them exactly; existing graphs are skipped unless overwrite=True)
 uv run python -m praxis.smoke                                 # Jev image-input probe -> results/l5/jev_image_probe.json
 
 # Fast layers (train split only)

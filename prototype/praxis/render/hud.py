@@ -4,7 +4,8 @@ User view (what a wearer sees): unobtrusive and voice-first. A thin progress ind
 current instruction as a short card that collapses to a one-line chip, a subtle green pulse on
 verification, and prominent cards only for mistakes (amber) and view requests (with a direction arrow).
 At most one card at a time; cards fade on their own. The task graph, beliefs and confidences are never
-shown.
+shown. Multi-task sessions add a one-line card for a switch, a resume ("Back to the burritos. Next: ...") or a leave
+reminder, and a small muted chip under the progress bar for each paused task ("Burritos · paused at step 4").
 
 Engineer view ("under the hood"): the same run with step-belief bars over the task graph, the event
 detector trace, point tracks / ROI, each verifier call with latency and confidence, and the policy
@@ -34,8 +35,20 @@ SUB = (92, 96, 104)
 BRAND_1 = "Instructions that can finally see how you're doing."
 BRAND_2 = "AI guidance for the physical world."
 
-CARD_DUR = {"announce_task": 3.6, "instruct": 4.0, "hint": 6.5, "mistake": 6.5, "view_request": 5.5, "done": 4.0}
-PRIORITY = {"mistake": 3, "view_request": 3, "hint": 2, "announce_task": 1, "instruct": 1, "done": 1}
+CARD_DUR = {"announce_task": 3.6, "instruct": 4.0, "hint": 6.5, "mistake": 6.5, "view_request": 5.5, "done": 4.0,
+            "switch_task": 4.5, "retract_task": 4.5, "resume_task": 4.5, "leave_warning": 6.0}
+PRIORITY = {"mistake": 3, "view_request": 3, "hint": 2, "leave_warning": 2, "announce_task": 1, "instruct": 1, "done": 1,
+            "switch_task": 2, "retract_task": 2, "resume_task": 2}   # a switch stays visible over the next instruction
+HEAD = {"announce_task": "Task recognized", "instruct": None, "hint": "Here's a closer walkthrough",
+        "mistake": "Something looks off", "view_request": "I can't see that clearly", "done": "Done",
+        "switch_task": "Switching tasks", "retract_task": None, "resume_task": None, "leave_warning": None}
+
+
+def task_short(title: str) -> str:
+    import re
+    t = re.sub(r"\s*\(.*?\)", "", title or "")
+    t = re.sub(r"(?i)\bindustreal\b\s*", "", t).strip()
+    return re.sub(r"(?i)\s+assembly$", "", t)
 
 
 def font(size: int, bold: bool = False, mono: bool = False) -> ImageFont.FreeTypeFont:
@@ -98,6 +111,7 @@ class LogState:
         self.verdicts = by_kind(records, "verdict")
         self.fast = by_kind(records, "fast")
         self.tasks = by_kind(records, "task")
+        self.task_recs = [r for r in records if r["kind"] in ("task", "task_state")]
         self.events = by_kind(records, "event")
         self.tracks = by_kind(records, "tracks")
         self.meta = records[0] if records else {}
@@ -106,13 +120,48 @@ class LogState:
                       for a in self.actions if a["action"] in CARD_DUR]
         self.cards.sort(key=lambda c: c.t)
 
+    def task_set(self, tau: float) -> tuple[dict | None, dict[str, dict]]:
+        """(current task, every task's latest state) at tau, from `task` and `task_state` records. Coming back from an
+        interruption keeps the same current task; a current task that becomes done enough leaves none."""
+        cur, tasks = None, {}
+        for r in self.task_recs:
+            if r["t"] > tau:
+                continue
+            if r["kind"] == "task":
+                tasks[r["task_id"]] = {"task_id": r["task_id"], "title": r.get("title"), "status": "active",
+                                       "step_index": 0, "n_steps": r.get("n_steps"), "t": r["t"]}
+                cur = tasks[r["task_id"]]
+            elif r["kind"] == "task_state":
+                x = tasks.setdefault(r["task_id"], {"task_id": r["task_id"], "title": r.get("title")})
+                x.update(status=r["to"], step_index=r.get("step_index", 0), n_steps=r.get("n_steps"), t=r["t"])
+                if r["to"] == "active":
+                    cur = x
+                elif r["to"] == "done_enough" and cur is x:
+                    cur = None
+        return cur, tasks
+
     def task_at(self, tau: float) -> dict | None:
-        t = [x for x in self.tasks if x["t"] <= tau]
-        return t[-1] if t else None
+        if not any(r["kind"] == "task_state" for r in self.task_recs):
+            t = [x for x in self.tasks if x["t"] <= tau]
+            return t[-1] if t else None
+        return self.task_set(tau)[0]
+
+    def paused(self, tau: float) -> list[str]:
+        """Chips for paused tasks: 'Burritos · paused at step 4' (retracted and done-enough tasks get none)."""
+        _, tasks = self.task_set(tau)
+        out = []
+        for x in sorted(tasks.values(), key=lambda x: -x["t"]):
+            if x.get("status") == "paused":
+                n = x.get("n_steps") or 0
+                out.append(f"{task_short(x['title']).capitalize()} · paused at step {min(n, x.get('step_index', 0) + 1)}")
+        return out[:2]
 
     def progress(self, tau: float) -> int:
-        """Steps committed under the task running at tau (a Studio session can switch tasks)."""
+        """Steps done in the task running at tau (a session can switch tasks and come back to one)."""
         task = self.task_at(tau)
+        b = self.belief(tau)
+        if b is not None and "task_id" in b and task is not None and b["task_id"] == task["task_id"]:
+            return len(b.get("completed", []))
         t0 = task["t"] if task else -1.0
         return len({c["node"] for c in self.commits if t0 <= c["t"] <= tau})
 
@@ -130,11 +179,16 @@ class LogState:
     def chip(self, tau: float, step_names: dict | None = None) -> str | None:
         """One-line chip after the instruction card collapses: the logged step's short name (from the task graph the
         engine used) when available, else the instruction text."""
-        ins = [c for c in self.cards if c.kind == "instruct" and c.t <= tau]
+        ins = [c for c in self.cards if c.kind in ("instruct", "resume_task") and c.t <= tau and
+               (c.kind == "instruct" or c.detail.get("chip"))]
         if not ins:
             return None
         last = ins[-1]
-        done = [a for a in self.actions if a["action"] == "done" and a["t"] <= tau]
+        task = self.task_at(tau)
+        if task is not None and task.get("status") == "paused":     # away from it: the paused chip says so instead
+            return None
+        t0 = task["t"] if task else -1.0
+        done = [a for a in self.actions if a["action"] == "done" and t0 <= a["t"] <= tau]
         if done:
             return None
         return last.detail.get("chip") or (step_names or {}).get(last.node) or last.text
@@ -205,6 +259,12 @@ class UserView:
                 d.ellipse((cx - r, cy - r, cx + r, cy + r), outline=GREEN + (int(255 * p),), width=max(2, int(3 * s)))
                 k = 7 * s
                 d.line([(cx - k, cy), (cx - k / 3, cy + k * 0.7), (cx + k, cy - k * 0.8)], fill=GREEN, width=max(2, int(3 * s)))
+        for i, txt in enumerate(st.paused(tau)):             # paused tasks: small muted chips under the progress bar
+            dd = ImageDraw.Draw(img)
+            tw = dd.textlength(txt, font=self.f_small)
+            x1, y0 = W - int(36 * s), int(66 * s) + i * int(34 * s)
+            _frosted(img, (x1 - tw - int(24 * s), y0, x1, y0 + int(28 * s)), int(14 * s), alpha=0.5, blur=10)
+            ImageDraw.Draw(img).text((x1 - tw - int(12 * s), y0 + int(4 * s)), txt, font=self.f_small, fill=SUB)
         card, a = st.card(tau)
         if card is not None and a > 0.02:
             img = self._card(img, card, a)
@@ -236,9 +296,9 @@ class UserView:
         d = ImageDraw.Draw(img)
         prominent = c.kind in ("mistake", "view_request")
         width = int((640 if prominent else 560) * s)
-        accent = {"mistake": AMBER, "view_request": BLUE, "hint": BLUE, "done": GREEN}.get(c.kind, GREEN)
-        head = {"announce_task": "Task recognized", "instruct": None, "hint": "Here's a closer walkthrough",
-                "mistake": "Something looks off", "view_request": "I can't see that clearly", "done": "Done"}[c.kind]
+        accent = {"mistake": AMBER, "view_request": BLUE, "hint": BLUE, "done": GREEN, "leave_warning": AMBER,
+                  "switch_task": BLUE, "retract_task": BLUE}.get(c.kind, GREEN)
+        head = HEAD[c.kind]
         body = c.text
         lines_extra: list[str] = []
         if c.kind == "hint":
@@ -360,6 +420,11 @@ class EngineerView:
         for i, a in enumerate(acts):
             txt = f"t={a['t']:6.1f}s {a['action']:<13} {a['text'][:28]}"
             d.text((vw + 18, cy + 26 + i * 22), txt, font=self.fm, fill=SUB)
+        cur, tasks = st.task_set(tau)
+        if len(tasks) > 1:                                  # multi-task: the task set, one line
+            line = "   ".join(f"{task_short(x['title'])[:22]}: {x.get('status')} {x.get('step_index', 0)}/{x.get('n_steps')}"
+                               for x in tasks.values())
+            d.text((14, H - 22), f"tasks  {line}"[:150], font=self.fm, fill=SUB)
         d.text((W - 380, H - 22), self.badge, font=self.fs, fill=SUB)
         return canvas
 
