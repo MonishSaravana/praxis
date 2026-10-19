@@ -136,6 +136,7 @@ def build() -> tuple[str, str]:
                   "One wrong recognition costs that clip's whole step track.")
         md.append(f"\nSource: {src(m, 'run_fused')}.\n")
     md += multitask_section(m)
+    md += backend_section(m)
     md.append("## Latency\n")
     if F:
         md.append(f"- **Feedback latency** (GT end of an action → Praxis says 'verified' or flags a mistake about that "
@@ -504,6 +505,42 @@ def multitask_section(m: dict) -> list[str]:
     md.append(f"\nSources: {src(m, 'run_fused_mt')}, {src(m, 'mt_eval_splices_mt')}, {src(m, 'mt_eval_splices_single')}, "
               f"{src(m, 'run_local_only_v2models')}, {src(m, 'mt_probe_learning_curve')}"
               + (f", {src(m, 'enigma_switch')}" if es else "") + ".\n")
+    return md
+
+
+def backend_section(m: dict) -> list[str]:
+    """The company-backend flow on ENIGMA-51 repair videos (PROXY labels): upload -> compile -> approve -> assign -> coach."""
+    bf = m.get("enigma_backend_flow")
+    if not bf or not bf.get("moments"):
+        return []
+    t, q = bf["moments"], bf.get("questions") or {}
+    md = ["## Company backend on repair videos (ENIGMA-51, PROXY labels)\n",
+          "A company profile received the four written repair procedures through the upload path. Each was compiled "
+          "through the backend's compile endpoint, which shows its estimate first. Each was reviewed against its "
+          "document, approved, and assigned, and then the profile was locked. Praxis then coached each first-person "
+          "repair video, with the job set by its assigned procedure (like a work order), using only the approved "
+          "procedures. gpt-6.1-sol answered both \"is this step done?\" and \"which step now?\"; it led Jev on both in "
+          "the train-split tests. Only related footage was used. The reference steps are DERIVED from the dataset's "
+          "object-interaction labels and the earlier script-compiled graphs, not from human step labels. A blind "
+          "Opus judge graded each answer.\n"]
+    rows = [[name, str(a["n"]), f"{a['correct']} ({100 * a['correct'] / max(1, a['n']):.0f}%)", str(a["adjacent"]),
+             str(a["wrong"] + a.get("no_answer", 0))] for name, a in (
+        ("Praxis on screen (backend-compiled procedures)", t["backend_praxis_shown"]),
+        ("Praxis on screen (earlier script-compiled procedures)", t["earlier_praxis_shown_postfix"]),
+        ("General assistant + the written procedure", t["general+doc"]),
+        ("General assistant, no procedure", t["general"]),
+        ("Step Praxis believes (backend-compiled)", t["backend_praxis_believed"]),
+        ("Step Praxis believes (earlier script-compiled)", t["earlier_praxis_believed"]))]
+    md.append(table(rows, ["Answer", "Moments", "Right", "Off by one step", "Wrong or none"]))
+    md.append("")
+    md.append(f"- Videos: {', '.join(bf.get('moments_videos') or [])}. Believed-step rows cover only the moments judged "
+              "for that arm (see the source file).")
+    if q:
+        md.append(f"- **Technician questions** asked mid-task through the backend's ask endpoint (Opus 5.5, retrieval over "
+                  f"all four documents), graded blind by gpt-6.1-sol against reference answers written from the "
+                  f"documents beforehand: {q['correct']} of {q['n']} correct, {q['partial']} partial, {q['wrong']} "
+                  "wrong.")
+    md.append(f"\nSource: {src(m, 'enigma_backend_flow')}.\n")
     return md
 
 
@@ -928,6 +965,16 @@ def mt_safe(m: dict, say, out: list[str]) -> None:
             f"person came back to an earlier task it resumed it in {r1.get('resumed')} of {r1.get('n')} cases, at the "
             f"exact step in {r1.get('step_exact')} of the {r1.get('n')}. Step accuracy went from {E0['step_acc'] * 100:.0f}% with the "
             f"single-task engine to {E1['step_acc'] * 100:.0f}%.", "mt_eval_splices_mt")
+    bf = m.get("enigma_backend_flow") or {}
+    t = bf.get("moments") or {}
+    if t.get("backend_praxis_shown") and t.get("general+doc"):
+        a, g = t["backend_praxis_shown"], t["general+doc"]
+        say(f"On {a['n']} moments from four first-person repair videos, with the written procedures uploaded and "
+            f"compiled through our company backend, the instruction Praxis showed named the right step "
+            f"{100 * a['correct'] / a['n']:.0f}% of the time, and the right or an adjacent step "
+            f"{100 * (a['correct'] + a['adjacent']) / a['n']:.0f}%. A general vision assistant given the same written "
+            f"procedure got {100 * g['correct'] / g['n']:.0f}% and {100 * (g['correct'] + g['adjacent']) / g['n']:.0f}%. "
+            f"(Step labels are derived from the dataset's object-interaction labels.)", "enigma_backend_flow")
     if MT:
         say(f"In fully automatic mode on {MT['n_clips']} held-out single-recipe clips, the multi-task engine tracked "
             f"the step {MT['step_acc'] * 100:.0f}% of the time and ended on the right recipe in "

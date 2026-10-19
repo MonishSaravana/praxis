@@ -90,6 +90,13 @@ def main() -> dict:
         r = json.loads(f.read_text())
         if "spend_usd_non_openai" in r:
             items[f"ENIGMA-51 run: {f.stem}"] = r["spend_usd_non_openai"]
+    for f in sorted((RESULTS / "verification").glob("*.json")):          # leave-check tests (non-OpenAI calls)
+        r = json.loads(f.read_text())
+        if r.get("spend_usd_non_openai"):
+            items[f"verification test: {f.stem}"] = r["spend_usd_non_openai"]
+    led = RESULTS.parent / "sessions" / "orgs" / "spend.json"           # company backend: compiles + questions (ledger)
+    if led.exists():
+        items["company backend (compiles, questions; sessions/orgs/spend.json)"] = json.loads(led.read_text()).get("total_usd", 0.0)
     from .paths import CACHE as _C                                      # OpenAI calls: each paid once, cost cached
     for d in sorted((_C / "api").glob("gpt-*")):
         items[f"OpenAI calls: {d.name}"] = sum(json.loads(f.read_text()).get("meta", {}).get("cost_usd", 0.0)

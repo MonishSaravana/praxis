@@ -85,7 +85,6 @@ class JevVerifier:
         """Typed localization: which of these candidate steps is the person doing now? -> probabilities.
         With `mistakes` (the likeliest step's mistake library), the same call also screens for a visible mistake
         (Jev answers all questions of a request in parallel, so this adds no latency)."""
-        self.budget.check()
         assets, refs = {}, []
         for f in frames:
             ref, a, _ = _asset(f, 768)
@@ -105,14 +104,16 @@ class JevVerifier:
         hit = self.cache.get(key) if self.cache else None
         if hit:
             resp, lat = hit["resp"], hit["latency_ms"]
-        else:
+        else:                           # the budget counts only calls actually made (as verify and choose_task)
+            self.budget.check()
             resp, lat = self.client.system_one({"frames": refs}, q, assets, images=True)
             if self.cache:
                 self.cache.put(key, {"resp": resp, "latency_ms": lat})
         a = resp["answers"]["step"]
         u = resp.get("usage", {})
         usd = cost_usd(self.model, u.get("input_tokens", 0), 0)
-        self.budget.add(usd)
+        if not hit:
+            self.budget.add(usd)
         out = {"probs": {k: float(p) for k, p in a["probabilities"].items()}, "choice": a["choice"],
                "latency_ms": lat, "model": resp.get("model"), "cost_usd": usd}
         if "mistake" in resp["answers"]:

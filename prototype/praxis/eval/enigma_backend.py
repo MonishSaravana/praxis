@@ -102,10 +102,12 @@ def proc_for(vid: str) -> dict:
     return next(p for p in o.procedures() if p["versions"][-1]["doc_name"] == VIDEO_DOC[vid])
 
 
-def run(vids=("141", "107", "144", "53"), openai_usd: float = 7.0, verifier: str = "openai:gpt-6.1-sol") -> dict:
+def run(vids=("141", "107", "144", "53"), openai_usd: float = 7.0, verifier: str = "openai:gpt-6.1-sol",
+        run_name: str = RUN, overrides: dict | None = None, max_calls: int = 6000) -> dict:
     """Option A (founder-approved): gpt-6.1-sol answers both "is this step done?" and "which step now?" (it led Jev on
     both in the train-split tests: 85% vs 58% on 100 completion checks, 41% vs 33% on 116 engine step questions);
-    no escalation tier (Sol is the strongest checker measured; Opus 82%). Task given by the assigned procedure."""
+    no escalation tier (Sol is the strongest checker measured; Opus 82%). Task given by the assigned procedure.
+    run_name / overrides: engine variants (eval/verify_check.py); openai_usd=0 is a free dry run (cache only)."""
     from ..experiments import _budget, make_verifier
     from ..perception.extract import load_features  # noqa: F401  (features exist: data/features/enigma_<vid>.npz)
     from ..studio.org_session import runtime_library
@@ -117,10 +119,10 @@ def run(vids=("141", "107", "144", "53"), openai_usd: float = 7.0, verifier: str
     graphs, evidence, info = runtime_library(o, texts(), s["assigned"] if s["locked"] else None)
     base = load_stack()
     st = {**base, "library": graphs, "evidence": evidence, "recognizer": None, "offtask": None}
-    ob = _budget(max_calls=6000, max_usd=openai_usd)
+    ob = _budget(max_calls=max_calls, max_usd=openai_usd)
     ver = make_verifier(verifier, ob)
     cals = {"primary": calibrators(verifier), "escalation": (None, None)}
-    ecfg = engine_config({"escalate": False})
+    ecfg = engine_config({"escalate": False, **(overrides or {})})
     ann = E.annotations()
     for vid in vids:
         p = proc_for(vid)
@@ -133,7 +135,7 @@ def run(vids=("141", "107", "144", "53"), openai_usd: float = 7.0, verifier: str
                                video=str(video_path(vid)), start=0.0, end=dur, duration=dur, segments=[],
                                mistakes=lambda: [])
         frames = decode_frames(clip)
-        run_clip(clip, st, RUN, ecfg, ver, None, oracle_task=True, calibrators=cals, frames=frames)
+        run_clip(clip, st, run_name, ecfg, ver, None, oracle_task=True, calibrators=cals, frames=frames)
         del frames
         print("ran", vid, p["id"], "openai so far", round(ob.usd, 3), flush=True)
     return {"spend_openai_usd": ob.usd, "calls": ob.calls}
@@ -242,7 +244,7 @@ def _graphs() -> dict:
     return {x["proc_id"]: x["graph"] for x in o.library().values()}
 
 
-def score_runs() -> dict:
+def score_runs(run: str = RUN) -> dict:
     """Per video: step accuracy against step segments derived for the backend's own graph (PROXY), and object
     consistency at the annotated interactions; calls and cost from the run log."""
     from ..eval import metrics as M
@@ -250,7 +252,7 @@ def score_runs() -> dict:
     gs = _graphs()
     rows = []
     for vid in VIDEO_DOC:
-        p = RUNS / RUN / f"enigma_{vid}.jsonl"
+        p = RUNS / run / f"enigma_{vid}.jsonl"
         if not p.exists():
             continue
         g = gs[proc_for(vid)["id"]]
@@ -297,7 +299,7 @@ def _believed(recs, t, g):
     return {"answer": n.instruction_expert or n.name, "node": n.id}
 
 
-def judge_moments(cap_usd: float = 0.40, workers: int = 4) -> dict:
+def judge_moments(cap_usd: float = 0.40, workers: int = 4, skip_believed: tuple = ()) -> dict:
     """The 66 doc_value moments: the instruction Praxis shows (logged; the display rule is in the engine now) and the
     step it believes, each judged blind against the reference step from the SCRIPT-compiled graph's derived labels
     (independent of the backend's graph). The general-assistant arms are read from doc_value.json, not re-run."""
@@ -316,6 +318,9 @@ def judge_moments(cap_usd: float = 0.40, workers: int = 4) -> dict:
             return {**out, "shown": {"grade": "not_run"}, "believed": {"grade": "not_run"}}
         recs, g = logs[it["video"]], gs[proc_for(it["video"])["id"]]
         for arm, a in (("shown", _shown(recs, it["t"])), ("believed", _believed(recs, it["t"], g))):
+            if arm == "believed" and it["video"] in skip_believed:     # judge cap: the shown answer comes first
+                out[arm] = {**(a or {}), "grade": "not_judged"}
+                continue
             out[arm] = {**(a or {}), "grade": _judge(jb, it, a["answer"], lib[it["task_id"]])["grade"] if a else "no_answer"}
         return out
     with ThreadPoolExecutor(workers) as ex:
@@ -325,16 +330,19 @@ def judge_moments(cap_usd: float = 0.40, workers: int = 4) -> dict:
     post = {r["id"]: r for r in (prev.get("praxis_shown_postfix") or {}).get("rows", [])}
     ran = [r for r in rows if r["shown"]["grade"] != "not_run"]
     ids = {r["id"] for r in ran}
+    bel = [r for r in ran if r["believed"]["grade"] != "not_judged"]
+    ids_b = {r["id"] for r in bel}
 
     def table(grades):
         return {"n": len(grades), **{k: grades.count(k) for k in ("correct", "adjacent", "wrong", "no_answer")}}
-    res = {"label": "same 66 moments as doc_value (PROXY reference steps from object-interaction labels and the "
+    res = {"believed_videos": sorted({r["video"] for r in bel}),
+           "label": "same 66 moments as doc_value (PROXY reference steps from object-interaction labels and the "
                     "script-compiled graphs); Praxis runs on procedures compiled through the company backend, "
                     "gpt-6.1-sol as checker", "videos": sorted(logs), "n": len(ran),
            "table": {"backend_praxis_shown": table([r["shown"]["grade"] for r in ran]),
-                     "backend_praxis_believed": table([r["believed"]["grade"] for r in ran]),
+                     "backend_praxis_believed": table([r["believed"]["grade"] for r in bel]),
                      "earlier_praxis_shown_postfix": table([post[i]["grade"] for i in ids if i in post]),
-                     "earlier_praxis_believed": table([pv[i]["praxis_believed"]["grade"] for i in ids]),
+                     "earlier_praxis_believed": table([pv[i]["praxis_believed"]["grade"] for i in ids_b]),
                      "general+doc": table([pv[i]["general+doc"]["grade"] for i in ids]),
                      "general": table([pv[i]["general"]["grade"] for i in ids])},
            "rows": rows, "spend_judge_usd": jb.usd}

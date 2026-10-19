@@ -334,3 +334,60 @@ details.peek summary { cursor: pointer; font-size: 12px; color: var(--sub); }
 .mk-row .nm { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mk-row .mk-t { font-variant-numeric: tabular-nums; min-width: 58px; }
 @media (max-width: 1100px) { .mark-grid { grid-template-columns: minmax(0, 1fr); } .mk-steps { position: static; max-height: none; } }
+
+/* ================= Praxis brand layer (brand/BRAND.md) =================
+   Archivo type, Graphite header with the white lockup, Aluminum ground, Plate surfaces, Torque Orange only for the
+   primary action and the current section, and the brand's state colors (verified green, information blue, mistake red).
+   Scoped to the admin page so the Live view is unchanged. */
+@font-face { font-family: "Archivo"; src: url("/static/brand/Archivo-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Archivo"; src: url("/static/brand/Archivo-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Archivo Expanded"; src: url("/static/brand/ArchivoExpanded-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+.admin-body {
+  --font: "Archivo", -apple-system, "Helvetica Neue", Arial, sans-serif; --display: "Archivo Expanded", "Archivo", sans-serif;
+  --ink: #16191B; --ink-2: #2E3437; --sub: #5E676C; --line: #D3D8D5; --line-2: #E1E5E3; --bg: #E8EBE9;
+  --side: #F6F7F6; --surface: #F6F7F6; --hover: #ECEFED; --soft: #E8EBE9;
+  --orange: #FF5B14; --orange-ink: #A3360A; --orange-bg: #FCE9DF;
+  --green: #17784A; --green-ink: #17784A; --green-bg: #E2F0E8; --blue: #1D4ED8; --blue-ink: #1D4ED8; --blue-bg: #E5EBFA;
+  --red: #C21F14; --red-ink: #C21F14; --red-bg: #F9E3E1; --amber: #B86E00; --amber-ink: #8A5200; --amber-bg: #F6EAD5;
+  --shadow: 0 1px 2px rgba(22, 25, 27, .05);
+  font-family: var(--font); color: var(--ink); background: var(--bg);
+}
+.admin-body header { background: var(--ink); border-bottom: none; padding: 12px 22px; }
+.admin-body .brand { display: flex; align-items: center; gap: 12px; color: #fff; }
+.admin-body .brand img { height: 20px; display: block; }
+.admin-body .brand .tag { color: #9AA3A7; font-size: 13px; margin: 0; padding-left: 12px; border-left: 1px solid #3A4044; }
+.admin-body nav a { color: #9AA3A7; }
+.admin-body nav a:hover { color: #E8EBE9; }
+.admin-body nav a.on { color: #fff; border-bottom-color: var(--orange); }
+.admin-body .pill-s { background: #2A2F32; color: #C9CFCC; }
+.admin-body .side { border-right-color: var(--line); }
+.admin-body .side-label, .admin-body h2.sec, .admin-body .tbl th, .admin-body .kv .k {
+  font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--sub); }
+.admin-body h2.sec .muted { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.admin-body .side-nav a.on { background: var(--bg); box-shadow: inset 3px 0 0 var(--orange); border-radius: 0 var(--r-sm) var(--r-sm) 0; }
+.admin-body .side-nav a.on svg { color: var(--orange); }
+.admin-body .meter i { background: var(--ink); }
+.admin-body .page-head h1, .admin-body .title-input { font-family: var(--display) !important; font-weight: 600; letter-spacing: -.01em; }
+.admin-body .page-head h1 { font-size: 24px; }
+.admin-body .surface, .admin-body .step-item, .admin-body .callout, .admin-body .kv, .admin-body .excerpt, .admin-body .upl, .admin-body .mode, .admin-body .drop {
+  background: var(--surface); border-color: var(--line); }
+.admin-body .tbl th { background: transparent; border-bottom-color: var(--ink); }
+.admin-body .tbl tbody tr.click:hover td { background: var(--hover); }
+.admin-body .btn { border-color: #C2C8C5; background: #fff; border-radius: 6px; }
+.admin-body .btn.primary { background: var(--orange); border-color: var(--orange); color: var(--ink); font-weight: 600; }
+.admin-body .btn.primary:hover:not(:disabled) { background: #F04E08; }
+.admin-body .btn.link { color: var(--orange-ink); background: none; border: none; }
+.admin-body .step-row .no, .admin-body .stage-col .n { background: var(--ink); color: #fff; }
+.admin-body .step-item.safety { border-color: #E3BE84; background: #FBF6EC; }
+.admin-body .kcard { background: #fff; border-color: var(--line); }
+.admin-body .kcard .pg, .admin-body .source .bd .pm { color: var(--orange-ink); }
+.admin-body .cite { background: var(--orange-bg); color: var(--orange-ink); }
+.admin-body .score i.on { background: var(--ink); }
+.admin-body .seg { background: var(--line-2); }
+.admin-body .mode.on { border-color: var(--orange); }
+.admin-body .mode.on .dot { border-color: var(--orange); }
+.admin-body .switch input:checked { background: var(--ink); }
+.admin-body .main input:focus, .admin-body .main textarea:focus, .admin-body .main select:focus {
+  border-color: var(--ink); box-shadow: 0 0 0 3px rgba(255, 91, 20, .22); }
+.admin-body .btn:focus-visible, .admin-body .side-nav a:focus-visible { outline-color: var(--orange); }
+.admin-body .main a:not(.btn) { color: var(--orange-ink); }

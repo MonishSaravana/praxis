@@ -1,5 +1,5 @@
 {
-  "total_usd": 123.77543676999997,
+  "total_usd": 127.55453476999996,
   "items": {
     "L3 compile (8 recipes, Fable 5.1)": 4.16358,
     "L3 compile (IndustReal graph)": 0.43374,
@@ -60,14 +60,20 @@
     "multi-task run: train_sweep_resume_bias_x3_W20_thr0.7": 0.19827947999999976,
     "multi-task run: train_sweep_strict_p0.8_W20_thr0.7": 0.20162150399999973,
     "multi-task run: train_sweep_two_confirmations_W20_thr0.7": 0.20267704799999955,
+    "multi-task run: vc_auto_V0_dry": 0.0,
+    "multi-task run: vc_auto_V1_dry": 0.0,
+    "multi-task run: vc_auto_V2_dry": 0.0,
+    "multi-task run: vc_auto_V3_dry": 0.0,
     "model test: which_task_bakeoff": 1.8966565699999998,
     "ENIGMA-51 graph compile (Opus)": 0.996516,
+    "ENIGMA-51 run: backend_flow": 0.3852000000000001,
     "ENIGMA-51 run: doc_value": 0.908172,
     "ENIGMA-51 run: enigma_switch": 0.16862231400000022,
     "ENIGMA-51 run: enigma_task_given": 0.13776646799999992,
+    "company backend (compiles, questions; sessions/orgs/spend.json)": 1.717176,
     "OpenAI calls: gpt-6-luna": 0.10024190000000001,
     "OpenAI calls: gpt-6-sol": 1.893778,
-    "OpenAI calls: gpt-6.1-sol": 11.5117068,
+    "OpenAI calls: gpt-6.1-sol": 13.1884288,
     "M2 two-clip test": 0.00170982
   },
   "untracked": [

@@ -41,6 +41,49 @@ Sources: `results/runs/fused_oracle.json`, `results/runs/baseline_stateless.json
 
 Source: `results/runs/fused.json`.
 
+## Multi-task: switching, pausing and resuming
+
+The engine keeps a set of tasks: one is active, others can be paused with their progress. It keeps checking which task is happening, and it can switch to another task or resume a paused one. When the person walks away it pauses the job and asks "Coming back to the ...?"; a paused task closes only when the person says they're done, or at the end of the session (never on a timer). Settings were chosen on the train split only (docs/MULTITASK.md, sections 11-13). In automatic mode, gpt-6.1-sol answers "which task?": it guesses no task before 10 s, needs two agreeing answers, and switches above 0.9. The founder adopted that setting on train results; the pre-set rule did not choose it (results/multitask/sol_fix_train.json).
+
+- **More training video:** the small local models were refit on all 70 train recordings (they had been trained on 24). Local-only step accuracy with the task given went from 41% to **49%** on the same 48 held-out clips. The train-split check (fold models trained on 16 vs about 47 recordings) showed the same direction: 54% to 61%.
+- **Automatic mode on 48 single-recipe held-out clips** (`fused_mt`: multi-task engine, refit models, Jev fast tier, Opus strong tier, openai:gpt-6.1-sol deciding the task): step accuracy **43%** (the earlier automatic run `fused`, older models and single-task engine: 30%). First task guess right on 73% of clips, right task at the end on 83%. **5 wrong switches** across the 48 clips; 10 more wrong guesses were corrected. False alarms 0.017 per minute.
+
+**SYNTHETIC multi-task sessions** (held-out clips spliced together, 167 min). CaptainCook4D has one recipe per video, so sessions are spliced at annotated step ends: a switch to another recipe, a switch and come back, or 60 s of a recipe that isn't in the library. The cuts are hard (the camera jumps), so switch latency here is not a real-life latency. Replay has no user, so "Coming back to ...?" is never answered. Same models and fast tier in both columns, no strong tier.
+
+|  | Single-task engine | Multi-task engine |
+|---|---|---|
+| Step accuracy | 23% | 39% |
+| Right task (share of time) | 42% | 63% |
+| Switches caught (of 25) | 0 | 22 |
+| Switch latency, median (hard cuts) | n/a | 57 s |
+| Wrong switches | 0 | 7 |
+| Job resumed after a switch (of 10) | 0 | 8 |
+| Resume step exact / within one (of 10) | 1 / 2 | 5 / 6 |
+| Interruption taken as a library task (of 6) | 0 | 1 |
+| Interruptions paused with "Coming back to ...?" | 0 | 4 |
+
+- **Repair footage (ENIGMA-51, SYNTHETIC splices, PROXY step labels):** across 108 min, a switch to a *different repair job* was noticed in 0 of 4 sessions. All four procedures name the same parts and tools, so the off-task signal could not tell the jobs apart. Of 4 unrelated interruptions, 2 were paused as designed and 2 became wrong switches.
+
+Sources: `results/runs/fused_mt.json`, `results/multitask/eval_splices_mt.json`, `results/multitask/eval_splices_single.json`, `results/runs/local_only_v2models.json`, `results/multitask/learning_curve.json`, `results/enigma51/enigma_switch.json`.
+
+## Company backend on repair videos (ENIGMA-51, PROXY labels)
+
+A company profile received the four written repair procedures through the upload path. Each was compiled through the backend's compile endpoint, which shows its estimate first. Each was reviewed against its document, approved, and assigned, and then the profile was locked. Praxis then coached each first-person repair video, with the job set by its assigned procedure (like a work order), using only the approved procedures. gpt-6.1-sol answered both "is this step done?" and "which step now?"; it led Jev on both in the train-split tests. Only related footage was used. The reference steps are DERIVED from the dataset's object-interaction labels and the earlier script-compiled graphs, not from human step labels. A blind Opus judge graded each answer.
+
+| Answer | Moments | Right | Off by one step | Wrong or none |
+|---|---|---|---|---|
+| Praxis on screen (backend-compiled procedures) | 66 | 30 (45%) | 19 | 17 |
+| Praxis on screen (earlier script-compiled procedures) | 66 | 32 (48%) | 12 | 22 |
+| General assistant + the written procedure | 66 | 24 (36%) | 6 | 36 |
+| General assistant, no procedure | 66 | 21 (32%) | 1 | 44 |
+| Step Praxis believes (backend-compiled) | 44 | 18 (41%) | 10 | 16 |
+| Step Praxis believes (earlier script-compiled) | 44 | 27 (61%) | 5 | 12 |
+
+- Videos: 107, 141, 144, 53. Believed-step rows cover only the moments judged for that arm (see the source file).
+- **Technician questions** asked mid-task through the backend's ask endpoint (Opus 5.5, retrieval over all four documents), graded blind by gpt-6.1-sol against reference answers written from the documents beforehand: 16 of 20 correct, 2 partial, 2 wrong.
+
+Source: `results/enigma51/backend_flow.json`.
+
 ## Latency
 
 - **Feedback latency** (GT end of an action → Praxis says 'verified' or flags a mistake about that step), p50 / p95: **4.7 s / 138.7 s** (n=43). Part of this is policy: Praxis waits for evidence before speaking.
@@ -294,7 +337,7 @@ No metric is computed from these clips. The official step labels were unreachabl
 
 ## Spend
 
-Tracked API spend for this build: **$109.23**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
+Tracked API spend for this build: **$127.55**, summed from recorded costs (`results/spend.json`). The brief's approval threshold was $150. Not in the total:
 
 - hand-run smoke tests and pilots on 2026-10-17 (model pings, Jev image probe, three 24-100 check prompt/framing pilots before the framing ablation was formalized, early 3-clip engine tests): not recorded per call; small relative to the total
 - 72 mistake-judge calls (Opus 5.5, effort low, one short text prompt each) made before the judge stored per-call cost

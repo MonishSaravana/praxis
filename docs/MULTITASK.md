@@ -452,3 +452,149 @@ for automatic mode and the small models refit on all 70 train recordings. Nothin
   isolates the models (+8.0 points). E3 against E4 isolates the multi-task engine: same models, same splices.
 - **The cost of multi-task:** wrong switches. There were 5 on 48 single-recipe clips, and 7 in 167 minutes of splices,
   where the single-task engine can never switch.
+
+## 15. Company backend end to end on repair videos (ENIGMA-51, PROXY labels, 2026-10-18)
+
+`eval/enigma_backend.py`, `results/enigma51/backend_flow.json`, profile `sessions/orgs/enigma-repair-lab`. The founder
+asked for related footage only (each procedure on its own repair video, no cooking footage) and accuracy over speed.
+
+- **Flow:**
+  - The four written procedures went in through the upload/ingest path.
+  - Each was compiled through the backend's compile endpoint, which shows its estimate first. One compile came back
+    with only the first of 20 steps; the backend rejected it and logged its cost, and the retry worked.
+  - Each was reviewed against its document. All four match, and unlike the script-compiled graphs they keep the
+    procedure's second repair-and-test cycle.
+  - All four were approved, then the profile was locked with all four assigned. Each video's job came from its
+    assigned procedure, as from a work order.
+- **Checker (founder's option A):** gpt-6.1-sol answered "is this step done?" and "which step now?", with no escalation
+  tier, justified by the train-split tests (85% vs Jev's 58% on 100 completion checks; 41% vs 33% on 116 step
+  questions). On these videos the engine made almost no completion checks. The cooking-trained event detector never
+  fires here, so completion checks come only from possible-mistake flags on "which step?" answers. Sol raised 1 such
+  flag across four videos; Jev raised 40 on one video in the earlier run.
+- **66 moments, judged blind against reference steps** derived from the script-compiled graphs:
+
+| | Right | Off by one step | Wrong |
+|---|---|---|---|
+| **Praxis on screen, backend-compiled procedures** | **30 (45%)** | 19 | 17 |
+| Praxis on screen, script-compiled (display rule replayed) | 32 (48%) | 12 | 22 |
+| General assistant + the written procedure | 24 (36%) | 6 | 36 |
+| General assistant, no procedure | 21 (32%) | 1 | 44 |
+
+  Right or off by one: backend 49 of 66 (74%), script-compiled 44 (67%), general + procedure 30 (45%). The believed
+  step was judged on 3 videos only (44 moments), because of the judge cap: backend 18 right, script-compiled 27. The
+  reference comes from the script graphs, which lack the second repair cycle, so it can disagree with a backend step
+  that is correct. Sol replacing Jev for "which step?" also differs between the two runs; these runs can't separate
+  the two causes.
+- **20 technician questions** were asked through the ask endpoint (Opus 5.5 answering from the four documents) and
+  graded blind by gpt-6.1-sol: 16 correct, 2 partial, 2 wrong. Read by hand, both "wrong" answers agree with the
+  document: one is more complete than the reference, and the other answers the action right after the one the
+  reference names. Reported as judged.
+- **Cost:**
+
+| Item | Spent | Cap |
+|---|---|---|
+| Compiles (incl. the failed call) | $0.84 | $1.30 |
+| Repair-video runs (OpenAI) | $2.11 | $7.00 |
+| Judging the 66 moments | $0.38 | $0.40 |
+| Questions: answers / judge | $0.24 / $0.01 | $0.50 |
+
+## 16. Near-identical procedures: noticing a silent switch (TRAIN data only, free, 2026-10-18)
+
+Section 12 found that a switch to another board-repair job was caught 0 of 4 times. The four repair procedures name the
+same bench, tools and instruments, so their landmark scores sit about 0.003 apart. P(away) never rises, and the "which
+task?" re-check is never asked. I compared three ways to notice such a switch. Every check below is free and uses train
+data only: library texts, the ENIGMA-51 **train** annotations, logged answers from paid **train** runs, and the cooking
+train recordings. No ENIGMA test footage or its run logs were used. Protocol and numbers:
+`eval/multitask.lookalike_free_check`, `results/multitask/lookalike_free_check.json`. Spend: $0.
+
+**What the free checks show**
+
+- **Look-alikes can be found from the procedures alone.** Landmark-set overlap (Jaccard of part names, hyphens folded)
+  is 0.36–0.57 between the four script-compiled repair procedures and 0.32–0.59 between the backend-compiled ones. No
+  two cooking recipes overlap more than 0.14, and no cooking/repair pair more than 0.04.
+- **Candidate 1, distinguishing landmarks: weak.** What tells the jobs apart is nearly the same direction in SigLIP2's
+  text space: "high voltage board" vs "low voltage board" has cosine 0.97, and "electric screwdriver" vs "screwdriver"
+  0.91. Meanwhile the same object named differently in two graphs ("register" / "log book" 0.87, "bench lamp" /
+  "workbench lamp" 0.93) counts as a unique landmark and gets the highest IDF weight. The opportunity is there: in the
+  ENIGMA-51 train labels, a job's board is handled within 150 s of the video start in 26 of 26 videos (median 59 s),
+  and its screwdriver in 24 of 26 (median 77 s). But text anchors can't express the difference. Whether visual
+  descriptions could ("a board with a small LCD display") can't be tested without repair train footage.
+- **Candidate 2, step-level fit: noisy.** Measured on the fast tier's logged "which step?" answers in two paid train
+  runs (A0 and C2, about 4,100 answers), typed against what was actually playing:
+
+  | | Fits the believed step | "None of these" | Out of order |
+  |---|---|---|---|
+  | On task | 34–39% | 57–62% | 4–5% |
+  | Off task | 7–23% | 75–88% | 2–7% |
+
+  Out-of-order answers don't separate the two. Firing when the last 30–60 s hold 3–6 answers and none fits would add
+  **12–36 re-checks per on-task hour**, on top of the current poor-fit trigger's 10 per hour (single-task train
+  recordings in the engine check below, with no back-off since nothing answers), to catch 19–31 of 33–37 off-task stretches. On near-identical jobs the step names are
+  shared, so a "fits" answer may even come from the other job.
+- **Candidate 3, a periodic re-check while the library holds look-alikes:** no threshold to tune. The cost is fixed (a
+  Sol check is about $0.004, so one a minute is about $0.24 per hour), and it does nothing where there are no
+  look-alikes. Its weak point is the decider: Sol named the right repair job on only 7 of 13 checks (section 12), so
+  acting on its answer alone would risk wrong switches.
+
+**Chosen: candidate 3, with the person deciding.** `EngineConfig.lookalike_recheck_s` (default `None`, off):
+
+- At load, `landmarks.lookalikes` marks task pairs with landmark overlap ≥ `lookalike_jaccard` (0.25, set between 0.14
+  and 0.32 on the library texts only).
+- While the current task has look-alikes, a "which task?" re-check runs every `lookalike_recheck_s`. It has its own
+  clock (confirmations don't back it off), and its options are the current task and its look-alikes only.
+- Any check that names a look-alike, whatever triggered it, no longer switches silently. After `lookalike_agree` (2)
+  checks in a row name it at or above the switch bar, Praxis asks: "Did you switch to the High Voltage Board Repair
+  (Electric Screwdriver)?" It uses the full title, because look-alikes often differ only in the parentheses. The
+  landmark-agreement test is skipped there, since landmarks can't separate look-alikes.
+- `answer_switch(t, task_id, "yes" | "no")`: yes switches, pausing the current job with its state as on any switch. No
+  keeps the current job. At most one question per `lookalike_ask_gap_s` (300 s), so a confused checker can't nag.
+- With no answer, nothing changes. Task-given mode (`switching=False`) never asks.
+- Logged as `task_check` with `reason: lookalike` and decisions `ask` / `hold_asked`, plus the `ask_switch` and
+  `switch_answer` records. `eval/enigma_switch.score` now reports `switch_asked`, `switch_ask_latency_s` and
+  `switch_asks_wrong`.
+- Unit tests: `tests/test_multitask.py`, 5 new (detection from shared parts, ask instead of switch, "no" waits the
+  gap, flag off or no look-alikes change nothing, task-given never asks).
+
+**Free train check of the engine:** 24 single-task train recordings (first 300 s) and 22 train splices, task given,
+local layers only, Studio library (cooking + the four repair procedures). The "which task?" stand-in logs each request
+and never answers.
+
+| | Flag off | Flag on (60 s) |
+|---|---|---|
+| Look-alike re-checks / "Did you switch?" questions | 0 / 0 | **0 / 0** |
+| Poor-fit re-checks (single-task / splices) | 20 / 87 | 20 / 87 |
+| Step accuracy (single-task / splices) | 54.5% / 38.1% | 54.5% / 38.1% |
+| Beliefs identical to the flag-off run | | **46 of 46** |
+
+So the flag adds no re-check, no question and no wrong switch on these recordings. **This holds by construction:**
+no cooking recipe has a look-alike. The check confirms that cooking tasks aren't counted as look-alikes of the repair
+jobs and that the engine is unchanged when there are none. It says nothing about repair footage.
+
+**Not shown yet, and what showing it would take**
+
+- **Whether it notices repair switches, and how often it asks wrongly.** There is no ENIGMA-51 train footage on disk;
+  only the four test videos are. A train-only test needs:
+  - four train videos, one per procedure. ENIGMA's scenario ids don't map to procedures (test videos 107 and 53 share
+    one), so pick them by the board and screwdriver in their labels. That is about 6 GB to download, free.
+  - features extracted on the local GPU (outside the sandbox), about 1 h, free.
+  - a paid run with the flag on: four single-task jobs (first 20 min) plus four resume splices built like section 12's,
+    134 video-minutes in all. Estimate: Jev about $0.21, Sol look-alike checks about $0.54, Sol poor-fit checks about
+    $0.05, so **about $0.80; cap $1.20**. Not run.
+  - a rule fixed before that run: keep the defaults if wrong questions on the single-task jobs are ≤ 2 per hour and
+    the other job is asked about during its 150 s in ≥ 2 of 4 splices.
+
+  **Status: in progress, paused 2026-10-18, to pick up after the 10/20 interview.** Paused before the download: nothing
+  downloaded, $0 spent. Prep done:
+  - Videos are picked by a fixed rule that doesn't look at outcomes: per procedure, the shortest ENIGMA Train-split
+    video of at least 20 min that has clean labels and handles its own board and screwdriver within 150 s. That gives
+    91 (hv manual), 126 (hv electric), 154 (lv electric) and 157 (lv manual), 5.46 GB in all.
+  - Cuts fall at 520, 456, 423 and 433 s, which makes 140.5 video-minutes.
+  - Re-estimate: about $0.90 (Sol measured at $0.0043 per check in section 12); cap $1.20.
+
+  Four splices is a small test: one splice moves the result by 25 points. If time allows, use 8–12 train splices instead.
+- **Studio:** the Yes/No chip for "Did you switch?" and typed answers routed to `answer_switch` aren't built.
+  `StudioSession._typed_answer` only knows "I'm done" and "coming back".
+- **The question itself:** hv_manual's title never says "manual screwdriver". A compiled "what visibly differs" line per
+  look-alike group (one small Opus call per library change) might help the checker. Paid and untested.
+- **The same procedure on a second unit** (RTU-3, then RTU-4) has no look-alike to ask about. Only step-level regression
+  (redoing steps already done) or the technician saying or scanning it could catch that.
