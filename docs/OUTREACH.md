@@ -97,8 +97,10 @@ an industrial-maintenance subreddit.
 
 - **Sat 2026-10-17, about 10:40 pm ET:** sent 14 small-business emails (9 HVAC shops, Alpha One, Atlantic Elevator,
   SRC Medical, Metal Industries, Spinnaker).
-- **Monday 2026-10-19 morning (planned):** the other 56 (universities, colleges, towns, unions, associations). These
-  are drafted in Gmail. IDs and status are in `outreach/draft_ids.txt` (git-ignored).
+- **Mon 2026-10-19, about 4:35 pm ET:** sent the other 56 (universities, colleges, towns, unions, associations), with
+  the signature website changed to plain-text `monishsaravana.com` (the first 14 carried an expiring google.com
+  redirect link). 2 hard bounces: autlerl@gcc.mass.edu (inactive) and Blaine.Cox@unh.edu (not found), so 54
+  delivered. IDs and status are in `outreach/draft_ids.txt` (git-ignored).
 
 ## Reply log
 
