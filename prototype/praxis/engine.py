@@ -113,12 +113,34 @@ class EngineConfig:
     rewind_lag_s: float = 10.0           # belonged to something else, so steps "done" meanwhile are undone
     nontask_landmarks: bool = False      # baby / door / phone etc. mean interruption: skip the re-check (unmeasured)
     nontask_thr: float = 0.12            # SigLIP2 cosine for a non-task landmark to count
+    # near-identical procedures (docs/MULTITASK.md section 16): tasks whose landmark sets overlap >= lookalike_jaccard
+    # (landmarks.lookalikes) can't be told apart by landmarks, so P(away) never rises when the person silently moves from
+    # one to another, and the poor-fit re-check is never asked. With lookalike_recheck_s set, a task that has look-alikes
+    # in the library gets a "which task?" re-check this often (options: it and its look-alikes), and a check naming a
+    # look-alike asks the person ("Did you switch to ...?", answer_switch) instead of switching: the checker confused the
+    # four repair jobs on 6 of 13 checks. Off by default; a library without look-alikes is unaffected.
+    lookalike_recheck_s: float | None = None
+    lookalike_jaccard: float = 0.25      # set on the library texts only: repair pairs 0.32-0.59, cooking pairs <= 0.14
+    lookalike_agree: int = 2             # checks in a row that must name the same look-alike before asking
+    lookalike_ask_gap_s: float = 300.0   # at most one "Did you switch?" per this (a confused checker can't nag)
     # what's on screen: say the first instruction as soon as the task is known, and let the instruction follow the
     # belief when another, not-yet-done step holds the majority for follow_ticks ticks (it used to change only on a
     # commit, so it lagged the belief: results/enigma51/doc_value.json). Fixed defaults, not tuned.
     speak_on_start: bool = True
     follow_belief_p: float = 0.5
     follow_ticks: int = 3                # 0 = off
+    # completion checks when the belief leaves a step. The L2 event detector is trained on cooking video and never
+    # fires on workbench repair (ENIGMA-51: boundary scores <= 0.76 vs the 0.8 threshold), so repair steps were tracked
+    # but never checked. Leaving a step needs no detector: on logged runs the step being left was already done
+    # (reference labels) 60-75% of the time, vs 26-44% for a check at a random moment, on cooking and repair alike.
+    #   off     no leave checks
+    #   commit  check the step at each implicit commit (the belief confidently moved on)
+    #   any     also when the belief moves off a step it held >= leave_min_s without a confident commit; a verified
+    #           answer commits it
+    leave_check: str = "off"
+    leave_gate: bool = False             # the implicit commit waits for the check; an answer below 0.5 holds it
+    leave_min_s: float = 5.0
+    leave_recheck_s: float = 30.0        # at most one leave check per step per this (a held commit stays held)
     recognize_thr: float | None = None   # optional earlier first commit (a wrong guess can now be undone): recognizer
     recognize_hold_s: float | None = None  # posterior threshold / hold time; None = the recognizer's own (0.9 / 2 s)
     recognize_min_s: float = 0.0          # no first task before this time (the first typed check comes at 4 s)
@@ -164,6 +186,7 @@ class TaskSlot:
     away_n: int = 0
     asked_at: float | None = None     # "Coming back to ...?" asked (latest pause)
     answer: str | None = None         # coming_back | done (the person's answer to it)
+    asked_switch: dict = field(default_factory=dict)   # look-alike task -> when "Did you switch to ...?" was asked
 
 
 def _timed(call):
@@ -253,9 +276,13 @@ class Engine:
         self._switch_cand: tuple[str, int] | None = None
         self._lead_checked: str | None = None
         self._strong_streak: tuple = (None, 0)
+        self._la: tuple = (None, {})          # (library ids, look-alikes): recomputed when the library changes
         self._t_last = 0.0
         self._away_ok_t = offtask.window_s if offtask is not None else 0.0   # landmark window full of this task
         self._follow: tuple = (None, 0)
+        self._map_since = 0.0           # when the current MAP step became the MAP
+        self._leave_t: dict[str, float] = {}      # step -> last leave check
+        self._leave_held: dict[str, float] = {}   # step -> when a leave check held its commit
         if task_id is not None:
             self._start_task(0.0, task_id, oracle=True)
             if cfg.speak_on_start:          # the task is known at the start: say the first instruction right away
@@ -287,6 +314,7 @@ class Engine:
         self.tasks[task_id] = self.slot
         self._recheck_i, self._switch_cand = 0, None
         self._follow = (None, 0)
+        self._map_since, self._leave_t, self._leave_held = t, {}, {}
         self._next_recheck = t + self.cfg.recheck_min_gap_s
         ev = self.evidence.get(task_id)
         if ev is not None and list(ev.ids) != list(self.graph.ids):
@@ -400,17 +428,30 @@ class Engine:
             if pk > self._max_mass.get(nid, 0.0):
                 self._max_mass[nid] = float(pk)
 
-        # implicit commit: belief confidently moved on from a step -> that step is done
+        # implicit commit: belief confidently moved on from a step -> that step is done (leave_check: check it first or
+        # right after; leave_gate: the commit waits for the answer)
         prev = self._last_switch_map
-        if prev and belief.map_id != prev and prev != DONE and belief.map_p_on >= self.cfg.commit_on_switch_p \
-                and prev not in tr.completed and self.cfg.tracker_mode != "verifier":
-            tr.mark_complete(prev)
-            ops.append(("commit", prev))
-            belief = tr.belief()
-            self._w("commit", t, node=prev, reason="belief_switch")
-            if belief.map_id != DONE:
-                self._check_order(t, belief, frame_at)
-                self._emit(pol.start(t, belief.map_id))
+        left = bool(prev) and belief.map_id != prev and prev != DONE and prev not in tr.completed \
+            and self.cfg.tracker_mode != "verifier"
+        if left and belief.map_p_on >= self.cfg.commit_on_switch_p:
+            if self.cfg.leave_gate and (self._leave_check(t, prev, frame_at, gate=True)
+                                        or t - self._leave_held.get(prev, -1e9) < self.cfg.leave_recheck_s):
+                belief = tr.belief()            # committed on the answer (_verify_answer), or held
+            else:
+                tr.mark_complete(prev)
+                ops.append(("commit", prev))
+                belief = tr.belief()
+                self._w("commit", t, node=prev, reason="belief_switch")
+                if belief.map_id != DONE:
+                    self._check_order(t, belief, frame_at)
+                    self._emit(pol.start(t, belief.map_id))
+                if not self.cfg.leave_gate and self._leave_check(t, prev, frame_at):
+                    belief = tr.belief()
+        elif left and self.cfg.leave_check == "any" and t - self._map_since >= self.cfg.leave_min_s:
+            if self._leave_check(t, prev, frame_at):
+                belief = tr.belief()
+        if belief.map_id != self._last_switch_map:
+            self._map_since = t
         self._last_switch_map = belief.map_id
         self._follow_belief(t, belief)
         if self.cfg.async_slow_path:
@@ -502,6 +543,7 @@ class Engine:
         if self.lm is not None:
             self._away_ok_t = self._t_last + self.lm.window_s
         self._recheck_i, self._switch_cand = 0, None
+        self._map_since, self._leave_t, self._leave_held = self._t_last, {}, {}
         self._next_recheck = self._t_last + self.cfg.recheck_min_gap_s
 
     def _end_active(self) -> None:
@@ -709,6 +751,35 @@ class Engine:
                 sl.interrupted = False
                 self._end_active()
 
+    def answer_switch(self, t: float, task_id: str, answer: str, via: str = "tap") -> None:
+        """The person's answer to "Did you switch to ...?" (a look-alike, EngineConfig.lookalike_recheck_s): yes switches
+        (the current task is paused with its state, as on any switch); no keeps the current task, and nothing is asked
+        again for lookalike_ask_gap_s."""
+        if answer not in ("yes", "no") or task_id not in self.lib or self.slot is None:
+            return
+        self._w("switch_answer", t, task_id=task_id, answer=answer, via=via, current=self.task_id)
+        if answer == "no":
+            self.slot.asked_switch[task_id] = t
+        elif task_id != self.task_id:
+            self._switch(t, task_id, {"reason": "person_confirmed", "via": via})
+
+    def _ask_switch(self, t: float, to: str, p: float, reason: str) -> None:
+        """A check named a look-alike of the current task: ask the person instead of switching. Without an answer the
+        current task stays (replay has no person, so nothing changes there)."""
+        sl, g = self.slot, self.lib[to]
+        sl.asked_switch[to] = t
+        q = f"Did you switch to the {g.title}?"       # the full title: look-alikes often differ only in its parentheses
+        self._w("ask_switch", t, task_id=to, title=g.title, current=sl.task_id, question=q, p=round(p, 3), reason=reason)
+        self._emit([Action(t, "ask_switch", q, None, {"title": g.title, "task_id": to, "from": sl.task_id})])
+
+    def _lookalikes(self, task_id: str | None) -> list[str]:
+        """The task's look-alikes in the current library (landmarks.lookalikes), recomputed when the library changes."""
+        key = tuple(sorted(self.lib))
+        if self._la[0] != key:
+            from .landmarks import lookalikes
+            self._la = (key, lookalikes(self.lib, self.cfg.lookalike_jaccard))
+        return self._la[1].get(task_id, [])
+
     def finish(self, t: float) -> None:
         """Session end: tasks still paused (including an interrupted current one) are closed as done enough."""
         for sl in list(self.tasks.values()):
@@ -735,6 +806,9 @@ class Engine:
             reason = "resume"
         elif due and cfg.recheck_every_s and t - self._last_recheck >= cfg.recheck_every_s:
             reason = "periodic"
+        elif cfg.lookalike_recheck_s and sl.status == "active" and self._lookalikes(sl.task_id) \
+                and t - max(self._last_recheck, sl.status_t) >= cfg.lookalike_recheck_s:
+            reason = "lookalike"                        # its own clock: confirmations don't back it off
         if reason is None:
             return False
         if cfg.nontask_landmarks and self.lm is not None and reason == "poor_fit":
@@ -747,7 +821,9 @@ class Engine:
         if not frames:
             return False
         self._next_recheck, self._last_recheck, self._lead_checked = t + cfg.recheck_min_gap_s, t, lead
-        opts = {tid: f"{g.title}: {g.summary[:160]}" for tid, g in self.lib.items()}   # same question as recognition
+        # same question as recognition; a look-alike check asks only the hard part: this task or one of its look-alikes
+        ids = [sl.task_id, *self._lookalikes(sl.task_id)] if reason == "lookalike" else list(self.lib)
+        opts = {tid: f"{self.lib[tid].title}: {self.lib[tid].summary[:160]}" for tid in ids}
         call = partial(self.tc.choose_task, frames, opts)
         ctx = {"reason": reason, "fit": round(fit, 4)}
         if self.cfg.async_slow_path:
@@ -797,10 +873,18 @@ class Engine:
             ok = (probs.get(ch, 0.0) >= need or override) and lm_ok and streak >= cfg.switch_confirmations
             decision = "switch" if ok else ("hold_landmarks" if not lm_ok else "hold_confidence"
                                             if probs.get(ch, 0.0) < need else "hold_confirm")
+            if cfg.lookalike_recheck_s and ch in self._lookalikes(cur):
+                # near-identical jobs: landmarks can't separate them (lm_ok is noise here) and the checker confuses them,
+                # so a confident answer is put to the person instead of a silent switch
+                sure = (probs.get(ch, 0.0) >= need or override) and \
+                    streak >= max(cfg.switch_confirmations, cfg.lookalike_agree)
+                last = max(self.slot.asked_switch.values(), default=None)
+                decision = ("ask" if last is None or t_out - last >= cfg.lookalike_ask_gap_s else "hold_asked") if sure \
+                    else "hold_confidence" if probs.get(ch, 0.0) < need and not override else "hold_confirm"
         else:
             decision = "none"
             self._switch_cand = None
-        if decision == "switch" and not cfg.switching:
+        if decision in ("switch", "ask") and not cfg.switching:
             decision = "hold_task_given"                # the person said which task: never switch away from it
         self.slot.last_check = (t, decision)
         self._w("task_check", t, choice=ch, probs=probs, raw_probs=raw if raw is not probs else None,
@@ -811,6 +895,8 @@ class Engine:
         if decision == "switch":
             self._switch(t_out, ch, {"p": round(probs.get(ch, 0.0), 3), "reason": reason, "fit": fit,
                                      "probs": {k: round(v, 3) for k, v in probs.items()}})
+        elif decision == "ask":
+            self._ask_switch(t_out, ch, probs.get(ch, 0.0), reason)
         elif self.tracker.cfg.away_enter > 0 and decision in ("none", "keep"):
             # a typed answer counts as one observation: "none of these" for being away, the current task for being on it
             self._observe(t, ("away", probs.get("none", 0.0) if decision == "none" else 1.0 - probs.get(cur, 0.0), 1.0))
@@ -933,18 +1019,31 @@ class Engine:
         acts += self.policy.start(ts, self.tracker.belief().map_id)
         self._emit(acts)
 
+    def _leave_check(self, t: float, node_id: str, frame_at, gate: bool = False) -> bool:
+        """Completion check on the step the belief is leaving (EngineConfig.leave_check). True if it was asked."""
+        if self.cfg.leave_check == "off" or not self.cfg.use_verifier or self.ver is None \
+                or (self.slot is not None and self.slot.interrupted):
+            return False
+        if t - self._leave_t.get(node_id, -1e9) < self.cfg.leave_recheck_s:
+            return False
+        self._leave_t[node_id] = t
+        return self._verify(t, self.tracker.belief(), "leave", frame_at, node_id=node_id, gate=gate)
+
     def _verify(self, t: float, belief, reason: str, frame_at, update_tracker: bool = True,
-                frames: list | None = None, times: list | None = None) -> None:
+                frames: list | None = None, times: list | None = None, node_id: str | None = None,
+                gate: bool = False) -> bool:
+        """A completion check on `node_id` (default: the most likely step). True if it was asked."""
         tr, pol, g = self.tracker, self.policy, self.graph
-        node = g.node(belief.map_id)
+        node = g.node(node_id or belief.map_id)
         if self._busy(("verify", node.id)):
-            return self._skip(t, "verify", node.id)
+            self._skip(t, "verify", node.id)
+            return False
         # evidence: sharpest frame from ~8-6 s ago (context) + 2 sharpest of the last 3 s ("now");
         # head-mounted video is often motion-blurred, so frames are picked by sharpness
         if frames is None:
             frames, times = span_keyframes(frame_at, t)
         if not frames:
-            return
+            return False
         crops = []
         if self.cfg.roi_crops and self.pt is not None:
             c = self.pt(t)
@@ -957,9 +1056,13 @@ class Engine:
                             features=dict(self._feat_now))
         call = partial(self._verify_call, req, reason, pol)
         ctx = {"node": node, "reason": reason, "n_frames": len(frames), "update_tracker": update_tracker}
+        if gate:
+            ctx.update(gate=True, frame_at=frame_at)
         if self.cfg.async_slow_path:
-            return self._submit("verify", ("verify", node.id), t, call, **ctx)
-        self._verify_answer(t, call(), **ctx)
+            self._submit("verify", ("verify", node.id), t, call, **ctx)
+        else:
+            self._verify_answer(t, call(), **ctx)
+        return True
 
     def _verify_call(self, req: VerifyRequest, reason: str, pol: Policy) -> list[tuple]:
         """The model calls of one completion check: the fast verifier, then the strong one when the policy says so.
@@ -976,30 +1079,56 @@ class Engine:
         return chain
 
     def _verify_answer(self, t: float, chain: list[tuple], node, reason: str, n_frames: int, update_tracker: bool,
-                       t_now: float | None = None, extra: dict | None = None) -> None:
+                       t_now: float | None = None, extra: dict | None = None, gate: bool = False,
+                       frame_at=None) -> None:
         """Act on a completion check's verdicts. t: the tick its frames were taken. t_now: when the answer arrived
-        (async); inline, the wearer hears it after the calls' latency."""
+        (async); inline, the wearer hears it after the calls' latency. gate: a leave check holding an implicit commit
+        (committed unless the answer says not done)."""
         tr, pol = self.tracker, self.policy
         roles = [self._log_verdict(t, v, why, pc, extra) for v, why, pc, _ in chain]
         v, _, pc, pdv = chain[-1] if len(chain) > 1 and chain[-1][0].error is None else chain[0]
         self.n_escalated_frames += n_frames
+        t_out = t + sum(r["latency_ms"] for r in roles) / 1000.0 if t_now is None else t_now
         if v.error:
+            if gate:                    # no answer: commit as the belief said, as without the check
+                self._leave_commit(t, t_out, node, None, False, frame_at)
             return
         if update_tracker:
             self._observe(t, ("verdict", node.id, "complete" if pc >= 0.5 else
                               ("deviation" if v.step_status == "deviation" else "in_progress"), pc if pc >= 0.5 else 1 - pc))
-        t_out = t + sum(r["latency_ms"] for r in roles) / 1000.0 if t_now is None else t_now
         acts, commit = pol.on_verdict(t_out, v, pc, pdv, tr.belief())
         if not update_tracker:          # mistake screen: only mistake alerts may come out of it
             acts = [a for a in acts if a.kind == "mistake"]
             commit = False
         self._emit(acts)
+        if gate:
+            if pc >= 0.5 or commit:
+                self._leave_commit(t, t_out, node, pc, commit, frame_at)
+            else:
+                self._leave_held[node.id] = t
+                self._w("commit_held", t_out, node=node.id, p=pc)
+            return
         if commit and node.id not in tr.completed:     # async: the belief may have moved past it meanwhile
             self._observe(t, ("commit", node.id))
             self._w("commit", t_out, node=node.id, reason="verified", p=pc)
             b = tr.belief()
             self._last_switch_map = b.map_id
             self._emit(pol.after_commit(t_out, b.map_id))
+
+    def _leave_commit(self, t: float, t_out: float, node, pc: float | None, verified: bool, frame_at) -> None:
+        """The implicit commit a gated leave check held, made once the answer doesn't say "not done"."""
+        tr = self.tracker
+        if node.id in tr.completed:
+            return
+        b = self._observe(t, ("commit", node.id))
+        self._w("commit", t_out, node=node.id, reason="verified" if verified else "belief_switch", p=pc, checked=True)
+        self._last_switch_map = b.map_id
+        if b.map_id != DONE:
+            if frame_at is not None:
+                self._check_order(t, b, frame_at)
+            self._emit(self.policy.start(t_out, b.map_id))
+        elif verified:
+            self._emit(self.policy.after_commit(t_out, b.map_id))
 
     def _localize(self, t: float, belief, frame_at) -> None:
         """Belief is spread over several steps: ask the fast verifier which of the top candidates is happening."""

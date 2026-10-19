@@ -1,0 +1,215 @@
+{
+ "label": "ENIGMA-51 repair, company-backend procedures, gpt-6.1-sol; PROXY step labels from object interactions (not human step labels)",
+ "name": "V2",
+ "run": "enigma_verify_V2_dry",
+ "dry": true,
+ "verification": {
+  "completion_checks": 68,
+  "check_errors": 68,
+  "labeled": 0,
+  "verified": 0,
+  "steps_verified": 0,
+  "verified_right": 0,
+  "verified_wrong": 0,
+  "verified_unknown": 0,
+  "marked_done": 68,
+  "marked_done_right": 40,
+  "marked_done_wrong": 25,
+  "commits_held": 0,
+  "confusion": {},
+  "verdict_accuracy": null,
+  "by_reason": {
+   "leave": 68
+  }
+ },
+ "rows": [
+  {
+   "video": "141",
+   "minutes": 16.675,
+   "proxy_steps": 11,
+   "completion_checks": 14,
+   "by_reason": {
+    "leave": 14
+   },
+   "check_errors": 14,
+   "labeled": 0,
+   "verdict_accuracy": null,
+   "confusion": {},
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 14,
+   "marked_done_right": 10,
+   "marked_done_wrong": 4,
+   "marked_done_by": {
+    "checked_belief_switch": 14
+   },
+   "commits_held": 0
+  },
+  {
+   "video": "107",
+   "minutes": 20.358333333333334,
+   "proxy_steps": 10,
+   "completion_checks": 19,
+   "by_reason": {
+    "leave": 19
+   },
+   "check_errors": 19,
+   "labeled": 0,
+   "verdict_accuracy": null,
+   "confusion": {},
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 19,
+   "marked_done_right": 10,
+   "marked_done_wrong": 7,
+   "marked_done_by": {
+    "checked_belief_switch": 19
+   },
+   "commits_held": 0
+  },
+  {
+   "video": "144",
+   "minutes": 25.546111666666665,
+   "proxy_steps": 15,
+   "completion_checks": 16,
+   "by_reason": {
+    "leave": 16
+   },
+   "check_errors": 16,
+   "labeled": 0,
+   "verdict_accuracy": null,
+   "confusion": {},
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 16,
+   "marked_done_right": 9,
+   "marked_done_wrong": 6,
+   "marked_done_by": {
+    "checked_belief_switch": 16
+   },
+   "commits_held": 0
+  },
+  {
+   "video": "53",
+   "minutes": 27.887778333333333,
+   "proxy_steps": 15,
+   "completion_checks": 19,
+   "by_reason": {
+    "leave": 19
+   },
+   "check_errors": 19,
+   "labeled": 0,
+   "verdict_accuracy": null,
+   "confusion": {},
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 19,
+   "marked_done_right": 11,
+   "marked_done_wrong": 8,
+   "marked_done_by": {
+    "checked_belief_switch": 19
+   },
+   "commits_held": 0
+  }
+ ],
+ "tracking": {
+  "rows": [
+   {
+    "video": "141",
+    "procedure": "high-voltage-screwdriver-front-matter",
+    "minutes": 16.675,
+    "n_steps": 19,
+    "derived_segments": 11,
+    "step_acc_derived": 0.11176470588235295,
+    "object_consistency": {
+     "n": 276,
+     "consistency": 0.5579710144927537,
+     "chance": 0.26182303585049543
+    },
+    "commits": 14,
+    "completion_checks": 14,
+    "step_questions": 159,
+    "instructions": 31,
+    "mistake_alerts": 0,
+    "cost_usd": 0.0
+   },
+   {
+    "video": "107",
+    "procedure": "high-voltage-electric-screwdriver-high-voltage-board-repai",
+    "minutes": 20.358333333333334,
+    "n_steps": 20,
+    "derived_segments": 10,
+    "step_acc_derived": 0.048484848484848485,
+    "object_consistency": {
+     "n": 227,
+     "consistency": 0.45374449339207046,
+     "chance": 0.2742290748898679
+    },
+    "commits": 19,
+    "completion_checks": 19,
+    "step_questions": 228,
+    "instructions": 33,
+    "mistake_alerts": 0,
+    "cost_usd": 0.0
+   },
+   {
+    "video": "144",
+    "procedure": "low-voltage-electric-screwdriver-low-voltage-board-repair",
+    "minutes": 25.546111666666665,
+    "n_steps": 20,
+    "derived_segments": 15,
+    "step_acc_derived": 0.5779610194902549,
+    "object_consistency": {
+     "n": 291,
+     "consistency": 0.6494845360824743,
+     "chance": 0.2589347079037802
+    },
+    "commits": 16,
+    "completion_checks": 17,
+    "step_questions": 155,
+    "instructions": 31,
+    "mistake_alerts": 1,
+    "cost_usd": 0.004116
+   },
+   {
+    "video": "53",
+    "procedure": "low-voltage-screwdriver-low-voltage-board-repair-procedure",
+    "minutes": 27.887778333333333,
+    "n_steps": 20,
+    "derived_segments": 15,
+    "step_acc_derived": 0.3835347925514538,
+    "object_consistency": {
+     "n": 407,
+     "consistency": 0.49385749385749383,
+     "chance": 0.3184275184275192
+    },
+    "commits": 19,
+    "completion_checks": 19,
+    "step_questions": 229,
+    "instructions": 30,
+    "mistake_alerts": 0,
+    "cost_usd": 0.0
+   }
+  ],
+  "mean_step_acc_derived": 0.2804363416022275
+ },
+ "spend": {
+  "openai_usd_all_variants": 0.0,
+  "calls": 0
+ },
+ "misses": {
+  "verdict:gpt-6.1-sol": 68
+ }
+}

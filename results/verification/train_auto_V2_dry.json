@@ -1,0 +1,762 @@
+{
+ "label": "cooking TRAIN, automatic (human step labels; verification on the single recordings)",
+ "name": "V2",
+ "overrides": {
+  "leave_check": "commit",
+  "leave_gate": true
+ },
+ "dry": true,
+ "run": "mt_vc_auto_V2_dry",
+ "single_task": {
+  "n_clips": 24,
+  "minutes": 120.0,
+  "step_acc": 0.47045989186623055,
+  "step_acc_after_recognition": 0.5313467056030614,
+  "step_acc_incl_between": 0.3996939343350028,
+  "transition_err_s": {
+   "n": 27,
+   "p50": 31.0349,
+   "p95": 217.40886697223033,
+   "mean": 56.18393691088689
+  },
+  "task_top1": 0.7916666666666666,
+  "t_recognize_s": {
+   "n": 19,
+   "p50": 28.0,
+   "p95": 104.7999999999999,
+   "mean": 46.94736842105263
+  },
+  "mistakes": {
+   "tp": 4,
+   "fp": 5,
+   "fn": 32,
+   "precision": 0.4444444444444444,
+   "recall": 0.1111111111111111,
+   "f1": 0.17777777777777776,
+   "detect_minus_step_end_s": {
+    "n": 4,
+    "p50": -6.8038424505386885,
+    "p95": 6.4947550000000005,
+    "mean": -17.816271225269343
+   },
+   "detect_minus_step_start_s": {
+    "n": 4,
+    "p50": 21.53126934133204,
+    "p95": 37.5109558023996,
+    "mean": 20.73078467066602
+   },
+   "share_caught_before_step_end": 0.75
+  },
+  "false_alarms_per_min": 0.041666666666666664,
+  "alerts_per_min": 0.075,
+  "feedback_latency_s": {
+   "n": 14,
+   "p50": 1.0339499999999973,
+   "p95": 116.81946870410226,
+   "mean": 19.133853710306294
+  },
+  "progress_latency_s": {
+   "n": 27,
+   "p50": 11.748999999999995,
+   "p95": 145.6255162685375,
+   "mean": 13.772891517260476
+  },
+  "verifier_latency_ms_live": {
+   "n": 0,
+   "p50": null,
+   "p95": null,
+   "mean": null
+  },
+  "verifier_calls": 1301,
+  "verifier_errors": 29,
+  "escalated_frame_share": 0.10387029288702929,
+  "cost_usd": 0.100948386,
+  "cost_usd_per_video_min": 0.0008412365500000001,
+  "view_requests": 1,
+  "hints": 19,
+  "zero_step_acc_clips": 2,
+  "task_final_correct": 0.9583333333333334,
+  "correct_task_share": 0.9085251809644553,
+  "wrong_switches": 0,
+  "recovered_switches": 4,
+  "task_rechecks": 50,
+  "leave_warnings": 4
+ },
+ "single_wrong_switches": 0,
+ "splices": {
+  "n": 22,
+  "minutes": 171.0,
+  "step_acc": 0.42173367716869364,
+  "correct_task_share": 0.6618446771159294,
+  "switch_latency_s": {
+   "n": 19,
+   "p50": 58.198800000000006,
+   "p90": 119.51171999999998
+  },
+  "switches_detected": 19,
+  "missed_switches": 5,
+  "wrong_switches": 1,
+  "wrong_switches_per_hour": 0.3508771929824561,
+  "task_checks": 266,
+  "verifier_calls": 1991,
+  "cost_usd": 0.165651024,
+  "resume": {
+   "n": 10,
+   "left_a": 7,
+   "resumed": 7,
+   "a_current_60s_after_return": 7,
+   "step_exact": 3,
+   "step_within1": 3,
+   "step_exact_at_resume": 3,
+   "step_within1_at_resume": 3,
+   "resume_latency_s_p50": 54.15020000000004
+  },
+  "interrupt": {
+   "n": 6,
+   "switched_to_a_library_task": 1,
+   "a_current_60s_after_return": 5,
+   "step_exact": 1,
+   "step_within1": 1,
+   "interruption_pauses": 3,
+   "leave_warnings": 2
+  }
+ },
+ "verification": {
+  "completion_checks": 75,
+  "check_errors": 25,
+  "labeled": 49,
+  "verified": 7,
+  "steps_verified": 7,
+  "verified_right": 5,
+  "verified_wrong": 2,
+  "verified_unknown": 0,
+  "marked_done": 32,
+  "marked_done_right": 21,
+  "marked_done_wrong": 6,
+  "commits_held": 1,
+  "confusion": {
+   "said_done|not_done": 11,
+   "said_not|not_done": 16,
+   "said_not|done": 12,
+   "said_done|done": 10
+  },
+  "verdict_accuracy": 0.5306122448979592,
+  "by_reason": {
+   "leave": 26,
+   "boundary": 47,
+   "hesitation": 2
+  }
+ },
+ "verification_rows": [
+  {
+   "clip": "7_1_full",
+   "completion_checks": 7,
+   "by_reason": {
+    "leave": 2,
+    "boundary": 5
+   },
+   "check_errors": 2,
+   "labeled": 5,
+   "verdict_accuracy": 0.8,
+   "confusion": {
+    "said_done|not_done": 1,
+    "said_not|not_done": 4
+   },
+   "verified": 1,
+   "steps_verified": 1,
+   "verified_right": 0,
+   "verified_wrong": 1,
+   "verified_unknown": 0,
+   "marked_done": 3,
+   "marked_done_right": 2,
+   "marked_done_wrong": 1,
+   "marked_done_by": {
+    "checked_belief_switch": 2,
+    "verified": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "7_24_full",
+   "completion_checks": 1,
+   "by_reason": {
+    "leave": 1
+   },
+   "check_errors": 1,
+   "labeled": 0,
+   "verdict_accuracy": null,
+   "confusion": {},
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 1,
+   "marked_done_right": 1,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "checked_belief_switch": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "7_2_full",
+   "completion_checks": 0,
+   "by_reason": {},
+   "check_errors": 0,
+   "labeled": 0,
+   "verdict_accuracy": null,
+   "confusion": {},
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 0,
+   "marked_done_right": 0,
+   "marked_done_wrong": 0,
+   "marked_done_by": {},
+   "commits_held": 0
+  },
+  {
+   "clip": "17_10_full",
+   "completion_checks": 4,
+   "by_reason": {
+    "boundary": 3,
+    "leave": 1
+   },
+   "check_errors": 1,
+   "labeled": 2,
+   "verdict_accuracy": 0.0,
+   "confusion": {
+    "said_done|not_done": 2
+   },
+   "verified": 1,
+   "steps_verified": 1,
+   "verified_right": 0,
+   "verified_wrong": 1,
+   "verified_unknown": 0,
+   "marked_done": 2,
+   "marked_done_right": 0,
+   "marked_done_wrong": 1,
+   "marked_done_by": {
+    "verified": 1,
+    "checked_belief_switch": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "17_11_full",
+   "completion_checks": 2,
+   "by_reason": {
+    "boundary": 2
+   },
+   "check_errors": 0,
+   "labeled": 2,
+   "verdict_accuracy": 0.5,
+   "confusion": {
+    "said_done|not_done": 1,
+    "said_not|not_done": 1
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 0,
+   "marked_done_right": 0,
+   "marked_done_wrong": 0,
+   "marked_done_by": {},
+   "commits_held": 0
+  },
+  {
+   "clip": "17_14_full",
+   "completion_checks": 3,
+   "by_reason": {
+    "boundary": 2,
+    "leave": 1
+   },
+   "check_errors": 1,
+   "labeled": 2,
+   "verdict_accuracy": 0.0,
+   "confusion": {
+    "said_done|not_done": 1,
+    "said_not|done": 1
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 1,
+   "marked_done_right": 1,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "checked_belief_switch": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "22_10_full",
+   "completion_checks": 3,
+   "by_reason": {
+    "leave": 1,
+    "boundary": 2
+   },
+   "check_errors": 1,
+   "labeled": 2,
+   "verdict_accuracy": 1.0,
+   "confusion": {
+    "said_done|done": 1,
+    "said_not|not_done": 1
+   },
+   "verified": 1,
+   "steps_verified": 1,
+   "verified_right": 1,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 2,
+   "marked_done_right": 1,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "checked_belief_switch": 1,
+    "verified": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "22_26_full",
+   "completion_checks": 5,
+   "by_reason": {
+    "boundary": 4,
+    "leave": 1
+   },
+   "check_errors": 1,
+   "labeled": 4,
+   "verdict_accuracy": 0.75,
+   "confusion": {
+    "said_not|not_done": 3,
+    "said_done|not_done": 1
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 1,
+   "marked_done_right": 0,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "checked_belief_switch": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "22_2_full",
+   "completion_checks": 3,
+   "by_reason": {
+    "leave": 3
+   },
+   "check_errors": 2,
+   "labeled": 1,
+   "verdict_accuracy": 1.0,
+   "confusion": {
+    "said_done|done": 1
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 3,
+   "marked_done_right": 1,
+   "marked_done_wrong": 1,
+   "marked_done_by": {
+    "checked_belief_switch": 3
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "1_10_full",
+   "completion_checks": 1,
+   "by_reason": {
+    "leave": 1
+   },
+   "check_errors": 1,
+   "labeled": 0,
+   "verdict_accuracy": null,
+   "confusion": {},
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 1,
+   "marked_done_right": 1,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "checked_belief_switch": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "1_14_full",
+   "completion_checks": 1,
+   "by_reason": {
+    "leave": 1
+   },
+   "check_errors": 1,
+   "labeled": 0,
+   "verdict_accuracy": null,
+   "confusion": {},
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 1,
+   "marked_done_right": 0,
+   "marked_done_wrong": 1,
+   "marked_done_by": {
+    "checked_belief_switch": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "1_19_full",
+   "completion_checks": 3,
+   "by_reason": {
+    "leave": 1,
+    "boundary": 1,
+    "hesitation": 1
+   },
+   "check_errors": 1,
+   "labeled": 2,
+   "verdict_accuracy": 0.5,
+   "confusion": {
+    "said_not|not_done": 1,
+    "said_done|not_done": 1
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 1,
+   "marked_done_right": 0,
+   "marked_done_wrong": 1,
+   "marked_done_by": {
+    "checked_belief_switch": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "3_11_full",
+   "completion_checks": 5,
+   "by_reason": {
+    "boundary": 5
+   },
+   "check_errors": 0,
+   "labeled": 5,
+   "verdict_accuracy": 0.2,
+   "confusion": {
+    "said_done|not_done": 2,
+    "said_done|done": 1,
+    "said_not|done": 2
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 0,
+   "marked_done_right": 0,
+   "marked_done_wrong": 0,
+   "marked_done_by": {},
+   "commits_held": 0
+  },
+  {
+   "clip": "3_12_full",
+   "completion_checks": 2,
+   "by_reason": {
+    "boundary": 2
+   },
+   "check_errors": 0,
+   "labeled": 2,
+   "verdict_accuracy": 0.5,
+   "confusion": {
+    "said_done|done": 1,
+    "said_not|done": 1
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 0,
+   "marked_done_right": 0,
+   "marked_done_wrong": 0,
+   "marked_done_by": {},
+   "commits_held": 0
+  },
+  {
+   "clip": "3_14_full",
+   "completion_checks": 4,
+   "by_reason": {
+    "leave": 2,
+    "boundary": 2
+   },
+   "check_errors": 2,
+   "labeled": 2,
+   "verdict_accuracy": 1.0,
+   "confusion": {
+    "said_not|not_done": 2
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 1,
+   "marked_done_right": 1,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "checked_belief_switch": 1
+   },
+   "commits_held": 1
+  },
+  {
+   "clip": "10_16_full",
+   "completion_checks": 5,
+   "by_reason": {
+    "leave": 1,
+    "boundary": 4
+   },
+   "check_errors": 1,
+   "labeled": 4,
+   "verdict_accuracy": 0.75,
+   "confusion": {
+    "said_not|not_done": 2,
+    "said_done|done": 1,
+    "said_done|not_done": 1
+   },
+   "verified": 1,
+   "steps_verified": 1,
+   "verified_right": 1,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 2,
+   "marked_done_right": 2,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "checked_belief_switch": 1,
+    "verified": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "10_26_full",
+   "completion_checks": 7,
+   "by_reason": {
+    "boundary": 6,
+    "hesitation": 1
+   },
+   "check_errors": 0,
+   "labeled": 7,
+   "verdict_accuracy": 0.0,
+   "confusion": {
+    "said_not|done": 7
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 0,
+   "marked_done_right": 0,
+   "marked_done_wrong": 0,
+   "marked_done_by": {},
+   "commits_held": 0
+  },
+  {
+   "clip": "10_31_full",
+   "completion_checks": 8,
+   "by_reason": {
+    "boundary": 5,
+    "leave": 3
+   },
+   "check_errors": 3,
+   "labeled": 5,
+   "verdict_accuracy": 0.8,
+   "confusion": {
+    "said_done|done": 3,
+    "said_not|not_done": 1,
+    "said_done|not_done": 1
+   },
+   "verified": 2,
+   "steps_verified": 2,
+   "verified_right": 2,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 5,
+   "marked_done_right": 5,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "verified": 2,
+    "checked_belief_switch": 3
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "8_11_full",
+   "completion_checks": 0,
+   "by_reason": {},
+   "check_errors": 0,
+   "labeled": 0,
+   "verdict_accuracy": null,
+   "confusion": {},
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 0,
+   "marked_done_right": 0,
+   "marked_done_wrong": 0,
+   "marked_done_by": {},
+   "commits_held": 0
+  },
+  {
+   "clip": "8_15_full",
+   "completion_checks": 2,
+   "by_reason": {
+    "leave": 1,
+    "boundary": 1
+   },
+   "check_errors": 1,
+   "labeled": 1,
+   "verdict_accuracy": 1.0,
+   "confusion": {
+    "said_done|done": 1
+   },
+   "verified": 1,
+   "steps_verified": 1,
+   "verified_right": 1,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 2,
+   "marked_done_right": 1,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "checked_belief_switch": 1,
+    "verified": 1
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "8_16_full",
+   "completion_checks": 3,
+   "by_reason": {
+    "leave": 2,
+    "boundary": 1
+   },
+   "check_errors": 2,
+   "labeled": 1,
+   "verdict_accuracy": 0.0,
+   "confusion": {
+    "said_not|done": 1
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 2,
+   "marked_done_right": 1,
+   "marked_done_wrong": 1,
+   "marked_done_by": {
+    "checked_belief_switch": 2
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "12_10_full",
+   "completion_checks": 1,
+   "by_reason": {
+    "boundary": 1
+   },
+   "check_errors": 0,
+   "labeled": 1,
+   "verdict_accuracy": 1.0,
+   "confusion": {
+    "said_done|done": 1
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 0,
+   "marked_done_right": 0,
+   "marked_done_wrong": 0,
+   "marked_done_by": {},
+   "commits_held": 0
+  },
+  {
+   "clip": "12_12_full",
+   "completion_checks": 4,
+   "by_reason": {
+    "leave": 3,
+    "boundary": 1
+   },
+   "check_errors": 3,
+   "labeled": 1,
+   "verdict_accuracy": 1.0,
+   "confusion": {
+    "said_not|not_done": 1
+   },
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 3,
+   "marked_done_right": 3,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "checked_belief_switch": 3
+   },
+   "commits_held": 0
+  },
+  {
+   "clip": "12_13_full",
+   "completion_checks": 1,
+   "by_reason": {
+    "leave": 1
+   },
+   "check_errors": 1,
+   "labeled": 0,
+   "verdict_accuracy": null,
+   "confusion": {},
+   "verified": 0,
+   "steps_verified": 0,
+   "verified_right": 0,
+   "verified_wrong": 0,
+   "verified_unknown": 0,
+   "marked_done": 1,
+   "marked_done_right": 1,
+   "marked_done_wrong": 0,
+   "marked_done_by": {
+    "checked_belief_switch": 1
+   },
+   "commits_held": 0
+  }
+ ],
+ "spend_usd_main": 0.0,
+ "spend_usd_openai": 0.0,
+ "misses": {
+  "verdict:jev-1.14.0": 65,
+  "step_choice:?": 171,
+  "task_check:?": 1
+ }
+}

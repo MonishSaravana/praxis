@@ -47,6 +47,23 @@ def task_landmarks(g, anchors: dict | None = None) -> list[str]:
     return sorted(out)
 
 
+def lookalikes(library: dict, thr: float = 0.25, anchors: dict | None = None) -> dict[str, list[str]]:
+    """Near-identical procedures: task pairs whose landmark sets overlap at least `thr` (Jaccard of part names, hyphens
+    folded). Landmarks can't tell such tasks apart: the four ENIGMA-51 repair procedures name the same bench, tools and
+    instruments, and what does differ is nearly one direction in SigLIP2's text space ("high voltage board" vs "low
+    voltage board" cosine 0.97, "electric screwdriver" vs "screwdriver" 0.91). Repair pairs overlap 0.32-0.59, no two
+    cooking recipes more than 0.14 (docs/MULTITASK.md section 16). Returns {task: [its look-alikes]}; tasks without any
+    are left out."""
+    fold = lambda p: re.sub(r"\s+", " ", p.replace("-", " ")).strip()      # noqa: E731
+    sets = {tid: {fold(p) for p in task_landmarks(g, anchors)} for tid, g in library.items()}
+    out: dict[str, list[str]] = {}
+    for a, A in sets.items():
+        for b, B in sets.items():
+            if a != b and A and B and len(A & B) / len(A | B) >= thr:
+                out.setdefault(a, []).append(b)
+    return out
+
+
 class TextCache:
     """SigLIP2 text embeddings of landmark phrases, cached on disk (cache/landmarks/) so replay never loads the text
     model once a phrase has been seen. encode: list[str] -> (n, D) array, e.g. SigLIP().texts or StudioCore.texts()."""

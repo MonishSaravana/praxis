@@ -1,0 +1,2096 @@
+{
+ "label": "cooking TRAIN, task given (human step labels)",
+ "name": "V2",
+ "overrides": {
+  "leave_check": "commit",
+  "leave_gate": true
+ },
+ "dry": true,
+ "aggregate": {
+  "n_clips": 24,
+  "minutes": 120.0,
+  "step_acc": 0.6162735734894728,
+  "step_acc_after_recognition": 0.6162735734894728,
+  "step_acc_incl_between": 0.545214245965498,
+  "transition_err_s": {
+   "n": 34,
+   "p50": 17.4645,
+   "p95": 142.0008842399944,
+   "mean": 37.74794793843542
+  },
+  "task_top1": 1.0,
+  "t_recognize_s": {
+   "n": 24,
+   "p50": 0.0,
+   "p95": 0.0,
+   "mean": 0.0
+  },
+  "mistakes": {
+   "tp": 3,
+   "fp": 2,
+   "fn": 33,
+   "precision": 0.6,
+   "recall": 0.08333333333333333,
+   "f1": 0.14634146341463414,
+   "detect_minus_step_end_s": {
+    "n": 3,
+    "p50": -6.321700000000021,
+    "p95": 6.451640000000002,
+    "mean": -3.5850283003591272
+   },
+   "detect_minus_step_start_s": {
+    "n": 3,
+    "p50": 23.13493868266407,
+    "p95": 38.356603868266404,
+    "mean": 26.030712894221356
+   },
+   "share_caught_before_step_end": 0.6666666666666666
+  },
+  "false_alarms_per_min": 0.016666666666666666,
+  "alerts_per_min": 0.041666666666666664,
+  "feedback_latency_s": {
+   "n": 16,
+   "p50": -1.0493095526315983,
+   "p95": 47.73960000000001,
+   "mean": 2.922284726551701
+  },
+  "progress_latency_s": {
+   "n": 34,
+   "p50": 8.408326108811366,
+   "p95": 75.23614151384302,
+   "mean": 6.005053689263808
+  },
+  "verifier_latency_ms_live": {
+   "n": 0,
+   "p50": null,
+   "p95": null,
+   "mean": null
+  },
+  "verifier_calls": 1204,
+  "verifier_errors": 85,
+  "escalated_frame_share": 0.09121338912133892,
+  "cost_usd": 0.082587876,
+  "cost_usd_per_video_min": 0.0006882323,
+  "view_requests": 0,
+  "hints": 37,
+  "zero_step_acc_clips": 0,
+  "task_final_correct": 1.0,
+  "correct_task_share": 1.0,
+  "wrong_switches": 0,
+  "recovered_switches": 0,
+  "task_rechecks": 0,
+  "leave_warnings": 0
+ },
+ "verification": {
+  "completion_checks": 94,
+  "check_errors": 49,
+  "labeled": 43,
+  "verified": 11,
+  "steps_verified": 11,
+  "verified_right": 6,
+  "verified_wrong": 5,
+  "verified_unknown": 0,
+  "marked_done": 39,
+  "marked_done_right": 24,
+  "marked_done_wrong": 10,
+  "commits_held": 0,
+  "confusion": {
+   "said_done|not_done": 11,
+   "said_not|not_done": 15,
+   "said_not|done": 8,
+   "said_done|done": 9
+  },
+  "verdict_accuracy": 0.5581395348837209,
+  "by_reason": {
+   "boundary": 61,
+   "leave": 28,
+   "hesitation": 4,
+   "grasp": 1
+  }
+ },
+ "rows": [
+  {
+   "clip": "7_1_full",
+   "task_id": "cc4d_breakfastburritos",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_breakfastburritos",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.8345195729537367,
+   "task_final": "cc4d_breakfastburritos",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.8345195729537367,
+   "step_acc_incl_between": 0.8013355592654424,
+   "transition_err_s": [
+    4.161640620682576,
+    7.9425342113976285,
+    214.73088709060738
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -7.9425342113976285
+   ],
+   "progress_latency_s": [
+    4.161640620682576,
+    -7.9425342113976285,
+    214.73088709060738
+   ],
+   "typed_choice_calls": 26,
+   "verifier_calls": 35,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    142.9059999063611,
+    187.26862501353025,
+    179.440459003672,
+    150.77787498012185,
+    789.4499169196934,
+    138.80908396095037
+   ],
+   "verifier_errors": 3,
+   "cost_usd": 0.002310378,
+   "frames": 1195,
+   "escalated_frames": 73,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 1,
+   "verification": {
+    "completion_checks": 8,
+    "by_reason": {
+     "boundary": 6,
+     "leave": 2
+    },
+    "check_errors": 3,
+    "labeled": 5,
+    "verdict_accuracy": 0.8,
+    "confusion": {
+     "said_done|not_done": 1,
+     "said_not|not_done": 4
+    },
+    "verified": 1,
+    "steps_verified": 1,
+    "verified_right": 0,
+    "verified_wrong": 1,
+    "verified_unknown": 0,
+    "marked_done": 3,
+    "marked_done_right": 2,
+    "marked_done_wrong": 1,
+    "marked_done_by": {
+     "checked_belief_switch": 2,
+     "verified": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "7_24_full",
+   "task_id": "cc4d_breakfastburritos",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_breakfastburritos",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.7967032967032966,
+   "task_final": "cc4d_breakfastburritos",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.7967032967032966,
+   "step_acc_incl_between": 0.7328881469115192,
+   "transition_err_s": [
+    30.17962508223684
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 1,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 1
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    30.17962508223684
+   ],
+   "typed_choice_calls": 29,
+   "verifier_calls": 39,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    143.17283302079886,
+    151.72458300366998,
+    139.53225000295788,
+    149.52600002288818
+   ],
+   "verifier_errors": 6,
+   "cost_usd": 0.0033539100000000003,
+   "frames": 1195,
+   "escalated_frames": 115,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 1,
+    "by_reason": {
+     "leave": 1
+    },
+    "check_errors": 1,
+    "labeled": 0,
+    "verdict_accuracy": null,
+    "confusion": {},
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 1,
+    "marked_done_right": 1,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "checked_belief_switch": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "7_2_full",
+   "task_id": "cc4d_breakfastburritos",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_breakfastburritos",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.7007042253521126,
+   "task_final": "cc4d_breakfastburritos",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.7007042253521126,
+   "step_acc_incl_between": 0.664440734557596,
+   "transition_err_s": [
+    26.66220279145233
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    26.66220279145233
+   ],
+   "typed_choice_calls": 54,
+   "verifier_calls": 56,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [],
+   "verifier_errors": 2,
+   "cost_usd": 0.0042351540000000005,
+   "frames": 1195,
+   "escalated_frames": 127,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 2,
+    "by_reason": {
+     "leave": 1,
+     "boundary": 1
+    },
+    "check_errors": 2,
+    "labeled": 0,
+    "verdict_accuracy": null,
+    "confusion": {},
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 1,
+    "marked_done_right": 1,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "checked_belief_switch": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "17_10_full",
+   "task_id": "cc4d_cucumberraita",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_cucumberraita",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.7517482517482518,
+   "task_final": "cc4d_cucumberraita",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.7517482517482518,
+   "step_acc_incl_between": 0.7178631051752922,
+   "transition_err_s": [
+    4.760699999999986
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -4.760699999999986
+   ],
+   "progress_latency_s": [
+    -4.760699999999986
+   ],
+   "typed_choice_calls": 24,
+   "verifier_calls": 29,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    136.99733291286975,
+    102.25687501952052,
+    189.78054099716246
+   ],
+   "verifier_errors": 2,
+   "cost_usd": 0.0028268940000000004,
+   "frames": 1195,
+   "escalated_frames": 85,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 1,
+   "verification": {
+    "completion_checks": 5,
+    "by_reason": {
+     "boundary": 3,
+     "hesitation": 1,
+     "leave": 1
+    },
+    "check_errors": 2,
+    "labeled": 2,
+    "verdict_accuracy": 0.0,
+    "confusion": {
+     "said_done|not_done": 2
+    },
+    "verified": 1,
+    "steps_verified": 1,
+    "verified_right": 0,
+    "verified_wrong": 1,
+    "verified_unknown": 0,
+    "marked_done": 2,
+    "marked_done_right": 0,
+    "marked_done_wrong": 1,
+    "marked_done_by": {
+     "verified": 1,
+     "checked_belief_switch": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "17_11_full",
+   "task_id": "cc4d_cucumberraita",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_cucumberraita",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.8932874354561101,
+   "task_final": "cc4d_cucumberraita",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.8932874354561101,
+   "step_acc_incl_between": 0.8664440734557596,
+   "transition_err_s": [],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [],
+   "typed_choice_calls": 20,
+   "verifier_calls": 23,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    141.90508401952684,
+    158.7754589272663
+   ],
+   "verifier_errors": 1,
+   "cost_usd": 0.00232701,
+   "frames": 1195,
+   "escalated_frames": 67,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 2,
+    "by_reason": {
+     "boundary": 2
+    },
+    "check_errors": 0,
+    "labeled": 2,
+    "verdict_accuracy": 0.5,
+    "confusion": {
+     "said_done|not_done": 1,
+     "said_not|not_done": 1
+    },
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 0,
+    "marked_done_right": 0,
+    "marked_done_wrong": 0,
+    "marked_done_by": {},
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "17_14_full",
+   "task_id": "cc4d_cucumberraita",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_cucumberraita",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.6193895870736086,
+   "task_final": "cc4d_cucumberraita",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.6193895870736086,
+   "step_acc_incl_between": 0.5759599332220368,
+   "transition_err_s": [
+    47.072
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    47.072
+   ],
+   "typed_choice_calls": 46,
+   "verifier_calls": 51,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    151.1836670106277,
+    166.35958303231746,
+    165.7993340631947
+   ],
+   "verifier_errors": 2,
+   "cost_usd": 0.004771914,
+   "frames": 1195,
+   "escalated_frames": 142,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 3,
+    "by_reason": {
+     "boundary": 2,
+     "leave": 1
+    },
+    "check_errors": 1,
+    "labeled": 2,
+    "verdict_accuracy": 0.0,
+    "confusion": {
+     "said_done|not_done": 1,
+     "said_not|done": 1
+    },
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 1,
+    "marked_done_right": 1,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "checked_belief_switch": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "22_10_full",
+   "task_id": "cc4d_herbomeletwithfriedtomatoes",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_herbomeletwithfriedtomatoes",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.831140350877193,
+   "task_final": "cc4d_herbomeletwithfriedtomatoes",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.831140350877193,
+   "step_acc_incl_between": 0.6327212020033389,
+   "transition_err_s": [
+    0.8678000000000026
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 1,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 1
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    0.8678000000000026
+   ],
+   "progress_latency_s": [
+    0.8678000000000026
+   ],
+   "typed_choice_calls": 17,
+   "verifier_calls": 21,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    197.7692920481786,
+    129.8870830796659,
+    165.53941601887345
+   ],
+   "verifier_errors": 1,
+   "cost_usd": 0.0017448900000000002,
+   "frames": 1195,
+   "escalated_frames": 52,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 1,
+   "verification": {
+    "completion_checks": 3,
+    "by_reason": {
+     "grasp": 1,
+     "boundary": 2
+    },
+    "check_errors": 1,
+    "labeled": 2,
+    "verdict_accuracy": 1.0,
+    "confusion": {
+     "said_done|done": 1,
+     "said_not|not_done": 1
+    },
+    "verified": 1,
+    "steps_verified": 1,
+    "verified_right": 1,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 1,
+    "marked_done_right": 1,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "verified": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "22_26_full",
+   "task_id": "cc4d_herbomeletwithfriedtomatoes",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_herbomeletwithfriedtomatoes",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.6728971962616822,
+   "task_final": "cc4d_herbomeletwithfriedtomatoes",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.6728971962616822,
+   "step_acc_incl_between": 0.5342237061769616,
+   "transition_err_s": [],
+   "mistakes": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 6,
+    "precision": 1.0,
+    "recall": 0.14285714285714285,
+    "f1": 0.25,
+    "detect_minus_step_end_s": [
+     -12.304284901077366
+    ],
+    "detect_minus_step_start_s": [
+     23.13493868266407
+    ],
+    "n_alerts": 1,
+    "n_gt": 7
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.2,
+   "feedback_latency_s": [
+    -12.304284901077366
+   ],
+   "progress_latency_s": [],
+   "typed_choice_calls": 64,
+   "verifier_calls": 79,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    408.1652919994667,
+    163.22741599287838,
+    161.5669169696048,
+    202.47062505222857,
+    144.1200419794768,
+    142.26633310317993,
+    119.9513329192996,
+    101.97050007991493,
+    516.4111671037972,
+    134.2254999326542
+   ],
+   "verifier_errors": 5,
+   "cost_usd": 0.005716536,
+   "frames": 1195,
+   "escalated_frames": 178,
+   "n_view_requests": 0,
+   "n_hints": 3,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 4,
+    "by_reason": {
+     "boundary": 3,
+     "leave": 1
+    },
+    "check_errors": 1,
+    "labeled": 3,
+    "verdict_accuracy": 1.0,
+    "confusion": {
+     "said_not|not_done": 3
+    },
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 1,
+    "marked_done_right": 0,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "checked_belief_switch": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "22_2_full",
+   "task_id": "cc4d_herbomeletwithfriedtomatoes",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_herbomeletwithfriedtomatoes",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.3247863247863248,
+   "task_final": "cc4d_herbomeletwithfriedtomatoes",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.3247863247863248,
+   "step_acc_incl_between": 0.25375626043405675,
+   "transition_err_s": [
+    168.855
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 2,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 2
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    -168.855
+   ],
+   "typed_choice_calls": 82,
+   "verifier_calls": 91,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [],
+   "verifier_errors": 9,
+   "cost_usd": 0.00254016,
+   "frames": 1195,
+   "escalated_frames": 100,
+   "n_view_requests": 0,
+   "n_hints": 4,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 4,
+    "by_reason": {
+     "leave": 1,
+     "hesitation": 1,
+     "boundary": 2
+    },
+    "check_errors": 4,
+    "labeled": 0,
+    "verdict_accuracy": null,
+    "confusion": {},
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 1,
+    "marked_done_right": 0,
+    "marked_done_wrong": 1,
+    "marked_done_by": {
+     "checked_belief_switch": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "1_10_full",
+   "task_id": "cc4d_microwaveeggsandwich",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwaveeggsandwich",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.43272727272727274,
+   "task_final": "cc4d_microwaveeggsandwich",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.43272727272727274,
+   "step_acc_incl_between": 0.4040066777963272,
+   "transition_err_s": [
+    2.688919105263153
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -2.688919105263153
+   ],
+   "progress_latency_s": [
+    -2.688919105263153
+   ],
+   "typed_choice_calls": 26,
+   "verifier_calls": 35,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    175.86829094216228,
+    134.4212080584839
+   ],
+   "verifier_errors": 7,
+   "cost_usd": 0.001509228,
+   "frames": 1195,
+   "escalated_frames": 64,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 1,
+   "verification": {
+    "completion_checks": 8,
+    "by_reason": {
+     "boundary": 7,
+     "leave": 1
+    },
+    "check_errors": 6,
+    "labeled": 1,
+    "verdict_accuracy": 0.0,
+    "confusion": {
+     "said_done|not_done": 1
+    },
+    "verified": 1,
+    "steps_verified": 1,
+    "verified_right": 0,
+    "verified_wrong": 1,
+    "verified_unknown": 0,
+    "marked_done": 2,
+    "marked_done_right": 0,
+    "marked_done_wrong": 1,
+    "marked_done_by": {
+     "verified": 1,
+     "checked_belief_switch": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "1_14_full",
+   "task_id": "cc4d_microwaveeggsandwich",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwaveeggsandwich",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.7012987012987013,
+   "task_final": "cc4d_microwaveeggsandwich",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.7012987012987013,
+   "step_acc_incl_between": 0.6460767946577629,
+   "transition_err_s": [
+    18.260000000000005,
+    9.665652217622721,
+    105.49209207569487
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    18.260000000000005,
+    9.665652217622721,
+    -105.49209207569487
+   ],
+   "typed_choice_calls": 48,
+   "verifier_calls": 54,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    144.75670806132257
+   ],
+   "verifier_errors": 5,
+   "cost_usd": 0.0050159340000000005,
+   "frames": 1195,
+   "escalated_frames": 160,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 4,
+    "by_reason": {
+     "leave": 4
+    },
+    "check_errors": 4,
+    "labeled": 0,
+    "verdict_accuracy": null,
+    "confusion": {},
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 4,
+    "marked_done_right": 2,
+    "marked_done_wrong": 1,
+    "marked_done_by": {
+     "checked_belief_switch": 4
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "1_19_full",
+   "task_id": "cc4d_microwaveeggsandwich",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwaveeggsandwich",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.8235294117647058,
+   "task_final": "cc4d_microwaveeggsandwich",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.8235294117647058,
+   "step_acc_incl_between": 0.7545909849749582,
+   "transition_err_s": [
+    29.784999999999997,
+    0.5902999999999565
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    0.5902999999999565
+   ],
+   "progress_latency_s": [
+    29.784999999999997,
+    0.5902999999999565
+   ],
+   "typed_choice_calls": 31,
+   "verifier_calls": 40,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    126.84029107913375,
+    211.30808303132653,
+    139.41787497606128,
+    108.31495805177838
+   ],
+   "verifier_errors": 5,
+   "cost_usd": 0.003537156,
+   "frames": 1195,
+   "escalated_frames": 118,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 1,
+   "verification": {
+    "completion_checks": 3,
+    "by_reason": {
+     "leave": 1,
+     "boundary": 2
+    },
+    "check_errors": 1,
+    "labeled": 2,
+    "verdict_accuracy": 1.0,
+    "confusion": {
+     "said_not|not_done": 1,
+     "said_done|done": 1
+    },
+    "verified": 1,
+    "steps_verified": 1,
+    "verified_right": 1,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 2,
+    "marked_done_right": 2,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "checked_belief_switch": 1,
+     "verified": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "3_11_full",
+   "task_id": "cc4d_microwavemugpizza",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwavemugpizza",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.39565217391304347,
+   "task_final": "cc4d_microwavemugpizza",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.39565217391304347,
+   "step_acc_incl_between": 0.36894824707846413,
+   "transition_err_s": [
+    11.573999999999998,
+    38.35359999999997,
+    5.9173999999999864
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    38.35359999999997,
+    -5.9173999999999864
+   ],
+   "progress_latency_s": [
+    11.573999999999998,
+    38.35359999999997,
+    -5.9173999999999864
+   ],
+   "typed_choice_calls": 66,
+   "verifier_calls": 76,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    159.1827500378713,
+    176.6667499905452,
+    271.6114589711651,
+    124.6063340222463,
+    149.3869589176029,
+    204.57720896229148,
+    125.78833301085979
+   ],
+   "verifier_errors": 3,
+   "cost_usd": 0.005882646,
+   "frames": 1195,
+   "escalated_frames": 178,
+   "n_view_requests": 0,
+   "n_hints": 4,
+   "n_verified": 2,
+   "verification": {
+    "completion_checks": 5,
+    "by_reason": {
+     "boundary": 4,
+     "leave": 1
+    },
+    "check_errors": 1,
+    "labeled": 4,
+    "verdict_accuracy": 0.5,
+    "confusion": {
+     "said_done|done": 2,
+     "said_done|not_done": 2
+    },
+    "verified": 2,
+    "steps_verified": 2,
+    "verified_right": 1,
+    "verified_wrong": 1,
+    "verified_unknown": 0,
+    "marked_done": 3,
+    "marked_done_right": 2,
+    "marked_done_wrong": 1,
+    "marked_done_by": {
+     "checked_belief_switch": 1,
+     "verified": 2
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "3_12_full",
+   "task_id": "cc4d_microwavemugpizza",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwavemugpizza",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.14395886889460155,
+   "task_final": "cc4d_microwavemugpizza",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.14395886889460155,
+   "step_acc_incl_between": 0.14524207011686144,
+   "transition_err_s": [],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 1,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 1
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [],
+   "typed_choice_calls": 22,
+   "verifier_calls": 29,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    87.4186250148341
+   ],
+   "verifier_errors": 6,
+   "cost_usd": 0.002025828,
+   "frames": 1195,
+   "escalated_frames": 76,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 4,
+    "by_reason": {
+     "boundary": 3,
+     "hesitation": 1
+    },
+    "check_errors": 3,
+    "labeled": 1,
+    "verdict_accuracy": 0.0,
+    "confusion": {
+     "said_not|done": 1
+    },
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 0,
+    "marked_done_right": 0,
+    "marked_done_wrong": 0,
+    "marked_done_by": {},
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "3_14_full",
+   "task_id": "cc4d_microwavemugpizza",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_microwavemugpizza",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.30740037950664134,
+   "task_final": "cc4d_microwavemugpizza",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.30740037950664134,
+   "step_acc_incl_between": 0.28213689482470783,
+   "transition_err_s": [
+    38.76520000000001
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    38.76520000000001
+   ],
+   "progress_latency_s": [
+    38.76520000000001
+   ],
+   "typed_choice_calls": 85,
+   "verifier_calls": 90,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    203.21629103273153,
+    179.55254099797457,
+    123.8654589978978
+   ],
+   "verifier_errors": 2,
+   "cost_usd": 0.001351098,
+   "frames": 1195,
+   "escalated_frames": 45,
+   "n_view_requests": 0,
+   "n_hints": 3,
+   "n_verified": 1,
+   "verification": {
+    "completion_checks": 4,
+    "by_reason": {
+     "boundary": 4
+    },
+    "check_errors": 2,
+    "labeled": 2,
+    "verdict_accuracy": 1.0,
+    "confusion": {
+     "said_done|done": 1,
+     "said_not|not_done": 1
+    },
+    "verified": 1,
+    "steps_verified": 1,
+    "verified_right": 1,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 1,
+    "marked_done_right": 1,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "verified": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "10_16_full",
+   "task_id": "cc4d_pinwheels",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_pinwheels",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.8976660682226212,
+   "task_final": "cc4d_pinwheels",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.8976660682226212,
+   "step_acc_incl_between": 0.8681135225375626,
+   "transition_err_s": [
+    16.668999999999997,
+    2.416799999999995
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 1,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 1,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.2,
+   "all_alerts_per_min": 0.2,
+   "feedback_latency_s": [
+    -75.1483,
+    2.416799999999995
+   ],
+   "progress_latency_s": [
+    16.668999999999997,
+    2.416799999999995
+   ],
+   "typed_choice_calls": 29,
+   "verifier_calls": 43,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    157.66091702971607,
+    192.29820894543082,
+    121.0437499685213,
+    118.43187501654029,
+    150.7489999057725,
+    181.73224991187453,
+    715.8234160160646,
+    136.91020803526044,
+    147.9682499775663,
+    139.71279200632125,
+    148.06812501046807,
+    176.43187509384006,
+    171.4435419999063
+   ],
+   "verifier_errors": 1,
+   "cost_usd": 0.0043193220000000004,
+   "frames": 1195,
+   "escalated_frames": 129,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 1,
+   "verification": {
+    "completion_checks": 5,
+    "by_reason": {
+     "leave": 1,
+     "boundary": 4
+    },
+    "check_errors": 1,
+    "labeled": 4,
+    "verdict_accuracy": 0.75,
+    "confusion": {
+     "said_not|not_done": 2,
+     "said_done|done": 1,
+     "said_done|not_done": 1
+    },
+    "verified": 1,
+    "steps_verified": 1,
+    "verified_right": 1,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 2,
+    "marked_done_right": 2,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "checked_belief_switch": 1,
+     "verified": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "10_26_full",
+   "task_id": "cc4d_pinwheels",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_pinwheels",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.1279373368146214,
+   "task_final": "cc4d_pinwheels",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.1279373368146214,
+   "step_acc_incl_between": 0.08180300500834725,
+   "transition_err_s": [],
+   "mistakes": {
+    "tp": 0,
+    "fp": 1,
+    "fn": 10,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 1,
+    "n_gt": 10
+   },
+   "false_alarms_per_min": 0.2,
+   "all_alerts_per_min": 0.2,
+   "feedback_latency_s": [
+    74.6628
+   ],
+   "progress_latency_s": [],
+   "typed_choice_calls": 0,
+   "verifier_calls": 7,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    116.80479103233665,
+    99.08725006971508,
+    113.07070893235505,
+    138.29958299174905,
+    183.70504199992865,
+    125.90000010095537
+   ],
+   "verifier_errors": 1,
+   "cost_usd": 0.0006383580000000001,
+   "frames": 1195,
+   "escalated_frames": 21,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 7,
+    "by_reason": {
+     "boundary": 6,
+     "hesitation": 1
+    },
+    "check_errors": 1,
+    "labeled": 6,
+    "verdict_accuracy": 0.0,
+    "confusion": {
+     "said_not|done": 6
+    },
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 0,
+    "marked_done_right": 0,
+    "marked_done_wrong": 0,
+    "marked_done_by": {},
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "10_31_full",
+   "task_id": "cc4d_pinwheels",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_pinwheels",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.8305709023941068,
+   "task_final": "cc4d_pinwheels",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.8305709023941068,
+   "step_acc_incl_between": 0.7529215358931552,
+   "transition_err_s": [
+    11.748999999999995,
+    7.1510000000000105,
+    1.200099999999992,
+    4.081999999999994
+   ],
+   "mistakes": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 11,
+    "precision": 1.0,
+    "recall": 0.15384615384615385,
+    "f1": 0.2666666666666667,
+    "detect_minus_step_end_s": [
+     -6.321700000000021,
+     7.870900000000006
+    ],
+    "detect_minus_step_start_s": [
+     14.909300000000002,
+     40.0479
+    ],
+    "n_alerts": 2,
+    "n_gt": 13
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.4,
+   "feedback_latency_s": [
+    -6.321700000000021,
+    7.870900000000006,
+    1.200099999999992
+   ],
+   "progress_latency_s": [
+    11.748999999999995,
+    7.1510000000000105,
+    1.200099999999992,
+    4.081999999999994
+   ],
+   "typed_choice_calls": 29,
+   "verifier_calls": 44,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    149.95762496255338,
+    138.2684160489589,
+    156.64854098577052,
+    222.6399159990251,
+    160.73266696184874,
+    121.88724998850375,
+    145.8740000380203,
+    128.12700006179512,
+    241.36720795650035,
+    144.9922500178218
+   ],
+   "verifier_errors": 5,
+   "cost_usd": 0.0032043480000000005,
+   "frames": 1195,
+   "escalated_frames": 108,
+   "n_view_requests": 0,
+   "n_hints": 0,
+   "n_verified": 1,
+   "verification": {
+    "completion_checks": 8,
+    "by_reason": {
+     "boundary": 5,
+     "leave": 3
+    },
+    "check_errors": 4,
+    "labeled": 4,
+    "verdict_accuracy": 0.75,
+    "confusion": {
+     "said_not|not_done": 1,
+     "said_done|done": 2,
+     "said_done|not_done": 1
+    },
+    "verified": 1,
+    "steps_verified": 1,
+    "verified_right": 1,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 4,
+    "marked_done_right": 4,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "checked_belief_switch": 3,
+     "verified": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "8_11_full",
+   "task_id": "cc4d_spicedhotchocolate",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_spicedhotchocolate",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.4620938628158845,
+   "task_final": "cc4d_spicedhotchocolate",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.4620938628158845,
+   "step_acc_incl_between": 0.4524207011686144,
+   "transition_err_s": [
+    2.887106157434573
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 1,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 1
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [
+    -2.887106157434573
+   ],
+   "progress_latency_s": [
+    -2.887106157434573
+   ],
+   "typed_choice_calls": 40,
+   "verifier_calls": 42,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    142.4812920158729,
+    104.80187507346272
+   ],
+   "verifier_errors": 0,
+   "cost_usd": 0.004332804,
+   "frames": 1195,
+   "escalated_frames": 124,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 1,
+   "verification": {
+    "completion_checks": 1,
+    "by_reason": {
+     "boundary": 1
+    },
+    "check_errors": 0,
+    "labeled": 1,
+    "verdict_accuracy": 0.0,
+    "confusion": {
+     "said_done|not_done": 1
+    },
+    "verified": 1,
+    "steps_verified": 1,
+    "verified_right": 0,
+    "verified_wrong": 1,
+    "verified_unknown": 0,
+    "marked_done": 1,
+    "marked_done_right": 0,
+    "marked_done_wrong": 1,
+    "marked_done_by": {
+     "verified": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "8_15_full",
+   "task_id": "cc4d_spicedhotchocolate",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_spicedhotchocolate",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.6916058394160584,
+   "task_final": "cc4d_spicedhotchocolate",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.6916058394160584,
+   "step_acc_incl_between": 0.654424040066778,
+   "transition_err_s": [
+    24.492023240767935
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    24.492023240767935
+   ],
+   "typed_choice_calls": 40,
+   "verifier_calls": 43,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [],
+   "verifier_errors": 3,
+   "cost_usd": 0.0028334460000000003,
+   "frames": 1195,
+   "escalated_frames": 89,
+   "n_view_requests": 0,
+   "n_hints": 1,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 3,
+    "by_reason": {
+     "leave": 2,
+     "boundary": 1
+    },
+    "check_errors": 3,
+    "labeled": 0,
+    "verdict_accuracy": null,
+    "confusion": {},
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 2,
+    "marked_done_right": 1,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "checked_belief_switch": 2
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "8_16_full",
+   "task_id": "cc4d_spicedhotchocolate",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_spicedhotchocolate",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.612565445026178,
+   "task_final": "cc4d_spicedhotchocolate",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.612565445026178,
+   "step_acc_incl_between": 0.5909849749582637,
+   "transition_err_s": [
+    14.487161718750002,
+    112.98078652686405,
+    127.5409757538377
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    14.487161718750002,
+    -112.98078652686405,
+    127.5409757538377
+   ],
+   "typed_choice_calls": 48,
+   "verifier_calls": 54,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    705.2497920813039,
+    130.55654207710177,
+    129.79208305478096
+   ],
+   "verifier_errors": 3,
+   "cost_usd": 0.005279022,
+   "frames": 1195,
+   "escalated_frames": 160,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 3,
+    "by_reason": {
+     "leave": 3
+    },
+    "check_errors": 3,
+    "labeled": 0,
+    "verdict_accuracy": null,
+    "confusion": {},
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 3,
+    "marked_done_right": 2,
+    "marked_done_wrong": 1,
+    "marked_done_by": {
+     "checked_belief_switch": 3
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "12_10_full",
+   "task_id": "cc4d_tomatomozzarellasalad",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_tomatomozzarellasalad",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.5953307392996109,
+   "task_final": "cc4d_tomatomozzarellasalad",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.5953307392996109,
+   "step_acc_incl_between": 0.3823038397328882,
+   "transition_err_s": [
+    35.891664159263286
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    -35.891664159263286
+   ],
+   "typed_choice_calls": 68,
+   "verifier_calls": 73,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    123.63074999302626,
+    141.06712501961738,
+    149.0092920139432
+   ],
+   "verifier_errors": 2,
+   "cost_usd": 0.004317978,
+   "frames": 1195,
+   "escalated_frames": 130,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 2,
+    "by_reason": {
+     "leave": 1,
+     "boundary": 1
+    },
+    "check_errors": 1,
+    "labeled": 1,
+    "verdict_accuracy": 1.0,
+    "confusion": {
+     "said_done|done": 1
+    },
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 1,
+    "marked_done_right": 0,
+    "marked_done_wrong": 1,
+    "marked_done_by": {
+     "checked_belief_switch": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "12_12_full",
+   "task_id": "cc4d_tomatomozzarellasalad",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_tomatomozzarellasalad",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.9676258992805755,
+   "task_final": "cc4d_tomatomozzarellasalad",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.9676258992805755,
+   "step_acc_incl_between": 0.659432387312187,
+   "transition_err_s": [
+    39.624059154929576
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    39.624059154929576
+   ],
+   "typed_choice_calls": 63,
+   "verifier_calls": 69,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [
+    279.3596659321338,
+    151.39733394607902,
+    151.94579202216119
+   ],
+   "verifier_errors": 3,
+   "cost_usd": 0.004891152,
+   "frames": 1195,
+   "escalated_frames": 148,
+   "n_view_requests": 0,
+   "n_hints": 3,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 2,
+    "by_reason": {
+     "leave": 1,
+     "boundary": 1
+    },
+    "check_errors": 1,
+    "labeled": 1,
+    "verdict_accuracy": 1.0,
+    "confusion": {
+     "said_not|not_done": 1
+    },
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 1,
+    "marked_done_right": 1,
+    "marked_done_wrong": 0,
+    "marked_done_by": {
+     "checked_belief_switch": 1
+    },
+    "commits_held": 0
+   }
+  },
+  {
+   "clip": "12_13_full",
+   "task_id": "cc4d_tomatomozzarellasalad",
+   "minutes": 5.0,
+   "recognized_task": "cc4d_tomatomozzarellasalad",
+   "t_recognize": 0.0,
+   "task_correct": true,
+   "step_acc": 0.37542662116040953,
+   "task_final": "cc4d_tomatomozzarellasalad",
+   "task_final_correct": true,
+   "correct_task_share": 1.0,
+   "n_task_changes": 0,
+   "wrong_switches": 0,
+   "recovered_switches": 0,
+   "task_rechecks": 0,
+   "leave_warnings": 0,
+   "step_acc_after_recognition": 0.37542662116040953,
+   "step_acc_incl_between": 0.2621035058430718,
+   "transition_err_s": [
+    92.213,
+    23.720999999999997
+   ],
+   "mistakes": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0,
+    "detect_minus_step_end_s": [],
+    "detect_minus_step_start_s": [],
+    "n_alerts": 0,
+    "n_gt": 0
+   },
+   "false_alarms_per_min": 0.0,
+   "all_alerts_per_min": 0.0,
+   "feedback_latency_s": [],
+   "progress_latency_s": [
+    -92.213,
+    23.720999999999997
+   ],
+   "typed_choice_calls": 73,
+   "verifier_calls": 81,
+   "verifier_latency_ms": [],
+   "verifier_latency_ms_all": [],
+   "verifier_errors": 8,
+   "cost_usd": 0.0036227100000000003,
+   "frames": 1195,
+   "escalated_frames": 127,
+   "n_view_requests": 0,
+   "n_hints": 2,
+   "n_verified": 0,
+   "verification": {
+    "completion_checks": 3,
+    "by_reason": {
+     "leave": 2,
+     "boundary": 1
+    },
+    "check_errors": 3,
+    "labeled": 0,
+    "verdict_accuracy": null,
+    "confusion": {},
+    "verified": 0,
+    "steps_verified": 0,
+    "verified_right": 0,
+    "verified_wrong": 0,
+    "verified_unknown": 0,
+    "marked_done": 2,
+    "marked_done_right": 1,
+    "marked_done_wrong": 1,
+    "marked_done_by": {
+     "checked_belief_switch": 2
+    },
+    "commits_held": 0
+   }
+  }
+ ],
+ "spend_usd_non_openai": 0.0,
+ "calls": 0,
+ "misses": {
+  "verdict:jev-1.14.0": 85,
+  "step_choice:?": 319
+ }
+}

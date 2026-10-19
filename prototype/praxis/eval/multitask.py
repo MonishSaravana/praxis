@@ -13,6 +13,7 @@ runs with a recognizer and step probes refit without that fold, so no recording 
 """
 from __future__ import annotations
 
+import collections
 import copy
 import json
 import pickle
@@ -931,3 +932,216 @@ def sol_fix_test(workers: int = 4, caps: dict | None = None) -> dict:
     save()
     print("chosen", chosen, "sol_default", out["sol_default"], flush=True)
     return out
+
+
+# ------------------------------------------------------------------------------------------- near-identical procedures
+LOOKALIKE_PROTOCOL = """TRAIN data only, no model calls (docs/MULTITASK.md section 16). Written before running.
+  candidates  1 distinguishing landmarks, 2 step-level fit from the fast tier's "which step?" answers, 3 a periodic
+              "which task?" re-check while the library holds look-alikes of the current task
+  free checks (a) landmark overlap between every pair of library procedures and the SigLIP2 text cosine of what tells the
+              repair jobs apart (texts only); (b) the ENIGMA-51 TRAIN annotations: when a job's board and screwdriver
+              are first handled (labels only, no footage); (c) candidate 2 on the logged answers of two paid TRAIN runs
+              (mt_combined_A0, mt_solfix_C2: Jev answers "which step?"), typed against what was playing; (d) the chosen
+              option in the engine: the 24 v1 single-task recordings (first 300 s) + the 22 v1 train splices, first
+              task given, local layers only, 3-fold v1 stacks, the chosen multi-task configuration, the library as in
+              Studio (cooking + the four repair procedures); "which task?" goes to a stand-in that logs each request and
+              never answers, so the re-check schedule runs without spending; arms: look-alike re-check off / on (60 s).
+  pass (d)    the 'on' arm makes no look-alike re-check and asks no "Did you switch?" on these recordings, and its
+              beliefs equal the 'off' arm's, so it cannot add a wrong switch on them.
+ENIGMA-51 test footage and its run logs are not used."""
+
+
+class NoAnswerChecker:
+    """'Which task?' stand-in for free checks: the engine logs each request (a task_check with an error) and gets no
+    answer, so re-checks are scheduled exactly as with a model, without a call or a cent."""
+    model = "none (free check)"
+
+    def choose_task(self, frames, opts):
+        raise RuntimeError("free check: not answered")
+
+
+def _answer_type(g, choice: str, map_id: str, completed: list[str]) -> str:
+    """'fit' (the believed step, an open step or a successor of the believed step), 'none', or 'ooo' (out of order)."""
+    if choice == "none":
+        return "none"
+    pred, done = g.predecessors(), set(completed)
+    open_ = {n for n in g.ids if n not in done and all(p in done for p in pred.get(n, []))}
+    succ = set(g.node(map_id).successors) if map_id in g.ids else set()
+    return "fit" if choice == map_id or choice in open_ or choice in succ else "ooo"
+
+
+def step_fit_from_logs(runs: tuple = ("mt_combined_A0", "mt_solfix_C2")) -> dict:
+    """Candidate 2, free: the fast tier's logged "which step?" answers in paid TRAIN runs, each typed against the task
+    actually playing (on task = the engine's current task is the one playing), then simple triggers replayed on them:
+    fire when the last W seconds hold >= n answers and none fits (at most one fire per 60 s, like the re-check gap)."""
+    from ..tasks.compiler import load_library
+    lib, clips = load_library(), _clips()
+    rows = []
+    for run in runs:
+        for p in sorted((RUNS / run).glob("*.jsonl")):
+            recs = read_log(p)
+            meta = recs[0]
+            if meta.get("splice"):
+                gt = [(a, b, k) for a, b, k, _ in build(meta["splice"], clips, decode=False)[2]]
+            else:
+                gt = [(0.0, 1e9, meta["task_id"])]
+            bel = by_kind(recs, "belief")
+            bt = np.array([b["t"] for b in bel])
+            for sc in by_kind(recs, "step_choice"):
+                i = int(np.searchsorted(bt, sc["t"])) - 1          # the belief the question was asked from
+                if sc.get("error") or i < 0 or bel[i].get("task_id") not in lib:
+                    continue
+                b = bel[i]
+                playing = next((k for a, e, k in gt if a <= sc["t"] < e), gt[-1][2])
+                rows.append({"run": run, "id": p.stem, "single": not meta.get("splice"), "t": sc["t"],
+                             "on": b["task_id"] == playing,
+                             "type": _answer_type(lib[b["task_id"]], sc["choice"], b["map"], b["completed"])})
+    out = {"runs": list(runs), "answers": {}, "triggers": []}
+    for run in runs:
+        for on in (True, False):
+            for single in (True, False):
+                S = [r for r in rows if r["run"] == run and r["on"] == on and r["single"] == single]
+                out["answers"][f"{run}|{'on' if on else 'off'}_task|{'single' if single else 'splices'}"] = {
+                    "n": len(S), **{k: sum(r["type"] == k for r in S) / max(1, len(S)) for k in ("fit", "none", "ooo")}}
+    sess: dict = {}
+    for r in rows:
+        sess.setdefault((r["run"], r["id"]), []).append(r)
+    for run in runs:
+        for W in (30.0, 60.0):
+            for n in (3, 4, 5, 6):
+                on_s, fires_on, stretches, caught, lat = 0.0, 0, 0, 0, []
+                for (rn, _), R in sess.items():
+                    if rn != run:
+                        continue
+                    R = sorted(R, key=lambda r: r["t"])
+                    fire = [len(w) >= n and not any(x["type"] == "fit" for x in w)
+                            for w in ([x for x in R[:i + 1] if x["t"] > R[i]["t"] - W] for i in range(len(R)))]
+                    last = -1e9
+                    for i, r in enumerate(R):
+                        if r["on"]:
+                            on_s += min(20.0, R[i + 1]["t"] - r["t"]) if i + 1 < len(R) else 0.0
+                            if fire[i] and r["t"] - last >= 60.0:
+                                fires_on, last = fires_on + 1, r["t"]
+                    i = 0
+                    while i < len(R):                   # off-task stretches: runs of answers given while off task
+                        if R[i]["on"]:
+                            i += 1
+                            continue
+                        j = i
+                        while j + 1 < len(R) and not R[j + 1]["on"]:
+                            j += 1
+                        stretches += 1
+                        k = next((k for k in range(i, j + 1) if fire[k]), None)
+                        if k is not None:
+                            caught += 1
+                            lat.append(R[k]["t"] - R[i]["t"])
+                        i = j + 1
+                out["triggers"].append({"run": run, "window_s": W, "n": n,
+                                        "false_per_on_task_hour": fires_on / max(1e-9, on_s / 3600.0),
+                                        "off_stretches_caught": caught, "off_stretches": stretches,
+                                        "latency_p50_s": float(np.median(lat)) if lat else None})
+    return out
+
+
+def _enigma_first_touch() -> dict:
+    """ENIGMA-51 TRAIN annotations (labels only): when a job's board and screwdriver are first handled."""
+    from ..data import enigma51 as E
+    a = E.annotations()
+    tr = {v for v, x in a["videos"].items() if x["split"] == "Train"}
+    first: dict = {}
+    boards, drivers = {"high_voltage_board", "low_voltage_board"}, {"screwdriver", "electric_screwdriver"}
+    for v in tr:
+        I = E.interactions(v, a)
+        tb = next((t for t, _, o in I if o in boards), None)
+        td = next((t for t, _, o in I if o in drivers), None)
+        if tb is not None or td is not None:
+            first[v] = {"board": tb, "screwdriver": td}
+    b = [x["board"] for x in first.values() if x["board"] is not None]
+    d = [x["screwdriver"] for x in first.values() if x["screwdriver"] is not None]
+    return {"train_videos_with_interactions": len(first), "train_videos": len(tr),
+            "board_first_s_median": float(np.median(b)), "board_by_150s": sum(x <= 150 for x in b), "board_n": len(b),
+            "screwdriver_first_s_median": float(np.median(d)), "screwdriver_by_150s": sum(x <= 150 for x in d),
+            "screwdriver_n": len(d), "per_video": first}
+
+
+def lookalike_free_check(workers: int = 4, every_s: float = 60.0) -> dict:
+    """Section 16's free checks (LOOKALIKE_PROTOCOL). Writes results/multitask/lookalike_free_check.json."""
+    from concurrent.futures import ThreadPoolExecutor
+    from ..data import enigma51 as E
+    from ..evidence import ZeroShotEvidence
+    from ..landmarks import TextCache, lookalikes, task_landmarks
+    from . import harness
+    from .run_all import engine_config, multitask_overrides
+    over = multitask_overrides()
+    base = harness.load_stack(offtask_window=over.pop("offtask_window", None))
+    rep = E.library()
+    lib = {**base["library"], **rep}
+    ev = dict(base["evidence"])
+    for tid, g in rep.items():
+        z = np.load(E.GRAPHS / f"{tid}.npz")
+        ev[tid] = ZeroShotEvidence(g, {k: z[k] for k in z.files})
+    res: dict = {"protocol": LOOKALIKE_PROTOCOL, "label": "TRAIN data only; splices are SYNTHETIC"}
+    # (a) overlap and text cosines
+    fold = lambda p: " ".join(p.replace("-", " ").split())                  # noqa: E731
+    sets = {t: {fold(p) for p in task_landmarks(g)} for t, g in lib.items()}
+    jac = {f"{a}|{b}": len(sets[a] & sets[b]) / len(sets[a] | sets[b]) for a in sorted(lib) for b in sorted(lib) if a < b}
+    cook = [v for k, v in jac.items() if not any(t in rep for t in k.split("|"))]
+    repair = [v for k, v in jac.items() if all(t in rep for t in k.split("|"))]
+    res["overlap"] = {"repair_pairs": [min(repair), max(repair)], "cooking_pairs_max": max(cook),
+                      "mixed_pairs_max": max(v for k, v in jac.items() if sum(t in rep for t in k.split("|")) == 1),
+                      "lookalikes": lookalikes(lib), "pairs": jac}
+    pairs = [("high voltage board", "low voltage board"), ("electric screwdriver", "screwdriver"),
+             ("register", "log book"), ("bench lamp", "workbench lamp"), ("display", "oscilloscope")]
+    tc = TextCache()
+    res["text_cosine"] = {f"{a} | {b}": float(tc.get([a])[0] @ tc.get([b])[0]) for a, b in pairs}
+    # (b) when the distinguishing things are first handled (ENIGMA-51 train labels)
+    res["enigma_train_first_touch"] = _enigma_first_touch()
+    # (c) candidate 2 on logged answers
+    res["step_fit"] = step_fit_from_logs()
+    # (d) the chosen option in the engine
+    stacks = {}
+    for f in range(3):
+        st = fold_stack(base, f)
+        stacks[f] = {**st, "library": lib, "evidence": {**ev, **{k: v for k, v in st["evidence"].items() if k in base["library"]}},
+                     "recognizer": None}
+    clips = _clips()
+    dummy = [np.zeros((16, 16, 3), np.uint8)] * 4000            # frames for the re-check requests (never looked at)
+    items = [("clip", replace(c, end=min(c.end, 300.0)), f) for c, f in train_recordings(base["library"])] + \
+            [("splice", sp, sp["fold"]) for sp in make_splices("train", lib=base["library"])]
+
+    def one(arm, ecfg, it):
+        kind, x, f = it
+        run = f"mt_lookalike_free_{arm}"
+        if kind == "clip":
+            p = harness.run_clip(x, stacks[f], run, ecfg, oracle_task=True, frames=dummy, task_checker=NoAnswerChecker())
+            r = harness.score_clip(x, p)
+        else:
+            p = run_splice(x, stacks[f], run, ecfg, clips=clips, frames=dummy, oracle_first=True,
+                           task_checker=NoAnswerChecker())
+            r = score_splice(x, p)
+        recs = read_log(p)
+        tc_ = by_kind(recs, "task_check")
+        return {"kind": kind, "id": x.clip_id if kind == "clip" else x["id"], "step_acc": r["step_acc"],
+                "wrong_switches": r["wrong_switches"], "checks": dict(collections.Counter(c.get("reason") for c in tc_)),
+                "asks": len(by_kind(recs, "ask_switch")),
+                "beliefs": [(b["t"], b.get("task_id"), b["map"], b.get("p_away")) for b in by_kind(recs, "belief")]}
+    arms = {}
+    for arm, every in (("off", None), ("on", every_s)):
+        ecfg = engine_config({**over, "use_verifier": False, "lookalike_recheck_s": every})
+        with ThreadPoolExecutor(workers) as ex:
+            arms[arm] = list(ex.map(lambda it: one(arm, ecfg, it), items))
+    same = [a["beliefs"] == b["beliefs"] for a, b in zip(arms["off"], arms["on"])]
+    summ = lambda rows, kind: {                                                                         # noqa: E731
+        "n": sum(r["kind"] == kind for r in rows),
+        "step_acc": float(np.mean([r["step_acc"] for r in rows if r["kind"] == kind])),
+        "wrong_switches": sum(r["wrong_switches"] for r in rows if r["kind"] == kind),
+        "checks": dict(sum((collections.Counter(r["checks"]) for r in rows if r["kind"] == kind), collections.Counter())),
+        "lookalike_checks": sum(r["checks"].get("lookalike", 0) for r in rows if r["kind"] == kind),
+        "asks": sum(r["asks"] for r in rows if r["kind"] == kind)}
+    res["engine"] = {"every_s": every_s, **{arm: {k: summ(rows, k) for k in ("clip", "splice")} for arm, rows in arms.items()},
+                     "beliefs_identical": f"{sum(same)}/{len(same)}"}
+    res["engine"]["pass"] = (all(same) and res["engine"]["on"]["clip"]["lookalike_checks"] == 0
+                             and res["engine"]["on"]["clip"]["asks"] == 0)
+    (RESULTS / "multitask").mkdir(parents=True, exist_ok=True)
+    (RESULTS / "multitask" / "lookalike_free_check.json").write_text(json.dumps(res, indent=1, default=float))
+    return res

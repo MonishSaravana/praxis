@@ -310,3 +310,93 @@ def test_recognition_gate_min_time_and_agreeing_answers(tmp_path):
     assert eng._gate(r).recognized
     eng._last_choice = "a"
     assert not eng._gate(r).recognized                               # the answers named another task
+
+
+# ------------------------------------------------------------------ near-identical procedures (section 16)
+def with_parts(tid, parts, n=4):
+    g = chain(tid, n)
+    for nd in g.nodes:
+        nd.parts = list(parts)
+    return g
+
+
+BENCH = ["power supply", "oscilloscope", "soldering iron", "pliers", "screws"]
+
+
+def make_lookalike(tmp_path, name="la", every=30.0):
+    """a and b are near-identical repair jobs (same bench, one tool differs); c is something else entirely."""
+    eng, ver = make(tmp_path, name)
+    eng.lib = {"a": with_parts("a", BENCH + ["high-voltage board", "screwdriver"]),
+               "b": with_parts("b", BENCH + ["high voltage board", "electric screwdriver"]),
+               "c": with_parts("c", ["tortilla", "egg", "salsa"])}
+    eng.cfg.lookalike_recheck_s = every
+    return eng, ver
+
+
+def test_lookalikes_come_from_shared_parts():
+    from praxis.landmarks import lookalikes
+    lib = {"a": with_parts("a", BENCH + ["high-voltage board", "screwdriver"]),
+           "b": with_parts("b", BENCH + ["high voltage board", "electric screwdriver"]),
+           "c": with_parts("c", ["tortilla", "egg", "salsa"])}
+    la = lookalikes(lib, 0.25, anchors={})
+    assert la == {"a": ["b"], "b": ["a"]}                  # 6 shared of 8 (hyphens folded); c shares nothing
+    assert lookalikes(lib, 0.9, anchors={}) == {}
+
+
+def test_lookalike_recheck_asks_instead_of_switching(tmp_path):
+    eng, ver = make_lookalike(tmp_path)
+    ver.task_answer = "b"                              # landmarks still fit a (P(away) low): only the check can tell
+    seen = []
+    orig = ver.choose_task
+    ver.choose_task = lambda frames, opts: (seen.append(sorted(opts)), orig(frames, opts))[1]
+    run(eng, 1, 100)
+    chk = recs(eng, "task_check")
+    assert [r["reason"] for r in chk] == ["lookalike"] * len(chk) and len(chk) >= 2
+    assert chk[0]["t"] == 30.0 and seen[0] == ["a", "b"]   # first check one period after the start; a and b only
+    assert [r["decision"] for r in chk] == ["hold_confirm", "ask"] + ["hold_asked"] * (len(chk) - 2)   # 2 in a row
+    ask = recs(eng, "ask_switch")
+    assert len(ask) == 1 and ask[0]["task_id"] == "b" and ask[0]["current"] == "a"
+    acts = [r for r in recs(eng, "action") if r["action"] == "ask_switch"]
+    assert acts[0]["text"] == "Did you switch to the Task B?"
+    assert eng.task_id == "a" and not recs(eng, "task_state")   # no answer: nothing changes
+    eng.tracker.mark_complete("a0")
+    eng.answer_switch(100.0, "b", "yes")
+    assert eng.task_id == "b" and eng.tasks["a"].status == "paused"
+    assert recs(eng, "switch_answer")[0]["answer"] == "yes"
+
+
+def test_lookalike_answer_no_keeps_the_task_and_waits(tmp_path):
+    eng, ver = make_lookalike(tmp_path, "la_no")
+    ver.task_answer = "b"
+    run(eng, 1, 65)
+    assert len(recs(eng, "ask_switch")) == 1
+    eng.answer_switch(65.0, "b", "no")
+    eng.cfg.lookalike_ask_gap_s = 100.0
+    run(eng, 65, 160)                                  # asked at ~60, "no" at 65: the next ask waits until 165
+    assert len(recs(eng, "ask_switch")) == 1 and eng.task_id == "a"
+    run(eng, 160, 230)
+    assert len(recs(eng, "ask_switch")) == 2
+
+
+def test_lookalike_check_confirming_the_task_or_flag_off_changes_nothing(tmp_path):
+    eng, ver = make_lookalike(tmp_path, "la_keep")
+    run(eng, 1, 100)                                   # the check keeps answering a
+    assert {r["decision"] for r in recs(eng, "task_check")} == {"keep"} and not recs(eng, "ask_switch")
+    eng, ver = make_lookalike(tmp_path, "la_off", every=None)
+    ver.task_answer = "b"
+    run(eng, 1, 100)
+    assert not recs(eng, "task_check") and eng.task_id == "a"   # off: never asked, as before
+    eng, ver = make(tmp_path, "la_none")               # on, but no look-alikes in the library (no shared parts)
+    eng.cfg.lookalike_recheck_s = 30.0
+    ver.task_answer = "b"
+    run(eng, 1, 100)
+    assert not recs(eng, "task_check")
+
+
+def test_lookalike_task_given_never_asks(tmp_path):
+    eng, ver = make_lookalike(tmp_path, "la_given")
+    eng.cfg.switching = False
+    ver.task_answer = "b"
+    run(eng, 1, 100)
+    assert {r["decision"] for r in recs(eng, "task_check")} == {"hold_confirm", "hold_task_given"}
+    assert not recs(eng, "ask_switch") and eng.task_id == "a"

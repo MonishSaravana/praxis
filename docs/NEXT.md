@@ -302,3 +302,13 @@ customer pilot. Verifying the vendors' terms costs nothing and can happen any ti
   are needed before any claim about the wedge. Pilot sessions in Studio would produce them.
 - **Distillation.** Replacing routine verifier calls with a local student model (first step measured in
   `results/l7/`) is what makes the coach cheap and fast at scale.
+- **Step verification on repair footage (added 2026-10-18, deferred by the founder; built, off, not measured).** On the
+  ENIGMA-51 repair videos Praxis tracks steps but never checks one. The event detector that triggers "is this step
+  done?" was trained on cooking video and never fires on workbench repair (scores up to 0.76 against a 0.8 bar). All 68
+  steps it marked done there went unchecked; the PROXY labels agree on 40 of them. The fix is in the engine but off by
+  default: `EngineConfig.leave_check` checks the step the belief is leaving. On logged runs, the step being left was
+  already done 60-75% of the time, against 26-44% for a check at a random moment, on cooking and repair alike.
+  Frame-change detectors (SSIM, SigLIP2, V-JEPA 2) were no better than random on repair. **Next:** a cooking TRAIN
+  no-regression check of three variants, then the 4 ENIGMA videos: checks run, steps verified, verdict accuracy, and
+  whether the on-screen instruction changes (`eval/verify_check.py`; pass rule in `PROTOCOL`, written before any run).
+  **Estimate:** at most $1.05 main and $3.40 OpenAI (expected about $0.45 and $1.20-2.50). Needs the founder's go.

@@ -1,0 +1,488 @@
+{
+ "protocol": "TRAIN data only, no model calls (docs/MULTITASK.md section 16). Written before running.\n  candidates  1 distinguishing landmarks, 2 step-level fit from the fast tier's \"which step?\" answers, 3 a periodic\n              \"which task?\" re-check while the library holds look-alikes of the current task\n  free checks (a) landmark overlap between every pair of library procedures and the SigLIP2 text cosine of what tells the\n              repair jobs apart (texts only); (b) the ENIGMA-51 TRAIN annotations: when a job's board and screwdriver\n              are first handled (labels only, no footage); (c) candidate 2 on the logged answers of two paid TRAIN runs\n              (mt_combined_A0, mt_solfix_C2: Jev answers \"which step?\"), typed against what was playing; (d) the chosen\n              option in the engine: the 24 v1 single-task recordings (first 300 s) + the 22 v1 train splices, first\n              task given, local layers only, 3-fold v1 stacks, the chosen multi-task configuration, the library as in\n              Studio (cooking + the four repair procedures); \"which task?\" goes to a stand-in that logs each request and\n              never answers, so the re-check schedule runs without spending; arms: look-alike re-check off / on (60 s).\n  pass (d)    the 'on' arm makes no look-alike re-check and asks no \"Did you switch?\" on these recordings, and its\n              beliefs equal the 'off' arm's, so it cannot add a wrong switch on them.\nENIGMA-51 test footage and its run logs are not used.",
+ "label": "TRAIN data only; splices are SYNTHETIC",
+ "overlap": {
+  "repair_pairs": [
+   0.35714285714285715,
+   0.5666666666666667
+  ],
+  "cooking_pairs_max": 0.14285714285714285,
+  "mixed_pairs_max": 0.04,
+  "lookalikes": {
+   "enigma_hv_electric": [
+    "enigma_hv_manual",
+    "enigma_lv_electric",
+    "enigma_lv_manual"
+   ],
+   "enigma_hv_manual": [
+    "enigma_hv_electric",
+    "enigma_lv_electric",
+    "enigma_lv_manual"
+   ],
+   "enigma_lv_electric": [
+    "enigma_hv_electric",
+    "enigma_hv_manual",
+    "enigma_lv_manual"
+   ],
+   "enigma_lv_manual": [
+    "enigma_hv_electric",
+    "enigma_hv_manual",
+    "enigma_lv_electric"
+   ]
+  },
+  "pairs": {
+   "cc4d_breakfastburritos|cc4d_cucumberraita": 0.02127659574468085,
+   "cc4d_breakfastburritos|cc4d_herbomeletwithfriedtomatoes": 0.075,
+   "cc4d_breakfastburritos|cc4d_microwaveeggsandwich": 0.14285714285714285,
+   "cc4d_breakfastburritos|cc4d_microwavemugpizza": 0.05,
+   "cc4d_breakfastburritos|cc4d_pinwheels": 0.02702702702702703,
+   "cc4d_breakfastburritos|cc4d_spicedhotchocolate": 0.034482758620689655,
+   "cc4d_breakfastburritos|cc4d_tomatomozzarellasalad": 0.0,
+   "cc4d_breakfastburritos|enigma_hv_electric": 0.0,
+   "cc4d_breakfastburritos|enigma_hv_manual": 0.0,
+   "cc4d_breakfastburritos|enigma_lv_electric": 0.0,
+   "cc4d_breakfastburritos|enigma_lv_manual": 0.0,
+   "cc4d_breakfastburritos|industreal_assy": 0.0,
+   "cc4d_cucumberraita|cc4d_herbomeletwithfriedtomatoes": 0.044444444444444446,
+   "cc4d_cucumberraita|cc4d_microwaveeggsandwich": 0.047619047619047616,
+   "cc4d_cucumberraita|cc4d_microwavemugpizza": 0.022222222222222223,
+   "cc4d_cucumberraita|cc4d_pinwheels": 0.024390243902439025,
+   "cc4d_cucumberraita|cc4d_spicedhotchocolate": 0.030303030303030304,
+   "cc4d_cucumberraita|cc4d_tomatomozzarellasalad": 0.023255813953488372,
+   "cc4d_cucumberraita|enigma_hv_electric": 0.0,
+   "cc4d_cucumberraita|enigma_hv_manual": 0.0,
+   "cc4d_cucumberraita|enigma_lv_electric": 0.0,
+   "cc4d_cucumberraita|enigma_lv_manual": 0.0,
+   "cc4d_cucumberraita|industreal_assy": 0.0,
+   "cc4d_herbomeletwithfriedtomatoes|cc4d_microwaveeggsandwich": 0.11428571428571428,
+   "cc4d_herbomeletwithfriedtomatoes|cc4d_microwavemugpizza": 0.0,
+   "cc4d_herbomeletwithfriedtomatoes|cc4d_pinwheels": 0.027777777777777776,
+   "cc4d_herbomeletwithfriedtomatoes|cc4d_spicedhotchocolate": 0.0,
+   "cc4d_herbomeletwithfriedtomatoes|cc4d_tomatomozzarellasalad": 0.02631578947368421,
+   "cc4d_herbomeletwithfriedtomatoes|enigma_hv_electric": 0.0,
+   "cc4d_herbomeletwithfriedtomatoes|enigma_hv_manual": 0.0,
+   "cc4d_herbomeletwithfriedtomatoes|enigma_lv_electric": 0.0,
+   "cc4d_herbomeletwithfriedtomatoes|enigma_lv_manual": 0.0,
+   "cc4d_herbomeletwithfriedtomatoes|industreal_assy": 0.0,
+   "cc4d_microwaveeggsandwich|cc4d_microwavemugpizza": 0.05555555555555555,
+   "cc4d_microwaveeggsandwich|cc4d_pinwheels": 0.030303030303030304,
+   "cc4d_microwaveeggsandwich|cc4d_spicedhotchocolate": 0.04,
+   "cc4d_microwaveeggsandwich|cc4d_tomatomozzarellasalad": 0.02857142857142857,
+   "cc4d_microwaveeggsandwich|enigma_hv_electric": 0.0,
+   "cc4d_microwaveeggsandwich|enigma_hv_manual": 0.0,
+   "cc4d_microwaveeggsandwich|enigma_lv_electric": 0.0,
+   "cc4d_microwaveeggsandwich|enigma_lv_manual": 0.0,
+   "cc4d_microwaveeggsandwich|industreal_assy": 0.0,
+   "cc4d_microwavemugpizza|cc4d_pinwheels": 0.0,
+   "cc4d_microwavemugpizza|cc4d_spicedhotchocolate": 0.07692307692307693,
+   "cc4d_microwavemugpizza|cc4d_tomatomozzarellasalad": 0.05555555555555555,
+   "cc4d_microwavemugpizza|enigma_hv_electric": 0.0,
+   "cc4d_microwavemugpizza|enigma_hv_manual": 0.0,
+   "cc4d_microwavemugpizza|enigma_lv_electric": 0.0,
+   "cc4d_microwavemugpizza|enigma_lv_manual": 0.0,
+   "cc4d_microwavemugpizza|industreal_assy": 0.0,
+   "cc4d_pinwheels|cc4d_spicedhotchocolate": 0.0,
+   "cc4d_pinwheels|cc4d_tomatomozzarellasalad": 0.0,
+   "cc4d_pinwheels|enigma_hv_electric": 0.0,
+   "cc4d_pinwheels|enigma_hv_manual": 0.0,
+   "cc4d_pinwheels|enigma_lv_electric": 0.0,
+   "cc4d_pinwheels|enigma_lv_manual": 0.0,
+   "cc4d_pinwheels|industreal_assy": 0.0,
+   "cc4d_spicedhotchocolate|cc4d_tomatomozzarellasalad": 0.0,
+   "cc4d_spicedhotchocolate|enigma_hv_electric": 0.0,
+   "cc4d_spicedhotchocolate|enigma_hv_manual": 0.0,
+   "cc4d_spicedhotchocolate|enigma_lv_electric": 0.0,
+   "cc4d_spicedhotchocolate|enigma_lv_manual": 0.0,
+   "cc4d_spicedhotchocolate|industreal_assy": 0.0,
+   "cc4d_tomatomozzarellasalad|enigma_hv_electric": 0.0,
+   "cc4d_tomatomozzarellasalad|enigma_hv_manual": 0.0,
+   "cc4d_tomatomozzarellasalad|enigma_lv_electric": 0.0,
+   "cc4d_tomatomozzarellasalad|enigma_lv_manual": 0.0,
+   "cc4d_tomatomozzarellasalad|industreal_assy": 0.0,
+   "enigma_hv_electric|enigma_hv_manual": 0.39285714285714285,
+   "enigma_hv_electric|enigma_lv_electric": 0.5666666666666667,
+   "enigma_hv_electric|enigma_lv_manual": 0.4,
+   "enigma_hv_electric|industreal_assy": 0.0,
+   "enigma_hv_manual|enigma_lv_electric": 0.35714285714285715,
+   "enigma_hv_manual|enigma_lv_manual": 0.43478260869565216,
+   "enigma_hv_manual|industreal_assy": 0.04,
+   "enigma_lv_electric|enigma_lv_manual": 0.5185185185185185,
+   "enigma_lv_electric|industreal_assy": 0.0,
+   "enigma_lv_manual|industreal_assy": 0.03571428571428571
+  }
+ },
+ "text_cosine": {
+  "high voltage board | low voltage board": 0.9661595821380615,
+  "electric screwdriver | screwdriver": 0.9109797477722168,
+  "register | log book": 0.8729959726333618,
+  "bench lamp | workbench lamp": 0.9254848957061768,
+  "display | oscilloscope": 0.8236479759216309
+ },
+ "enigma_train_first_touch": {
+  "train_videos_with_interactions": 26,
+  "train_videos": 27,
+  "board_first_s_median": 59.183,
+  "board_by_150s": 26,
+  "board_n": 26,
+  "screwdriver_first_s_median": 77.4165,
+  "screwdriver_by_150s": 24,
+  "screwdriver_n": 26,
+  "per_video": {
+   "111": {
+    "board": 56.633,
+    "screwdriver": 305.233
+   },
+   "92": {
+    "board": 57.2,
+    "screwdriver": 70.8
+   },
+   "81": {
+    "board": 65.433,
+    "screwdriver": 80.4
+   },
+   "146": {
+    "board": 48.866,
+    "screwdriver": 58.6
+   },
+   "60": {
+    "board": 64.066,
+    "screwdriver": 79.966
+   },
+   "156": {
+    "board": 54.566,
+    "screwdriver": 56.733
+   },
+   "154": {
+    "board": 47.0,
+    "screwdriver": 71.033
+   },
+   "153": {
+    "board": 77.4,
+    "screwdriver": 74.6
+   },
+   "105": {
+    "board": 52.6,
+    "screwdriver": 76.333
+   },
+   "148": {
+    "board": 44.866,
+    "screwdriver": 59.533
+   },
+   "104": {
+    "board": 64.366,
+    "screwdriver": 83.166
+   },
+   "126": {
+    "board": 64.033,
+    "screwdriver": 81.633
+   },
+   "79": {
+    "board": 62.466,
+    "screwdriver": 81.2
+   },
+   "145": {
+    "board": 57.266,
+    "screwdriver": 76.533
+   },
+   "56": {
+    "board": 120.7,
+    "screwdriver": 250.366
+   },
+   "69": {
+    "board": 67.666,
+    "screwdriver": 83.266
+   },
+   "91": {
+    "board": 53.533,
+    "screwdriver": 65.7
+   },
+   "157": {
+    "board": 79.2,
+    "screwdriver": 52.833
+   },
+   "72": {
+    "board": 55.233,
+    "screwdriver": 68.366
+   },
+   "63": {
+    "board": 61.9,
+    "screwdriver": 82.533
+   },
+   "83": {
+    "board": 60.533,
+    "screwdriver": 78.3
+   },
+   "55": {
+    "board": 67.066,
+    "screwdriver": 94.233
+   },
+   "58": {
+    "board": 70.766,
+    "screwdriver": 87.533
+   },
+   "135": {
+    "board": 55.433,
+    "screwdriver": 68.9
+   },
+   "76": {
+    "board": 57.833,
+    "screwdriver": 78.966
+   },
+   "74": {
+    "board": 56.133,
+    "screwdriver": 67.066
+   }
+  }
+ },
+ "step_fit": {
+  "runs": [
+   "mt_combined_A0",
+   "mt_solfix_C2"
+  ],
+  "answers": {
+   "mt_combined_A0|on_task|single": {
+    "n": 668,
+    "fit": 0.36826347305389223,
+    "none": 0.5778443113772455,
+    "ooo": 0.05389221556886228
+   },
+   "mt_combined_A0|on_task|splices": {
+    "n": 601,
+    "fit": 0.3910149750415973,
+    "none": 0.5690515806988353,
+    "ooo": 0.03993344425956739
+   },
+   "mt_combined_A0|off_task|single": {
+    "n": 120,
+    "fit": 0.175,
+    "none": 0.7583333333333333,
+    "ooo": 0.06666666666666667
+   },
+   "mt_combined_A0|off_task|splices": {
+    "n": 447,
+    "fit": 0.06711409395973154,
+    "none": 0.8814317673378076,
+    "ooo": 0.05145413870246085
+   },
+   "mt_solfix_C2|on_task|single": {
+    "n": 760,
+    "fit": 0.3355263157894737,
+    "none": 0.6171052631578947,
+    "ooo": 0.04736842105263158
+   },
+   "mt_solfix_C2|on_task|splices": {
+    "n": 866,
+    "fit": 0.3394919168591224,
+    "none": 0.6177829099307159,
+    "ooo": 0.042725173210161664
+   },
+   "mt_solfix_C2|off_task|single": {
+    "n": 101,
+    "fit": 0.22772277227722773,
+    "none": 0.7524752475247525,
+    "ooo": 0.019801980198019802
+   },
+   "mt_solfix_C2|off_task|splices": {
+    "n": 571,
+    "fit": 0.13660245183887915,
+    "none": 0.8266199649737302,
+    "ooo": 0.03677758318739054
+   }
+  },
+  "triggers": [
+   {
+    "run": "mt_combined_A0",
+    "window_s": 30.0,
+    "n": 3,
+    "false_per_on_task_hour": 32.73809523809524,
+    "off_stretches_caught": 29,
+    "off_stretches": 33,
+    "latency_p50_s": 9.0
+   },
+   {
+    "run": "mt_combined_A0",
+    "window_s": 30.0,
+    "n": 4,
+    "false_per_on_task_hour": 26.19047619047619,
+    "off_stretches_caught": 26,
+    "off_stretches": 33,
+    "latency_p50_s": 12.0
+   },
+   {
+    "run": "mt_combined_A0",
+    "window_s": 30.0,
+    "n": 5,
+    "false_per_on_task_hour": 24.404761904761905,
+    "off_stretches_caught": 23,
+    "off_stretches": 33,
+    "latency_p50_s": 15.0
+   },
+   {
+    "run": "mt_combined_A0",
+    "window_s": 30.0,
+    "n": 6,
+    "false_per_on_task_hour": 19.047619047619047,
+    "off_stretches_caught": 22,
+    "off_stretches": 33,
+    "latency_p50_s": 16.5
+   },
+   {
+    "run": "mt_combined_A0",
+    "window_s": 60.0,
+    "n": 3,
+    "false_per_on_task_hour": 24.404761904761905,
+    "off_stretches_caught": 26,
+    "off_stretches": 33,
+    "latency_p50_s": 10.0
+   },
+   {
+    "run": "mt_combined_A0",
+    "window_s": 60.0,
+    "n": 4,
+    "false_per_on_task_hour": 18.452380952380953,
+    "off_stretches_caught": 25,
+    "off_stretches": 33,
+    "latency_p50_s": 14.0
+   },
+   {
+    "run": "mt_combined_A0",
+    "window_s": 60.0,
+    "n": 5,
+    "false_per_on_task_hour": 16.071428571428573,
+    "off_stretches_caught": 25,
+    "off_stretches": 33,
+    "latency_p50_s": 17.0
+   },
+   {
+    "run": "mt_combined_A0",
+    "window_s": 60.0,
+    "n": 6,
+    "false_per_on_task_hour": 11.904761904761905,
+    "off_stretches_caught": 23,
+    "off_stretches": 33,
+    "latency_p50_s": 20.0
+   },
+   {
+    "run": "mt_solfix_C2",
+    "window_s": 30.0,
+    "n": 3,
+    "false_per_on_task_hour": 35.83310608126534,
+    "off_stretches_caught": 31,
+    "off_stretches": 37,
+    "latency_p50_s": 15.0
+   },
+   {
+    "run": "mt_solfix_C2",
+    "window_s": 30.0,
+    "n": 4,
+    "false_per_on_task_hour": 33.37878374693209,
+    "off_stretches_caught": 29,
+    "off_stretches": 37,
+    "latency_p50_s": 21.0
+   },
+   {
+    "run": "mt_solfix_C2",
+    "window_s": 30.0,
+    "n": 5,
+    "false_per_on_task_hour": 30.433596945732205,
+    "off_stretches_caught": 27,
+    "off_stretches": 37,
+    "latency_p50_s": 27.0
+   },
+   {
+    "run": "mt_solfix_C2",
+    "window_s": 30.0,
+    "n": 6,
+    "false_per_on_task_hour": 26.997545677665666,
+    "off_stretches_caught": 26,
+    "off_stretches": 37,
+    "latency_p50_s": 25.5
+   },
+   {
+    "run": "mt_solfix_C2",
+    "window_s": 60.0,
+    "n": 3,
+    "false_per_on_task_hour": 25.524952277065722,
+    "off_stretches_caught": 21,
+    "off_stretches": 37,
+    "latency_p50_s": 15.0
+   },
+   {
+    "run": "mt_solfix_C2",
+    "window_s": 60.0,
+    "n": 4,
+    "false_per_on_task_hour": 22.57976547586583,
+    "off_stretches_caught": 20,
+    "off_stretches": 37,
+    "latency_p50_s": 16.5
+   },
+   {
+    "run": "mt_solfix_C2",
+    "window_s": 60.0,
+    "n": 5,
+    "false_per_on_task_hour": 21.107172075265883,
+    "off_stretches_caught": 19,
+    "off_stretches": 37,
+    "latency_p50_s": 18.0
+   },
+   {
+    "run": "mt_solfix_C2",
+    "window_s": 60.0,
+    "n": 6,
+    "false_per_on_task_hour": 19.14371420779929,
+    "off_stretches_caught": 19,
+    "off_stretches": 37,
+    "latency_p50_s": 18.0
+   }
+  ]
+ },
+ "engine": {
+  "every_s": 60.0,
+  "off": {
+   "clip": {
+    "n": 24,
+    "step_acc": 0.5449691722970548,
+    "wrong_switches": 0,
+    "checks": {
+     "poor_fit": 20
+    },
+    "lookalike_checks": 0,
+    "asks": 0
+   },
+   "splice": {
+    "n": 22,
+    "step_acc": 0.3808454794224939,
+    "wrong_switches": 0,
+    "checks": {
+     "poor_fit": 87
+    },
+    "lookalike_checks": 0,
+    "asks": 0
+   }
+  },
+  "on": {
+   "clip": {
+    "n": 24,
+    "step_acc": 0.5449691722970548,
+    "wrong_switches": 0,
+    "checks": {
+     "poor_fit": 20
+    },
+    "lookalike_checks": 0,
+    "asks": 0
+   },
+   "splice": {
+    "n": 22,
+    "step_acc": 0.3808454794224939,
+    "wrong_switches": 0,
+    "checks": {
+     "poor_fit": 87
+    },
+    "lookalike_checks": 0,
+    "asks": 0
+   }
+  },
+  "beliefs_identical": "46/46",
+  "pass": true
+ }
+}

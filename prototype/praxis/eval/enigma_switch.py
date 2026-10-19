@@ -204,6 +204,14 @@ def score(spec: dict, log_path, settle_s: float = 60.0) -> dict:
         res["interruption_paused"] = any(t_x0 <= x["t"] < t_ret + 30 for x in st)
         res["interruption_pause_latency_s"] = next((round(x["t"] - t_x0, 1) for x in st if t_x0 <= x["t"] < t_ret + 30), None)
         res["interruption_pauses_outside"] = sum(1 for x in st if not (t_x0 <= x["t"] < t_ret + 30))
+    # look-alike re-check (EngineConfig.lookalike_recheck_s): "Did you switch to ...?" asked while another job played
+    asks = by_kind(recs, "ask_switch")
+    res["switch_asks"] = [[round(x["t"], 1), x["task_id"], playing(x["t"])] for x in asks]
+    res["switch_asks_wrong"] = sum(1 for x in asks if x["task_id"] != playing(x["t"]))
+    if mid != OTHER:
+        hit = [x["t"] for x in asks if t_x0 <= x["t"] < t_ret and x["task_id"] == mid]
+        res["switch_asked"] = bool(hit)
+        res["switch_ask_latency_s"] = round(hit[0] - t_x0, 1) if hit else None
     # back to A: when A is current again, at which step
     left = any(t_x0 <= t < t_ret + settle_s and k != a for t, k in later) or \
         any(t < t_x0 and k != a for t, k in later)
@@ -261,10 +269,12 @@ def aggregate(rows: list[dict]) -> dict:
            "step_acc_job_a": mean("step_acc_job_a", rows), "correct_task_share": mean("correct_task_share", rows),
            "wrong_switches": sum(r["wrong_switches"] for r in rows),
            "wrong_switches_per_hour": sum(r["wrong_switches"] for r in rows) / max(1e-6, mins / 60),
-           "task_checks": sum(r["task_checks"] for r in rows), "cost_usd": float(sum(r["cost_usd"] for r in rows))}
+           "task_checks": sum(r["task_checks"] for r in rows), "cost_usd": float(sum(r["cost_usd"] for r in rows)),
+           "switch_asks_wrong": sum(r.get("switch_asks_wrong", 0) for r in rows)}
     if rr:
         lat = [r["switch_latency_s"] for r in rr if r["switch_latency_s"] is not None]
         out["resume"] = {"n": len(rr), "switch_detected": sum(r["switch_detected"] for r in rr),
+                         "switch_asked": sum(bool(r.get("switch_asked")) for r in rr),
                          "switch_latency_s": lat, "resumed": sum(r["resumed"] for r in rr),
                          "a_current_60s_after_return": sum(r["a_current_60s_after_return"] for r in rr),
                          "resume_step_exact": sum(bool(r.get("resume_step_exact")) for r in rr),

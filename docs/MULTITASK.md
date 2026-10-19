@@ -583,8 +583,8 @@ jobs and that the engine is unchanged when there are none. It says nothing about
   - a rule fixed before that run: keep the defaults if wrong questions on the single-task jobs are ≤ 2 per hour and
     the other job is asked about during its 150 s in ≥ 2 of 4 splices.
 
-  **Status: in progress, paused 2026-10-18, to pick up after the 10/20 interview.** Paused before the download: nothing
-  downloaded, $0 spent. Prep done:
+  **Status: queued, not scheduled (2026-10-18).** The founder: "we don't need it right now". Nothing downloaded, $0
+  spent. It is item 1 in `docs/TO_TEST.md`, which also has options for 8 or 12 train splices. Prep done:
   - Videos are picked by a fixed rule that doesn't look at outcomes: per procedure, the shortest ENIGMA Train-split
     video of at least 20 min that has clean labels and handles its own board and screwdriver within 150 s. That gives
     91 (hv manual), 126 (hv electric), 154 (lv electric) and 157 (lv manual), 5.46 GB in all.
