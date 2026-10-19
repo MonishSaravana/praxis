@@ -27,7 +27,7 @@ async function applyTheme(file, theme) {
 const A = (f) => path.join(ROOT, "brand", "deck", "v1", "assets", f);
 const MK = (f) => path.join(__dirname, "assets", "marks", f);
 const P = (px) => px / 144;
-const TOTAL = 13; // main-deck slides; appendix slides carry the full mark
+const TOTAL = 14; // main-deck slides; appendix slides carry the full mark
 
 const THEME = {
   name: "Praxis",
@@ -275,7 +275,7 @@ function sProblem() {
   line(s, 0.5, 5.85, 12.83, 5.85, { color: C.accent6, width: 0.75, name: "problem-rule" });
   tb(s, [{ text: "~255,000 openings a year ", options: { fontFace: SEMI } }, { text: "for US maintenance and repair techs, and every new hire pulls a senior tech off the floor." }], { x: 0.5, y: 6.0, w: 12.33, h: 0.5, fontSize: 17 });
   footer(s, 0, "ARSA member survey of 35 repair stations, 2017 · Reliability magazine (A. Gager) · BLS Occupational Outlook Handbook");
-  s.addNotes("Manuals and videos can't see you, so the senior tech is the real teacher, and that time sits in nobody's training budget. ARSA surveyed 35 aviation repair stations: new hires took 9 to 14 months on average to become profitable, some up to 24. Reliability magazine puts recruiting and hiring one maintenance technician at $10,000 to $15,000 once onboarding time and lost productivity are counted; that's a trade estimate, not a study. BLS says on-the-job training for these jobs typically lasts more than a year. Our own estimate of the senior-tech time alone is $11-23k per hire (appendix A4).");
+  s.addNotes(`Manuals and videos can't see you, so the senior tech is the real teacher, and that time sits in nobody's training budget. ARSA surveyed 35 aviation repair stations: new hires took 9 to 14 months on average to become profitable, some up to 24. Reliability magazine puts recruiting and hiring one maintenance technician at $10,000 to $15,000 once onboarding time and lost productivity are counted; that's a trade estimate, not a study. BLS says on-the-job training for these jobs typically lasts more than a year. Our own estimate of the senior-tech time alone is $11-23k per hire (appendix ${ref(aUnitEcon)}).`);
 }
 
 // ---------- Product ----------
@@ -541,6 +541,34 @@ function sBuilt() {
   s.addNotes("This is the product a company actually touches, running today. One: a manager uploads the manuals they already have. Here it's three public Bureau of Reclamation maintenance manuals, 97 to 222 pages; each is parsed and indexed on the laptop in under 2 seconds, nothing is sent to a model, and it finds the likely procedures. Two: they pick a procedure and Praxis compiles it into coached steps for about 16 to 19 cents, with knowledge cards quoted from the manual and the page cited; the manager reviews, edits and approves before any technician sees it. Three: the technician is coached live through smart glasses, by voice or on the glasses' screen depending on the model. Say out loud: the Meta and Viture glasses connections are built but not yet tested on the devices; that's part of what the grant buys.");
 }
 
+// ---------- Live demo: real repair footage, the model's own output (renders/demo, praxis.render.reel) ----------
+const VID = (f) => path.join(__dirname, "assets", "video", f);
+const poster = (f) => "data:image/png;base64," + fs.readFileSync(VID(f)).toString("base64");
+function video(s, name, x, y, w) {
+  const h = w * 9 / 16;
+  s.addMedia({ type: "video", path: VID(`${name}.mp4`), cover: poster(`${name}_poster.png`), x, y, w, h, objectName: "demo-video" });
+  return y + h;
+}
+function sLive() {
+  const s = pres.addSlide({ masterName: "Praxis Light" });
+  s.addText("HOW FAR ALONG · LIVE", { placeholder: "eyebrow" });
+  s.addText("A live session on a real repair job.\nEvery card on screen is the model's own output", { placeholder: "title" });
+  video(s, "repair_demo_user", 0.5, 2.3, 7.82);
+  const x = 8.7, w = 4.13;
+  [["0:00", "Starts from the lab's written procedure. It was never trained on this task."],
+   ["0:26", "The fast model suspects a missed button. Opus checks and clears it, so no false alarm."],
+   ["2:52", "Safety-critical step: it reads the iron at 215 °C and tells the tech to go back to 200."],
+   ["3:37", "Follows the resolder, step by step."]].forEach(([t, b], i) => {
+    const y = 2.3 + i * 0.98;
+    line(s, x, y, x + w, y, { color: C.text1, width: i ? 0.75 : 1.5, name: "beat-rule" });
+    tb(s, t, { x, y: y + 0.14, w: 0.8, h: 0.3, fontFace: SEMI, fontSize: 14, color: C.accent2, objectName: "beat-time" });
+    tb(s, b, { x: x + 0.8, y: y + 0.12, w: w - 0.8, h: 0.8, fontSize: 13.5, color: BODY, objectName: "beat-text" });
+  });
+  mono(s, "ENIGMA-51 · REAL REPAIR LAB · 16-MINUTE LIVE SESSION · $0.17", { x, y: 6.35, w, h: 0.3, fontSize: 9.5 });
+  footer(s, 0, "Praxis Studio live session on ENIGMA-51 video 141 (first-person high-voltage board repair) · renders/demo/README.md");
+  s.addNotes("Click to play; it's 49 seconds. This is real footage from an industrial repair lab (the ENIGMA-51 dataset), streamed through Praxis live: the fast tier is Jev, and Claude Opus double-checks when the fast model is unsure. Every card is drawn from the session's log at the time it happened. The cut only picks moments, and each frame shows its session time. The procedure was compiled from the lab's written instructions, and the models were never trained on this task. Say plainly if asked: these are selected moments. Across the whole 16-minute session it confirmed 1 of 19 steps and agreed with proxy step labels 29% of the time. The overshoot alert came about 6 seconds after the frame it checked, while it waited on Opus, and by then the tech had already pressed DOWN back to 200. A second alert later in the session was a false alarm and is left out. The engineer view of the same session is in the appendix.");
+}
+
 // ---------- How far along (2/2): what works, measured, and the bottleneck ----------
 function sWorks() {
   const s = pres.addSlide({ masterName: "Praxis Light" });
@@ -799,6 +827,21 @@ const appx = (_label, title) => {
   return s;
 };
 
+// ---------- Under the hood: the engineer cut of the live session ----------
+function aUnderHood() {
+  const s = appx("", "Under the hood: the same live session, layer by layer");
+  video(s, "repair_demo_engineer", 0.5, 1.95, 8.6);
+  const x = 9.4, w = 3.43;
+  tb(s, runs([
+    ["State tracker. ", "Its belief over the 19 steps, the time on the current step, and whether the tech looks like a novice."],
+    ["Model calls. ", "Jev answers in 150 ms (median, 130 calls). Opus double-checks 14 moments, about 4 s each."],
+    ["Timeline. ", "The event detector, both model tiers, the tracked step and every decision to speak or stay quiet."],
+    ["Cost. ", "$0.165 for the whole 16:40 session, with 0 errors."],
+  ], 12), { x, y: 1.95, w, h: 4.8, fontSize: 13.5, color: BODY, objectName: "hood-legend" });
+  footer(s, TOTAL, "Praxis Studio live session on ENIGMA-51 video 141 · latencies from the session log");
+  s.addNotes("The same 49 seconds as the live slide, with the engine underneath. Right: the state tracker's belief over the 19 steps, and below it each model call with its real latency. Bottom: a scrolling timeline of the event detector, the fast tier (Jev), the Opus escalations, the step it thinks you're on, and the policy's decisions. Two moments to point at. At 0:26 the fast model flags a missed button with 0.84 confidence; Opus says the step is still in progress, so no alert goes out (both buttons are lit in the footage). At 2:52 the fast model guesses the wrong cause and Opus reads the display at 215 °C. That alert lands 6 seconds after the checked frame, and cutting that escalation latency is next.");
+}
+
 // ---------- Status quo ----------
 function aStatusQuo() {
   const s = pres.addSlide({ masterName: "Praxis Light", sectionTitle: "Appendix" });
@@ -972,7 +1015,7 @@ function aGlasses() {
 // ================================================================== ORDER
 const CORE = [
   ["Story", [sCover, sProblem, sProduct]],
-  ["Progress", [sEngine, sBuilt, sWorks]],
+  ["Progress", [sEngine, sBuilt, sLive, sWorks]],
   ["Why now", [sWhyNow]],
   ["Why we win", [sWorkflow, sBigTech]],
   ["Market", [sMarket, sBusiness]],
@@ -980,7 +1023,7 @@ const CORE = [
   ["Ask", [sAsk]],
 ];
 const APPENDIX = [
-  [sEvidence, "Evidence: accuracy and cost"], [aTrain, "What we train, and why big labs won't"], [aStatusQuo, "The status quo, tool by tool"],
+  [sEvidence, "Evidence: accuracy and cost"], [aUnderHood, "Under the hood: the live session"], [aTrain, "What we train, and why big labs won't"], [aStatusQuo, "The status quo, tool by tool"],
   [aMarketMath, "Market math and assumptions"], [aUnitEcon, "Unit economics and pricing risk"], [aCurves, "Learning curves"],
   [aTraining, "Training data, stated plainly"], [aCompetitors, "Competitor detail"], [sConsumers, "Why not consumers first"],
   [aRisks, "Risks and what we do"], [aGlasses, "Glasses and voice"], [sFounder, "Why me"],
