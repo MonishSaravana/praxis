@@ -106,4 +106,8 @@ an industrial-maintenance subreddit.
 
 | Date | Role | Kind of organization | Channel | Replied? | Key line (paraphrase) | Next step |
 |---|---|---|---|---|---|---|
-| | | | | | | |
+| Mon 10/19 | Training staff | Fiber-optic training school (FOM, splicing, inspection and testing) | Email, training inbox | Yes, within the hour | The instructor demos each lab, then students follow a lab manual, with recorded videos for review. The struggle comes after class: without the tools and practice, they forget very quickly. "We would be open to an experiment like this." | Thank them and propose one lab exercise. Before anything runs, say it's becoming a startup, not only a school project |
+| Mon 10/19, 4:49 pm CT | Association staff | Sterile processing association (HSPA, a national professional body) | Email | Yes, within 15 min | "The hardest AND most expensive part" is training new techs to clean complex surgical instruments in decontamination: lots of one-to-one time, and damage is costly if the technique is wrong. They can't refer us to individual members | Send a thank-you. It's a profession-wide view, not a buyer, so no pilot ask |
+
+**Using these in the deck:** quote them by kind of organization, not by name, since both were asked as a school
+project. Neither reply is a customer, a pilot or an LOI. The training school is "open to trying it on one lab".

@@ -323,6 +323,11 @@ paths").
   consumer comes back: by then mass-market glasses distribution is open and our models run on device, so coaching
   a consumer costs almost nothing.
 - **Workers own verified-skill records.** They become portable proof of what someone can actually do.
+- **Certification partners** (the HV deck puts this at 2029). We don't issue licenses. We partner with the bodies
+  that already certify techs (NCCER, NIMS, HSPA, the Fiber Optic Association, equipment makers) and run the hands-on
+  part of their tests, which today needs a person watching. Certified techs carry the credential to their next job,
+  as Cisco and AWS certifications spread Cisco and AWS. It comes after our own models, because a certificate is only
+  worth the checking behind it.
 - **Robot fleets** run Praxis procedures with Praxis checks.
 - **Network effects.** More published procedures make the glasses app more useful, which brings more sessions,
   which makes the models better.
