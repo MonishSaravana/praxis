@@ -15,6 +15,7 @@ import json
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
@@ -62,7 +63,7 @@ BEATS = [
 BEATS_SHORT = [
     Beat(168.5, 172.5, "Next step: it moves on and says what to do"),
     Beat(176.0, 180.5, "Mistake caught: the iron went past 200 °C"),
-    Beat(266.0, 273.0, "Can't see the display: it says so and asks for a closer look"),
+    Beat(266.0, 274.5, "Can't see the display: it says so and asks for a closer look"),
 ]
 TITLE_S, END_S, XFADE = 2.6, 4.2, 0.27
 
@@ -151,6 +152,7 @@ class Session:
         self.session = json.loads((folder / "session.json").read_text())
         self.calls = self._calls()
         self.overruled = self._overruled()
+        self.view_requests = self._view_requests()
 
     def _calls(self) -> list[dict]:
         """Every model call as (sent, back, model, what, result, colour), times on the session clock."""
@@ -176,6 +178,19 @@ class Session:
                             what="escalation" if esc else "verify", lat=v["latency_ms"] / 1000, res=res,
                             note=mis, color=color, status=v["status"]))
         return sorted(out, key=lambda c: c["back"])
+
+    def _view_requests(self) -> list[tuple[float, str]]:
+        """Verdicts that said the view was insufficient, as (time the answer arrived, the request it made)."""
+        out = []
+        for v in self.verdicts:
+            if v.get("visibility") != "insufficient" or not v.get("view_request"):
+                continue
+            back = v["applied_t"] if v["model"].startswith("claude") else v["t"] + v["latency_ms"] / 1000
+            text = v["view_request"].strip()
+            if text.startswith("Show me ") and len(text) > 8:          # "Show me The x" -> "Show me the x."
+                text = "Show me " + text[8].lower() + text[9:]
+            out.append((back, text if text.endswith((".", "?")) else text + "."))
+        return sorted(out)
 
     def _overruled(self) -> list[dict]:
         """Fast-tier 'deviation' verdicts whose paired escalation said otherwise and no mistake alert followed."""
@@ -210,8 +225,8 @@ class Session:
 # ---------------------------------------------------------------- user view (what the wearer sees)
 
 class UserHUD:
-    def __init__(self, s: Session, scale: float = 1.0):
-        self.s, self.k = s, scale
+    def __init__(self, s: Session, scale: float = 1.0, view_cards: bool = False):
+        self.s, self.k, self.view_cards = s, scale, view_cards
 
     def px(self, v: float) -> int:
         return int(round(v * self.k))
@@ -241,13 +256,35 @@ class UserHUD:
             self._pill(img, "Work order: high-voltage board repair · procedure v1", (px(380), px(48)), a, ORANGE)
 
         card, alpha = s.st.card(tau)
+        vr = self._view_request_at(tau) if self.view_cards else None
         if card is not None and card.kind != "announce_task":
             self._card(img, card, alpha, s.safety_at(tau) if card.kind == "instruct" else None)
+        elif vr is not None:
+            # --view-cards: the verifier's logged request drawn as a card. In the live session the policy logged it but
+            # put no card on screen, so the card carries a tag saying where its text comes from.
+            text, a = vr
+            self._card(img, SimpleNamespace(kind="view_request", text=text), a, None)
+            tag = "verifier request · text from the session log"
+            ft = F(px(15), "MonoMed")
+            dd = ImageDraw.Draw(img)
+            tw = dd.textlength(tag, font=ft)
+            tx = (img.width - tw) / 2
+            ty = img.height - px(66)
+            frosted(img, (tx - px(12), ty - px(5), tx + tw + px(12), ty + px(24)), px(10), alpha=0.6)
+            ImageDraw.Draw(img).text((tx, ty), tag, font=ft, fill=MUTED)
         else:
             chip = s.st.chip(tau, s.names)
             if chip:
                 self._chip(img, chip)
         return img
+
+    def _view_request_at(self, tau: float) -> tuple[str, float] | None:
+        """The latest logged view request still on screen at tau (shown for CARD_DUR["view_request"] s), with a fade."""
+        live = [(t, text) for t, text in self.s.view_requests if 0 <= tau - t < CARD_DUR["view_request"]]
+        if not live:
+            return None
+        t, text = live[-1]
+        return text, min(1.0, (tau - t) / 0.25, (CARD_DUR["view_request"] - (tau - t)) / 0.3)
 
     def _pill(self, img, text, xy, a, dot):
         px = self.px
@@ -336,9 +373,9 @@ class Engineer:
     VX, VY, VW, VH = 24, 24, 1328, 747
     CX = 1376
 
-    def __init__(self, s: Session):
+    def __init__(self, s: Session, view_cards: bool = False):
         self.s = s
-        self.hud = UserHUD(s, scale=self.VW / W)
+        self.hud = UserHUD(s, scale=self.VW / W, view_cards=view_cards)
 
     def draw(self, frame: Image.Image, tau: float, caption: str | None, cap_a: float) -> Image.Image:
         s = self.s
@@ -605,14 +642,15 @@ def frames(src: Path, start: float, dur: float):
     p.wait()
 
 
-def render(view: str, out: Path, s: Session, beats: list[Beat] = BEATS, cards: bool = True) -> Path:
+def render(view: str, out: Path, s: Session, beats: list[Beat] = BEATS, cards: bool = True,
+           view_cards: bool = False) -> Path:
     out.parent.mkdir(parents=True, exist_ok=True)
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
                             "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "18",
                             "-pix_fmt", "yuv420p", "-movflags", "+faststart", str(out)], stdin=subprocess.PIPE)
     put = lambda im: enc.stdin.write(im.tobytes())
-    eng = Engineer(s) if view == "engineer" else None
-    hud = UserHUD(s)
+    eng = Engineer(s, view_cards) if view == "engineer" else None
+    hud = UserHUD(s, view_cards=view_cards)
     title = title_card()
     for i in range(int(TITLE_S * FPS) if cards else 0):
         put(Image.blend(Image.new("RGB", (W, H), GRAPHITE), title, min(1, i / 10, (TITLE_S * FPS - i) / 8)))
@@ -645,13 +683,18 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--view", choices=["user", "engineer", "both"], default="both")
     ap.add_argument("--out", default=str(RENDERS / "demo"))
-    ap.add_argument("--cut", choices=["full", "short"], default="full", help="short: ~15 s, no title or end card")
+    ap.add_argument("--cut", choices=["full", "short"], default="full", help="short: ~17 s, no title or end card")
+    ap.add_argument("--view-cards", action="store_true", help="draw logged view requests as HUD cards (tagged)")
+    ap.add_argument("--beat", type=int, default=None, help="render only this beat (0-based) of the chosen cut")
     a = ap.parse_args()
     s = Session(SESSION)
     short = a.cut == "short"
     for v in (["user", "engineer"] if a.view == "both" else [a.view]):
         name = f"praxis_repair_{'short' if short else 'demo'}_{v}.mp4"
-        p = render(v, Path(a.out) / name, s, BEATS_SHORT if short else BEATS, cards=not short)
+        beats = BEATS_SHORT if short else BEATS
+        if a.beat is not None:
+            beats, name = [beats[a.beat]], name.replace(".mp4", f"_beat{a.beat}.mp4")
+        p = render(v, Path(a.out) / name, s, beats, cards=not short and a.beat is None, view_cards=a.view_cards)
         print(p)
 
 

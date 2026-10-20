@@ -121,3 +121,11 @@ Android XR planned.
 - **Founder slide.** The SCOPE placeholder is removed.
 - **Shareable copy.** `node build_deck.js --share` builds `deck/Praxis_SAH_Oct2026_no_appendix.pptx` and its PDF: core
   only, notes stripped to sources.
+
+## Fifth follow-up: the view request is visible in the demo
+
+- Slide 5's cut is now 17 s. In the third moment the HUD shows the verifiers' logged view requests as a card at
+  their logged times: "Show me the soldering station display." (fast model, 4:25.2), then "Look closely at the
+  soldering station display, upper right." (Claude Opus 5.5, 4:30.75). In the live session the policy logged these
+  without showing a card, so the card is tagged "verifier request · text from the session log".
+- Only that beat was re-rendered (`reel.py --cut short --view-cards --beat 2`) and spliced after the first 8.5 s.

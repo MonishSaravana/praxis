@@ -24,17 +24,19 @@ steps and agreed with proxy step labels 29% of the time (`results/backend/enigma
 alert in the session (4:39.8, "Use the UP button") was a false alarm: the tech was correctly cooling the iron, so it is
 left out of the reel.
 
-## Short cut for the deck (15 s, engineer view)
+## Short cut for the deck (17 s, engineer view)
 
-`praxis_repair_short_engineer.mp4` is built by `python -m praxis.render.reel --view engineer --cut short` from the
-same session and log. It has no title or end card. It has three beats, `BEATS_SHORT` in `praxis/render/reel.py`:
+`praxis_repair_short_engineer.mp4` is built by `python -m praxis.render.reel --view engineer --cut short --view-cards`
+from the same session and log (or render one beat with `--beat N` and splice it in). It has no title or end card. It has three beats, `BEATS_SHORT` in `praxis/render/reel.py`:
 
 | Beat | Session time | What the log shows |
 |---|---|---|
 | Next step | 2:48.5–2:52.5 | instruction for s6 at 2:50: turn on the iron, press UP until the display shows 200 |
 | Mistake caught | 2:56–3:00.5 | alert at 2:58: "You've gone past 200. Press DOWN to get back to 200 degrees." |
-| Can't see | 4:26–4:33 | the fast tier's 4:25 verdict marks the view insufficient ("Show me The soldering station display"). The Opus escalation is answered at 4:30.75: "Look closely at the soldering station display, upper right." |
+| Can't see | 4:26–4:34.5 | the fast tier's 4:25 verdict marks the view insufficient ("Show me The soldering station display"). The Opus escalation is answered at 4:30.75: "Look closely at the soldering station display, upper right." |
 
-In the third beat the request appears in the model-call panel; the policy didn't put a card on the glasses for it.
+In the third beat, `--view-cards` draws the verifiers' logged requests as a HUD card at their logged times: the fast
+model's at 4:25.2, then Claude Opus 5.5's at 4:30.75. In the live session the policy logged them without showing a
+card, so the card carries a tag: "verifier request · text from the session log".
 The renderer now prints any verdict whose `visibility` is `insufficient` as "can't see clearly" in blue, with the
 logged `view_request` as its note.
