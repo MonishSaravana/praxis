@@ -58,6 +58,12 @@ BEATS = [
     Beat(167.0, 183.0, "Safety-critical step: the iron overshoots 200 °C"),
     Beat(214.0, 223.0, "Follows the resolder"),
 ]
+# ~15 s cut for the deck: a step change, a caught mistake, and a moment it can't see (no title or end card)
+BEATS_SHORT = [
+    Beat(168.5, 172.5, "Next step: it moves on and says what to do"),
+    Beat(176.0, 180.5, "Mistake caught: the iron went past 200 °C"),
+    Beat(266.0, 273.0, "Can't see the display: it says so and asks for a closer look"),
+]
 TITLE_S, END_S, XFADE = 2.6, 4.2, 0.27
 
 
@@ -163,9 +169,12 @@ class Session:
             back = v["applied_t"] if esc else v["t"] + v["latency_ms"] / 1000
             mis = (v.get("mistake") or {}).get("description")
             res = f"{v['node']} → {v['status'].replace('_', ' ')} {v['confidence']:.2f}"
+            color = STATUS_COLOR.get(v["status"], MUTED)
+            if v.get("visibility") == "insufficient" and v.get("view_request"):  # the model said it can't see
+                res, mis, color = f"{v['node']} → can't see clearly", v["view_request"], BLUE
             out.append(dict(sent=v["t"], back=back, model="opus" if esc else "jev",
                             what="escalation" if esc else "verify", lat=v["latency_ms"] / 1000, res=res,
-                            note=mis, color=STATUS_COLOR.get(v["status"], MUTED), status=v["status"]))
+                            note=mis, color=color, status=v["status"]))
         return sorted(out, key=lambda c: c["back"])
 
     def _overruled(self) -> list[dict]:
@@ -596,7 +605,7 @@ def frames(src: Path, start: float, dur: float):
     p.wait()
 
 
-def render(view: str, out: Path, s: Session) -> Path:
+def render(view: str, out: Path, s: Session, beats: list[Beat] = BEATS, cards: bool = True) -> Path:
     out.parent.mkdir(parents=True, exist_ok=True)
     enc = subprocess.Popen(["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
                             "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "18",
@@ -605,9 +614,9 @@ def render(view: str, out: Path, s: Session) -> Path:
     eng = Engineer(s) if view == "engineer" else None
     hud = UserHUD(s)
     title = title_card()
-    for i in range(int(TITLE_S * FPS)):
+    for i in range(int(TITLE_S * FPS) if cards else 0):
         put(Image.blend(Image.new("RGB", (W, H), GRAPHITE), title, min(1, i / 10, (TITLE_S * FPS - i) / 8)))
-    for b in BEATS:
+    for b in beats:
         n_total = int(round((b.end - b.start) * FPS))
         for i, fr in enumerate(frames(SOURCE, b.start, b.end - b.start)):
             if i >= n_total:
@@ -625,7 +634,7 @@ def render(view: str, out: Path, s: Session) -> Path:
                 im = Image.blend(Image.new("RGB", (W, H), GRAPHITE), im, max(0.0, edge / XFADE))
             put(im)
     end = end_card(s, view)
-    for i in range(int(END_S * FPS)):
+    for i in range(int(END_S * FPS) if cards else 0):
         put(Image.blend(Image.new("RGB", (W, H), GRAPHITE), end, min(1, i / 10)))
     enc.stdin.close()
     enc.wait()
@@ -636,10 +645,13 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--view", choices=["user", "engineer", "both"], default="both")
     ap.add_argument("--out", default=str(RENDERS / "demo"))
+    ap.add_argument("--cut", choices=["full", "short"], default="full", help="short: ~15 s, no title or end card")
     a = ap.parse_args()
     s = Session(SESSION)
+    short = a.cut == "short"
     for v in (["user", "engineer"] if a.view == "both" else [a.view]):
-        p = render(v, Path(a.out) / f"praxis_repair_demo_{v}.mp4", s)
+        name = f"praxis_repair_{'short' if short else 'demo'}_{v}.mp4"
+        p = render(v, Path(a.out) / name, s, BEATS_SHORT if short else BEATS, cards=not short)
         print(p)
 
 

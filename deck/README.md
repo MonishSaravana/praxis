@@ -1,6 +1,6 @@
 # Deck
 
-`Praxis_SAH_Oct2026.pptx` is the Startups @ Harvard grant deck: 14 core slides (about 7 minutes), an appendix divider and a 13-slide appendix, in the Praxis
+`Praxis_SAH_Oct2026.pptx` is the Startups @ Harvard grant deck: 14 core slides (about 10 minutes), an appendix divider and a 17-slide Q&A appendix, in the Praxis
 brand (`brand/BRAND.md`). It's built by `build_deck.js`, so edit the script, not the .pptx. If you edit the .pptx in
 PowerPoint, the next build overwrites your changes.
 
@@ -8,6 +8,8 @@ PowerPoint, the next build overwrites your changes.
 cd deck && npm install --cache "$TMPDIR/npm-cache" && node build_deck.js
 ```
 
+- **Shareable copy.** `node build_deck.js --share` writes `Praxis_SAH_Oct2026_no_appendix.pptx`: the 14 core slides only,
+  with speaker scripts removed (notes keep just the sources). Render its PDF the same way as the main deck.
 - **Brand.** The cover, architecture diagram and closing cover use the same layouts, helpers and assets as
   `brand/deck/build-deck.js`; the assets are read from `brand/deck/v1/assets/`. The other slides are new, built in the
   same system: Aluminum background, Archivo / IBM Plex Mono type, rules, dark panels, and Torque Orange only for
@@ -41,4 +43,4 @@ cd deck && npm install --cache "$TMPDIR/npm-cache" && node build_deck.js
   ```
 
   where `fonts.conf` lists `<dir>` entries for `brand/deck/v1/fonts` and `~/Library/Fonts`.
-- **Versions.** Rendered snapshots live in `brand/deck/v2.5/`, `v2.6/`, `v2.7/`, `v2.8/`, `v2.9/`, `v2.10/`, `v2.11/`, `v2.12/`, `v2.13/`, `v2.14/`, `v2.15/`, `v2.16/` and later versions beside them. Each has a `CHANGES.md`.
+- **Versions.** Rendered snapshots live in `brand/deck/v2.5/`, `v2.6/`, `v2.7/`, `v2.8/`, `v2.9/`, `v2.10/`, `v2.11/`, `v2.12/`, `v2.13/`, `v2.14/`, `v2.15/`, `v2.16/`, `v2.17/`, `v2.18/`, `v2.19/` and later versions beside them. Each has a `CHANGES.md`.
