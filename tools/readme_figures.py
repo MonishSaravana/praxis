@@ -15,7 +15,7 @@ from matplotlib import font_manager
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "docs" / "media"
-FONTS = ROOT / "brand" / "deck" / "v1" / "fonts"
+FONTS = ROOT / "brand" / "fonts"
 
 ORANGE = "#FF5B14"
 INK = "#1D2225"
@@ -216,8 +216,133 @@ def fig_distill():
     plt.close(fig)
 
 
+def fig_taskgraph():
+    """A compiled task graph: steps laid out by prerequisite depth, with duration priors and check/mistake counts."""
+    from matplotlib.patches import FancyBboxPatch
+
+    g = load("prototype/taskgraphs/cc4d_cucumberraita.json")
+    nodes = {n["id"]: n for n in g["nodes"]}
+    preds = {k: [] for k in nodes}
+    for n in g["nodes"]:
+        for s in n.get("successors", []):
+            if s in preds:
+                preds[s].append(n["id"])
+    depth = {}
+
+    def d(k):
+        if k not in depth:
+            depth[k] = 0 if not preds[k] else 1 + max(d(p) for p in preds[k])
+        return depth[k]
+
+    for k in nodes:
+        d(k)
+    cols = {}
+    for k, v in sorted(depth.items(), key=lambda kv: (kv[1], kv[0])):
+        cols.setdefault(v, []).append(k)
+    W, H, dx, dy = 2.35, 0.82, 2.95, 1.12
+    pos = {}
+    for c, ks in cols.items():
+        for i, k in enumerate(ks):
+            pos[k] = (c * dx, -(i - (len(ks) - 1) / 2) * dy)
+    fig, ax = plt.subplots(figsize=(15, 5.4))
+    for k, n in nodes.items():
+        x, y = pos[k]
+        for s in n.get("successors", []):
+            if s in pos:
+                x2, y2 = pos[s]
+                ax.annotate("", xy=(x2 - W / 2, y2), xytext=(x + W / 2, y),
+                            arrowprops=dict(arrowstyle="-|>", color=GRAY, lw=1.1, shrinkA=2, shrinkB=2,
+                                            connectionstyle="arc3,rad=-0.12"), zorder=1)
+    for k, n in nodes.items():
+        x, y = pos[k]
+        start = k in g.get("start", [])
+        ax.add_patch(FancyBboxPatch((x - W / 2, y - H / 2), W, H, boxstyle="round,pad=0.02,rounding_size=0.08",
+                                    fc="#FFF1EA" if start else "#F6F7F6", ec=ORANGE if start else INK, lw=1.3,
+                                    zorder=3))
+        name = n["name"] if len(n["name"]) <= 27 else n["name"][:25] + "…"
+        ax.text(x - W / 2 + 0.1, y + 0.16, name, fontsize=9.6, color=INK, weight="semibold", va="center", zorder=4)
+        dur = n.get("duration") or {}
+        meta = f"~{dur.get('mean_s', 0):.0f} s ± {dur.get('std_s', 0):.0f}  ·  {len(n.get('checks', []))} checks  ·  {len(n.get('mistakes', []))} mistakes"
+        ax.text(x - W / 2 + 0.1, y - 0.17, meta, fontsize=8, color=MUTED, va="center", zorder=4)
+    xs = [p[0] for p in pos.values()]
+    ys = [p[1] for p in pos.values()]
+    ax.set_xlim(min(xs) - W / 2 - 0.1, max(xs) + W / 2 + 0.1)
+    ax.set_ylim(min(ys) - H, max(ys) + H)
+    ax.axis("off")
+    ax.set_title(f"Compiled task graph: {g['title']} ({len(nodes)} steps). Orange = valid start steps; "
+                 "arrows = allowed successors", loc="left")
+    fig.text(0.01, -0.02, "Durations are lognormal priors fit on train-split recordings. "
+             "Source: prototype/taskgraphs/cc4d_cucumberraita.json", fontsize=9, color=MUTED)
+    fig.savefig(OUT / "fig_taskgraph.png")
+    plt.close(fig)
+
+
+def fig_belief():
+    """Step belief over time vs ground truth on one held-out clip, with verifier calls and policy actions."""
+    import numpy as np
+
+    html = (ROOT / "renders/viewer/fused_10_18_0.html").read_text()
+    i = html.index("const D = ") + len("const D = ")
+    D, _ = json.JSONDecoder().raw_decode(html[i:])
+    recs = [json.loads(line) for line in (ROOT / "runs/fused/10_18_0.jsonl").read_text().splitlines()]
+    beliefs = [r for r in recs if r["kind"] == "belief"]
+    verdicts = [r for r in recs if r["kind"] == "verdict"]
+    actions = [r for r in recs if r["kind"] == "action"]
+    names = D["names"]
+    gt = D["gt"]
+    order = []
+    for _, _, k, _ in gt:
+        if k not in order:
+            order.append(k)
+    peak = {k: max(b["p"].get(k, 0.0) for b in beliefs) for k in names}
+    order += [k for k in names if k not in order and peak[k] >= 0.15]
+    T = np.array([b["t"] for b in beliefs])
+    P = np.array([[b["p"].get(k, 0.0) for k in order] for b in beliefs]).T
+    fig, ax = plt.subplots(figsize=(15, 1.6 + 0.42 * len(order)))
+    from matplotlib.colors import LinearSegmentedColormap
+
+    cmap = LinearSegmentedColormap.from_list("p", ["#FFFFFF", "#FFD2BD", ORANGE, "#B53A00"])
+    ax.imshow(P, aspect="auto", cmap=cmap, vmin=0, vmax=1, interpolation="nearest",
+              extent=(T[0], T[-1], len(order) - 0.5, -0.5))
+    for a, b_, k, err in gt:
+        r = order.index(k)
+        ax.add_patch(plt.Rectangle((a, r - 0.45), b_ - a, 0.9, fill=False, ec=INK, lw=1.6, ls="-"))
+        if err:
+            ax.text(b_ + 1, r, "annotated error", fontsize=8, color=INK, va="center")
+    for v in verdicts:
+        ax.plot([v["t"]], [-0.95], marker="|", color=INK if v.get("role") == "fast" else ORANGE, ms=9, mew=1.6,
+                clip_on=False)
+    tasks = [r for r in recs if r["kind"] == "task"]
+    if len(tasks) > 1 or (tasks and tasks[0]["t"] > 0):
+        t0 = next((r["t"] for r in tasks if r["t"] > 0), None)
+        if t0 is not None:
+            ax.axvline(t0, color=MUTED, lw=0.8, ls=(0, (2, 2)))
+            ax.text(t0 + 1, len(order) - 0.2, "task recognized", fontsize=8.6, color=MUTED, va="bottom")
+    lane = 0
+    for a in actions:
+        if a["action"] in ("mistake", "view_request"):
+            ax.axvline(a["t"], color=INK, lw=0.8, ls=(0, (3, 3)))
+            label = "mistake flagged" if a["action"] == "mistake" else "asked for a better view"
+            ax.text(a["t"] + 1, len(order) + 0.25 + 0.42 * (lane % 2), label, fontsize=8.6, color=INK, va="bottom",
+                    bbox=dict(fc="white", ec="none", pad=1.2))
+            lane += 1
+    ax.set_yticks(range(len(order)), [names[k] for k in order], fontsize=9)
+    ax.tick_params(axis="y", length=0)
+    ax.set_xlabel("seconds", fontsize=9)
+    ax.set_ylim(len(order) + 0.9, -1.4)
+    ax.set_title(f"Tracker belief vs ground truth on a held-out clip (task not given, "
+                 f"{D['metrics'].get('step accuracy', '')} step accuracy)", loc="left")
+    ax.text(0, 1.0, "shading = P(step)   ·   black boxes = annotated step segments   ·   "
+            "ticks = verifier calls (black: fast tier, orange: Opus escalation)", transform=ax.transAxes,
+            fontsize=9, color=MUTED, va="bottom")
+    fig.text(0.01, -0.03, "Pinwheels, CaptainCook4D 10_18. Source: runs/fused/10_18_0.jsonl (engine log); ground truth "
+             "from CaptainCook4D via renders/viewer/fused_10_18_0.html", fontsize=9, color=MUTED)
+    fig.savefig(OUT / "fig_belief.png")
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
-    for f in (fig_headline, fig_ablation, fig_uncertainty, fig_repair, fig_multitask, fig_live, fig_distill):
+    for f in (fig_headline, fig_ablation, fig_uncertainty, fig_repair, fig_multitask, fig_live, fig_distill, fig_taskgraph, fig_belief):
         f()
         print("wrote", f.__name__)

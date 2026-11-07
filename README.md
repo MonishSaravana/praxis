@@ -1,8 +1,13 @@
 # Praxis
 
-A real-time, stateful engine for first-person procedural guidance. It watches a task through a head-mounted
-camera, keeps a probabilistic estimate of where the person is in the procedure, checks progress and mistakes
-with typed visual questions, and decides when it is worth saying something.
+A side project: a real-time, stateful engine that coaches someone through a hands-on procedure (a recipe, an
+assembly, a board repair) from first-person video. It watches through a head-mounted camera, keeps a probabilistic
+estimate of where the person is in the procedure, checks progress and mistakes with typed visual questions, and
+decides when it is worth saying something.
+
+The question it was built to answer: **is a structured engine around a frontier VLM better than simply sending
+the frames to that VLM every few seconds?** On the same held-out video, with the same model, it is more accurate,
+catches more mistakes, knows when it can't see, and costs about a fifth as much.
 
 The frontier vision-language model is one swappable component (the verifier), called only when the local
 layers detect an event or become uncertain. Everything around it (event detection, task recognition, a Bayesian
@@ -35,6 +40,7 @@ nothing is mocked. More renders are in [`renders/`](renders/).
 
 ## Contents
 
+- [What it looks like](#what-it-looks-like)
 - [The problem with calling a VLM on every frame](#the-problem-with-calling-a-vlm-on-every-frame)
 - [Architecture](#architecture)
 - [How a tick works](#how-a-tick-works)
@@ -44,6 +50,30 @@ nothing is mocked. More renders are in [`renders/`](renders/).
 - [Repository layout](#repository-layout)
 
 ---
+
+## What it looks like
+
+Stills from the rendered sessions. The user view is what the wearer would see: a single instruction card and a
+progress bar, with the step graph hidden. The engineer view exposes the internals on the same timeline.
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/media/shot_engineer.jpg" alt="Engineer view on a cooking clip"></td>
+    <td width="50%"><img src="docs/media/shot_assembly_engineer.jpg" alt="Engineer view on an assembly clip"></td>
+  </tr>
+  <tr>
+    <td><sub><b>Engineer view, cooking.</b> Task recognized without being told, belief locked onto "Chop 2 tbsp cilantro", one fast-tier and one Opus call so far.</sub></td>
+    <td><sub><b>Engineer view, assembly</b> (IndustReal). Same engine on a different domain: the task graph was compiled from the assembly instructions.</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/media/shot_repair.jpg" alt="User view on an electrical board repair"></td>
+    <td width="50%"><img src="docs/media/shot_live.jpg" alt="User view in live mode"></td>
+  </tr>
+  <tr>
+    <td><sub><b>Board repair</b> (ENIGMA-51). Procedure compiled from the lab's written instructions; nothing was trained on this task.</sub></td>
+    <td><sub><b>Live mode.</b> A recording replayed at wall-clock speed through the real-time loop; the top bar shows ground truth vs the engine's step for comparison.</sub></td>
+  </tr>
+</table>
 
 ## The problem with calling a VLM on every frame
 
@@ -99,6 +129,16 @@ The engine is split into two paths that run at different rates.
 |---|---|---|
 | L3 compiler | Turns a manual, recipe or work instruction into a typed `TaskGraph`: steps, prerequisites, visual end states, typed checks, a library of common mistakes with spoken corrections, and lognormal duration priors | [`praxis/tasks/compiler.py`](prototype/praxis/tasks/compiler.py), [`schema.py`](prototype/praxis/tasks/schema.py) |
 
+### Procedures as typed task graphs
+
+<p align="center"><img src="docs/media/fig_taskgraph.png" width="100%" alt="A compiled task graph"></p>
+
+The compiler turns a recipe or work instruction into a graph like the one above, once per procedure (8 procedures:
+96 steps, 207 typed checks, 267 known mistakes with spoken corrections, $4.16 in total). Each node carries novice
+and expert phrasings, the visual end state, which region to look at, and a duration prior. This graph is what the
+tracker filters over and what the verifier is asked about, so a check is always "has *this* end state been
+reached?", never "what is happening?".
+
 Swapping the verifier is a one-line config change (`verifier.primary: jev | claude_fast | distilled` in
 [`configs/default.yaml`](prototype/configs/default.yaml)).
 
@@ -128,6 +168,12 @@ sequenceDiagram
     end
     L6-->>Cam: speak / HUD card (only when confident)
 ```
+
+<p align="center"><img src="docs/media/fig_belief.png" width="100%" alt="Tracker belief vs ground truth"></p>
+
+The plot above is the tracker's posterior on a held-out clip where the task was **not** given. After recognizing the
+recipe at ~28 s, the belief walks down the graph in step with the annotated segments, with only four verifier
+calls in five minutes: the duration model and local evidence carry it between calls.
 
 **The tracker.** The hidden state is *(active step k, seconds spent in k)*. Each tick:
 
@@ -291,7 +337,8 @@ the synced belief over the task graph, the event log and metrics.
 | [`prototype/tests/`](prototype/tests/) | Tests, including the async slow path and cache determinism |
 | [`results/`](results/) | Raw results JSON, generated `RESULTS.md`, figures, failure analysis |
 | [`renders/`](renders/) | User-view and engineer-view videos rendered only from saved run logs |
-| [`docs/`](docs/) | [`ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`MULTITASK.md`](docs/MULTITASK.md), [`BACKEND.md`](docs/BACKEND.md), [`DATA.md`](docs/DATA.md) (datasets, licenses, splits), [`MODEL_ROADMAP.md`](docs/MODEL_ROADMAP.md) |
+| [`docs/`](docs/) | Design notes: [`ARCHITECTURE.md`](docs/ARCHITECTURE.md), [`MULTITASK.md`](docs/MULTITASK.md), [`BACKEND.md`](docs/BACKEND.md), [`GLASSES.md`](docs/GLASSES.md), [`DATA.md`](docs/DATA.md) (datasets, licenses, splits), [`MODEL_ROADMAP.md`](docs/MODEL_ROADMAP.md) |
+| [`tools/readme_figures.py`](tools/readme_figures.py) | Regenerates every figure in this README from `results/` and `runs/` |
 
 Datasets: [CaptainCook4D](https://captaincook4d.github.io/captain-cook/) (evaluation), [ENIGMA-51](https://iplab.dmi.unict.it/ENIGMA-51/)
 (repair transfer), [IndustReal](https://github.com/TimSchoonbeek/IndustReal) (qualitative assembly demos). All

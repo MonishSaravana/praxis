@@ -22,7 +22,7 @@ def box(x, y, w, h, kind, title, plain, specs=(), hero=False, compact=False):
     elif kind == 'open': r = f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{OPEN}"/>'
     elif kind == 'rented': r = f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="none" stroke="{G}" stroke-width="2.2" stroke-dasharray="12 8"/>'
     else: r = f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{OR}"/>'
-    tag = {'ours': 'OURS', 'open': 'OPEN MODEL · LOCAL', 'rented': 'RENTED · SWAPPABLE', 'out': ''}[kind]
+    tag = {'ours': 'CUSTOM', 'open': 'OPEN MODEL · LOCAL', 'rented': 'HOSTED API · SWAPPABLE', 'out': ''}[kind]
     s = r
     if tag: s += M(tag, 12.5, x + w - 14, y + 26, fill=(G if kind == 'ours' else ST), trk=80, anchor='end')
     ty, py = (46, 72) if compact else (54, 82)
@@ -51,10 +51,10 @@ def tracker_viz(x, y):
 b = []
 # header
 b.append(M('HOW PRAXIS WORKS · ENGINE v0', 15, 64, 70, fill=ST, trk=90))
-b.append(T('The frontier model is one swappable part. The tracking engine around it is ours.', 36, 64, 120, wdth=125, maxw=1800))
+b.append(T('The frontier model is one swappable verifier. State, timing and policy run locally.', 36, 64, 120, wdth=125, maxw=1800))
 # legend
 lx = 64
-for kind, label in (('ours', 'Ours: code and trained weights'), ('open', 'Open model, frozen, runs on the device'), ('rented', 'Rented API behind a typed interface')):
+for kind, label in (('ours', 'Custom code and trained weights'), ('open', 'Open model, frozen, runs on the device'), ('rented', 'Hosted API behind a typed interface')):
     if kind == 'ours': b.append(f'<rect x="{lx}" y="150" width="34" height="20" rx="3" fill="{PL}" stroke="{G}" stroke-width="2"/>')
     elif kind == 'open': b.append(f'<rect x="{lx}" y="150" width="34" height="20" rx="3" fill="{OPEN}"/>')
     else: b.append(f'<rect x="{lx}" y="150" width="34" height="20" rx="3" fill="none" stroke="{G}" stroke-width="2" stroke-dasharray="6 4"/>')
@@ -111,7 +111,7 @@ b.append(arrow([(980, 616), (980, 640), (760, 640), (760, 700)], 'session record
 
 # results strip
 b.append(f'<path d="M64 900H1856" stroke="{G}" stroke-width="2"/>')
-cells = [('54% vs 48%', 'step accuracy, same frontier model', 'with and without our layers'),
+cells = [('54% vs 48%', 'step accuracy, same frontier model', 'with and without the engine'),
          ('$0.018 vs $0.085', 'per minute of video', 'about 5× cheaper'),
          ('77–98%', 'of blurred or blocked views:', 'asks for a better one, never confidently wrong'),
          ('~50 ms', 'local work per frame on a laptop', 'model calls never block the loop')]
@@ -122,7 +122,7 @@ for i, (big, l1, l2) in enumerate(cells):
     b.append(T(big, 40, cx, 958, fill=(OR if i == 0 else G) if False else G, wdth=125, maxw=cw - 30))
     b.append(T(l1, 17, cx, 990, fill='#3C4347', wght=430, maxw=cw - 30))
     b.append(T(l2, 17, cx, 1014, fill='#3C4347', wght=430, maxw=cw - 30))
-b.append(M('Measured on 48 held-out first-person clips from a public dataset (CaptainCook4D) · results/RESULTS.md · docs/CLAIMS.md', 12.5, 64, 1056, trk=10))
+b.append(M('Measured on 48 held-out first-person clips from a public dataset (CaptainCook4D) · results/RESULTS.md', 12.5, 64, 1056, trk=10))
 
 svg = ('<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" '
        'aria-label="Praxis architecture: camera, perception, event detector and task recognizer feed a state tracker, then a policy and the coach. Only when something happens does it call a swappable verifier, whose answers are calibrated and fed back. A flywheel turns sessions into a local student model.">'

@@ -1,18 +1,18 @@
-# Company backend: knowledge portal and locked procedures
+# Procedure backend: knowledge portal and locked procedures
 
-Status, 2026-10-17 (evening). This is `NEXT.md` item 4, first version, built into Praxis Studio (`uv run praxis studio`,
-then **Company admin**). The founder approved the downloads and paid runs in section 8; their results are there.
+First version, built into Praxis Studio (`uv run praxis studio`,
+then **Organization admin**). Results of the paid runs are in section 8.
 Everything marked **ran** below was run on this machine.
 
 | Part | State |
 |---|---|
-| Company profiles (create, select, settings), stored locally | **Ran** (three companies on disk: Hydro Plant Demo, Test Kitchen, Test Co) |
+| Organization profiles (create, select, settings), stored locally | **Ran** (three organizations on disk: Hydro Plant Demo, Test Kitchen, Test Co) |
 | Upload PDF / .txt / .md / .docx; video as reference | **Ran** for PDF (three real manuals), Markdown, text and Word (tests). Video upload not run on a real video |
 | Ingest once, locally | **Ran** on three public manuals: 97, 222 and 125 pages, 0.5–1.8 s each, $0 |
 | Find procedures (headings, bookmarks, numbered steps) | **Ran**; tuned on the real manuals (section 3). Precision is not measured |
 | Compile one procedure from only its section (Opus 5.5, cached) | **Ran**: FIST 4-1A §2.8.2 (11 steps, $0.164) and a recipe card (17 steps, $0.188) |
 | Knowledge cards per step (quoted from the source, with page) | **Ran** (both compiled procedures, plus tests) |
-| Runtime: company library, locked mode, step cards, safety banner | **Ran** live with real verifiers on a local test clip (section 8, P3 and its re-run): locked start worked; on the re-run steps committed and instructions advanced through 12 of 17 steps, with some back-and-forth. Both runs shared the GPU with other jobs; tracking accuracy is **not measured** |
+| Runtime: organization library, locked mode, step cards, safety banner | **Ran** live with real verifiers on a local test clip (section 8, P3 and its re-run): locked start worked; on the re-run steps committed and instructions advanced through 12 of 17 steps, with some back-and-forth. Both runs shared the GPU with other jobs; tracking accuracy is **not measured** |
 | Questions: card answer, local retrieval, Claude answer with citation | **Ran**: three Claude answers with page or section citations, $0.0065–0.0128 each |
 | Admin page (redesigned): overview, documents, sections, compile estimate, review with source and page preview, approve, safety flags, versions, live deployment, ask, videos | **Ran** in the browser at 1024 and 1440 px wide and phone width |
 | Reference keyframes from a video | Built; alignment unit-tested on synthetic similarities; **not run on a video** |
@@ -59,7 +59,7 @@ sessions/orgs/
   page shows "document updated" and offers a recompile of the same section (matched by title) as a new draft.
 - **What a worker followed** stays on record: saved Studio sessions already store the exact `taskgraph.json`, and
   `config.json` now also stores `org_procedures` (procedure id and version per task).
-- **Deleting a company** is deleting its folder.
+- **Deleting an organization** is deleting its folder.
 
 ## 3. Ingest pipeline (local, $0, once per file hash)
 
@@ -83,7 +83,7 @@ Code: `prototype/praxis/knowledge/` (`parse.py`, `sections.py`, `chunk.py`, `ind
    the chunk's start) fused by reciprocal rank. BM25 is the default; hybrid is **not yet measured** to help.
 
 Timing (BM25, measured): 97 pages in 0.5 s, 125 pages in 0.7 s, 222 pages in 1.2–1.8 s. Dense SigLIP2 vectors are
-only built when a company turns on hybrid search (17.9 s for a 3-page file, almost all of it the first SigLIP2 call;
+only built when an organization turns on hybrid search (17.9 s for a 3-page file, almost all of it the first SigLIP2 call;
 not timed on a large manual).
 
 ## 4. Compile per procedure (paid, cached)
@@ -110,14 +110,14 @@ compiler drops steps it now attaches the call's usage and output to the error, s
 
 Code: `studio/org_session.py`, `studio/static/org.js`, two one-line hooks in `app.js`, three in `server.py`.
 
-1. Live page → **0 · Company** picker. The start message carries `org_id`.
-2. The session's library is that company's **approved** procedures (approved versions only). Recognition among them
+1. Live page → **0 · Organization** picker. The start message carries `org_id`.
+2. The session's library is that organization's **approved** procedures (approved versions only). Recognition among them
    uses the harness's zero-shot recognizer (SigLIP2 frame vs each graph's title) plus the verifier's typed "which
    task?" check, whose options are only these procedures.
 3. **Locked mode**: only the assigned procedure(s). One assigned: it starts at t=0 ("assigned"), no recognition, no
    drafting. Several: closed-set recognition among them. Typing an unrelated task never drafts a plan or switches;
-   the wearer hears "This job is locked to: …". Pasted instructions are refused with a company profile.
-   - **Ran** ($0, verifier calls off, fixture company on a local CaptainCook4D clip): one assigned → started at
+   the wearer hears "This job is locked to: …". Pasted instructions are refused with an organization profile.
+   - **Ran** ($0, verifier calls off, fixture organization on a local CaptainCook4D clip): one assigned → started at
      t=0; step cards sent per step; the safety banner fired once on the flagged step; an unrelated description in
      locked mode with two assigned gave the notice and no drafter. Closed-set accuracy is **not measured**.
 4. **What the live engine sees**: the compiled graph only (the same verifier prompts as before, built from step
@@ -130,9 +130,9 @@ Code: `studio/org_session.py`, `studio/static/org.js`, two one-line hooks in `ap
    it; answers are cached. With "Answer with Claude" off (the default until approved) or no budget left, the best
    matching line of the top excerpts is quoted with its page. Every question is written to the session's run log.
 
-## 5b. Admin page (Studio → Company admin)
+## 5b. Admin page (Studio → Organization admin)
 
-Internal view for a maintenance manager; technicians never see it. Left sidebar: company switcher, sections, model
+Internal view for a maintenance manager; technicians never see it. Left sidebar: organization switcher, sections, model
 spend against the cap. Pages, in workflow order:
 - **Overview**: the three steps (documents → procedures → live) with real counts, and what leaves the machine.
 - **Documents**: drag-and-drop upload with per-file progress, then a table (pages, sections, likely procedures, index).
@@ -202,12 +202,12 @@ keep their own per-session cap as before.
 
 ## 8. Approved runs and results (2026-10-17)
 
-The founder approved downloads D1–D3 and paid runs P1–P4 (estimate ~$0.48, at most ~$0.94).
+Downloads D1–D3 and paid runs P1–P4 were approved (estimate ~$0.48, at most ~$0.94).
 
 **Downloads** (public US-government documents, public domain, born-digital), stored under `data/manuals/`
 (gitignored): FIST 1-1 *Hazardous Energy Control Program* (3.2 MB, 97 pages), FIST 4-1A *Maintenance Scheduling
 for Mechanical Equipment* (4.3 MB, 222 pages), FIST 3-8 *Protective Relays* (2.1 MB, 125 pages), all from
-usbr.gov. Ingested locally into the company "Hydro Plant Demo" in 0.5–1.8 s each (444 pages, 998 passages).
+usbr.gov. Ingested locally into the organization "Hydro Plant Demo" in 0.5–1.8 s each (444 pages, 998 passages).
 
 **What the real manuals changed in the section finder** (all local): headings printed without their numbers
 ("Request clearance." for bookmark "11.3.1 Request clearance.") are now matched; numbered requirement lists and
@@ -224,7 +224,7 @@ fractions ("1/2-inch") and angles ("90-degree", "360 degrees").
 | P1 (first attempt) | Same section. The split call ran ($0.013); the compile call returned only 2 of 12 steps and the shared compiler raised before reporting its cost | **That call's cost was not recorded** (bounded by its 32,000-token limit at $0.66; likely far less). The failure path now records cost and keeps the split result | $0.013 + unrecorded |
 | P2 | Recipe card written from CaptainCook4D's public recipe text (17 numbered steps, no download), compiled with the manual's own numbering | 17 steps; 2,846 in, 8,828 out, 72 s. Approved v1 and locked | $0.188 |
 | P3 | Studio session, Test Kitchen locked to that procedure, local pinwheels test clip 10_18_0, 299 s, Jev + Opus escalations, cap $0.25 | Locked start worked (task started at t=0, "assigned"). The tracker moved from step 1 to step 3 by ~94 s but committed no step, so only one instruction was spoken. The engine processed only 180 of 1,200 frames: local encoders took 1,431 ms per frame (median) versus ~43 ms in earlier Studio sessions, because other sessions were running GPU feature extraction at the same time. This run does not measure tracking | $0.034 |
-| P3 re-run (approved, cap $0.10, 2026-10-18 03:39) | Same clip and company, started after the feature jobs ended | **Steps committed and instructions advanced**: 6 commits (s3, s6, s7 verified by the verifier; s2, s1, s4 by belief switch) and spoken instructions for 12 of the 17 steps in order (s1 → s12) over 5 minutes, plus 2 hints. Not clean: an early hint for s4 at 67 s, a late commit of s1 at 209 s, and s8's instruction repeated at 291 s after s12, so the tracker jumped back and forth near the end. Still not an idle machine: another session's multitask training job (4 workers) was running, encoders took 731 ms per frame (median) and the engine processed 486 of 1,200 frames. One clip, no ground-truth comparison: not an accuracy figure | $0.091 |
+| P3 re-run (approved, cap $0.10, 2026-10-18 03:39) | Same clip and organization, started after the feature jobs ended | **Steps committed and instructions advanced**: 6 commits (s3, s6, s7 verified by the verifier; s2, s1, s4 by belief switch) and spoken instructions for 12 of the 17 steps in order (s1 → s12) over 5 minutes, plus 2 hints. Not clean: an early hint for s4 at 67 s, a late commit of s1 at 209 s, and s8's instruction repeated at 291 s after s12, so the tracker jumped back and forth near the end. Still not an idle machine: another session's multitask training job (4 workers) was running, encoders took 731 ms per frame (median) and the engine processed 486 of 1,200 frames. One clip, no ground-truth comparison: not an accuracy figure | $0.091 |
 | P4 | Three questions answered by Claude, effort low | See below | $0.029 |
 | | **Recorded total** | | **$0.519** + one unrecorded call |
 
@@ -258,17 +258,17 @@ keeping a share of frames (`results/backend/company_tracking.json`):
 | Graph | 100% frames | 40% | 15% |
 |---|---|---|---|
 | Built-in pinwheels graph (probe trained on 6 labelled recordings) | 0.470 | 0.476 | 0.381 |
-| Company-compiled recipe card, document only (zero-shot) | 0.196 | 0.194 | 0.237 |
+| Organization-compiled recipe card, document only (zero-shot) | 0.196 | 0.194 | 0.237 |
 
 Down to 40% of frames it is lag, not accuracy; at 15% (the first live run) step accuracy drops and spoken
-instructions fall from 12.8 to 7.5 per clip. Studio's company panel now warns when the engine keeps under half
+instructions fall from 12.8 to 7.5 per clip. Studio's organization panel now warns when the engine keeps under half
 its frames.
 
 **The bigger lever is not speed.** A freshly compiled procedure has no visual training, so locally it barely
 advances (0.20, no commits); in the live re-run the paid verifier did the advancing. One or a few reference
-recordings of the job fix most of that (same eval, company graph):
+recordings of the job fix most of that (same eval, organization graph):
 
-| Company graph plus | Step accuracy |
+| Organization graph plus | Step accuracy |
 |---|---|
 | nothing (document only) | 0.196 |
 | 1 reference recording, steps aligned automatically (no labelling) | 0.259 |
@@ -276,8 +276,8 @@ recordings of the job fix most of that (same eval, company graph):
 | 1 reference recording, step starts marked by a person | 0.432 |
 | 3 reference recordings, step starts marked by a person | 0.475 |
 
-With three marked recordings the company's procedure tracks as well as the built-in graph trained on six. That
-means fewer verifier calls (faster, cheaper) for a company procedure.
+With three marked recordings the organization's procedure tracks as well as the built-in graph trained on six. That
+means fewer verifier calls (faster, cheaper) for an organization procedure.
 
 **Built: reference-recording step marking** (`knowledge/refs.py`, admin → Reference videos → Mark steps). The page
 plays the recording with a timeline of step spans; a manager sets each step's start (Set button or the M key), can
@@ -294,9 +294,9 @@ procedure on this machine, so no reference recordings to train from without down
 
 ## 8c. Maintenance footage: ENIGMA-51 high-voltage board repair (approved, 2026-10-18)
 
-The use case: a hyper-specific job whose details a general model cannot know until it reads the company's
+The use case: a hyper-specific job whose details a general model cannot know until it reads the organization's
 document. ENIGMA-51 (first-person repairs of electrical boards in an industrial-like lab) ships the written procedures
-the technicians followed; four repair videos are on this machine. Company "ENIGMA repair lab": the four procedures
+the technicians followed; four repair videos are on this machine. Organization "ENIGMA repair lab": the four procedures
 uploaded and ingested locally ($0); the high-voltage, manual-screwdriver procedure (113 numbered lines) compiled
 through the backend into 19 steps (split call + compile, 4,615 in / 9,790 out tokens, **$0.231**); safety-critical
 steps marked (energizing the board twice, the 200-degree soldering iron); approved and locked.
@@ -305,7 +305,7 @@ Scripts: `prototype/praxis/eval/backend_scripts/`.
 **Does a general model know the details without the document?** Same model both ways (Claude Opus 5.5, effort
 low); scored by a fixed check for the fact the procedure states (`results/backend/enigma_questions.json`):
 
-| Question (asked mid-step) | General model, no document | Praxis (company question box) |
+| Question (asked mid-step) | General model, no document | Praxis (organization question box) |
 |---|---|---|
 | Voltage to set on the power supply? | "I can't tell … check the board's schematic" ✗ | "5 Volts", step 16 (card, 2 ms, $0) ✓ |
 | Soldering iron temperature and button? | "330–350 °C … ▲/▼ buttons" ✗ | "200 degrees … yellow button UP" (card, $0) ✓ |
@@ -330,17 +330,17 @@ but this machine has only one recording per ENIGMA procedure, so that is unteste
 
 **Total for the approved test: $0.435** of the $1.30 cap.
 
-## 9. How a device adapter passes a company profile
+## 9. How a device adapter passes an organization profile
 
 The glasses (or a phone) adapter speaks the same WebSocket as the Studio page (`/ws`, protocol in
 `studio/server.py`):
 
-1. At setup, the device is given a company id (later: scanned from a QR code on the admin page, with a device token;
+1. At setup, the device is given an organization id (later: scanned from a QR code on the admin page, with a device token;
    **auth is not built**, Studio binds to 127.0.0.1 only).
 2. Session start: `{"type": "start", "org_id": "acme-pumps", "input": "glasses", "task_mode": "auto",
-   "escalation": true, "cost_cap": 1.0}`. The server builds the company's library; locked mode and the assigned
-   procedure come from the company settings, so the device doesn't need to know them. (Per-worker assignment waits
-   for profiles, `NEXT.md` item 3.)
+   "escalation": true, "cost_cap": 1.0}`. The server builds the organization's library; locked mode and the assigned
+   procedure come from the organization settings, so the device doesn't need to know them. (Per-worker assignment waits
+   for user profiles.)
 3. Frames: binary messages, 8-byte little-endian session time + one JPEG, as now.
 4. Server messages the adapter can use besides the existing ones: `org_task`, `org_step` (current step and cards),
    `org_safety` (speak and show), `org_notice`.
@@ -364,6 +364,6 @@ New: `prototype/praxis/knowledge/` (`__init__`, `parse`, `pdfkit_tool.swift`, `s
 training), `prototype/praxis/eval/backend_scripts/` (ENIGMA and marking runs),
 `prototype/tests/test_knowledge.py` (17 tests; the full suite, 47 tests, passes). Small additive edits:
 `studio/server.py`, `studio/static/app.js`, `studio/static/index.html`, `tasks/compiler.py` (error carries usage),
-`.claude/launch.json` (a Studio entry on port 8801), `docs/NEXT.md` (item 4 status line). Data (gitignored):
-`data/manuals/` (three FIST PDFs and the recipe card), `sessions/orgs/` (three companies, spend ledger),
+`.claude/launch.json` (a Studio entry on port 8801). Data (gitignored):
+`data/manuals/` (three FIST PDFs and the recipe card), `sessions/orgs/` (three organizations, spend ledger),
 `sessions/20261017_233645_making-pinwheels/` (the P3 session, with its HUD replay).

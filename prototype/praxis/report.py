@@ -1,5 +1,5 @@
 """Assemble results/metrics.json (all headline numbers, each with its source file) from results/**.json.
-RESULTS.md and CLAIMS.md quote these numbers; nothing is typed in by hand."""
+RESULTS.md quotes these numbers; nothing is typed in by hand."""
 from __future__ import annotations
 
 import json

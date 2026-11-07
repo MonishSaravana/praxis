@@ -26,7 +26,7 @@ uv pip install --no-deps "tapnet @ git+https://github.com/google-deepmind/tapnet
 
 ## Reproduce
 
-Each command writes JSON under `../results/`. Every number in `RESULTS.md` and `CLAIMS.md` comes from those
+Each command writes JSON under `../results/`. Every number in `RESULTS.md` comes from those
 files, and `results/metrics.json` lists the source file for each one.
 
 ```bash
@@ -89,7 +89,7 @@ uv run python -m praxis.eval.replay_check diff --tag _recorded_post --against _r
 uv run python -m praxis.spend                                 # results/spend.json (recorded costs only)
 uv run python -m praxis.report                                # results/metrics.json
 uv run python -m praxis.make_figures                          # results/figures/*.png
-uv run python -m praxis.write_results                         # results/RESULTS.md and docs/CLAIMS.md
+uv run python -m praxis.write_results                         # results/RESULTS.md
 uv run python -m praxis.make_renders                          # renders/*.mp4 (from run logs only) + results/renders_index.json
 uv run python -m praxis.viewer fused                          # renders/viewer/*.html
 cd .. && python3 -m http.server 8765                          # open http://localhost:8765/renders/viewer/ (needs the videos locally)
