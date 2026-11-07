@@ -1,8 +1,8 @@
 # Multi-task Praxis: design note
 
-Status: approved by the founder on 2026-10-17 (decisions in section 10). Decision 1 was changed the same day: no
+Status: approved on 2026-10-17 (decisions in section 10). Decision 1 was changed the same day: no
 done-enough timer; Praxis asks instead. Built; see section 11 for what changed while building.
-Starting tracked spend: **$104.88** (the founder's figure, 2026-10-17). Cap for this whole task: $20, so all calls
+Starting tracked spend: **$104.88** (2026-10-17). Cap for this whole task: $20, so all calls
 stop at **$124.88**. `python -m praxis.spend` sums only recorded costs and reads $98.46 at the start. This task's
 spend is therefore that reading minus $98.46, and it may not pass $20.
 
@@ -36,7 +36,7 @@ comes from them; thresholds come from the train split (section 7).
 
 ## 3. Design
 
-### 3.1 An "away" state in the tracker (the founder's off-recipe state)
+### 3.1 An "away" state in the tracker (off-recipe state)
 
 The tracker gets a second copy of every (step, dwell) state, meaning *away from this task while at step k*.
 
@@ -227,8 +227,8 @@ Splices cut hard (the camera jumps). Real switches are gradual, since people wal
 latency here can't stand in for real-life latency, and the write-up will say so. Replay has no user, so every
 "Coming back to ...?" goes unanswered: the benchmark scores the no-answer behavior (paused tasks stay paused and close
 at session end), and the write-up will say that too. Results go through
-`write_results.py` into RESULTS.md and metrics.json from measured runs only. Nothing gets committed until the
-founder asks.
+`write_results.py` into RESULTS.md and metrics.json from measured runs only. Nothing gets committed until
+reviewed.
 
 ## 8. Spend plan ($20 cap, approval before every paid run)
 
@@ -260,9 +260,9 @@ in under the estimate.
   section 6.
 - Non-task landmarks and real interruptions can't be measured on this dataset (section 3.5).
 
-## 10. Decisions for the founder
+## 10. Design decisions
 
-Decided by the founder on 2026-10-17:
+Decided on 2026-10-17:
 
 1. **Paused → done enough:** no timer and no per-task setting. Praxis asks "Coming back to the ...?" at the leave
    moment. "I'm done" closes the task; no answer keeps it paused until the session ends (section 3.6). This replaced
@@ -306,7 +306,7 @@ Decided by the founder on 2026-10-17:
   for 7–12 of 18 off-task stretches caught within 60 s. Each check costs about $0.0001. The risk that matters is a
   wrong switch, which the paid train sweep measures with its own rule (zero wrong switches on single-task recordings).
   So two trigger candidates go into it: 20 s window at 0.4 (11/18 caught) and at 0.7 (8/18 caught, fewer checks).
-- **No done-enough timer** (founder, 2026-10-17): see section 3.6.
+- **No done-enough timer** (2026-10-17): see section 3.6.
 - **From the smoke test and stage A of the train sweep** (paid, train split; not reported as results):
   - Coming back to a paused task, the check sometimes named a third, similar recipe (egg sandwich 0.74 vs the paused
     burritos 0.22), while landmarks ranked the burritos first. Option added: `resume_bias`, a prior bonus for paused
@@ -409,12 +409,12 @@ options: no first task before 10 s (`recognize_min_s`), and only after two typed
   - the same: interruptions taken as a library task, 1 vs 1;
   - worse: false alarms, 6 vs 4 in 120 minutes.
 
-  Adopting C2 for the final held-out test is the founder's decision on train results. It is not the outcome of the
+  Adopting C2 for the final held-out test was a judgment call on train results. It is not the outcome of the
   pre-set rule, and it would be reported that way.
 
 ### 13.2 Decisions for the final held-out test (2026-10-18)
 
-- **C2 adopted for automatic mode** (the founder: "do whatever you think is best"). Sol answers "which task?", with no
+- **C2 adopted for automatic mode**. Sol answers "which task?", with no
   first task before 10 s, two agreeing answers, and a switch bar of 0.9. It is recorded in
   `results/multitask/chosen.json` under `task_checker` and used by `run_all` for `fused_mt` only. Task-given mode and
   Studio keep Jev and the earlier overrides, which are untested with Sol. This is a decision on train results, not the
@@ -426,7 +426,7 @@ options: no first task before 10 s (`recognize_min_s`), and only after two typed
 
 ## 14. Final held-out test (EVAL split, paid, 2026-10-18)
 
-Founder-approved: caps $6.00 main and $2.60 OpenAI; spent $3.83 main and $1.92 OpenAI. It uses the C2 configuration
+Caps: $6.00 main and $2.60 OpenAI; spent $3.83 main and $1.92 OpenAI. It uses the C2 configuration
 for automatic mode and the small models refit on all 70 train recordings. Nothing in it was tuned on these clips.
 
 | Run | Result |
@@ -453,10 +453,10 @@ for automatic mode and the small models refit on all 70 train recordings. Nothin
 - **The cost of multi-task:** wrong switches. There were 5 on 48 single-recipe clips, and 7 in 167 minutes of splices,
   where the single-task engine can never switch.
 
-## 15. Company backend end to end on repair videos (ENIGMA-51, PROXY labels, 2026-10-18)
+## 15. Procedure backend end to end on repair videos (ENIGMA-51, PROXY labels, 2026-10-18)
 
-`eval/enigma_backend.py`, `results/enigma51/backend_flow.json`, profile `sessions/orgs/enigma-repair-lab`. The founder
-asked for related footage only (each procedure on its own repair video, no cooking footage) and accuracy over speed.
+`eval/enigma_backend.py`, `results/enigma51/backend_flow.json`, profile `sessions/orgs/enigma-repair-lab`. The evaluation
+uses related footage only (each procedure on its own repair video, no cooking footage) and accuracy over speed.
 
 - **Flow:**
   - The four written procedures went in through the upload/ingest path.
@@ -466,7 +466,7 @@ asked for related footage only (each procedure on its own repair video, no cooki
     procedure's second repair-and-test cycle.
   - All four were approved, then the profile was locked with all four assigned. Each video's job came from its
     assigned procedure, as from a work order.
-- **Checker (founder's option A):** gpt-6.1-sol answered "is this step done?" and "which step now?", with no escalation
+- **Checker (option A):** gpt-6.1-sol answered "is this step done?" and "which step now?", with no escalation
   tier, justified by the train-split tests (85% vs Jev's 58% on 100 completion checks; 41% vs 33% on 116 step
   questions). On these videos the engine made almost no completion checks. The cooking-trained event detector never
   fires here, so completion checks come only from possible-mistake flags on "which step?" answers. Sol raised 1 such
@@ -583,8 +583,8 @@ jobs and that the engine is unchanged when there are none. It says nothing about
   - a rule fixed before that run: keep the defaults if wrong questions on the single-task jobs are ≤ 2 per hour and
     the other job is asked about during its 150 s in ≥ 2 of 4 splices.
 
-  **Status: queued, not scheduled (2026-10-18).** The founder: "we don't need it right now". Nothing downloaded, $0
-  spent. It is item 1 in `docs/TO_TEST.md`, which also has options for 8 or 12 train splices. Prep done:
+  **Status: queued, not scheduled (2026-10-18).** Nothing downloaded, $0
+  spent. Prep done:
   - Videos are picked by a fixed rule that doesn't look at outcomes: per procedure, the shortest ENIGMA Train-split
     video of at least 20 min that has clean labels and handles its own board and screwdriver within 150 s. That gives
     91 (hv manual), 126 (hv electric), 154 (lv electric) and 157 (lv manual), 5.46 GB in all.

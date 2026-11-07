@@ -1,7 +1,0 @@
-{
-  "name": "praxis-deck-v2",
-  "private": true,
-  "description": "Builds brand/deck/v2/praxis-deck-v2.pptx",
-  "scripts": { "build": "node build-deck.js praxis-deck-v2.pptx" },
-  "dependencies": { "pptxgenjs": "3.12.0" }
-}

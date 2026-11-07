@@ -1,6 +1,6 @@
-"""The company-backend flow end to end on ENIGMA-51 repair videos (founder-approved 2026-10-18).
+"""The organization-backend flow end to end on ENIGMA-51 repair videos.
 
-A company profile ("ENIGMA repair lab", sessions/orgs/enigma-repair-lab) gets the four written procedures through the
+An organization profile ("ENIGMA repair lab", sessions/orgs/enigma-repair-lab) gets the four written procedures through the
 upload/ingest path; each is compiled through the backend's compile endpoint (its own estimate first), reviewed against
 its document, approved, and the profile is locked with all four assigned. Praxis then runs on each repair video with
 the job set by its assigned procedure (a work order; no recognition from video), using only the profile's approved
@@ -104,7 +104,7 @@ def proc_for(vid: str) -> dict:
 
 def run(vids=("141", "107", "144", "53"), openai_usd: float = 7.0, verifier: str = "openai:gpt-6.1-sol",
         run_name: str = RUN, overrides: dict | None = None, max_calls: int = 6000) -> dict:
-    """Option A (founder-approved): gpt-6.1-sol answers both "is this step done?" and "which step now?" (it led Jev on
+    """Option A: gpt-6.1-sol answers both "is this step done?" and "which step now?" (it led Jev on
     both in the train-split tests: 85% vs 58% on 100 completion checks, 41% vs 33% on 116 engine step questions);
     no escalation tier (Sol is the strongest checker measured; Opus 82%). Task given by the assigned procedure.
     run_name / overrides: engine variants (eval/verify_check.py); openai_usd=0 is a free dry run (cache only)."""

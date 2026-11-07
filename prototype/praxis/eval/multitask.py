@@ -895,7 +895,7 @@ def combined_train_test(workers: int = 4, caps: dict | None = None) -> dict:
     return out
 
 
-SOL_FIX_PROTOCOL = """TRAIN split, same items, stacks and engine as the combined test (section 13); founder-approved
+SOL_FIX_PROTOCOL = """TRAIN split, same items, stacks and engine as the combined test (section 13), adopted
 2026-10-18. Sol (gpt-6.1-sol) answers "which task?", no strong tier (as B0), plus the early-guess fix: no first task
 before 10 s, and only after two typed answers in a row named it.
   C1  switch bar 0.8 (as chosen on Jev's answers)
