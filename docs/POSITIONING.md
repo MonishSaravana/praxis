@@ -237,8 +237,7 @@ feed loaded from a file. So the whole path can be built and tested now:
 > device. What's left is running it on real glasses and measuring latency, and hardware is a line item in this
 > grant."
 
-The application's budget includes $2,500 for smart-glasses hardware and capture equipment
-([`../context/APPLICATION.md`](../context/APPLICATION.md)).
+The application's budget includes $2,500 for smart-glasses hardware and capture equipment.
 
 **The line before it's done:**
 > "The engine is camera-agnostic and runs live on a video stream. Each pair of glasses is an input adapter, and the
